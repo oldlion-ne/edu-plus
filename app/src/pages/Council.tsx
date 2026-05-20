@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import HolographicTextRing from '../components/effects/HolographicTextRing';
 import ImmersiveHero from '../components/effects/ImmersiveHero';
 import {
   Dialog,
@@ -150,11 +149,7 @@ export default function Council() {
         description="Uniting researchers, corporate leaders, and community builders across Asia, Europe, and North America."
         telemetryLeft="COUNCIL_MEMBERS // ACTIVE"
         telemetryRight="GLOBAL_REPRESENTATION // STABLE"
-      >
-        <div className="absolute inset-0 z-0 opacity-40">
-          <HolographicTextRing />
-        </div>
-      </ImmersiveHero>
+      />
 
       <div className={`max-w-[1200px] mx-auto px-6 md:px-12 relative z-10 transition-all duration-1000 delay-300 transform ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
         {/* Category Filters */}
