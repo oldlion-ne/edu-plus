@@ -425,6 +425,13 @@ export default function Dashboard() {
       </div>
 
       {/* LEFT SIDEBAR (Fixed Desktop, Slide-out Mobile) */}
+      {isMobileOpen && (
+        <div
+          onClick={() => setIsMobileOpen(false)}
+          className="md:hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-[45]"
+        />
+      )}
+
       <div className={`
         fixed inset-y-0 left-0 z-50 w-64 bg-[#0E131A] border-r border-[#7DF9FF]/10 flex flex-col justify-between transform transition-transform duration-300 md:relative md:translate-x-0 md:h-full
         ${isMobileOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}
@@ -633,8 +640,8 @@ export default function Dashboard() {
         </header>
 
         {/* Content area workspace */}
-        <main className="flex-1 h-0 p-6 md:p-12 pb-24 md:pb-24 relative flex flex-col justify-start overflow-y-auto">
-          <div className="liquid-glass border border-white/10 p-8 rounded-none min-h-[500px] shrink-0 mb-12">
+        <main className="flex-1 h-0 p-4 sm:p-6 md:p-12 pb-24 md:pb-24 relative flex flex-col justify-start overflow-y-auto">
+          <div className="liquid-glass border border-white/10 p-4 sm:p-8 rounded-none min-h-[500px] shrink-0 mb-12">
             {/* TAB OVERVIEW */}
             {activeTab === 'overview' && (
               <div id="view-overview" className="space-y-8 animate-in fade-in duration-300">
@@ -670,7 +677,7 @@ export default function Dashboard() {
                     </div>
                     <Select value={timeRange} onValueChange={setTimeRange}>
                       <SelectTrigger
-                        className="hidden w-[160px] rounded-none sm:ml-auto sm:flex border border-white/10 hover:border-[#7DF9FF]/50 bg-[#0B0F14] text-xs font-mono tracking-wider px-3 py-1.5 h-auto text-[#E6EDF3] outline-none"
+                        className="w-full sm:w-[160px] rounded-none sm:ml-auto flex border border-white/10 hover:border-[#7DF9FF]/50 bg-[#0B0F14] text-xs font-mono tracking-wider px-3 py-1.5 h-auto text-[#E6EDF3] outline-none mt-2 sm:mt-0"
                         aria-label="Select a value"
                       >
                         <SelectValue placeholder="Last 3 months" />
@@ -693,7 +700,7 @@ export default function Dashboard() {
                   <div className="px-2 pt-4 pb-6 sm:px-6 sm:pt-6">
                     <ChartContainer
                       config={chartConfig}
-                      className="aspect-auto h-[350px] w-full"
+                      className="aspect-auto h-[250px] sm:h-[350px] w-full"
                     >
                       <AreaChart data={filteredData} margin={{ left: 12, right: 12, top: 20, bottom: 12 }}>
                         <defs>
