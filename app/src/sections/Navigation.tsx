@@ -48,6 +48,8 @@ export default function Navigation() {
     <nav
       ref={navRef}
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
+        isOpen ? '!overflow-visible' : ''
+      } ${
         scrolled ? 'liquid-glass-strong backdrop-blur-md shadow-lg border-b border-[#7DF9FF]/10' : 'liquid-glass'
       }`}
     >
@@ -118,18 +120,26 @@ export default function Navigation() {
         {/* Mobile Menu Toggle */}
         <button
           onClick={() => setIsOpen(!isOpen)}
-          className="md:hidden flex flex-col gap-1.5 p-2 focus:outline-none"
+          className="md:hidden flex flex-col gap-1.5 p-2 focus:outline-none z-50"
           aria-label="Toggle menu"
         >
-          <span className={`w-5 h-[1px] bg-[#E6EDF3] transition-all duration-300 ${isOpen ? 'rotate-45 translate-y-1.5' : ''}`} />
-          <span className={`w-5 h-[1px] bg-[#E6EDF3] transition-all duration-300 ${isOpen ? 'opacity-0' : ''}`} />
-          <span className={`w-5 h-[1px] bg-[#E6EDF3] transition-all duration-300 ${isOpen ? '-rotate-45 -translate-y-1.5' : ''}`} />
+          <span className={`w-5 h-0.5 bg-[#E6EDF3] transition-all duration-300 ${isOpen ? 'rotate-45 translate-y-[8px]' : ''}`} />
+          <span className={`w-5 h-0.5 bg-[#E6EDF3] transition-all duration-300 ${isOpen ? 'opacity-0' : ''}`} />
+          <span className={`w-5 h-0.5 bg-[#E6EDF3] transition-all duration-300 ${isOpen ? '-rotate-45 -translate-y-[8px]' : ''}`} />
         </button>
       </div>
 
+      {/* Mobile Drawer Backdrop */}
+      {isOpen && (
+        <div
+          onClick={() => setIsOpen(false)}
+          className="md:hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-40 mt-[72px]"
+        />
+      )}
+
       {/* Mobile Drawer */}
       {isOpen && (
-        <div className="md:hidden absolute top-[72px] left-0 right-0 bg-[#0B0F14]/95 backdrop-blur-lg border-b border-[#7DF9FF]/10 py-6 px-8 flex flex-col gap-4">
+        <div className="md:hidden absolute top-[72px] left-0 right-0 bg-[#0B0F14]/95 backdrop-blur-lg border-b border-[#7DF9FF]/10 py-6 px-8 flex flex-col gap-4 z-50">
           {NAV_LINKS.map((link) => (
             <NavLink
               key={link.label}
