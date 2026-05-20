@@ -428,7 +428,7 @@ export default function Dashboard() {
       {isMobileOpen && (
         <div
           onClick={() => setIsMobileOpen(false)}
-          className="md:hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-45"
+          className="md:hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-[45]"
         />
       )}
 

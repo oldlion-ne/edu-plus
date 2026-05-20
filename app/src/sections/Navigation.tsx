@@ -122,6 +122,8 @@ export default function Navigation() {
           onClick={() => setIsOpen(!isOpen)}
           className="md:hidden flex flex-col gap-1.5 p-2 focus:outline-none z-50"
           aria-label="Toggle menu"
+          aria-expanded={isOpen}
+          aria-controls="mobile-menu"
         >
           <span className={`w-5 h-0.5 bg-[#E6EDF3] transition-all duration-300 ${isOpen ? 'rotate-45 translate-y-[8px]' : ''}`} />
           <span className={`w-5 h-0.5 bg-[#E6EDF3] transition-all duration-300 ${isOpen ? 'opacity-0' : ''}`} />
@@ -139,7 +141,7 @@ export default function Navigation() {
 
       {/* Mobile Drawer */}
       {isOpen && (
-        <div className="md:hidden absolute top-[72px] left-0 right-0 bg-[#0B0F14]/95 backdrop-blur-lg border-b border-[#7DF9FF]/10 py-6 px-8 flex flex-col gap-4 z-50">
+        <div id="mobile-menu" className="md:hidden absolute top-[72px] left-0 right-0 bg-[#0B0F14]/95 backdrop-blur-lg border-b border-[#7DF9FF]/10 py-6 px-8 flex flex-col gap-4 z-50">
           {NAV_LINKS.map((link) => (
             <NavLink
               key={link.label}
