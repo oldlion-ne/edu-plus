@@ -111,11 +111,11 @@ export default function PathwaySimulator() {
             </div>
             <blockquote>
               <p className="text-sm text-foreground leading-relaxed">
-                "The pathway intelligence layer is unlike anything we've seen — it adapts to every learner's pace and maps directly to real career outcomes."
+                "EduPlus bridges the gap between academic learning and real-world industry expectations — equipping learners with global competence and operational excellence from day one."
               </p>
               <div className="mt-3 flex gap-2 text-xs">
-                <cite className="font-medium text-foreground not-italic">Dr. Ananya Rao</cite>
-                <span className="text-muted-foreground">· Academic Advisor, Indian Maritime University</span>
+                <cite className="font-medium text-foreground not-italic">Shri Rojit Keisham</cite>
+                <span className="text-muted-foreground">· Faculty Member, Indian Maritime University, Kolkata</span>
               </div>
             </blockquote>
           </div>
