@@ -7,8 +7,8 @@ import { Badge } from '../components/ui/badge';
 
 const STATS = [
   { value: '4,200+', label: 'Learners' },
-  { value: '98%', label: 'Placement' },
-  { value: '12ms', label: 'Latency' },
+  { value: '98%',    label: 'Placement' },
+  { value: '38',     label: 'Countries' },
 ];
 
 export default function Hero() {
@@ -72,7 +72,7 @@ export default function Hero() {
           as="div"
           animationNum={1}
           timelineRef={sectionRef}
-          className="mb-8"
+          className="mb-4 flex flex-col items-center gap-3"
         >
           <Badge variant="outline" className="inline-flex items-center gap-2 px-4 py-1.5">
             <Activity size={11} />
@@ -80,6 +80,9 @@ export default function Hero() {
               Eduplus · Learning Intelligence Platform
             </span>
           </Badge>
+          <span className="font-mono text-[10px] tracking-[0.25em] uppercase text-primary/70">
+            Where Passion Meets Profession
+          </span>
         </TimelineAnimation>
 
         {/* Headline */}
@@ -90,8 +93,8 @@ export default function Hero() {
           timelineRef={sectionRef}
           className="text-4xl sm:text-5xl md:text-[3.5rem] lg:text-6xl font-semibold tracking-tight leading-[1.1] text-foreground mb-5"
         >
-          Shaping the builders{' '}
-          <span className="text-primary">of tomorrow</span>
+          Empowering Skills for{' '}
+          <span className="text-primary">a Brighter Future</span>
         </TimelineAnimation>
 
         {/* Subtext */}

@@ -142,10 +142,10 @@ export default function Council() {
       {/* Immersive Top Hero Viewport */}
       <ImmersiveHero
         bgImage="/images/CouncilVisual.png"
-        category="Global Vision. Local Impact."
+        category="Leadership & Global Expert Council"
         titleNormal="Expert"
         titleHighlighted="Council"
-        description="Uniting researchers, corporate leaders, and community builders across Asia, Europe, and North America."
+        description="The people powering EduPlus Skills — uniting researchers, corporate leaders, and community builders across Asia, Europe, and North America."
         telemetryLeft="COUNCIL_MEMBERS // ACTIVE"
         telemetryRight="GLOBAL_REPRESENTATION // STABLE"
       />
