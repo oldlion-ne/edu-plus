@@ -32,6 +32,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from '../components/ui/select';
+import { Button } from '../components/ui/button';
+import { Card } from '../components/ui/card';
+import { Input } from '../components/ui/input';
+import { Textarea } from '../components/ui/textarea';
+import { Label } from '../components/ui/label';
+import { Sheet, SheetContent, SheetTitle } from '../components/ui/sheet';
 
 type UserRole = 'admin' | 'educator' | 'resource_person' | 'none';
 
@@ -47,7 +53,7 @@ const chartData = [
   { date: "2024-04-09", desktop: 59, mobile: 110 },
   { date: "2024-04-10", desktop: 261, mobile: 190 },
   { date: "2024-04-11", desktop: 327, mobile: 350 },
-  { date: "2024-04-12", desktop: 292, mobile: 210 },
+  { date: "2024-05-12", desktop: 292, mobile: 210 },
   { date: "2024-04-13", desktop: 342, mobile: 380 },
   { date: "2024-04-14", desktop: 137, mobile: 220 },
   { date: "2024-04-15", desktop: 120, mobile: 170 },
@@ -135,11 +141,11 @@ const chartConfig = {
   },
   desktop: {
     label: "Desktop",
-    color: "#7DF9FF",
+    color: "hsl(var(--primary))",
   },
   mobile: {
     label: "Mobile",
-    color: "#a855f7",
+    color: "hsl(var(--secondary))",
   },
 } satisfies ChartConfig;
 
@@ -187,7 +193,7 @@ export default function Dashboard() {
           localStorage.setItem('edu_plus_sim_session', JSON.stringify(parsed));
           toast.success('[SIMULATED COGNITIVE OVERRIDE SUCCESS]', {
             description: 'Local simulated session profile nodes re-aligned successfully.',
-            style: { background: '#0E131A', border: '1px solid #7DF9FF', color: '#E6EDF3', borderRadius: '0px' }
+            style: { background: 'hsl(var(--card))', border: '1px solid hsl(var(--primary)/0.3)', color: 'hsl(var(--foreground))', borderRadius: '0px' }
           });
           window.location.reload();
         }
@@ -205,13 +211,14 @@ export default function Dashboard() {
 
         toast.success('[DATABASE SYNC COMPLETE]', {
           description: 'Your profile credentials have been updated securely.',
-          style: { background: '#0E131A', border: '1px solid #7DF9FF', color: '#E6EDF3', borderRadius: '0px' }
+          style: { background: 'hsl(var(--card))', border: '1px solid hsl(var(--primary)/0.3)', color: 'hsl(var(--foreground))', borderRadius: '0px' }
         });
       }
       setIsSettingsOpen(false);
     } catch (err: any) {
       toast.error('COMPILATION_ERROR', {
-        description: err.message || 'Failed to update user profile.'
+        description: err.message || 'Failed to update user profile.',
+        style: { background: 'hsl(var(--card))', border: '1px solid hsl(var(--destructive)/0.3)', color: 'hsl(var(--foreground))', borderRadius: '0px' }
       });
     }
   };
@@ -221,13 +228,13 @@ export default function Dashboard() {
       await signOut();
       toast.success('[SESSION TERMINATED]', {
         description: 'You have logged out successfully from Dashboard.',
-        style: { background: '#0E131A', border: '1px solid #7DF9FF', color: '#E6EDF3', borderRadius: '0px' }
+        style: { background: 'hsl(var(--card))', border: '1px solid hsl(var(--primary)/0.3)', color: 'hsl(var(--foreground))', borderRadius: '0px' }
       });
       navigate('/', { replace: true });
     } catch (err: any) {
       toast.error('LOGOUT_ERROR', {
         description: err.message || 'Logout failed.',
-        style: { borderRadius: '0px' }
+        style: { background: 'hsl(var(--card))', border: '1px solid hsl(var(--destructive)/0.3)', color: 'hsl(var(--foreground))', borderRadius: '0px' }
       });
     }
   };
@@ -276,9 +283,9 @@ export default function Dashboard() {
           toast(`[ALERT // NEW INQUIRY TRANSMITTED]`, {
             description: `Sender: ${newMsg.name} (${newMsg.profile})`,
             style: {
-              background: '#0E131A',
-              border: '1px solid #7DF9FF',
-              color: '#E6EDF3',
+              background: 'hsl(var(--card))',
+              border: '1px solid hsl(var(--primary)/0.3)',
+              color: 'hsl(var(--foreground))',
               fontFamily: 'monospace',
               borderRadius: '0px'
             }
@@ -325,7 +332,7 @@ export default function Dashboard() {
 
       toast.success('[TRANSMISSION SUCCESSFUL]', {
         description: 'Knowledge node has been compiled to public database.',
-        style: { background: '#0E131A', border: '1px solid #7DF9FF', color: '#E6EDF3', borderRadius: '0px' }
+        style: { background: 'hsl(var(--card))', border: '1px solid hsl(var(--primary)/0.3)', color: 'hsl(var(--foreground))', borderRadius: '0px' }
       });
 
       setNewHubItem({
@@ -339,7 +346,10 @@ export default function Dashboard() {
 
       fetchData();
     } catch (err) {
-      toast.error('TRANSMISSION_ERROR', { description: 'Unauthorized role or empty input variables.' });
+      toast.error('TRANSMISSION_ERROR', {
+        description: 'Unauthorized role or empty input variables.',
+        style: { background: 'hsl(var(--card))', border: '1px solid hsl(var(--destructive)/0.3)', color: 'hsl(var(--foreground))', borderRadius: '0px' }
+      });
     }
   };
 
@@ -356,13 +366,16 @@ export default function Dashboard() {
 
       toast.success('[COGNITIVE COMPILATION SUCCESS]', {
         description: 'AI custom factual guideline loaded dynamically.',
-        style: { background: '#0E131A', border: '1px solid #7DF9FF', color: '#E6EDF3', borderRadius: '0px' }
+        style: { background: 'hsl(var(--card))', border: '1px solid hsl(var(--primary)/0.3)', color: 'hsl(var(--foreground))', borderRadius: '0px' }
       });
 
       setNewKbDoc({ question: '', answer: '' });
       fetchData();
     } catch (err) {
-      toast.error('COMPILATION_ERROR', { description: 'Failed to write fact to AI matrix.' });
+      toast.error('COMPILATION_ERROR', {
+        description: 'Failed to write fact to AI matrix.',
+        style: { background: 'hsl(var(--card))', border: '1px solid hsl(var(--destructive)/0.3)', color: 'hsl(var(--foreground))', borderRadius: '0px' }
+      });
     }
   };
 
@@ -402,200 +415,242 @@ export default function Dashboard() {
     const startDate = new Date(referenceDate)
     startDate.setDate(startDate.getDate() - daysToSubtract)
     return date >= startDate
-  })
+  });
+
+  const renderSidebarContents = (onNavItemClick?: () => void) => (
+    <div className="flex flex-col h-full justify-between bg-card text-card-foreground border-r border-border font-mono">
+      <div className="flex flex-col flex-1">
+        {/* Brand header */}
+        <div className="p-6 border-b border-border flex items-center justify-between">
+          <Link to="/" className="flex items-center gap-0 hover:text-primary focus:outline-none focus:ring-1 focus:ring-primary/70">
+            <span className="font-heading font-bold text-xl text-foreground">Edu</span>
+            <span className="text-primary font-light text-xl">+=</span>
+          </Link>
+          {onNavItemClick && (
+            <Button variant="ghost" onClick={onNavItemClick} className="md:hidden text-muted-foreground hover:text-foreground focus:text-primary font-mono text-xs cursor-pointer">
+              [X]
+            </Button>
+          )}
+        </div>
+        <div className="px-6 py-4">
+          <span className="font-mono text-[9px] text-primary tracking-[0.25em] uppercase font-bold block">ADMIN TERMINAL</span>
+        </div>
+
+        {/* Navigation Sidebar Tabs */}
+        <nav className="flex-grow px-4 py-2 space-y-1">
+          <Button
+            id="tab-overview"
+            variant="ghost"
+            onClick={() => { setActiveTab('overview'); onNavItemClick?.(); }}
+            className={`w-full justify-start px-4 py-3 font-mono text-xs tracking-wider transition-all duration-300 rounded-none border ${
+              activeTab === 'overview'
+                ? 'border-primary bg-primary/5 text-primary shadow-[0_0_8px_rgba(var(--primary),0.15)]'
+                : 'border-transparent text-muted-foreground hover:border-border hover:text-foreground'
+            }`}
+          >
+            [ 01 // Overview Telemetry ]
+          </Button>
+          <Button
+            id="tab-uploader"
+            variant="ghost"
+            onClick={() => { setActiveTab('uploader'); onNavItemClick?.(); }}
+            className={`w-full justify-start px-4 py-3 font-mono text-xs tracking-wider transition-all duration-300 rounded-none border ${
+              activeTab === 'uploader'
+                ? 'border-primary bg-primary/5 text-primary shadow-[0_0_8px_rgba(var(--primary),0.15)]'
+                : 'border-transparent text-muted-foreground hover:border-border hover:text-foreground'
+            }`}
+          >
+            [ 02 // Upload Station ]
+          </Button>
+          <Button
+            id="tab-ai-matrix"
+            variant="ghost"
+            onClick={() => { setActiveTab('ai-matrix'); onNavItemClick?.(); }}
+            className={`w-full justify-start px-4 py-3 font-mono text-xs tracking-wider transition-all duration-300 rounded-none border ${
+              activeTab === 'ai-matrix'
+                ? 'border-primary bg-primary/5 text-primary shadow-[0_0_8px_rgba(var(--primary),0.15)]'
+                : 'border-transparent text-muted-foreground hover:border-border hover:text-foreground'
+            }`}
+          >
+            [ 03 // AI Chat Training ]
+          </Button>
+          <Button
+            id="tab-messages"
+            variant="ghost"
+            onClick={() => { setActiveTab('messages'); onNavItemClick?.(); }}
+            className={`w-full justify-start px-4 py-3 font-mono text-xs tracking-wider transition-all duration-300 rounded-none border ${
+              activeTab === 'messages'
+                ? 'border-primary bg-primary/5 text-primary shadow-[0_0_8px_rgba(var(--primary),0.15)]'
+                : 'border-transparent text-muted-foreground hover:border-border hover:text-foreground'
+            }`}
+          >
+            [ 04 // Message Hub ]
+          </Button>
+        </nav>
+      </div>
+
+      {/* Footer profile card trigger dialog */}
+      <div className="p-4 border-t border-border bg-background/50">
+        <Dialog open={isSettingsOpen} onOpenChange={setIsSettingsOpen}>
+          <DialogTrigger asChild>
+            <button className="w-full flex items-center gap-3 p-3 border border-border hover:border-primary/30 bg-card hover:bg-primary/5 focus:outline-none focus:ring-1 focus:ring-primary/70 focus:border-primary/30 transition-all duration-300 text-left cursor-pointer rounded-none group">
+              <Avatar className="border border-primary/20 group-hover:border-primary shadow-[0_0_8px_rgba(var(--primary),0.05)] rounded-none shrink-0">
+                <AvatarImage src={user?.user_metadata?.avatar_url} className="rounded-none object-cover" />
+                <AvatarFallback className="bg-background text-primary font-mono font-bold text-xs rounded-none flex items-center justify-center">
+                  {profileName.substring(0, 2).toUpperCase() || 'AD'}
+                </AvatarFallback>
+              </Avatar>
+              <div className="flex-grow min-w-0">
+                <p className="font-heading text-xs font-semibold text-foreground truncate group-hover:text-primary transition-colors">
+                  {profileName}
+                </p>
+                <p className="font-mono text-[9px] text-muted-foreground truncate">
+                  {user?.email}
+                </p>
+                <span className={`inline-block mt-1 px-1.5 py-0.5 text-[7px] font-mono rounded-none uppercase border font-bold tracking-widest ${
+                  selectedRole === 'admin'
+                    ? 'border-destructive/50 bg-destructive/10 text-destructive'
+                    : selectedRole === 'educator'
+                    ? 'border-emerald-500/50 bg-emerald-500/10 text-emerald-400'
+                    : 'border-primary/50 bg-primary/10 text-primary'
+                }`}>
+                  {selectedRole ? selectedRole.replace('_', ' ') : 'NONE'}
+                </span>
+              </div>
+            </button>
+          </DialogTrigger>
+
+          <DialogContent className="max-w-md bg-card border border-primary/30 text-foreground rounded-none p-6 shadow-[0_0_24px_rgba(var(--primary),0.15)] font-sans">
+            <DialogHeader className="border-b border-border pb-4">
+              <DialogTitle className="text-primary font-mono tracking-widest text-sm">[ SYS // PROFILE_SETTINGS ]</DialogTitle>
+              <DialogDescription className="text-muted-foreground font-mono text-[10px] uppercase">
+                Manage cryptographic node credentials and workspace parameters.
+              </DialogDescription>
+            </DialogHeader>
+
+            {/* Form and Settings section */}
+            <form onSubmit={handleUpdateProfile} className="space-y-4 pt-2">
+              <div className="flex justify-center mb-4">
+                <Avatar className="size-16 border-2 border-primary shadow-[0_0_12px_hsl(var(--primary))] rounded-none">
+                  <AvatarImage src={profileAvatar} className="rounded-none object-cover" />
+                  <AvatarFallback className="bg-background text-primary font-mono font-bold text-lg rounded-none flex items-center justify-center">
+                    {profileName.substring(0, 2).toUpperCase() || 'AD'}
+                  </AvatarFallback>
+                </Avatar>
+              </div>
+
+              <div className="space-y-1.5">
+                <Label className="text-[9px] font-mono text-muted-foreground uppercase tracking-wider block">Display Full Name</Label>
+                <Input
+                  type="text"
+                  required
+                  value={profileName}
+                  onChange={e => setProfileName(e.target.value)}
+                  className="w-full bg-background border border-border text-xs px-4 py-2.5 outline-none focus:border-primary rounded-none text-foreground font-sans h-9"
+                />
+              </div>
+
+              <div className="space-y-1.5">
+                <Label className="text-[9px] font-mono text-muted-foreground uppercase tracking-wider block">Avatar Image URL</Label>
+                <Input
+                  type="url"
+                  value={profileAvatar}
+                  onChange={e => setProfileAvatar(e.target.value)}
+                  placeholder="https://images.unsplash.com/photo-..."
+                  className="w-full bg-background border border-border text-xs px-4 py-2.5 outline-none focus:border-primary rounded-none text-foreground font-mono h-9"
+                />
+              </div>
+
+              <div className="space-y-1.5">
+                <Label className="text-[9px] font-mono text-muted-foreground uppercase tracking-wider block">Administrative Summary (Bio)</Label>
+                <Textarea
+                  value={profileBio}
+                  onChange={e => setProfileBio(e.target.value)}
+                  rows={3}
+                  className="w-full bg-background border border-border text-xs px-4 py-2 outline-none focus:border-primary rounded-none text-foreground font-sans resize-none min-h-20"
+                />
+              </div>
+
+              {/* Quick simulated bypass swapper (only for dev simulated user sessions) */}
+              {isSimulated && (
+                <div className="border border-primary/20 bg-primary/5 p-3 rounded-none mt-2 text-left space-y-2">
+                  <span className="font-mono text-[9px] text-primary tracking-wider uppercase block font-bold">// DEV BYPASS ACCESS PANEL</span>
+                  <span className="font-mono text-[8px] text-muted-foreground block">SWAP MOCK CLEARANCE ROLES DYNAMICALLY:</span>
+                  <div className="grid grid-cols-3 gap-1.5">
+                    {(['admin', 'educator', 'resource_person'] as const).map(role => (
+                      <Button key={role} type="button" variant="outline" onClick={() => { signInSimulated(role); toast.success(`[ROLE_OVERRIDE: ${role.toUpperCase()}]`, { description: `Simulated identity shifted successfully.`, style: { background: 'hsl(var(--card))', border: '1px solid hsl(var(--primary))', color: 'hsl(var(--foreground))', borderRadius: '0px' } }); setIsSettingsOpen(false); }} className={`py-1 text-center font-mono text-[8px] uppercase tracking-wider border cursor-pointer transition-all rounded-none focus:outline-none focus:ring-1 focus:ring-primary/70 ${selectedRole === role ? 'border-primary bg-primary/10 text-primary' : 'border-transparent text-muted-foreground hover:text-foreground hover:border-border'}`}>
+                        {role.replace('_', ' ')}
+                      </Button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Controls panel */}
+              <div className="flex gap-2 pt-2 border-t border-border">
+                <Button type="submit" className="flex-grow py-2 bg-primary text-primary-foreground hover:bg-foreground hover:text-background focus:outline-none focus:ring-1 focus:ring-primary/70 transition-all font-mono text-[9px] font-bold tracking-wider uppercase cursor-pointer rounded-none h-9">
+                  Save Changes
+                </Button>
+                <Link to="/" onClick={() => setIsSettingsOpen(false)} className="px-4 py-2 border border-border hover:border-foreground focus:outline-none focus:ring-1 focus:ring-primary/70 text-center font-mono text-[9px] uppercase tracking-wider transition-all inline-flex items-center justify-center h-9 text-foreground hover:bg-accent hover:text-accent-foreground">
+                  Exit Site
+                </Link>
+                <Button type="button" variant="destructive" onClick={() => { setIsSettingsOpen(false); handleLogout(); }} className="px-4 py-2 border border-destructive/30 hover:border-destructive hover:bg-destructive/10 bg-destructive/5 text-destructive focus:outline-none focus:ring-1 focus:ring-destructive font-mono text-[9px] uppercase tracking-wider transition-all cursor-pointer rounded-none h-9">
+                  Logout
+                </Button>
+              </div>
+            </form>
+          </DialogContent>
+        </Dialog>
+      </div>
+    </div>
+  );
 
   return (
-    <div className="h-screen w-full flex flex-col md:flex-row overflow-x-hidden bg-[#0B0F14] text-[#E6EDF3] font-sans relative">
+    <div className="h-screen w-full flex flex-col md:flex-row overflow-x-hidden bg-background text-foreground font-sans relative">
       {/* Onboarding Tour Spotlight */}
       {showTour && <DashboardOnboardingTour onComplete={() => setShowTour(false)} />}
 
       {/* Global HUD elements */}
-      <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-[#7DF9FF]/3 rounded-none blur-[140px] pointer-events-none" />
+      <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-primary/3 rounded-none blur-[140px] pointer-events-none" />
 
       {/* Mobile Drawer Header */}
-      <div className="md:hidden flex items-center justify-between px-6 py-4 bg-[#0E131A] border-b border-[#7DF9FF]/10 z-40 w-full">
-        <Link to="/" className="flex items-center gap-0 hover:text-[#7DF9FF] focus:outline-none focus:ring-1 focus:ring-[#7DF9FF]/70">
-          <span className="font-heading font-bold text-lg text-[#E6EDF3]">Edu</span>
-          <span className="text-[#7DF9FF] font-light text-lg">+</span>
-          <span className="font-mono text-[9px] text-[#8B949E] tracking-widest uppercase ml-2">// ADMIN</span>
+      <div className="md:hidden flex items-center justify-between px-6 py-4 bg-card border-b border-border z-40 w-full">
+        <Link to="/" className="flex items-center gap-0 hover:text-primary focus:outline-none focus:ring-1 focus:ring-primary/70">
+          <span className="font-heading font-bold text-lg text-foreground">Edu</span>
+          <span className="text-primary font-light text-lg">+</span>
+          <span className="font-mono text-[9px] text-muted-foreground tracking-widest uppercase ml-2">// ADMIN</span>
         </Link>
-        <button onClick={() => setIsMobileOpen(!isMobileOpen)} className="p-2 border border-[#7DF9FF]/20 hover:border-[#7DF9FF] text-[#7DF9FF] text-xs font-mono tracking-widest uppercase cursor-pointer rounded-none focus:outline-none focus:ring-1 focus:ring-[#7DF9FF]/70">
+        <Button variant="outline" onClick={() => setIsMobileOpen(!isMobileOpen)} className="p-2 border border-primary/20 hover:border-primary text-primary text-xs font-mono tracking-widest uppercase cursor-pointer rounded-none focus:outline-none focus:ring-1 focus:ring-primary/70">
           [ MENU ]
-        </button>
+        </Button>
       </div>
 
-      {/* LEFT SIDEBAR (Fixed Desktop, Slide-out Mobile) */}
-      {isMobileOpen && (
-        <div
-          onClick={() => setIsMobileOpen(false)}
-          className="md:hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-[45]"
-        />
-      )}
-
-      <div className={`
-        fixed inset-y-0 left-0 z-50 w-64 bg-[#0E131A] border-r border-[#7DF9FF]/10 flex flex-col justify-between transform transition-transform duration-300 md:relative md:translate-x-0 md:h-full
-        ${isMobileOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}
-      `}>
-        <div className="flex flex-col flex-1">
-          {/* Brand header */}
-          <div className="p-6 border-b border-[#7DF9FF]/5 flex items-center justify-between">
-            <Link to="/" className="flex items-center gap-0 hover:text-[#7DF9FF] focus:outline-none focus:ring-1 focus:ring-[#7DF9FF]/70">
-              <span className="font-heading font-bold text-xl text-[#E6EDF3]">Edu</span>
-              <span className="text-[#7DF9FF] font-light text-xl">+=</span>
-            </Link>
-            <button onClick={() => setIsMobileOpen(false)} className="md:hidden text-white/50 hover:text-white focus:text-[#7DF9FF] focus:outline-none font-mono text-xs cursor-pointer bg-transparent border-0">
-              [X]
-            </button>
-          </div>
-          <div className="px-6 py-4">
-            <span className="font-mono text-[9px] text-[#7DF9FF] tracking-[0.25em] uppercase font-bold block">ADMIN TERMINAL</span>
-          </div>
-
-          {/* Navigation Sidebar Tabs */}
-          <nav className="flex-grow px-4 py-2 space-y-1">
-            <button id="tab-overview" onClick={() => { setActiveTab('overview'); setIsMobileOpen(false); }} className={`w-full text-left px-4 py-3 font-mono text-xs tracking-wider transition-all duration-300 rounded-none border focus:outline-none focus:ring-1 focus:ring-[#7DF9FF]/70 ${activeTab === 'overview' ? 'border-[#7DF9FF] bg-[#7DF9FF]/5 text-[#7DF9FF] shadow-[0_0_8px_rgba(125,249,255,0.15)] hover:border-[#7DF9FF]' : 'border-transparent text-[#8B949E] hover:border-white/5 hover:text-white'} cursor-pointer`}>
-              [ 01 // Overview Telemetry ]
-            </button>
-            <button id="tab-uploader" onClick={() => { setActiveTab('uploader'); setIsMobileOpen(false); }} className={`w-full text-left px-4 py-3 font-mono text-xs tracking-wider transition-all duration-300 rounded-none border focus:outline-none focus:ring-1 focus:ring-[#7DF9FF]/70 ${activeTab === 'uploader' ? 'border-[#7DF9FF] bg-[#7DF9FF]/5 text-[#7DF9FF] shadow-[0_0_8px_rgba(125,249,255,0.15)] hover:border-[#7DF9FF]' : 'border-transparent text-[#8B949E] hover:border-white/5 hover:text-white'} cursor-pointer`}>
-              [ 02 // Upload Station ]
-            </button>
-            <button id="tab-ai-matrix" onClick={() => { setActiveTab('ai-matrix'); setIsMobileOpen(false); }} className={`w-full text-left px-4 py-3 font-mono text-xs tracking-wider transition-all duration-300 rounded-none border focus:outline-none focus:ring-1 focus:ring-[#7DF9FF]/70 ${activeTab === 'ai-matrix' ? 'border-[#7DF9FF] bg-[#7DF9FF]/5 text-[#7DF9FF] shadow-[0_0_8px_rgba(125,249,255,0.15)] hover:border-[#7DF9FF]' : 'border-transparent text-[#8B949E] hover:border-white/5 hover:text-white'} cursor-pointer`}>
-              [ 03 // AI Chat Training ]
-            </button>
-            <button id="tab-messages" onClick={() => { setActiveTab('messages'); setIsMobileOpen(false); }} className={`w-full text-left px-4 py-3 font-mono text-xs tracking-wider transition-all duration-300 rounded-none border focus:outline-none focus:ring-1 focus:ring-[#7DF9FF]/70 ${activeTab === 'messages' ? 'border-[#7DF9FF] bg-[#7DF9FF]/5 text-[#7DF9FF] shadow-[0_0_8px_rgba(125,249,255,0.15)] hover:border-[#7DF9FF]' : 'border-transparent text-[#8B949E] hover:border-white/5 hover:text-white'} cursor-pointer`}>
-              [ 04 // Message Hub ]
-            </button>
-          </nav>
-        </div>
-
-        {/* Footer profile card trigger dialog */}
-        <div className="p-4 border-t border-[#7DF9FF]/10 bg-[#0B0F14]/50">
-          <Dialog open={isSettingsOpen} onOpenChange={setIsSettingsOpen}>
-            <DialogTrigger asChild>
-              <button className="w-full flex items-center gap-3 p-3 border border-white/5 hover:border-[#7DF9FF]/30 bg-white/[0.01] hover:bg-[#7DF9FF]/5 focus:outline-none focus:ring-1 focus:ring-[#7DF9FF]/70 focus:border-[#7DF9FF]/30 transition-all duration-300 text-left cursor-pointer rounded-none group">
-                <Avatar size="default" className="border border-[#7DF9FF]/20 group-hover:border-[#7DF9FF] shadow-[0_0_8px_rgba(125,249,255,0.05)] rounded-none shrink-0">
-                  <AvatarImage src={user?.user_metadata?.avatar_url} className="rounded-none object-cover" />
-                  <AvatarFallback className="bg-[#0B0F14] text-[#7DF9FF] font-mono font-bold text-xs rounded-none flex items-center justify-center">
-                    {profileName.substring(0, 2).toUpperCase() || 'AD'}
-                  </AvatarFallback>
-                </Avatar>
-                <div className="flex-grow min-w-0">
-                  <p className="font-heading text-xs font-semibold text-white truncate group-hover:text-[#7DF9FF] transition-colors">
-                    {profileName}
-                  </p>
-                  <p className="font-mono text-[9px] text-[#8B949E] truncate">
-                    {user?.email}
-                  </p>
-                  <span className={`inline-block mt-1 px-1.5 py-0.5 text-[7px] font-mono rounded-none uppercase border font-bold tracking-widest ${
-                    selectedRole === 'admin'
-                      ? 'border-[#EF4444]/50 bg-[#EF4444]/10 text-[#F87171]'
-                      : selectedRole === 'educator'
-                      ? 'border-[#22C55E]/50 bg-[#22C55E]/10 text-[#4ADE80]'
-                      : 'border-[#7DF9FF]/50 bg-[#7DF9FF]/10 text-[#7DF9FF]'
-                  }`}>
-                    {selectedRole ? selectedRole.replace('_', ' ') : 'NONE'}
-                  </span>
-                </div>
-              </button>
-            </DialogTrigger>
-
-            <DialogContent className="max-w-md bg-[#0E131A] border border-[#7DF9FF]/30 text-white rounded-none p-6 shadow-[0_0_24px_rgba(125,249,255,0.15)] font-sans">
-              <DialogHeader className="border-b border-[#7DF9FF]/10 pb-4">
-                <DialogTitle className="text-[#7DF9FF] font-mono tracking-widest text-sm">[ SYS // PROFILE_SETTINGS ]</DialogTitle>
-                <DialogDescription className="text-white/40 font-mono text-[10px] uppercase">
-                  Manage cryptographic node credentials and workspace parameters.
-                </DialogDescription>
-              </DialogHeader>
-
-              {/* Form and Settings section */}
-              <form onSubmit={handleUpdateProfile} className="space-y-4 pt-2">
-                <div className="flex justify-center mb-4">
-                  <Avatar size="lg" className="size-16 border-2 border-[#7DF9FF] shadow-[0_0_12px_#7DF9FF] rounded-none">
-                    <AvatarImage src={profileAvatar} className="rounded-none object-cover" />
-                    <AvatarFallback className="bg-[#0B0F14] text-[#7DF9FF] font-mono font-bold text-lg rounded-none flex items-center justify-center">
-                      {profileName.substring(0, 2).toUpperCase() || 'AD'}
-                    </AvatarFallback>
-                  </Avatar>
-                </div>
-
-                <div className="space-y-1.5">
-                  <label className="text-[9px] font-mono text-[#8B949E] uppercase tracking-wider block">Display Full Name</label>
-                  <input
-                    type="text"
-                    required
-                    value={profileName}
-                    onChange={e => setProfileName(e.target.value)}
-                    className="w-full bg-[#0B0F14] border border-white/10 text-xs px-4 py-2 outline-none focus:border-[#7DF9FF] rounded-none text-white font-sans"
-                  />
-                </div>
-
-                <div className="space-y-1.5">
-                  <label className="text-[9px] font-mono text-[#8B949E] uppercase tracking-wider block">Avatar Image URL</label>
-                  <input
-                    type="url"
-                    value={profileAvatar}
-                    onChange={e => setProfileAvatar(e.target.value)}
-                    placeholder="https://images.unsplash.com/photo-..."
-                    className="w-full bg-[#0B0F14] border border-white/10 text-xs px-4 py-2 outline-none focus:border-[#7DF9FF] rounded-none text-white font-mono"
-                  />
-                </div>
-
-                <div className="space-y-1.5">
-                  <label className="text-[9px] font-mono text-[#8B949E] uppercase tracking-wider block">Administrative Summary (Bio)</label>
-                  <textarea
-                    value={profileBio}
-                    onChange={e => setProfileBio(e.target.value)}
-                    rows={3}
-                    className="w-full bg-[#0B0F14] border border-white/10 text-xs px-4 py-2 outline-none focus:border-[#7DF9FF] rounded-none text-white font-sans resize-none"
-                  />
-                </div>
-
-                {/* Quick simulated bypass swapper (only for dev simulated user sessions) */}
-                {isSimulated && (
-                  <div className="border border-[#7DF9FF]/20 bg-[#7DF9FF]/5 p-3 rounded-none mt-2 text-left space-y-2">
-                    <span className="font-mono text-[9px] text-[#7DF9FF] tracking-wider uppercase block font-bold">// DEV BYPASS ACCESS PANEL</span>
-                    <span className="font-mono text-[8px] text-white/50 block">SWAP MOCK CLEARANCE ROLES DYNAMICALLY:</span>
-                    <div className="grid grid-cols-3 gap-1.5">
-                      {(['admin', 'educator', 'resource_person'] as const).map(role => (
-                        <button key={role} type="button" onClick={() => { signInSimulated(role); toast.success(`[ROLE_OVERRIDE: ${role.toUpperCase()}]`, { description: `Simulated identity shifted successfully.`, style: { background: '#0E131A', border: '1px solid #7DF9FF', color: '#E6EDF3', borderRadius: '0px' } }); setIsSettingsOpen(false); }} className={`py-1 text-center font-mono text-[8px] uppercase tracking-wider border cursor-pointer transition-all rounded-none focus:outline-none focus:ring-1 focus:ring-[#7DF9FF]/70 ${selectedRole === role ? 'border-[#7DF9FF] bg-[#7DF9FF]/10 text-[#7DF9FF]' : 'border-transparent text-white/40 hover:text-white hover:border-white/10'}`}>
-                          {role.replace('_', ' ')}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {/* Controls panel */}
-                <div className="flex gap-2 pt-2 border-t border-[#7DF9FF]/10">
-                  <button type="submit" className="flex-grow py-2 bg-[#7DF9FF] text-[#0B0F14] hover:bg-white focus:outline-none focus:ring-1 focus:ring-[#7DF9FF]/70 transition-all font-mono text-[9px] font-bold tracking-wider uppercase cursor-pointer rounded-none">
-                    Save Changes
-                  </button>
-                  <Link to="/" onClick={() => setIsSettingsOpen(false)} className="px-4 py-2 border border-white/10 hover:border-white focus:outline-none focus:ring-1 focus:ring-[#7DF9FF]/70 text-center font-mono text-[9px] uppercase tracking-wider transition-all">
-                    Exit Site
-                  </Link>
-                  <button type="button" onClick={() => { setIsSettingsOpen(false); handleLogout(); }} className="px-4 py-2 border border-[#EF4444]/30 hover:border-[#EF4444] hover:bg-[#EF4444]/10 bg-[#EF4444]/5 text-[#F87171] focus:outline-none focus:ring-1 focus:ring-[#EF4444] font-mono text-[9px] uppercase tracking-wider transition-all cursor-pointer rounded-none">
-                    Logout
-                  </button>
-                </div>
-              </form>
-            </DialogContent>
-          </Dialog>
-        </div>
+      {/* Desktop Sidebar (hidden on mobile, static on desktop) */}
+      <div className="hidden md:flex md:w-64 md:shrink-0 md:h-full">
+        {renderSidebarContents()}
       </div>
+
+      {/* Mobile Drawer (via shadcn Sheet) */}
+      <Sheet open={isMobileOpen} onOpenChange={setIsMobileOpen}>
+        <SheetContent side="left" className="w-64 p-0 border-r border-border" showCloseButton={false}>
+          <SheetTitle className="sr-only">Admin Navigation Terminal</SheetTitle>
+          {renderSidebarContents(() => setIsMobileOpen(false))}
+        </SheetContent>
+      </Sheet>
 
       {/* Main Workspace viewport layout */}
       <div className="flex-grow flex flex-col min-h-0 relative overflow-hidden w-full">
         {/* Topbar Telemetry Header */}
-        <header className="bg-[#0E131A] border-b border-[#7DF9FF]/10 px-6 md:px-12 py-4 flex flex-col sm:flex-row gap-4 justify-between items-center z-30">
+        <header className="bg-card border-b border-border px-6 md:px-12 py-4 flex flex-col sm:flex-row gap-4 justify-between items-center z-30">
           <div className="flex items-center gap-3">
-            <span className="font-mono text-[10px] text-white/40 tracking-wider">SECURE LINK STATUS:</span>
-            <span className="font-mono text-[10px] text-[#7DF9FF] tracking-wider uppercase">ACTIVE</span>
-            <span className="w-1.5 h-1.5 bg-[#7DF9FF] shadow-[0_0_8px_#7DF9FF] rounded-none"></span>
+            <span className="font-mono text-[10px] text-muted-foreground/50 tracking-wider">SECURE LINK STATUS:</span>
+            <span className="font-mono text-[10px] text-primary tracking-wider uppercase">ACTIVE</span>
+            <span className="w-1.5 h-1.5 bg-primary shadow-[0_0_8px_hsl(var(--primary))] rounded-none"></span>
             
-            <span className="text-white/20 font-mono text-[10px] hidden sm:inline">|</span>
+            <span className="text-muted-foreground/20 font-mono text-[10px] hidden sm:inline">|</span>
             
             {/* Breadcrumb based on active tab */}
-            <span className="font-mono text-[10px] text-white/50 uppercase tracking-widest hidden sm:inline">
+            <span className="font-mono text-[10px] text-muted-foreground uppercase tracking-widest hidden sm:inline">
               SYS // {activeTab.replace('-', '_')}
             </span>
           </div>
@@ -603,28 +658,28 @@ export default function Dashboard() {
           <div className="flex items-center gap-6">
             {/* Sonar Bell notifications */}
             <div className="relative">
-              <button id="bell-sonar" onClick={() => { setShowBellDropdown(!showBellDropdown); setUnreadMessagesCount(0); }} className="relative p-2 text-[#7DF9FF] hover:text-white focus:outline-none focus:text-white transition-colors cursor-pointer">
-                <span className="font-mono text-[10px] tracking-widest">[ SONAR_PING ]</span>
+              <Button id="bell-sonar" variant="ghost" onClick={() => { setShowBellDropdown(!showBellDropdown); setUnreadMessagesCount(0); }} className="relative p-2 text-primary hover:text-foreground hover:bg-transparent transition-colors cursor-pointer font-mono text-[10px] tracking-widest">
+                [ SONAR_PING ]
                 {unreadMessagesCount > 0 && (
-                  <span className="absolute -top-1 -right-1 w-2 h-2 bg-[#7DF9FF] rounded-none animate-ping"></span>
+                  <span className="absolute -top-1 -right-1 w-2 h-2 bg-primary rounded-none animate-ping"></span>
                 )}
-              </button>
+              </Button>
 
               {showBellDropdown && (
-                <div className="absolute right-0 mt-3 w-80 bg-[#0E131A] border border-[#7DF9FF]/30 p-4 shadow-[0_0_24px_rgba(0,0,0,0.85)] z-50 rounded-none text-left font-sans">
-                  <h4 className="font-mono text-[10px] font-bold text-[#7DF9FF] tracking-wider border-b border-[#7DF9FF]/20 pb-2 mb-2 uppercase">
+                <div className="absolute right-0 mt-3 w-80 bg-card border border-primary/30 p-4 shadow-[0_0_24px_rgba(0,0,0,0.85)] z-50 rounded-none text-left font-sans">
+                  <h4 className="font-mono text-[10px] font-bold text-primary tracking-wider border-b border-border pb-2 mb-2 uppercase">
                     Unread Signal Inbound
                   </h4>
                   <div className="space-y-2.5 max-h-60 overflow-y-auto">
                     {contactMessages.filter(m => m.status === 'unread').length === 0 ? (
-                      <p className="text-[10px] text-white/40 font-mono py-4">NO ACTIVE INBOUND PINGS.</p>
+                      <p className="text-[10px] text-muted-foreground/50 font-mono py-4">NO ACTIVE INBOUND PINGS.</p>
                     ) : (
                       contactMessages
                         .filter(m => m.status === 'unread')
                         .map(m => (
-                          <div key={m.id} className="border-b border-white/5 pb-2 text-[10px]">
-                            <p className="font-mono text-[#7DF9FF]">{m.name} // {m.profile.toUpperCase()}</p>
-                            <p className="text-white/60 line-clamp-1 mt-0.5">{m.message}</p>
+                          <div key={m.id} className="border-b border-border pb-2 text-[10px]">
+                            <p className="font-mono text-primary">{m.name} // {m.profile.toUpperCase()}</p>
+                            <p className="text-muted-foreground line-clamp-1 mt-0.5">{m.message}</p>
                           </div>
                         ))
                     )}
@@ -633,63 +688,63 @@ export default function Dashboard() {
               )}
             </div>
 
-            <button onClick={() => { localStorage.removeItem('edu_plus_onboarding_completed'); setShowTour(true); }} className="border border-[#7DF9FF]/20 hover:border-[#7DF9FF] text-[#7DF9FF] hover:bg-[#7DF9FF]/5 focus:outline-none focus:ring-1 focus:ring-[#7DF9FF] px-3 py-1.5 font-mono text-[9px] uppercase tracking-widest transition-all duration-300 cursor-pointer rounded-none">
+            <Button variant="outline" onClick={() => { localStorage.removeItem('edu_plus_onboarding_completed'); setShowTour(true); }} className="border border-primary/20 hover:border-primary text-primary hover:bg-primary/5 focus:outline-none focus:ring-1 focus:ring-primary px-3 py-1.5 font-mono text-[9px] uppercase tracking-widest transition-all duration-300 cursor-pointer rounded-none h-8">
               [ RUN PROTOCOL TUTORIAL ]
-            </button>
+            </Button>
           </div>
         </header>
 
         {/* Content area workspace */}
-        <main className="flex-1 h-0 p-4 sm:p-6 md:p-12 pb-24 md:pb-24 relative flex flex-col justify-start overflow-y-auto">
-          <div className="liquid-glass border border-white/10 p-4 sm:p-8 rounded-none min-h-[500px] shrink-0 mb-12">
+        <main className="flex-1 h-0 p-4 sm:p-6 md:p-12 pb-24 md:pb-24 relative flex flex-col justify-start overflow-y-auto bg-background">
+          <Card className="border border-border bg-card/30 p-4 sm:p-8 rounded-none min-h-[500px] shrink-0 mb-12">
             {/* TAB OVERVIEW */}
             {activeTab === 'overview' && (
               <div id="view-overview" className="space-y-8 animate-in fade-in duration-300">
-                <div className="border-b border-[#7DF9FF]/10 pb-4">
-                  <h2 className="font-heading text-2xl font-light">Ecosystem Overview</h2>
-                  <p className="font-mono text-xs text-[#8B949E] mt-1">TELEMETRY_LINK // DIAGNOSTIC_ACTIVE</p>
+                <div className="border-b border-border pb-4">
+                  <h2 className="font-heading text-2xl font-light text-foreground">Ecosystem Overview</h2>
+                  <p className="font-mono text-xs text-muted-foreground mt-1">TELEMETRY_LINK // DIAGNOSTIC_ACTIVE</p>
                 </div>
 
                 <div className="grid sm:grid-cols-3 gap-5 w-full">
-                  <div className="border border-white/5 p-5 bg-white/[0.01] rounded-none text-left">
-                    <span className="font-mono text-[9px] text-[#7DF9FF] tracking-wider block mb-1">HUB RESOURCES</span>
-                    <span className="font-heading text-3xl font-light">{knowledgeHubItems.length}</span>
-                  </div>
-                  <div className="border border-white/5 p-5 bg-white/[0.01] rounded-none text-left">
-                    <span className="font-mono text-[9px] text-[#7DF9FF] tracking-wider block mb-1">AI TRAINING RULES</span>
-                    <span className="font-heading text-3xl font-light">{kbDocuments.length}</span>
-                  </div>
-                  <div className="border border-white/5 p-5 bg-white/[0.01] rounded-none text-left">
-                    <span className="font-mono text-[9px] text-[#7DF9FF] tracking-wider block mb-1">INBOUND INQUIRIES</span>
-                    <span className="font-heading text-3xl font-light">{contactMessages.length}</span>
-                  </div>
+                  <Card className="border border-border bg-card rounded-none text-left p-5 flex flex-col gap-0 py-5">
+                    <span className="font-mono text-[9px] text-primary tracking-wider block mb-1">HUB RESOURCES</span>
+                    <span className="font-heading text-3xl font-light text-foreground">{knowledgeHubItems.length}</span>
+                  </Card>
+                  <Card className="border border-border bg-card rounded-none text-left p-5 flex flex-col gap-0 py-5">
+                    <span className="font-mono text-[9px] text-primary tracking-wider block mb-1">AI TRAINING RULES</span>
+                    <span className="font-heading text-3xl font-light text-foreground">{kbDocuments.length}</span>
+                  </Card>
+                  <Card className="border border-border bg-card rounded-none text-left p-5 flex flex-col gap-0 py-5">
+                    <span className="font-mono text-[9px] text-primary tracking-wider block mb-1">INBOUND INQUIRIES</span>
+                    <span className="font-heading text-3xl font-light text-foreground">{contactMessages.length}</span>
+                  </Card>
                 </div>
 
-                {/* Interactive Area Chart - plain div to bypass card.tsx overflow-hidden */}
-                <div className="rounded-none border border-white/10 bg-white/[0.01]">
+                {/* Interactive Area Chart */}
+                <Card className="rounded-none border border-border bg-card/50 overflow-visible flex flex-col gap-0 py-0">
                   {/* Chart Header */}
-                  <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 border-b border-white/5 py-5 px-6">
+                  <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 border-b border-border py-5 px-6">
                     <div className="grid flex-1 gap-1 text-left">
-                      <div className="font-mono text-[11px] font-bold text-[#7DF9FF] tracking-[0.2em] uppercase">SYSTEM ANALYTICS TELEMETRY</div>
-                      <div className="text-white/40 font-mono text-[9px] uppercase tracking-wider">
+                      <div className="font-mono text-[11px] font-bold text-primary tracking-[0.2em] uppercase">SYSTEM ANALYTICS TELEMETRY</div>
+                      <div className="text-muted-foreground/50 font-mono text-[9px] uppercase tracking-wider">
                         Showing interactive visitor metric influx nodes
                       </div>
                     </div>
                     <Select value={timeRange} onValueChange={setTimeRange}>
                       <SelectTrigger
-                        className="w-full sm:w-[160px] rounded-none sm:ml-auto flex border border-white/10 hover:border-[#7DF9FF]/50 bg-[#0B0F14] text-xs font-mono tracking-wider px-3 py-1.5 h-auto text-[#E6EDF3] outline-none mt-2 sm:mt-0"
+                        className="w-full sm:w-[160px] rounded-none sm:ml-auto flex border border-border hover:border-primary/50 bg-background text-xs font-mono tracking-wider px-3 py-1.5 h-auto text-foreground outline-none mt-2 sm:mt-0"
                         aria-label="Select a value"
                       >
                         <SelectValue placeholder="Last 3 months" />
                       </SelectTrigger>
-                      <SelectContent className="rounded-none bg-[#0E131A] border border-[#7DF9FF]/30 text-[#E6EDF3] font-mono text-xs z-50">
-                        <SelectItem value="90d" className="rounded-none cursor-pointer focus:bg-[#7DF9FF]/10 text-[10px]">
+                      <SelectContent className="rounded-none bg-card border border-border text-foreground font-mono text-xs z-50">
+                        <SelectItem value="90d" className="rounded-none cursor-pointer focus:bg-primary/10 text-[10px]">
                           Last 3 months
                         </SelectItem>
-                        <SelectItem value="30d" className="rounded-none cursor-pointer focus:bg-[#7DF9FF]/10 text-[10px]">
+                        <SelectItem value="30d" className="rounded-none cursor-pointer focus:bg-primary/10 text-[10px]">
                           Last 30 days
                         </SelectItem>
-                        <SelectItem value="7d" className="rounded-none cursor-pointer focus:bg-[#7DF9FF]/10 text-[10px]">
+                        <SelectItem value="7d" className="rounded-none cursor-pointer focus:bg-primary/10 text-[10px]">
                           Last 7 days
                         </SelectItem>
                       </SelectContent>
@@ -713,14 +768,15 @@ export default function Dashboard() {
                             <stop offset="95%" stopColor={chartConfig.mobile.color} stopOpacity={0.05} />
                           </linearGradient>
                         </defs>
-                        <CartesianGrid vertical={false} stroke="rgba(125,249,255,0.05)" />
+                        <CartesianGrid vertical={false} stroke="hsl(var(--border)/0.2)" />
                         <XAxis
                           dataKey="date"
                           tickLine={false}
                           axisLine={false}
                           tickMargin={8}
                           minTickGap={32}
-                          tick={{ fill: 'rgba(139,148,158,0.7)', fontSize: 10, fontFamily: 'monospace' }}
+                          tick={{ fill: 'currentColor', fontSize: 10, fontFamily: 'monospace' }}
+                          className="fill-muted-foreground"
                           tickFormatter={(value) => {
                             const date = new Date(value)
                             return date.toLocaleDateString("en-US", {
@@ -740,7 +796,7 @@ export default function Dashboard() {
                                 })
                               }}
                               indicator="dot"
-                              className="rounded-none border border-[#7DF9FF]/30 bg-[#0E131A] text-white"
+                              className="rounded-none border border-primary/30 bg-card text-foreground"
                             />
                           }
                         />
@@ -767,138 +823,145 @@ export default function Dashboard() {
                     <div className="flex items-center justify-center gap-6 pt-3 pb-1">
                       <div className="flex items-center gap-2">
                         <div className="h-[2px] w-5 rounded-none" style={{ backgroundColor: chartConfig.desktop.color, boxShadow: `0 0 6px ${chartConfig.desktop.color}` }} />
-                        <span className="font-mono text-[10px] text-white/50 uppercase tracking-wider">Desktop</span>
+                        <span className="font-mono text-[10px] text-muted-foreground uppercase tracking-wider">Desktop</span>
                       </div>
                       <div className="flex items-center gap-2">
                         <div className="h-[2px] w-5 rounded-none" style={{ backgroundColor: chartConfig.mobile.color, boxShadow: `0 0 6px ${chartConfig.mobile.color}` }} />
-                        <span className="font-mono text-[10px] text-white/50 uppercase tracking-wider">Mobile</span>
+                        <span className="font-mono text-[10px] text-muted-foreground uppercase tracking-wider">Mobile</span>
                       </div>
                     </div>
                   </div>
-                </div>
+                </Card>
 
-
-                {/* dynamic visual simulation chart built via CSS metrics */}
-                <div className="border border-white/5 p-6 bg-white/[0.01] rounded-none text-left">
-                  <h3 className="font-mono text-[10px] font-bold text-[#7DF9FF] tracking-wider mb-4 uppercase">Content Category Distribution</h3>
+                {/* Content Category Distribution */}
+                <Card className="border border-border p-6 bg-card rounded-none text-left flex flex-col gap-0 py-6">
+                  <h3 className="font-mono text-[10px] font-bold text-primary tracking-wider mb-4 uppercase">Content Category Distribution</h3>
                   <div className="space-y-4">
                     {['tutorial', 'podcast', 'webinar', 'study_material'].map(cat => {
                       const count = knowledgeHubItems.filter(i => i.category === cat).length;
                       const percent = knowledgeHubItems.length > 0 ? (count / knowledgeHubItems.length) * 100 : 0;
                       return (
                         <div key={cat} className="space-y-1">
-                          <div className="flex justify-between text-[10px] font-mono">
+                          <div className="flex justify-between text-[10px] font-mono text-foreground">
                             <span className="uppercase">{cat.replace('_', ' ')}</span>
-                            <span>{count} NODES ({percent.toFixed(0)}%)</span>
+                            <span className="text-muted-foreground">{count} NODES ({percent.toFixed(0)}%)</span>
                           </div>
-                          <div className="w-full bg-[#0B0F14] h-2 border border-white/5 rounded-none">
+                          <div className="w-full bg-background h-2 border border-border rounded-none">
                             <div
                               style={{ width: `${percent}%` }}
-                              className="h-full bg-[#7DF9FF] shadow-[0_0_8px_#7DF9FF] rounded-none"
+                              className="h-full bg-primary shadow-[0_0_8px_hsl(var(--primary))] rounded-none"
                             ></div>
                           </div>
                         </div>
                       );
                     })}
                   </div>
-                </div>
+                </Card>
               </div>
             )}
 
             {/* TAB UPLOADER */}
             {activeTab === 'uploader' && (
               <div id="view-uploader" className="space-y-6 animate-in fade-in duration-300 text-left">
-                <div className="border-b border-[#7DF9FF]/10 pb-4">
-                  <h2 className="font-heading text-2xl font-light">Content Upload Station</h2>
-                  <p className="font-mono text-xs text-[#8B949E] mt-1">Compile new courses, files, and lectures.</p>
+                <div className="border-b border-border pb-4">
+                  <h2 className="font-heading text-2xl font-light text-foreground">Content Upload Station</h2>
+                  <p className="font-mono text-xs text-muted-foreground mt-1">Compile new courses, files, and lectures.</p>
                 </div>
 
                 {hasPermission(['admin', 'educator', 'resource_person']) ? (
                   <form onSubmit={handleCreateHubItem} className="space-y-5">
                     <div className="grid md:grid-cols-2 gap-5">
                       <div className="space-y-2">
-                        <label className="text-[10px] font-mono text-[#8B949E] uppercase tracking-wider block">Title</label>
-                        <input
+                        <Label className="text-[10px] font-mono text-muted-foreground uppercase tracking-wider block">Title</Label>
+                        <Input
                           type="text"
                           required
                           value={newHubItem.title}
                           onChange={e => setNewHubItem(p => ({ ...p, title: e.target.value }))}
                           placeholder="Technical Introduction to React 19..."
-                          className="w-full bg-[#0B0F14] border border-white/10 text-xs px-4 py-2.5 outline-none focus:border-[#7DF9FF] rounded-none text-white font-sans"
+                          className="w-full bg-background border border-border text-xs px-4 py-2.5 outline-none focus:border-primary rounded-none text-foreground font-sans h-9"
                         />
                       </div>
                       <div className="space-y-2">
-                        <label className="text-[10px] font-mono text-[#8B949E] uppercase tracking-wider block">Author Name</label>
-                        <input
+                        <Label className="text-[10px] font-mono text-muted-foreground uppercase tracking-wider block">Author Name</Label>
+                        <Input
                           type="text"
                           required
                           value={newHubItem.author_name}
                           onChange={e => setNewHubItem(p => ({ ...p, author_name: e.target.value }))}
                           placeholder="e.g., Roshan Khumukcham"
-                          className="w-full bg-[#0B0F14] border border-white/10 text-xs px-4 py-2.5 outline-none focus:border-[#7DF9FF] rounded-none text-white font-sans"
+                          className="w-full bg-background border border-border text-xs px-4 py-2.5 outline-none focus:border-primary rounded-none text-foreground font-sans h-9"
                         />
                       </div>
                     </div>
 
                     <div className="grid md:grid-cols-2 gap-5">
-                      <div className="space-y-2">
-                        <label className="text-[10px] font-mono text-[#8B949E] uppercase tracking-wider block">Category</label>
-                        <select
+                      <div className="space-y-2 flex flex-col gap-1.5">
+                        <Label className="text-[10px] font-mono text-muted-foreground uppercase tracking-wider block">Category</Label>
+                        <Select
                           value={newHubItem.category}
-                          onChange={e => setNewHubItem(p => ({ ...p, category: e.target.value }))}
-                          className="w-full bg-[#0B0F14] border border-white/10 text-xs px-4 py-2.5 outline-none focus:border-[#7DF9FF] rounded-none text-white font-mono"
+                          onValueChange={val => setNewHubItem(p => ({ ...p, category: val }))}
                         >
-                          <option value="tutorial">Tutorial</option>
-                          <option value="podcast">Podcast</option>
-                          <option value="webinar">Webinar</option>
-                          <option value="study_material">Study Material</option>
-                        </select>
+                          <SelectTrigger className="w-full bg-background border border-border text-xs px-4 py-2.5 outline-none focus:border-primary rounded-none text-foreground font-mono h-9">
+                            <SelectValue placeholder="Select Category" />
+                          </SelectTrigger>
+                          <SelectContent className="rounded-none bg-card border border-border text-foreground font-mono text-xs z-50">
+                            <SelectItem value="tutorial" className="rounded-none cursor-pointer">Tutorial</SelectItem>
+                            <SelectItem value="podcast" className="rounded-none cursor-pointer">Podcast</SelectItem>
+                            <SelectItem value="webinar" className="rounded-none cursor-pointer">Webinar</SelectItem>
+                            <SelectItem value="study_material" className="rounded-none cursor-pointer">Study Material</SelectItem>
+                          </SelectContent>
+                        </Select>
                       </div>
-                      <div className="space-y-2">
-                        <label className="text-[10px] font-mono text-[#8B949E] uppercase tracking-wider block">Media Type</label>
-                        <select
+                      <div className="space-y-2 flex flex-col gap-1.5">
+                        <Label className="text-[10px] font-mono text-muted-foreground uppercase tracking-wider block">Media Type</Label>
+                        <Select
                           value={newHubItem.media_type}
-                          onChange={e => setNewHubItem(p => ({ ...p, media_type: e.target.value }))}
-                          className="w-full bg-[#0B0F14] border border-white/10 text-xs px-4 py-2.5 outline-none focus:border-[#7DF9FF] rounded-none text-white font-mono"
+                          onValueChange={val => setNewHubItem(p => ({ ...p, media_type: val }))}
                         >
-                          <option value="video_embed">YouTube/Video link (Embedded player)</option>
-                          <option value="document_url">Study PDF link</option>
-                          <option value="external_link">Generic External Link</option>
-                        </select>
+                          <SelectTrigger className="w-full bg-background border border-border text-xs px-4 py-2.5 outline-none focus:border-primary rounded-none text-foreground font-mono h-9">
+                            <SelectValue placeholder="Select Media Type" />
+                          </SelectTrigger>
+                          <SelectContent className="rounded-none bg-card border border-border text-foreground font-mono text-xs z-50">
+                            <SelectItem value="video_embed" className="rounded-none cursor-pointer">YouTube/Video link (Embedded player)</SelectItem>
+                            <SelectItem value="document_url" className="rounded-none cursor-pointer">Study PDF link</SelectItem>
+                            <SelectItem value="external_link" className="rounded-none cursor-pointer">Generic External Link</SelectItem>
+                          </SelectContent>
+                        </Select>
                       </div>
                     </div>
 
                     <div className="space-y-2">
-                      <label className="text-[10px] font-mono text-[#8B949E] uppercase tracking-wider block">Resource URL</label>
-                      <input
+                      <Label className="text-[10px] font-mono text-muted-foreground uppercase tracking-wider block">Resource URL</Label>
+                      <Input
                         type="url"
                         required
                         value={newHubItem.url}
                         onChange={e => setNewHubItem(p => ({ ...p, url: e.target.value }))}
                         placeholder="https://www.youtube.com/watch?v=..."
-                        className="w-full bg-[#0B0F14] border border-white/10 text-xs px-4 py-2.5 outline-none focus:border-[#7DF9FF] rounded-none text-white font-sans"
+                        className="w-full bg-background border border-border text-xs px-4 py-2.5 outline-none focus:border-primary rounded-none text-foreground font-sans h-9"
                       />
                     </div>
 
                     <div className="space-y-2">
-                      <label className="text-[10px] font-mono text-[#8B949E] uppercase tracking-wider block">Brief Description</label>
-                      <textarea
+                      <Label className="text-[10px] font-mono text-muted-foreground uppercase tracking-wider block">Brief Description</Label>
+                      <Textarea
                         value={newHubItem.description}
                         onChange={e => setNewHubItem(p => ({ ...p, description: e.target.value }))}
                         placeholder="A concise synopsis detailing what core concepts this resource node will cover..."
                         rows={3}
-                        className="w-full bg-[#0B0F14] border border-white/10 text-xs px-4 py-2.5 outline-none focus:border-[#7DF9FF] rounded-none text-white font-sans"
+                        className="w-full bg-background border border-border text-xs px-4 py-2 outline-none focus:border-primary rounded-none text-foreground font-sans resize-none min-h-20"
                       />
                     </div>
 
-                    <button type="submit" className="px-6 py-3 bg-[#7DF9FF] text-[#0B0F14] hover:bg-white hover:text-[#0B0F14] focus:outline-none focus:ring-1 focus:ring-[#7DF9FF] transition-all duration-300 font-mono text-[10px] font-bold tracking-widest uppercase cursor-pointer rounded-none">
+                    <Button type="submit" className="px-6 py-3 bg-primary text-primary-foreground hover:bg-foreground hover:text-background focus:outline-none focus:ring-1 focus:ring-primary transition-all duration-300 font-mono text-[10px] font-bold tracking-widest uppercase cursor-pointer rounded-none h-10">
                       COMPILE RESOURCE
-                    </button>
+                    </Button>
                   </form>
                 ) : (
-                  <div className="p-8 text-center text-[#8B949E] font-mono text-xs border border-[#EF4444]/20 bg-[#EF4444]/5">
+                  <Card className="p-8 text-center text-destructive font-mono text-xs border border-destructive/20 bg-destructive/5 rounded-none flex flex-col gap-0 py-8">
                     ACCESS DENIED. USER PROTOCOL REQUIRES LEVEL: STAFF, EDUCATOR, OR ADMIN.
-                  </div>
+                  </Card>
                 )}
               </div>
             )}
@@ -906,64 +969,72 @@ export default function Dashboard() {
             {/* TAB AI MATRIX */}
             {activeTab === 'ai-matrix' && (
               <div id="view-ai-matrix" className="space-y-6 animate-in fade-in duration-300 text-left">
-                <div className="border-b border-[#7DF9FF]/10 pb-4">
-                  <h2 className="font-heading text-2xl font-light">AI Cognitive Training Matrix</h2>
-                  <p className="font-mono text-xs text-[#8B949E] mt-1">Inject custom facts directly into the site advisor chatbot.</p>
+                <div className="border-b border-border pb-4">
+                  <h2 className="font-heading text-2xl font-light text-foreground">AI Cognitive Training Matrix</h2>
+                  <p className="font-mono text-xs text-muted-foreground mt-1">Inject custom facts directly into the site advisor chatbot.</p>
                 </div>
 
                 {hasPermission(['admin', 'educator']) ? (
                   <div className="space-y-8">
-                    <form onSubmit={handleCreateKbDoc} className="space-y-4 border border-[#7DF9FF]/10 p-5 bg-white/[0.01] rounded-none">
-                      <h3 className="font-mono text-[10px] font-bold text-[#7DF9FF] tracking-wider uppercase mb-2">New Factual Guideline Influx</h3>
+                    <form onSubmit={handleCreateKbDoc} className="space-y-4 border border-border p-5 bg-card rounded-none">
+                      <h3 className="font-mono text-[10px] font-bold text-primary tracking-wider uppercase mb-2">New Factual Guideline Influx</h3>
                       <div className="space-y-3">
-                        <input
+                        <Input
                           type="text"
                           required
                           value={newKbDoc.question}
                           onChange={e => setNewKbDoc(p => ({ ...p, question: e.target.value }))}
                           placeholder="Fact Topic (e.g. Founder Bikash Oinam Email?)"
-                          className="w-full bg-[#0B0F14] border border-white/10 text-xs px-4 py-2.5 outline-none focus:border-[#7DF9FF] rounded-none text-white font-sans"
+                          className="w-full bg-background border border-border text-xs px-4 py-2.5 outline-none focus:border-primary rounded-none text-foreground font-sans h-9"
                         />
-                        <textarea
+                        <Textarea
                           required
                           value={newKbDoc.answer}
                           onChange={e => setNewKbDoc(p => ({ ...p, answer: e.target.value }))}
                           placeholder="Factual Knowledge Answer (e.g. Mr. Bikash Oinam can be reached at info@eduplus.in)"
                           rows={2}
-                          className="w-full bg-[#0B0F14] border border-white/10 text-xs px-4 py-2.5 outline-none focus:border-[#7DF9FF] rounded-none text-white font-sans"
+                          className="w-full bg-background border border-border text-xs px-4 py-2 outline-none focus:border-primary rounded-none text-foreground font-sans resize-none min-h-20"
                         />
                       </div>
-                      <button type="submit" className="px-4 py-2 bg-[#7DF9FF]/10 border border-[#7DF9FF]/30 text-[#7DF9FF] hover:bg-[#7DF9FF] hover:text-[#0B0F14] focus:outline-none focus:ring-1 focus:ring-[#7DF9FF] transition-all duration-300 font-mono text-[9px] font-bold tracking-wider rounded-none cursor-pointer">
+                      <Button type="submit" className="px-4 py-2 bg-primary/10 border border-primary/30 text-primary hover:bg-primary hover:text-primary-foreground focus:outline-none focus:ring-1 focus:ring-primary transition-all duration-300 font-mono text-[9px] font-bold tracking-wider rounded-none cursor-pointer h-9">
                         TRAIN COGNITIVE ADVISOR
-                      </button>
+                      </Button>
                     </form>
 
                     {/* Loaded Rules */}
                     <div className="space-y-3">
-                      <h3 className="font-mono text-[10px] font-bold text-white/50 tracking-wider uppercase">Active Fact Matrix</h3>
+                      <h3 className="font-mono text-[10px] font-bold text-muted-foreground tracking-wider uppercase">Active Fact Matrix</h3>
                       {kbDocuments.length === 0 ? (
-                        <p className="text-xs text-white/30 font-mono py-4">NO TRAINING INJECTIONS RECORDED.</p>
+                        <p className="text-xs text-muted-foreground/30 font-mono py-4">NO TRAINING INJECTIONS RECORDED.</p>
                       ) : (
                         <div className="space-y-2 max-h-80 overflow-y-auto">
                           {kbDocuments.map(doc => (
-                            <div key={doc.id} className="border border-white/5 p-4 flex justify-between items-center rounded-none bg-[#0E131A]/30">
+                            <Card key={doc.id} className="border border-border p-4 flex justify-between items-center rounded-none bg-card/30 flex-row gap-4 py-4">
                               <div className="text-left max-w-[80%]">
-                                <p className="font-mono text-[10px] text-[#7DF9FF]">TOPIC: {doc.question}</p>
-                                <p className="text-xs text-[#8B949E] mt-1">{doc.answer}</p>
+                                <p className="font-mono text-[10px] text-primary">TOPIC: {doc.question}</p>
+                                <p className="text-xs text-muted-foreground mt-1">{doc.answer}</p>
                               </div>
-                              <button onClick={() => handleToggleKbActive(doc.id, doc.is_active)} className={`px-2 py-1 text-[8px] font-mono rounded-none uppercase transition-all duration-300 cursor-pointer hover:bg-white/5 focus:outline-none focus:ring-1 focus:ring-[#7DF9FF] ${doc.is_active ? 'bg-[#22C55E]/10 border border-[#22C55E]/40 text-[#22C55E]' : 'bg-[#EF4444]/10 border border-[#EF4444]/40 text-[#EF4444]'}`}>
+                              <Button
+                                variant="ghost"
+                                onClick={() => handleToggleKbActive(doc.id, doc.is_active)}
+                                className={`px-2 py-1 text-[8px] font-mono rounded-none uppercase transition-all duration-300 cursor-pointer h-6 border ${
+                                  doc.is_active
+                                    ? 'bg-emerald-500/10 border-emerald-500/40 text-emerald-400 hover:bg-emerald-500/20'
+                                    : 'bg-destructive/10 border-destructive/40 text-destructive hover:bg-destructive/20'
+                                }`}
+                              >
                                 {doc.is_active ? 'ACTIVE' : 'DEACTIVATED'}
-                              </button>
-                            </div>
+                              </Button>
+                            </Card>
                           ))}
                         </div>
                       )}
                     </div>
                   </div>
                 ) : (
-                  <div className="p-8 text-center text-[#8B949E] font-mono text-xs border border-[#EF4444]/20 bg-[#EF4444]/5">
+                  <Card className="p-8 text-center text-destructive font-mono text-xs border border-destructive/20 bg-destructive/5 rounded-none flex flex-col gap-0 py-8">
                     ACCESS DENIED. AI COMPILING CAPABILITIES REQUIRE SECURITY LEVEL: EDUCATOR OR ADMIN.
-                  </div>
+                  </Card>
                 )}
               </div>
             )}
@@ -971,56 +1042,59 @@ export default function Dashboard() {
             {/* TAB MESSAGES */}
             {activeTab === 'messages' && (
               <div id="view-message-hub" className="space-y-6 animate-in fade-in duration-300 text-left">
-                <div className="border-b border-[#7DF9FF]/10 pb-4">
-                  <h2 className="font-heading text-2xl font-light">Sonar Inquiries Terminal</h2>
-                  <p className="font-mono text-xs text-[#8B949E] mt-1">Signals received from public contact nodes.</p>
+                <div className="border-b border-border pb-4">
+                  <h2 className="font-heading text-2xl font-light text-foreground">Sonar Inquiries Terminal</h2>
+                  <p className="font-mono text-xs text-muted-foreground mt-1">Signals received from public contact nodes.</p>
                 </div>
 
                 {hasPermission(['admin', 'educator']) ? (
                   <div className="space-y-4">
                     {contactMessages.length === 0 ? (
-                      <p className="text-center py-10 font-mono text-white/40 text-xs uppercase">No inquiries received yet.</p>
+                      <p className="text-center py-10 font-mono text-muted-foreground/40 text-xs uppercase">No inquiries received yet.</p>
                     ) : (
                       <div className="space-y-3.5 max-h-[500px] overflow-y-auto pr-2">
                         {contactMessages.map(msg => (
-                          <div
+                          <Card
                             key={msg.id}
-                            className={`p-5 border text-left transition-colors duration-300 rounded-none ${
+                            className={`p-5 border text-left transition-colors duration-300 rounded-none flex flex-col gap-0 py-5 ${
                               msg.status === 'unread'
-                                ? 'border-[#7DF9FF]/40 bg-[#7DF9FF]/5 shadow-[0_0_8px_rgba(125,249,255,0.05)]'
-                                : 'border-white/5 bg-[#0E131A]/30'
+                                ? 'border-primary/40 bg-primary/5 shadow-[0_0_8px_rgba(var(--primary),0.05)]'
+                                : 'border-border bg-card/30'
                             }`}
                           >
                             <div className="flex justify-between items-start gap-4">
                               <div>
-                                <span className="font-mono text-[9px] text-[#7DF9FF] uppercase tracking-wider block">
+                                <span className="font-mono text-[9px] text-primary uppercase tracking-wider block">
                                   {msg.profile} inquiry
                                 </span>
-                                <h4 className="font-heading text-base font-light text-white mt-1">{msg.name}</h4>
-                                <span className="font-mono text-[10px] text-white/50 block mt-0.5">{msg.email}</span>
+                                <h4 className="font-heading text-base font-light text-foreground mt-1">{msg.name}</h4>
+                                <span className="font-mono text-[10px] text-muted-foreground block mt-0.5">{msg.email}</span>
                               </div>
                               {msg.status === 'unread' && (
-                                <button onClick={() => handleMarkMessageRead(msg.id)} className="px-2.5 py-0.5 bg-[#7DF9FF] hover:bg-white focus:outline-none focus:ring-1 focus:ring-[#7DF9FF]/70 text-[#0B0F14] transition-colors font-mono text-[8px] font-bold tracking-wider uppercase rounded-none cursor-pointer">
+                                <Button
+                                  onClick={() => handleMarkMessageRead(msg.id)}
+                                  className="px-2.5 py-0.5 bg-primary hover:bg-foreground hover:text-background text-primary-foreground transition-colors font-mono text-[8px] font-bold tracking-wider uppercase rounded-none cursor-pointer h-6"
+                                >
                                   Mark Read
-                                </button>
+                                </Button>
                               )}
                             </div>
-                            <p className="font-sans text-xs text-[#8B949E] leading-relaxed mt-4 pt-4 border-t border-white/5">
+                            <p className="font-sans text-xs text-muted-foreground leading-relaxed mt-4 pt-4 border-t border-border">
                               {msg.message}
                             </p>
-                          </div>
+                          </Card>
                         ))}
                       </div>
                     )}
                   </div>
                 ) : (
-                  <div className="p-8 text-center text-[#8B949E] font-mono text-xs border border-[#EF4444]/20 bg-[#EF4444]/5">
+                  <Card className="p-8 text-center text-destructive font-mono text-xs border border-destructive/20 bg-destructive/5 rounded-none flex flex-col gap-0 py-8">
                     ACCESS DENIED. COMPROMISED CLEARANCE LEVEL. REQUIRED NODES: EDUCATOR OR ADMIN.
-                  </div>
+                  </Card>
                 )}
               </div>
             )}
-          </div>
+          </Card>
         </main>
       </div>
     </div>
