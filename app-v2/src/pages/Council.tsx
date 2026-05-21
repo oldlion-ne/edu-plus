@@ -7,6 +7,9 @@ import {
   DialogTitle,
   DialogDescription,
 } from '../components/ui/dialog';
+import { Badge } from '../components/ui/badge';
+import { Button } from '../components/ui/button';
+import { Card, CardContent } from '../components/ui/card';
 
 interface CouncilMember {
   name: string;
@@ -135,12 +138,8 @@ export default function Council() {
   });
 
   return (
-    <div className="min-h-screen bg-[#0B0F14] text-[#E6EDF3] pb-32 relative overflow-hidden">
-      {/* Glow Backdrops */}
-      <div className="absolute top-0 left-0 w-[600px] h-[600px] bg-[#7DF9FF]/3 rounded-none blur-[160px] pointer-events-none" />
-      <div className="absolute bottom-0 right-0 w-[600px] h-[600px] bg-[#7DF9FF]/3 rounded-none blur-[160px] pointer-events-none" />
-
-      {/* Immersive Top Hero Viewport with Holographic Ring */}
+    <div className="min-h-screen bg-background text-foreground pb-32 relative overflow-hidden">
+      {/* Immersive Top Hero Viewport */}
       <ImmersiveHero
         bgImage="/images/CouncilVisual.png"
         category="Global Vision. Local Impact."
@@ -153,57 +152,54 @@ export default function Council() {
 
       <div className={`max-w-[1200px] mx-auto px-6 md:px-12 relative z-10 transition-all duration-1000 delay-300 transform ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
         {/* Category Filters */}
-        <div className="flex flex-wrap items-center justify-center gap-3 mb-16 border-y border-[#7DF9FF]/10 py-6">
+        <div className="flex flex-wrap items-center justify-center gap-3 mb-16 border-y border-border py-6">
           {FILTERS.map(filter => (
-            <button
+            <Button
               key={filter}
+              variant={activeFilter === filter ? 'default' : 'outline'}
+              size="sm"
               onClick={() => setActiveFilter(filter)}
-              className={`px-5 py-2 text-xs md:text-sm font-sans tracking-wide transition-all duration-300 ${
-                activeFilter === filter
-                  ? 'bg-[#7DF9FF] text-[#0B0F14] font-medium'
-                  : 'text-[#E6EDF3] border border-[#E6EDF3]/10 hover:border-[#7DF9FF]/30 hover:text-[#7DF9FF]'
-              }`}
             >
               {filter}
-            </button>
+            </Button>
           ))}
         </div>
 
         {/* Members Grid */}
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredMembers.map(member => (
-            <div
+            <Card
               key={member.name}
               onClick={() => setSelectedMember(member)}
-              className="liquid-glass relative p-8 h-[380px] overflow-hidden group hover:border-[#7DF9FF]/40 hover:scale-[1.01] hover:shadow-lg hover:shadow-[#7DF9FF]/5 cursor-pointer transition-all duration-500 flex flex-col justify-between rounded-none border border-white/[0.08]"
+              className="relative h-[380px] overflow-hidden cursor-pointer group hover:border-primary/40 hover:shadow-md transition-all duration-500 flex flex-col justify-between"
             >
-              {/* Default Front State */}
-              <div className="space-y-4">
-                <span className="text-xs font-sans font-medium text-[#7DF9FF] tracking-widest uppercase block opacity-80">
-                  {member.location}
-                </span>
-                <h3 className="font-heading text-2xl font-light text-[#E6EDF3] group-hover:text-[#7DF9FF] transition-colors duration-300">
-                  {member.name}
-                </h3>
-                <p className="font-sans text-sm text-[#8B949E] leading-relaxed">
-                  {member.role}
-                </p>
-              </div>
+              <CardContent className="p-8 flex flex-col justify-between h-full">
+                {/* Default Front State */}
+                <div className="space-y-4">
+                  <span className="text-xs font-sans font-medium text-primary tracking-widest uppercase block opacity-80">
+                    {member.location}
+                  </span>
+                  <h3 className="font-heading text-2xl font-light text-foreground group-hover:text-primary transition-colors duration-300">
+                    {member.name}
+                  </h3>
+                  <p className="font-sans text-sm text-muted-foreground leading-relaxed">
+                    {member.role}
+                  </p>
+                </div>
 
-              {/* Action and categories tags */}
-              <div className="space-y-4">
-                <div className="text-xs font-sans font-medium text-[#7DF9FF] flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                  READ PROFILE // &rarr;
+                {/* Action and categories tags */}
+                <div className="space-y-4">
+                  <div className="text-xs font-sans font-medium text-primary flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    READ PROFILE // &rarr;
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    {member.categories.map(cat => (
+                      <Badge key={cat} variant="secondary">{cat}</Badge>
+                    ))}
+                  </div>
                 </div>
-                <div className="flex flex-wrap gap-2">
-                  {member.categories.map(cat => (
-                    <span key={cat} className="text-[10px] font-sans px-2.5 py-0.5 bg-[#7DF9FF]/10 text-[#7DF9FF] border border-[#7DF9FF]/10 rounded-none">
-                      {cat}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            </div>
+              </CardContent>
+            </Card>
           ))}
         </div>
       </div>
@@ -211,35 +207,26 @@ export default function Council() {
       {/* Profile Detail Dialog */}
       <Dialog open={selectedMember !== null} onOpenChange={(open) => !open && setSelectedMember(null)}>
         {selectedMember && (
-          <DialogContent className="bg-[#0E131A] border border-[#7DF9FF]/20 text-[#E6EDF3] max-w-lg p-8 rounded-none shadow-2xl before:absolute before:inset-0 before:-z-1 before:bg-[#0B0F14]/90 before:backdrop-blur-xl">
-            {/* Retro dot matrix grid pattern overlay */}
-            <div className="absolute inset-0 opacity-[0.04] pointer-events-none" 
-                 style={{ 
-                   backgroundImage: `radial-gradient(circle, #7DF9FF 1px, transparent 1px)`, 
-                   backgroundSize: '16px 16px' 
-                 }} 
-            />
-            <DialogHeader className="relative z-10">
-              <span className="text-xs font-sans font-medium text-[#7DF9FF] tracking-[0.2em] uppercase block mb-1">
+          <DialogContent className="max-w-lg p-8">
+            <DialogHeader>
+              <span className="text-xs font-sans font-medium text-primary tracking-[0.2em] uppercase block mb-1">
                 {selectedMember.location} // PROFILE_ACTIVE
               </span>
-              <DialogTitle className="font-heading text-3xl font-light text-[#E6EDF3]">
+              <DialogTitle className="font-heading text-3xl font-light text-foreground">
                 {selectedMember.name}
               </DialogTitle>
-              <div className="text-sm font-sans text-[#8B949E] border-b border-[#7DF9FF]/10 pb-4 mb-4">
+              <div className="text-sm font-sans text-muted-foreground border-b border-border pb-4 mb-4">
                 {selectedMember.role}
               </div>
             </DialogHeader>
-            
-            <DialogDescription className="relative z-10 text-sm font-sans text-[#E6EDF3] leading-relaxed mb-6 whitespace-pre-wrap">
+
+            <DialogDescription className="text-sm font-sans text-foreground leading-relaxed mb-6 whitespace-pre-wrap">
               {selectedMember.bio}
             </DialogDescription>
-            
-            <div className="relative z-10 flex flex-wrap gap-2 pt-4 border-t border-white/[0.04]">
+
+            <div className="flex flex-wrap gap-2 pt-4 border-t border-border">
               {selectedMember.categories.map(cat => (
-                <span key={cat} className="text-xs font-sans px-3 py-1 bg-[#7DF9FF]/10 text-[#7DF9FF] border border-[#7DF9FF]/10 rounded-none">
-                  {cat}
-                </span>
+                <Badge key={cat} variant="secondary">{cat}</Badge>
               ))}
             </div>
           </DialogContent>

@@ -34,31 +34,25 @@ export default function Navigation() {
   const handleLogout = async () => {
     try {
       await signOut();
-      toast.success('[SESSION TERMINATED]', {
-        description: 'You have logged out successfully.',
-        style: { background: '#0E131A', border: '1px solid #7DF9FF', color: '#E6EDF3', borderRadius: '0px' }
-      });
+      toast.success('Logged out successfully.');
       navigate('/', { replace: true });
     } catch (err: any) {
-      toast.error('LOGOUT_ERROR', {
-        description: err.message || 'Logout failed.',
-        style: { borderRadius: '0px' }
-      });
+      toast.error(err.message || 'Logout failed.');
     }
   };
 
   return (
     <nav
       ref={navRef}
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
-        scrolled ? 'liquid-glass-strong backdrop-blur-md shadow-lg border-b border-[#7DF9FF]/10' : 'liquid-glass'
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 bg-background/95 backdrop-blur-md ${
+        scrolled ? 'shadow-sm border-b border-border' : ''
       }`}
     >
       <div className="max-w-[1440px] mx-auto flex items-center justify-between px-6 md:px-12 py-4">
         {/* Logo */}
         <Link to="/" className="flex items-center gap-0">
-          <span className="font-heading font-bold text-2xl text-[#E6EDF3]">Edu</span>
-          <span className="text-[#7DF9FF] font-light text-2xl">+</span>
+          <span className="font-heading font-bold text-2xl text-foreground">Edu</span>
+          <span className="text-primary font-light text-2xl">+</span>
         </Link>
 
         {/* Center Nav Links */}
@@ -69,12 +63,12 @@ export default function Navigation() {
               to={link.path}
               className={({ isActive }) =>
                 `text-sm font-sans transition-colors duration-300 relative group ${
-                  isActive ? 'text-[#7DF9FF]' : 'text-[#E6EDF3] hover:text-[#7DF9FF]'
+                  isActive ? 'text-primary' : 'text-foreground hover:text-primary'
                 }`
               }
             >
               {link.label}
-              <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-[#7DF9FF] transition-all duration-300 group-hover:w-full" />
+              <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-primary transition-all duration-300 group-hover:w-full" />
             </NavLink>
           ))}
         </div>
@@ -85,12 +79,12 @@ export default function Navigation() {
             <NavLink
               to="/dashboard"
               className={({ isActive }) =>
-                `font-mono text-xs tracking-widest uppercase transition-all duration-300 relative group ${
-                  isActive ? 'text-[#7DF9FF]' : 'text-[#E6EDF3] hover:text-[#7DF9FF]'
+                `font-mono text-xs tracking-widest uppercase transition-all duration-300 ${
+                  isActive ? 'text-primary' : 'text-foreground hover:text-primary'
                 }`
               }
             >
-              [ Dashboard ]
+              Dashboard
             </NavLink>
           )}
 
@@ -98,25 +92,21 @@ export default function Navigation() {
             <Button
               variant="ghost"
               onClick={handleLogout}
-              className="rounded-none font-mono text-xs tracking-widest uppercase text-white/50 hover:text-red-400 hover:bg-transparent transition-colors duration-300 cursor-pointer h-auto p-0"
+              className="text-xs font-mono tracking-widest uppercase text-destructive hover:text-destructive hover:bg-destructive/10 h-auto p-0"
             >
-              [ Logout ]
+              Logout
             </Button>
           ) : (
             <Button
               asChild
               variant="ghost"
-              className="rounded-none font-mono text-xs tracking-widest uppercase text-[#7DF9FF] hover:text-white hover:bg-transparent transition-colors duration-300 h-auto p-0"
+              className="text-xs font-mono tracking-widest uppercase text-primary hover:text-primary hover:bg-primary/10 h-auto p-0"
             >
-              <Link to="/login">[ Login ]</Link>
+              <Link to="/login">Login</Link>
             </Button>
           )}
 
-          <Button
-            asChild
-            variant="outline"
-            className="rounded-none border-[#7DF9FF] text-[#7DF9FF] hover:bg-[#7DF9FF] hover:text-[#0B0F14] bg-transparent font-sans px-5 py-2 text-sm h-auto transition-all duration-300"
-          >
+          <Button asChild variant="outline" className="font-sans px-5 py-2 text-sm h-auto">
             <Link to="/contact">Connect</Link>
           </Button>
         </div>
@@ -127,7 +117,7 @@ export default function Navigation() {
             <SheetTrigger asChild>
               <Button
                 variant="ghost"
-                className="p-2 h-auto text-[#E6EDF3] hover:bg-transparent hover:text-[#7DF9FF]"
+                className="p-2 h-auto"
                 aria-label="Toggle menu"
               >
                 {isOpen ? <X className="size-6" /> : <Menu className="size-6" />}
@@ -135,7 +125,7 @@ export default function Navigation() {
             </SheetTrigger>
             <SheetContent
               side="top"
-              className="bg-[#0B0F14]/95 backdrop-blur-lg border-b border-[#7DF9FF]/10 pt-[80px] pb-8 px-8 flex flex-col gap-4 z-40 text-left w-full rounded-none"
+              className="bg-background border-b border-border pt-[80px] pb-8 px-8 flex flex-col gap-4 z-40 text-left w-full"
             >
               {NAV_LINKS.map((link) => (
                 <NavLink
@@ -144,7 +134,7 @@ export default function Navigation() {
                   onClick={() => setIsOpen(false)}
                   className={({ isActive }) =>
                     `text-lg font-sans transition-colors duration-300 ${
-                      isActive ? 'text-[#7DF9FF] font-medium' : 'text-[#E6EDF3]'
+                      isActive ? 'text-primary font-medium' : 'text-foreground'
                     }`
                   }
                 >
@@ -158,11 +148,11 @@ export default function Navigation() {
                   onClick={() => setIsOpen(false)}
                   className={({ isActive }) =>
                     `text-lg font-mono tracking-wider uppercase transition-colors duration-300 ${
-                      isActive ? 'text-[#7DF9FF] font-medium' : 'text-white/70'
+                      isActive ? 'text-primary font-medium' : 'text-muted-foreground'
                     }`
                   }
                 >
-                  [ Dashboard ]
+                  Dashboard
                 </NavLink>
               )}
 
@@ -173,24 +163,24 @@ export default function Navigation() {
                     setIsOpen(false);
                     handleLogout();
                   }}
-                  className="justify-start rounded-none p-0 h-auto text-left font-mono text-lg tracking-wider uppercase text-red-400 hover:text-red-300 hover:bg-transparent transition-colors duration-300 cursor-pointer"
+                  className="justify-start p-0 h-auto text-left font-mono text-lg tracking-wider uppercase text-destructive hover:text-destructive hover:bg-transparent"
                 >
-                  [ Logout ]
+                  Logout
                 </Button>
               ) : (
                 <Button
                   asChild
                   variant="ghost"
-                  className="justify-start rounded-none p-0 h-auto text-left font-mono text-lg tracking-wider uppercase text-[#7DF9FF] hover:text-white hover:bg-transparent transition-colors duration-300"
+                  className="justify-start p-0 h-auto text-left font-mono text-lg tracking-wider uppercase text-primary hover:text-primary hover:bg-transparent"
                 >
-                  <Link to="/login" onClick={() => setIsOpen(false)}>[ Login ]</Link>
+                  <Link to="/login" onClick={() => setIsOpen(false)}>Login</Link>
                 </Button>
               )}
 
               <Button
                 asChild
                 variant="outline"
-                className="rounded-none border-[#7DF9FF] text-[#7DF9FF] hover:bg-[#7DF9FF] hover:text-[#0B0F14] bg-transparent font-sans py-2.5 text-center text-sm w-full transition-all duration-300 mt-2 h-auto"
+                className="font-sans py-2.5 text-center text-sm w-full mt-2 h-auto"
               >
                 <Link to="/contact" onClick={() => setIsOpen(false)}>Connect</Link>
               </Button>
@@ -201,4 +191,3 @@ export default function Navigation() {
     </nav>
   );
 }
-

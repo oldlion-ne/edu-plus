@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router';
 import ImmersiveHero from '../components/effects/ImmersiveHero';
+import { Button } from '../components/ui/button';
+import { Card, CardContent } from '../components/ui/card';
 
 interface StakeholderDetails {
   id: string;
@@ -29,7 +31,7 @@ const STAKEHOLDERS: StakeholderDetails[] = [
     id: 'parents',
     label: 'For Parents',
     title: 'Empower Your Child Without the Pressure',
-    desc: 'Equip yourself with the tools, frameworks, and information needed to support your child’s professional and personal growth. Our sessions help you decode rapidly changing education and career landscapes so that you can guide—not pressure—your child toward realistic, fulfilling paths.',
+    desc: 'Equip yourself with the tools, frameworks, and information needed to support your child\'s professional and personal growth. Our sessions help you decode rapidly changing education and career landscapes so that you can guide—not pressure—your child toward realistic, fulfilling paths.',
     roadmap: [
       'Understanding Modern Career Landscapes',
       'DMIT & Psychometrics Outcomes Explanation',
@@ -76,7 +78,6 @@ export default function Guidance() {
     setMounted(true);
   }, []);
 
-  // Retro Terminal script log typewriter flow triggered on tab changes
   useEffect(() => {
     let isMounted = true;
     setIsRunning(true);
@@ -155,11 +156,7 @@ export default function Guidance() {
   const activeStakeholder = STAKEHOLDERS.find(s => s.id === activeTab) || STAKEHOLDERS[0];
 
   return (
-    <div className="min-h-screen bg-[#0B0F14] text-[#E6EDF3] pb-32 relative overflow-hidden">
-      {/* Decorative Glows */}
-      <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-[#7DF9FF]/5 rounded-none blur-[130px] pointer-events-none" />
-      <div className="absolute bottom-1/4 right-1/4 w-[500px] h-[500px] bg-[#7DF9FF]/3 rounded-none blur-[130px] pointer-events-none" />
-
+    <div className="min-h-screen bg-background text-foreground pb-32 relative overflow-hidden">
       {/* Immersive Top Hero Viewport */}
       <ImmersiveHero
         bgImage="/images/MentorshipVisual.png"
@@ -172,21 +169,20 @@ export default function Guidance() {
       />
 
       <div className="max-w-[1200px] mx-auto px-6 md:px-12 relative z-10 mt-16">
-        {/* Dynamic Stakeholder Tabs & Dashboard Grid */}
         <div className={`flex flex-col lg:flex-row gap-8 transition-all duration-1000 delay-300 transform ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-          
-          {/* Left Navigation and Retro Terminal Control Block */}
+
+          {/* Left Navigation and Terminal Block */}
           <div className="lg:w-1/3 flex flex-col gap-6">
             {/* Tab Selectors */}
-            <div className="flex flex-row lg:flex-col gap-1 overflow-x-auto lg:overflow-x-visible pb-4 lg:pb-0 border-b lg:border-b-0 lg:border-r border-white/[0.08] lg:pr-4 whitespace-nowrap bg-black/10 p-2">
+            <div className="flex flex-row lg:flex-col gap-1 overflow-x-auto lg:overflow-x-visible pb-4 lg:pb-0 border-b lg:border-b-0 lg:border-r border-border lg:pr-4 whitespace-nowrap bg-muted/40 p-2">
               {STAKEHOLDERS.map(stakeholder => (
                 <button
                   key={stakeholder.id}
                   onClick={() => setActiveTab(stakeholder.id)}
-                  className={`px-4 py-3 text-left font-sans text-sm tracking-wide transition-all duration-300 rounded-none w-full ${
+                  className={`px-4 py-3 text-left font-sans text-sm tracking-wide transition-all duration-300 w-full border-l-2 ${
                     activeTab === stakeholder.id
-                      ? 'text-[#7DF9FF] bg-[#7DF9FF]/5 border-b-2 lg:border-b-0 lg:border-l-2 border-[#7DF9FF] font-semibold'
-                      : 'text-[#8B949E] hover:text-[#7DF9FF] hover:bg-[#7DF9FF]/2 border-b-2 lg:border-b-0 lg:border-l-2 border-transparent'
+                      ? 'text-primary bg-primary/5 border-l-primary font-semibold'
+                      : 'text-muted-foreground hover:text-primary hover:bg-primary/5 border-l-transparent'
                   }`}
                 >
                   {stakeholder.label}
@@ -194,86 +190,73 @@ export default function Guidance() {
               ))}
             </div>
 
-            {/* Typing Retro Log Terminal */}
-            <div className="relative border border-white/[0.08] bg-[#0E131A] p-1 rounded-none">
-              <div className="relative bg-[#090D12] p-4 font-mono text-[10px] leading-relaxed text-[#4AF626] h-[220px] overflow-hidden rounded-none select-none flex flex-col justify-start">
-                
-                {/* scanline glass filter overlay */}
-                <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#7DF9FF]/2 to-transparent opacity-30 pointer-events-none" />
-                
-                {/* Simulated Scanlines */}
-                <div className="absolute inset-0 pointer-events-none opacity-[0.03]" 
-                     style={{ 
-                       backgroundImage: 'linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%)', 
-                       backgroundSize: '100% 4px' 
-                     }} 
-                />
+            {/* Retro Terminal Log */}
+            <Card>
+              <CardContent className="p-1">
+                <div className="bg-card p-4 font-mono text-[10px] leading-relaxed text-green-600 dark:text-green-400 h-[220px] overflow-hidden select-none flex flex-col justify-start relative">
+                  {/* Console header */}
+                  <div className="flex justify-between items-center text-[8px] text-primary/60 border-b border-border pb-2 mb-3">
+                    <span>LOG_PORT: TERMINAL_EXECUTION_DEV</span>
+                    <span className="flex items-center gap-1.5">
+                      <span className={`w-1.5 h-1.5 bg-green-500 ${isRunning ? 'animate-ping' : ''}`} />
+                      {isRunning ? 'EXEC_SH' : 'READY_PRMPT'}
+                    </span>
+                  </div>
 
-                {/* Console header */}
-                <div className="flex justify-between items-center text-[8px] text-[#7DF9FF]/60 border-b border-white/[0.08] pb-2 mb-3">
-                  <span>LOG_PORT: TERMINAL_EXECUTION_DEV</span>
-                  <span className="flex items-center gap-1.5">
-                    <span className={`w-1.5 h-1.5 rounded-none bg-[#4AF626] ${isRunning ? 'animate-ping' : ''}`} />
-                    {isRunning ? 'EXEC_SH' : 'READY_PRMPT'}
-                  </span>
+                  {/* Log outputs stream */}
+                  <div className="space-y-1 overflow-y-auto flex-1 font-mono pr-2">
+                    {terminalLogs.map((log, idx) => {
+                      const isCmd = log.startsWith('[GUEST');
+                      return (
+                        <div key={idx} className={isCmd ? 'text-primary' : 'text-green-600 dark:text-green-400'}>
+                          {log}
+                        </div>
+                      );
+                    })}
+                  </div>
                 </div>
-
-                {/* Log outputs stream */}
-                <div className="space-y-1 overflow-y-auto flex-1 font-mono pr-2 scrollbar-thin scrollbar-thumb-white/[0.04] scrollbar-track-transparent">
-                  {terminalLogs.map((log, idx) => {
-                    const isCmd = log.startsWith('[GUEST');
-                    return (
-                      <div key={idx} className={isCmd ? 'text-[#7DF9FF]' : 'text-[#4AF626]'}>
-                        {log}
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-            </div>
+              </CardContent>
+            </Card>
           </div>
 
           {/* Right Active Details Panel */}
           <div className="lg:w-2/3 flex flex-col gap-6">
-            
-            {/* Active Tab Panel */}
-            <div className="liquid-glass p-8 md:p-12 min-h-[380px] flex flex-col justify-between border border-white/[0.08] rounded-none">
-              <div className="space-y-6">
-                <span className="text-xs font-sans text-[#7DF9FF] tracking-wider uppercase block opacity-60">
-                  Tailored Roadmap
-                </span>
-                <h2 className="font-heading text-2xl md:text-3xl font-light text-[#E6EDF3]">
-                  {activeStakeholder.title}
-                </h2>
-                <p className="font-sans text-sm md:text-base text-[#8B949E] leading-relaxed">
-                  {activeStakeholder.desc}
-                </p>
+            <Card className="min-h-[380px] flex flex-col justify-between">
+              <CardContent className="p-8 md:p-12 flex flex-col justify-between h-full">
+                <div className="space-y-6">
+                  <span className="text-xs font-sans text-primary tracking-wider uppercase block opacity-60">
+                    Tailored Roadmap
+                  </span>
+                  <h2 className="font-heading text-2xl md:text-3xl font-light text-foreground">
+                    {activeStakeholder.title}
+                  </h2>
+                  <p className="font-sans text-sm md:text-base text-muted-foreground leading-relaxed">
+                    {activeStakeholder.desc}
+                  </p>
 
-                {/* Milestones list */}
-                <div className="pt-6">
-                  <h4 className="font-heading text-sm text-[#E6EDF3] uppercase tracking-wider mb-4">Milestones & Strategy:</h4>
-                  <div className="grid sm:grid-cols-2 gap-4">
-                    {activeStakeholder.roadmap.map((step, idx) => (
-                      <div key={idx} className="flex items-center gap-3 text-sm text-[#8B949E] font-sans">
-                        <span className="w-6 h-6 rounded-none bg-[#7DF9FF]/10 border border-[#7DF9FF]/20 flex items-center justify-center text-xs text-[#7DF9FF] font-medium font-heading">
-                          {idx + 1}
-                        </span>
-                        <span>{step}</span>
-                      </div>
-                    ))}
+                  {/* Milestones list */}
+                  <div className="pt-6">
+                    <h4 className="font-heading text-sm text-foreground uppercase tracking-wider mb-4">Milestones &amp; Strategy:</h4>
+                    <div className="grid sm:grid-cols-2 gap-4">
+                      {activeStakeholder.roadmap.map((step, idx) => (
+                        <div key={idx} className="flex items-center gap-3 text-sm text-muted-foreground font-sans">
+                          <span className="w-6 h-6 bg-primary/10 border border-primary/20 flex items-center justify-center text-xs text-primary font-medium font-heading shrink-0">
+                            {idx + 1}
+                          </span>
+                          <span>{step}</span>
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              <div className="mt-12 pt-6 border-t border-white/[0.08] flex justify-end">
-                <Link
-                  to="/contact"
-                  className="px-6 py-3 bg-[#7DF9FF] text-[#0B0F14] hover:bg-white font-sans text-sm font-medium tracking-wide transition-all duration-300 rounded-none border border-transparent hover:border-[#7DF9FF]"
-                >
-                  {activeStakeholder.ctaText}
-                </Link>
-              </div>
-            </div>
+                <div className="mt-12 pt-6 border-t border-border flex justify-end">
+                  <Button asChild>
+                    <Link to="/contact">{activeStakeholder.ctaText}</Link>
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
           </div>
 
         </div>

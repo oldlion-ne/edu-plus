@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react';
 import ImmersiveHero from '../components/effects/ImmersiveHero';
+import { Card, CardContent } from '../components/ui/card';
+import { Badge } from '../components/ui/badge';
 
 interface Article {
   title: string;
@@ -18,7 +20,7 @@ const ARTICLES: Article[] = [
     readTime: '4 min read'
   },
   {
-    title: 'Bridging Singapore’s Clinical Speech Interventions to Local Classrooms',
+    title: 'Bridging Singapore\'s Clinical Speech Interventions to Local Classrooms',
     category: 'Academic Insights',
     date: 'April 28, 2026',
     excerpt: 'Co-founder Ronen Akoijam highlights the importance of language development and inclusive education practices in early childhood curriculums, standardizing student accessibility.',
@@ -48,10 +50,7 @@ export default function News() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-[#0B0F14] text-[#E6EDF3] pb-32 relative overflow-hidden">
-      {/* Decorative radial glows */}
-      <div className="absolute top-1/4 left-1/3 w-[600px] h-[600px] bg-[#7DF9FF]/4 rounded-none blur-[140px] pointer-events-none" />
-
+    <div className="min-h-screen bg-background text-foreground pb-32 relative overflow-hidden">
       {/* Immersive Top Hero Viewport */}
       <ImmersiveHero
         bgImage="/images/NewsVisual.png"
@@ -64,36 +63,35 @@ export default function News() {
       />
 
       <div className="max-w-[1200px] mx-auto px-6 md:px-12 relative z-10 mt-16">
-
         {/* Articles Grid */}
         <div className={`grid md:grid-cols-2 gap-8 transition-all duration-1000 delay-300 transform ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
           {ARTICLES.map((article, idx) => (
-            <div
+            <Card
               key={idx}
-              className="liquid-glass p-8 md:p-10 hover:border-[#7DF9FF]/30 transition-all duration-500 flex flex-col justify-between group"
+              className="hover:border-primary/40 hover:shadow-md transition-all duration-500 flex flex-col justify-between group"
             >
-              <div>
-                <div className="flex items-center justify-between text-xs font-sans text-[#8B949E] mb-6">
-                  <span className="text-[#7DF9FF] bg-[#7DF9FF]/10 px-3 py-1 rounded-none border border-[#7DF9FF]/20 font-medium">
-                    {article.category}
-                  </span>
-                  <span>{article.date}</span>
+              <CardContent className="p-8 md:p-10 flex flex-col justify-between h-full">
+                <div>
+                  <div className="flex items-center justify-between text-xs font-sans text-muted-foreground mb-6">
+                    <Badge variant="secondary">{article.category}</Badge>
+                    <span>{article.date}</span>
+                  </div>
+                  <h3 className="font-heading text-xl md:text-2xl font-light text-foreground group-hover:text-primary transition-colors duration-300 mb-4 leading-snug">
+                    {article.title}
+                  </h3>
+                  <p className="font-sans text-sm text-muted-foreground leading-relaxed mb-8">
+                    {article.excerpt}
+                  </p>
                 </div>
-                <h3 className="font-heading text-xl md:text-2xl font-light text-[#E6EDF3] group-hover:text-[#7DF9FF] transition-colors duration-300 mb-4 leading-snug">
-                  {article.title}
-                </h3>
-                <p className="font-sans text-sm text-[#8B949E] leading-relaxed mb-8">
-                  {article.excerpt}
-                </p>
-              </div>
 
-              <div className="flex items-center justify-between text-xs font-sans pt-4 border-t border-[#7DF9FF]/5 text-[#8B949E]">
-                <span>{article.readTime}</span>
-                <span className="text-[#7DF9FF] group-hover:translate-x-1.5 transition-transform duration-300">
-                  Read Article &rarr;
-                </span>
-              </div>
-            </div>
+                <div className="flex items-center justify-between text-xs font-sans pt-4 border-t border-border text-muted-foreground">
+                  <span>{article.readTime}</span>
+                  <span className="text-primary group-hover:translate-x-1.5 transition-transform duration-300">
+                    Read Article &rarr;
+                  </span>
+                </div>
+              </CardContent>
+            </Card>
           ))}
         </div>
       </div>

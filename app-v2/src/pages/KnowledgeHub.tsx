@@ -1,6 +1,10 @@
 import { useEffect, useState } from 'react';
 import { supabase } from '../lib/supabaseClient';
 import ImmersiveHero from '../components/effects/ImmersiveHero';
+import { Button } from '../components/ui/button';
+import { Card, CardContent } from '../components/ui/card';
+import { Input } from '../components/ui/input';
+import { X } from 'lucide-react';
 
 interface KnowledgeItem {
   id: string;
@@ -12,6 +16,8 @@ interface KnowledgeItem {
   author_name: string;
   created_at: string;
 }
+
+const TABS = ['all', 'tutorial', 'podcast', 'webinar', 'study_material'];
 
 export default function KnowledgeHub() {
   const [items, setItems] = useState<KnowledgeItem[]>([]);
@@ -64,9 +70,7 @@ export default function KnowledgeHub() {
   };
 
   return (
-    <div className="min-h-screen bg-[#0B0F14] text-[#E6EDF3] pb-32 relative overflow-hidden font-sans">
-      <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-[#7DF9FF]/5 rounded-none blur-[130px] pointer-events-none" />
-
+    <div className="min-h-screen bg-background text-foreground pb-32 relative overflow-hidden font-sans">
       <ImmersiveHero
         bgImage="/images/HubVisual.png"
         category="Ecosystem Nodes"
@@ -79,109 +83,113 @@ export default function KnowledgeHub() {
 
       <div className="max-w-[1200px] mx-auto px-6 md:px-12 relative z-10 mt-12">
         {/* Controls Matrix */}
-        <div className="flex flex-col md:flex-row gap-6 justify-between items-center mb-10 border-b border-[#7DF9FF]/10 pb-8">
+        <div className="flex flex-col md:flex-row gap-6 justify-between items-center mb-10 border-b border-border pb-8">
           <div className="flex flex-wrap gap-2">
-            {['all', 'tutorial', 'podcast', 'webinar', 'study_material'].map(tab => (
-              <button
+            {TABS.map(tab => (
+              <Button
                 key={tab}
+                variant={activeTab === tab ? 'default' : 'outline'}
+                size="sm"
                 onClick={() => setActiveTab(tab)}
-                className={`px-4 py-2 text-xs font-mono tracking-wider transition-all duration-300 rounded-none border ${
-                  activeTab === tab
-                    ? 'border-[#7DF9FF] bg-[#7DF9FF]/10 text-[#7DF9FF] shadow-[0_0_10px_rgba(125,249,255,0.2)]'
-                    : 'border-white/10 text-[#8B949E] hover:border-white/20 hover:text-white'
-                } uppercase cursor-pointer`}
+                className="uppercase tracking-wider font-mono text-xs"
               >
                 {tab.replace('_', ' ')}
-              </button>
+              </Button>
             ))}
           </div>
 
           <div className="w-full md:w-80">
-            <input
+            <Input
               type="text"
-              placeholder="SEARCH TRANSMISSIONS..."
+              placeholder="Search resources..."
               value={searchQuery}
               onChange={e => setSearchQuery(e.target.value)}
-              className="w-full bg-white/[0.02] border border-[#7DF9FF]/20 text-[#E6EDF3] text-xs px-4 py-2.5 outline-none focus:border-[#7DF9FF] font-mono tracking-wider rounded-none transition-colors"
+              className="font-mono tracking-wider text-xs"
             />
           </div>
         </div>
 
         {/* Grid display */}
         {loading ? (
-          <div className="text-center py-20 font-mono text-[#7DF9FF] text-sm tracking-widest animate-pulse">
-            LOADING_HUBNODES_TELEMETRY...
+          <div className="text-center py-20 font-mono text-primary text-sm tracking-widest animate-pulse">
+            LOADING RESOURCES...
           </div>
         ) : filteredItems.length === 0 ? (
-          <div className="text-center py-20 font-mono text-white/40 text-sm tracking-widest border border-white/5 bg-white/[0.01] rounded-none">
-            NO TRANSMISSIONS MATCHING THE QUERY.
+          <div className="text-center py-20 font-mono text-muted-foreground text-sm tracking-widest border border-border bg-muted/20">
+            NO RESOURCES MATCHING QUERY.
           </div>
         ) : (
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredItems.map(item => {
               const isYoutube = item.media_type === 'video_embed' && getYoutubeId(item.url);
               return (
-                <div
+                <Card
                   key={item.id}
-                  className="liquid-glass border border-white/10 p-6 flex flex-col justify-between hover:border-[#7DF9FF]/30 transition-all duration-300 group rounded-none relative overflow-hidden"
+                  className="flex flex-col justify-between hover:border-primary/40 hover:shadow-md transition-all duration-300 group relative overflow-hidden"
                 >
-                  <div className="absolute top-0 right-0 px-2 py-0.5 bg-[#7DF9FF]/5 border-b border-l border-white/10 text-[8px] font-mono text-[#7DF9FF] tracking-widest uppercase">
+                  <div className="absolute top-0 right-0 px-2 py-0.5 bg-primary/5 border-b border-l border-border text-[8px] font-mono text-primary tracking-widest uppercase">
                     {item.category.replace('_', ' ')}
                   </div>
 
-                  <div>
-                    <span className="text-[10px] font-mono text-[#7DF9FF] tracking-widest block mb-2 uppercase">
-                      SRC // {item.media_type.replace('_', ' ')}
-                    </span>
-                    <h3 className="font-heading text-lg font-light text-white mb-2 leading-snug group-hover:text-[#7DF9FF] transition-colors">
-                      {item.title}
-                    </h3>
-                    <p className="font-sans text-xs text-[#8B949E] leading-relaxed mb-6">
-                      {item.description || 'No supplementary data stream available.'}
-                    </p>
-                  </div>
+                  <CardContent className="p-6 flex flex-col justify-between h-full">
+                    <div>
+                      <span className="text-[10px] font-mono text-primary tracking-widest block mb-2 uppercase">
+                        SRC // {item.media_type.replace('_', ' ')}
+                      </span>
+                      <h3 className="font-heading text-lg font-light text-foreground mb-2 leading-snug group-hover:text-primary transition-colors">
+                        {item.title}
+                      </h3>
+                      <p className="font-sans text-xs text-muted-foreground leading-relaxed mb-6">
+                        {item.description || 'No supplementary data available.'}
+                      </p>
+                    </div>
 
-                  <div className="pt-4 border-t border-white/5 flex items-center justify-between">
-                    <span className="text-[9px] font-mono text-white/50 uppercase">
-                      NODE: {item.author_name}
-                    </span>
-                    {isYoutube ? (
-                      <button
-                        onClick={() => setSelectedVideo(item.url)}
-                        className="px-3 py-1 bg-[#7DF9FF]/10 border border-[#7DF9FF]/30 hover:bg-[#7DF9FF] hover:text-[#0B0F14] transition-all duration-300 font-mono text-[9px] font-bold tracking-wider text-[#7DF9FF] rounded-none cursor-pointer"
-                      >
-                        LAUNCH PLAYBACK
-                      </button>
-                    ) : (
-                      <a
-                        href={item.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="px-3 py-1 bg-white/5 border border-white/10 hover:border-white hover:bg-white hover:text-[#0B0F14] transition-all duration-300 font-mono text-[9px] font-bold tracking-wider text-[#E6EDF3] rounded-none"
-                      >
-                        OPEN DIRECTLINK
-                      </a>
-                    )}
-                  </div>
-                </div>
+                    <div className="pt-4 border-t border-border flex items-center justify-between">
+                      <span className="text-[9px] font-mono text-muted-foreground uppercase">
+                        NODE: {item.author_name}
+                      </span>
+                      {isYoutube ? (
+                        <Button
+                          size="sm"
+                          variant="secondary"
+                          onClick={() => setSelectedVideo(item.url)}
+                          className="font-mono text-[9px] tracking-wider uppercase"
+                        >
+                          LAUNCH PLAYBACK
+                        </Button>
+                      ) : (
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          asChild
+                        >
+                          <a href={item.url} target="_blank" rel="noopener noreferrer" className="font-mono text-[9px] tracking-wider uppercase">
+                            OPEN LINK
+                          </a>
+                        </Button>
+                      )}
+                    </div>
+                  </CardContent>
+                </Card>
               );
             })}
           </div>
         )}
       </div>
 
-      {/* Video Overlaid Cinema */}
+      {/* Video Overlay */}
       {selectedVideo && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-[#0B0F14]/90 backdrop-blur-sm animate-fade-in">
-          <div className="w-full max-w-4xl bg-[#0B0F14] border border-[#7DF9FF] shadow-[0_0_30px_rgba(125,249,255,0.3)] rounded-none relative">
-            <div className="flex items-center justify-between p-3 border-b border-[#7DF9FF]/20 bg-[#7DF9FF]/5">
-              <span className="font-mono text-[10px] font-bold tracking-widest text-[#7DF9FF]">IMMERSIVE CINEMA LINK</span>
-              <button
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-background/90 backdrop-blur-sm animate-fade-in">
+          <div className="w-full max-w-4xl bg-card border border-border shadow-2xl relative">
+            <div className="flex items-center justify-between p-3 border-b border-border bg-muted">
+              <span className="font-mono text-[10px] font-bold tracking-widest text-primary">VIDEO PLAYBACK</span>
+              <Button
+                variant="ghost"
+                size="icon"
                 onClick={() => setSelectedVideo(null)}
-                className="text-white hover:text-[#7DF9FF] font-mono text-xs cursor-pointer focus:outline-none"
               >
-                [ CLOSE TRANSMISSION ]
-              </button>
+                <X className="size-4" />
+              </Button>
             </div>
             <div className="aspect-video w-full">
               <iframe

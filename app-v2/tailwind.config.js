@@ -5,9 +5,9 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['Outfit', 'sans-serif'],
+        sans: ['var(--font-sans)', 'Outfit', 'sans-serif'],
         serif: ['Merriweather', 'serif'],
-        heading: ['Merriweather', 'serif'],
+        heading: ['var(--font-heading)', 'Merriweather', 'serif'],
       },
       colors: {
         border: "hsl(var(--border))",

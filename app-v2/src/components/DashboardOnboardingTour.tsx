@@ -55,8 +55,8 @@ export default function DashboardOnboardingTour({ onComplete }: { onComplete: ()
         left: rect.left - 8,
         width: rect.width + 16,
         height: rect.height + 16,
-        border: '2px solid #7DF9FF',
-        boxShadow: '0 0 18px rgba(125,249,255,0.6), inset 0 0 8px rgba(125,249,255,0.3)',
+        border: '2px solid hsl(var(--primary))',
+        boxShadow: '0 0 18px hsl(var(--primary)/0.6), inset 0 0 8px hsl(var(--primary)/0.3)',
         transition: 'all 0.3s ease-in-out',
         zIndex: 99,
         pointerEvents: 'none'
@@ -95,34 +95,34 @@ export default function DashboardOnboardingTour({ onComplete }: { onComplete: ()
   return (
     <div className="fixed inset-0 z-[98] pointer-events-auto">
       {/* Dark Screen Matrix */}
-      <div className="absolute inset-0 bg-[#0B0F14]/80 backdrop-blur-[2px]" />
+      <div className="absolute inset-0 bg-background/80 backdrop-blur-[2px]" />
 
       {/* Cyberpunk Highlight Box */}
       <div style={boxStyle} className="rounded-none animate-pulse" />
 
       {/* floating Instruction Guidance Card */}
       <div
-        className="fixed z-[100] w-[320px] bg-[#0E131A] border border-[#7DF9FF]/30 p-5 rounded-none shadow-[0_0_20px_rgba(0,0,0,0.8)] text-[#E6EDF3] transition-all duration-300 font-sans"
+        className="fixed z-[100] w-[320px] bg-card border border-border p-5 rounded-none shadow-[0_0_20px_rgba(0,0,0,0.8)] text-card-foreground transition-all duration-300 font-sans"
         style={{
           top: boxStyle.top ? Number(boxStyle.top) + Number(boxStyle.height) + 16 : '40%',
           left: boxStyle.left ? Math.max(16, Math.min(window.innerWidth - 336, Number(boxStyle.left))) : '50%'
         }}
       >
-        <div className="flex items-center gap-1.5 mb-2 border-b border-[#7DF9FF]/10 pb-2">
-          <span className="w-1.5 h-1.5 bg-[#7DF9FF] shadow-[0_0_6px_#7DF9FF]"></span>
-          <span className="font-mono text-[9px] font-bold tracking-widest text-[#7DF9FF]">
+        <div className="flex items-center gap-1.5 mb-2 border-b border-border pb-2">
+          <span className="w-1.5 h-1.5 bg-primary shadow-[0_0_6px_hsl(var(--primary))]"></span>
+          <span className="font-mono text-[9px] font-bold tracking-widest text-primary">
             {currentStep.title} (STEP {stepIndex + 1}/{TOUR_STEPS.length})
           </span>
         </div>
 
-        <p className="text-[11px] leading-relaxed mb-4 text-[#8B949E] min-h-[44px]">
+        <p className="text-[11px] leading-relaxed mb-4 text-muted-foreground min-h-[44px]">
           {currentStep.text}
         </p>
 
-        <div className="flex items-center justify-between pt-2 border-t border-white/5">
+        <div className="flex items-center justify-between pt-2 border-t border-border">
           <button
             onClick={handleSkip}
-            className="text-[9px] font-mono text-[#8B949E] hover:text-white cursor-pointer uppercase"
+            className="text-[9px] font-mono text-muted-foreground hover:text-foreground cursor-pointer uppercase"
           >
             [ SKIP TOUR ]
           </button>
@@ -130,14 +130,14 @@ export default function DashboardOnboardingTour({ onComplete }: { onComplete: ()
             {stepIndex > 0 && (
               <button
                 onClick={handleBack}
-                className="px-2.5 py-1 bg-white/5 border border-white/10 hover:border-white hover:text-[#0B0F14] transition-all duration-200 text-[9px] font-mono rounded-none cursor-pointer"
+                className="px-2.5 py-1 bg-muted border border-border hover:border-foreground hover:text-foreground transition-all duration-200 text-[9px] font-mono rounded-none cursor-pointer"
               >
                 PREV
               </button>
             )}
             <button
               onClick={handleNext}
-              className="px-3 py-1 bg-[#7DF9FF] hover:bg-white text-[#0B0F14] font-bold transition-all duration-200 text-[9px] font-mono rounded-none cursor-pointer"
+              className="px-3 py-1 bg-primary hover:bg-primary/90 text-primary-foreground font-bold transition-all duration-200 text-[9px] font-mono rounded-none cursor-pointer"
             >
               {stepIndex === TOUR_STEPS.length - 1 ? 'COMPLETE' : 'NEXT'}
             </button>
