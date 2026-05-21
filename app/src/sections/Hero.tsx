@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router';
-import TypeScramble from '../components/effects/TypeScramble';
+import RandomizedTextEffect from '../components/effects/RandomizedTextEffect';
+import ScrollTextMarquee from '../components/effects/ScrollTextMarquee';
 
 export default function Hero() {
   const [visible, setVisible] = useState(false);
@@ -38,6 +39,11 @@ export default function Hero() {
         }}
       />
 
+      {/* Parallax Scroll Marquee background watermark */}
+      <div className="absolute inset-x-0 bottom-24 z-[1] pointer-events-none">
+        <ScrollTextMarquee text="BUILDING • REDEFINING • REDIRECTION • MOBILIZING" baseSpeed={-300} />
+      </div>
+
       {/* Content */}
       <div className="relative z-10 max-w-[1440px] mx-auto px-6 md:px-12 text-center">
         {/* Soft Radial Neon Glow behind text */}
@@ -50,7 +56,7 @@ export default function Hero() {
           }`}
         >
           <span className="text-xs md:text-sm font-sans font-semibold tracking-[0.4em] uppercase text-[#7DF9FF]">
-            Eduplus
+            <RandomizedTextEffect text="Eduplus" triggerOnHover />
           </span>
         </div>
 
@@ -58,10 +64,9 @@ export default function Hero() {
         <h1 className="font-heading text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl font-light leading-[1.05] tracking-tight mb-8 relative z-10">
           <span className="block text-[#E6EDF3]">
             {'Shaping '}
-            <TypeScramble
+            <RandomizedTextEffect
               text="tomorrow"
               className="text-[#7DF9FF] font-heading"
-              delay={600}
             />
           </span>
         </h1>
