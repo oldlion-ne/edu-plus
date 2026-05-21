@@ -35,7 +35,7 @@ export default function ImmersiveHero({
     <div className="relative w-full h-[60vh] min-h-[460px] md:h-[65vh] overflow-hidden bg-[#0B0F14] border-b border-[#7DF9FF]/10 select-none group">
       {/* Parallax Background Layer */}
       <div 
-        className="absolute inset-0 w-full h-full z-0 pointer-events-none transition-transform duration-[1.2s] ease-out group-hover:scale-[1.03]"
+        className="absolute inset-0 w-full h-full z-0 pointer-events-none transition-transform duration-1200 ease-out group-hover:scale-[1.03]"
         style={{
           transform: `translateY(${scrollY * 0.4}px)`,
         }}

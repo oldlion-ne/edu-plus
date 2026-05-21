@@ -1,10 +1,10 @@
 {
   "$schema": "https://ui.shadcn.com/schema.json",
-  "style": "radix-sera",
+  "style": "radix-mira",
   "rsc": false,
   "tsx": true,
   "tailwind": {
-    "config": "postcss.config.js",
+    "config": "tailwind.config.js",
     "css": "src/index.css",
     "baseColor": "taupe",
     "cssVariables": true,
@@ -12,6 +12,8 @@
   },
   "iconLibrary": "hugeicons",
   "rtl": false,
+  "menuColor": "default-translucent",
+  "menuAccent": "subtle",
   "aliases": {
     "components": "@/components",
     "utils": "@/lib/utils",
@@ -19,9 +21,7 @@
     "lib": "@/lib",
     "hooks": "@/hooks"
   },
-  "menuColor": "default-translucent",
-  "menuAccent": "subtle",
   "registries": {
-    "@eduplus": "file:///c:/edu-plus/registry.json"
+    "@ui-layouts": "https://ui-layouts.com/r/{name}.json"
   }
 }

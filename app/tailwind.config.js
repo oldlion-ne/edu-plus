@@ -111,6 +111,12 @@ module.exports = {
         marquee: "marquee var(--duration) linear infinite",
         "marquee-vertical": "marquee-vertical var(--duration) linear infinite",
       },
+      transitionTimingFunction: {
+        "out-cubic": "cubic-bezier(0.22, 1, 0.36, 1)",
+      },
+      transitionDuration: {
+        "1200": "1200ms",
+      },
     },
   },
   plugins: [require("tailwindcss-animate")],
