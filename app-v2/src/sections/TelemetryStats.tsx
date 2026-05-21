@@ -1,252 +1,183 @@
-'use client'
-
-import { Activity, Map as MapIcon, MessageCircle } from 'lucide-react'
+import { BookOpen, Globe, MessageCircle, TrendingUp } from 'lucide-react'
 import DottedMap from 'dotted-map'
-import { Area, AreaChart, CartesianGrid } from 'recharts'
-import { type ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart'
 
+// ── Inline logo ──────────────────────────────────────────────────────────────
 const Logo = ({ className }: { className?: string }) => (
-  <span className={`font-sans font-bold text-[8px] text-foreground flex items-center justify-center leading-none ${className}`}>
+  <span
+    className={`font-sans font-bold text-[8px] text-foreground flex items-center justify-center leading-none ${className}`}
+  >
     E<span className="text-primary font-light">+</span>
   </span>
 )
 
+// ── Dotted world map ─────────────────────────────────────────────────────────
 const map = new DottedMap({ height: 55, grid: 'diagonal' })
 const points = map.getPoints()
 
-const svgOptions = {
-  backgroundColor: 'var(--color-background)',
-  color: 'currentColor',
-  radius: 0.15,
-}
+const Map = () => (
+  <svg
+    viewBox="0 0 120 60"
+    className="w-full h-auto text-muted-foreground/35"
+    style={{ background: 'oklch(var(--background))' }}
+    aria-label="Dotted World Map showing global learner reach"
+  >
+    {points.map((point, index) => (
+      <circle key={index} cx={point.x} cy={point.y} r={0.15} fill="currentColor" />
+    ))}
+  </svg>
+)
 
-const Map = () => {
-  const viewBox = `0 0 120 60`
-  return (
-    <svg
-      viewBox={viewBox}
-      className="w-full h-auto text-muted-foreground/35"
-      style={{ background: svgOptions.backgroundColor }}
-      aria-label="Dotted World Map"
-    >
-      {points.map((point, index) => (
-        <circle
-          key={index}
-          cx={point.x}
-          cy={point.y}
-          r={svgOptions.radius}
-          fill={svgOptions.color}
-        />
-      ))}
-    </svg>
-  )
-}
-
-const chartConfig = {
-  desktop: {
-    label: 'Desktop',
-    color: 'oklch(var(--primary))',
-  },
-  mobile: {
-    label: 'Mobile',
-    color: 'oklch(var(--chart-1))',
-  },
-} satisfies ChartConfig
-
-const chartData = [
-  { month: 'May', desktop: 56, mobile: 224 },
-  { month: 'June', desktop: 56, mobile: 224 },
-  { month: 'January', desktop: 126, mobile: 252 },
-  { month: 'February', desktop: 205, mobile: 410 },
-  { month: 'March', desktop: 200, mobile: 126 },
-  { month: 'April', desktop: 400, mobile: 800 },
+// ── Milestone stats shown in the bottom panel ────────────────────────────────
+const MILESTONES = [
+  { value: '4,200+', label: 'Active Learners' },
+  { value: '38',     label: 'Countries Reached' },
+  { value: '98%',    label: 'Placement Rate' },
+  { value: '1.2M+',  label: 'Learning Hours' },
 ]
 
-const MonitoringChart = () => {
-  return (
-    <ChartContainer
-      className="h-120 aspect-auto md:h-96 w-full"
-      config={chartConfig}
-    >
-      <AreaChart
-        accessibilityLayer
-        data={chartData}
-        margin={{
-          left: 0,
-          right: 0,
-        }}
-      >
-        <defs>
-          <linearGradient
-            id="fillDesktop"
-            x1="0"
-            y1="0"
-            x2="0"
-            y2="1"
-          >
-            <stop
-              offset="0%"
-              stopColor="var(--color-desktop)"
-              stopOpacity={0.8}
-            />
-            <stop
-              offset="55%"
-              stopColor="var(--color-desktop)"
-              stopOpacity={0.1}
-            />
-          </linearGradient>
-          <linearGradient
-            id="fillMobile"
-            x1="0"
-            y1="0"
-            x2="0"
-            y2="1"
-          >
-            <stop
-              offset="0%"
-              stopColor="var(--color-mobile)"
-              stopOpacity={0.8}
-            />
-            <stop
-              offset="55%"
-              stopColor="var(--color-mobile)"
-              stopOpacity={0.1}
-            />
-          </linearGradient>
-        </defs>
-        <CartesianGrid vertical={false} stroke="oklch(var(--border))" strokeDasharray="3 3" />
-        <ChartTooltip
-          active
-          cursor={false}
-          content={<ChartTooltipContent className="dark:bg-muted" />}
-        />
-        <Area
-          strokeWidth={2}
-          dataKey="mobile"
-          type="stepBefore"
-          fill="url(#fillMobile)"
-          fillOpacity={0.1}
-          stroke="var(--color-mobile)"
-          stackId="a"
-        />
-        <Area
-          strokeWidth={2}
-          dataKey="desktop"
-          type="stepBefore"
-          fill="url(#fillDesktop)"
-          fillOpacity={0.1}
-          stroke="var(--color-desktop)"
-          stackId="a"
-        />
-      </AreaChart>
-    </ChartContainer>
-  )
-}
-
+// ── Section ──────────────────────────────────────────────────────────────────
 export default function TelemetryStats() {
   return (
-    <section 
+    <section
       id="telemetry"
       className="relative w-full px-4 py-16 md:py-32 bg-background overflow-hidden"
     >
       <div className="mx-auto grid max-w-5xl border border-border md:grid-cols-2 bg-card/10 backdrop-blur-sm">
-        {/* Left Side: Real-time Location Tracking */}
+
+        {/* ── Left panel: Global learner reach ── */}
         <div className="border-b border-border md:border-b-0">
           <div className="p-6 sm:p-12">
             <span className="text-muted-foreground flex items-center gap-2 text-xs font-mono uppercase tracking-wider">
-              <MapIcon className="size-4 text-primary" />
-              Real time location tracking
+              <Globe className="size-4 text-primary" />
+              Global learner reach
             </span>
 
             <p className="mt-8 text-2xl font-light text-foreground leading-snug">
-              Advanced tracking system, Instantly locate all your assets.
+              Learners from 38 countries — every timezone, one platform.
             </p>
           </div>
 
+          {/* Map with location pill */}
           <div
             aria-hidden="true"
             className="relative h-60 flex items-center justify-center overflow-hidden border-t border-border"
           >
+            {/* Location pill */}
             <div className="absolute inset-0 z-10 m-auto size-fit flex flex-col items-center justify-center">
               <div className="rounded-[var(--radius)] bg-background relative flex size-fit w-fit items-center gap-2 border border-border px-3 py-1.5 text-[10px] font-mono tracking-wider uppercase shadow-md shadow-zinc-950/5">
-                <span className="text-sm">🇨🇩</span> Last connection from DR Congo
+                <span className="text-sm">🇸🇬</span> Latest enrolment from Singapore
               </div>
-              <div className="rounded-[var(--radius)] bg-background absolute inset-2 -bottom-2 mx-auto border border-border px-3 py-4 text-xs shadow-md shadow-zinc-950/5 dark:bg-zinc-900 -z-10"></div>
+              <div className="rounded-[var(--radius)] bg-background absolute inset-2 -bottom-2 mx-auto border border-border px-3 py-4 text-xs shadow-md shadow-zinc-950/5 dark:bg-zinc-900 -z-10" />
             </div>
 
+            {/* Dotted map */}
             <div className="w-full relative">
-              <div 
+              <div
                 className="absolute inset-0 z-10 pointer-events-none"
-                style={{ background: 'radial-gradient(circle, transparent 25%, oklch(var(--background)) 75%)' }}
+                style={{
+                  background:
+                    'radial-gradient(circle, transparent 25%, oklch(var(--background)) 75%)',
+                }}
               />
               <Map />
             </div>
           </div>
         </div>
 
-        {/* Right Side: Email and Web Support */}
+        {/* ── Right panel: AI mentor support ── */}
         <div className="overflow-hidden bg-zinc-50/5 p-6 sm:p-12 md:border-l border-border dark:bg-transparent">
           <div className="relative z-10">
             <span className="text-muted-foreground flex items-center gap-2 text-xs font-mono uppercase tracking-wider">
               <MessageCircle className="size-4 text-primary" />
-              Email and web support
+              AI mentor support
             </span>
 
             <p className="my-8 text-2xl font-light text-foreground leading-snug">
-              Reach out via email or web for any assistance you need.
+              Instant guidance, available 24/7 — no learner left without a next step.
             </p>
           </div>
-          <div
-            aria-hidden="true"
-            className="flex flex-col gap-8 pt-4"
-          >
+
+          {/* Simulated chat thread */}
+          <div aria-hidden="true" className="flex flex-col gap-8 pt-4">
+            {/* Learner message */}
             <div>
               <div className="flex items-center gap-2">
                 <span className="flex size-5 rounded-full border border-border items-center justify-center bg-card">
                   <Logo className="m-auto size-3" />
                 </span>
-                <span className="text-muted-foreground font-mono text-[10px] uppercase tracking-wider">Sat 22 Feb</span>
+                <span className="text-muted-foreground font-mono text-[10px] uppercase tracking-wider">
+                  Mon 19 May
+                </span>
               </div>
               <div className="rounded-[var(--radius)] bg-card mt-1.5 w-3/5 border border-border p-3 text-xs text-foreground font-sans leading-relaxed">
-                Hey, I'm having trouble with my account.
+                Which pathway should I choose for a UX design career?
               </div>
             </div>
 
+            {/* EduPlus AI response */}
             <div>
-              <div className="rounded-[var(--radius)] mb-1 ml-auto w-3/5 bg-primary p-3 text-xs text-primary-foreground font-sans leading-relaxed">
-                Molestiae numquam debitis et ullam distinctio provident nobis repudiandae deleniti necessitatibus.
+              <div className="rounded-[var(--radius)] mb-1 ml-auto w-4/5 bg-primary p-3 text-xs text-primary-foreground font-sans leading-relaxed">
+                Based on your profile, the Product Design Pathway aligns best. Start with the Foundations module — it maps directly to your goals.
               </div>
-              <span className="text-muted-foreground block text-right font-mono text-[9px] uppercase tracking-widest mt-1">Now</span>
+              <span className="text-muted-foreground block text-right font-mono text-[9px] uppercase tracking-widest mt-1">
+                Now
+              </span>
             </div>
           </div>
         </div>
 
-        {/* Uptime Banner */}
+        {/* ── Highlight banner ── */}
         <div className="col-span-full border-t border-b border-border p-12 bg-zinc-50/5 dark:bg-transparent">
           <p className="text-center text-4xl font-light tracking-tight text-primary lg:text-7xl font-sans">
-            99.99% Uptime
+            98% Placement Rate
           </p>
         </div>
 
-        {/* Activity Feed Chart */}
-        <div className="relative col-span-full min-h-[400px] flex flex-col justify-between">
-          <div className="relative z-10 max-w-lg px-6 pr-12 pt-6 md:px-12 md:pt-12">
+        {/* ── Bottom panel: Learner milestone stats ── */}
+        <div className="relative col-span-full flex flex-col">
+          <div className="relative z-10 px-6 pt-6 md:px-12 md:pt-12 pb-4">
             <span className="text-muted-foreground flex items-center gap-2 text-xs font-mono uppercase tracking-wider">
-              <Activity className="size-4 text-primary" />
-              Activity feed
+              <TrendingUp className="size-4 text-primary" />
+              Platform milestones
             </span>
 
-            <p className="my-8 text-2xl font-light text-foreground leading-snug">
-              Monitor your application's activity in real-time.{' '}
-              <span className="text-muted-foreground">Instantly identify and resolve issues.</span>
+            <p className="my-6 text-2xl font-light text-foreground leading-snug">
+              Impact that compounds.{' '}
+              <span className="text-muted-foreground">
+                Every learner milestone strengthens the entire network.
+              </span>
             </p>
           </div>
-          <div className="w-full mt-auto">
-            <MonitoringChart />
+
+          {/* Stat grid */}
+          <div className="grid grid-cols-2 md:grid-cols-4 border-t border-border">
+            {MILESTONES.map((m, i) => (
+              <div
+                key={m.label}
+                className={`flex flex-col items-center justify-center gap-1 px-6 py-10 ${
+                  i < MILESTONES.length - 1 ? 'border-r border-border' : ''
+                } ${i >= 2 ? 'border-t border-border md:border-t-0' : ''}`}
+              >
+                <span className="text-3xl md:text-4xl font-light text-primary font-sans tracking-tight">
+                  {m.value}
+                </span>
+                <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-muted-foreground text-center leading-tight">
+                  {m.label}
+                </span>
+              </div>
+            ))}
+          </div>
+
+          {/* Decorative icon */}
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute bottom-6 right-8 opacity-[0.04]"
+          >
+            <BookOpen className="size-40 text-primary" strokeWidth={0.5} />
           </div>
         </div>
+
       </div>
     </section>
   )
 }
-
