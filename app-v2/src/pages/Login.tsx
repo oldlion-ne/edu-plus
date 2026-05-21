@@ -1,27 +1,160 @@
 import React, { useState } from 'react';
-import { useNavigate, useLocation } from 'react-router';
+import { Link, useNavigate, useLocation } from 'react-router';
 import { useAuth } from '../lib/AuthContext';
 import { toast } from 'sonner';
+import { cn } from '@/lib/utils';
 import {
   Card,
   CardContent,
+  CardDescription,
   CardHeader,
   CardTitle,
-  CardDescription,
-} from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Input } from "@/components/ui/input";
+} from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { Label } from '@/components/ui/label';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
-import { Alert, AlertDescription } from "@/components/ui/alert";
+} from '@/components/ui/select';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
+// ── LoginForm component (shadcn block pattern) ────────────────────────────────
+function LoginForm({
+  className,
+  isSignUp,
+  setIsSignUp,
+  onSubmit,
+  email,
+  setEmail,
+  password,
+  setPassword,
+  role,
+  setRole,
+  submitting,
+}: {
+  className?: string;
+  isSignUp: boolean;
+  setIsSignUp: (v: boolean) => void;
+  onSubmit: (e: React.FormEvent) => void;
+  email: string;
+  setEmail: (v: string) => void;
+  password: string;
+  setPassword: (v: string) => void;
+  role: 'admin' | 'educator' | 'resource_person';
+  setRole: (v: 'admin' | 'educator' | 'resource_person') => void;
+  submitting: boolean;
+}) {
+  return (
+    <div className={cn('flex flex-col gap-6', className)}>
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-xl">
+            {isSignUp ? 'Create an account' : 'Login to your account'}
+          </CardTitle>
+          <CardDescription>
+            {isSignUp
+              ? 'Fill in the details below to create your EduPlus account'
+              : 'Enter your email below to login to your account'}
+          </CardDescription>
+        </CardHeader>
+
+        <CardContent>
+          <form onSubmit={onSubmit}>
+            <div className="flex flex-col gap-6">
+
+              {/* Email */}
+              <div className="flex flex-col gap-2">
+                <Label htmlFor="email">Email</Label>
+                <Input
+                  id="email"
+                  type="email"
+                  placeholder="name@eduplus.in"
+                  required
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+              </div>
+
+              {/* Password */}
+              <div className="flex flex-col gap-2">
+                <div className="flex items-center">
+                  <Label htmlFor="password">Password</Label>
+                  {!isSignUp && (
+                    <Link
+                      to="/contact"
+                      className="ml-auto inline-block text-sm underline-offset-4 hover:underline text-muted-foreground"
+                    >
+                      Forgot your password?
+                    </Link>
+                  )}
+                </div>
+                <Input
+                  id="password"
+                  type="password"
+                  placeholder="••••••••••••"
+                  required
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+              </div>
+
+              {/* Role selector — sign-up only */}
+              {isSignUp && (
+                <div className="flex flex-col gap-2">
+                  <Label htmlFor="role">Role</Label>
+                  <Select
+                    value={role}
+                    onValueChange={(val) =>
+                      setRole(val as 'admin' | 'educator' | 'resource_person')
+                    }
+                  >
+                    <SelectTrigger id="role">
+                      <SelectValue placeholder="Select your role" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="admin">Administrator</SelectItem>
+                      <SelectItem value="educator">Educator</SelectItem>
+                      <SelectItem value="resource_person">Resource Expert</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              )}
+
+              {/* Submit */}
+              <div className="flex flex-col gap-3">
+                <Button type="submit" className="w-full" disabled={submitting}>
+                  {submitting
+                    ? 'Processing...'
+                    : isSignUp
+                    ? 'Create Account'
+                    : 'Login'}
+                </Button>
+
+                <p className="text-center text-sm text-muted-foreground">
+                  {isSignUp ? 'Already have an account? ' : "Don't have an account? "}
+                  <button
+                    type="button"
+                    onClick={() => setIsSignUp(!isSignUp)}
+                    className="underline underline-offset-4 hover:text-primary transition-colors"
+                  >
+                    {isSignUp ? 'Sign in' : 'Sign up'}
+                  </button>
+                </p>
+              </div>
+            </div>
+          </form>
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
+
+// ── Page ──────────────────────────────────────────────────────────────────────
 export default function Login() {
   const { signIn, signUp, signInSimulated, user } = useAuth();
   const navigate = useNavigate();
@@ -29,7 +162,6 @@ export default function Login() {
 
   const [activeTab, setActiveTab] = useState<'secure' | 'bypass'>('secure');
   const [isSignUp, setIsSignUp] = useState(false);
-
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [role, setRole] = useState<'admin' | 'educator' | 'resource_person'>('educator');
@@ -38,9 +170,7 @@ export default function Login() {
   const from = (location.state as any)?.from?.pathname || '/dashboard';
 
   React.useEffect(() => {
-    if (user) {
-      navigate(from, { replace: true });
-    }
+    if (user) navigate(from, { replace: true });
   }, [user, navigate, from]);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -50,12 +180,12 @@ export default function Login() {
       if (isSignUp) {
         const { error } = await signUp(email, password, role);
         if (error) throw error;
-        toast.success('Sign up successful. Your account has been created.');
+        toast.success('Account created successfully.');
         setIsSignUp(false);
       } else {
         const { error } = await signIn(email, password);
         if (error) throw error;
-        toast.success('Access granted. Welcome back.');
+        toast.success('Welcome back.');
         navigate(from, { replace: true });
       }
     } catch (err: any) {
@@ -67,105 +197,62 @@ export default function Login() {
 
   const handleBypass = (selectedRole: 'admin' | 'educator' | 'resource_person') => {
     signInSimulated(selectedRole);
-    toast.success(`Simulated session established as ${selectedRole.toUpperCase()}.`);
+    toast.success(`Simulated session: ${selectedRole.toUpperCase()}`);
     navigate(from, { replace: true });
   };
 
   return (
-    <div className="min-h-screen bg-background text-foreground flex justify-center items-center py-24 relative overflow-hidden font-sans pt-[100px] px-6 animate-fade-in">
-      <Card className="w-full max-w-[460px] z-10 relative">
-        <CardHeader className="text-center pb-6">
-          <CardTitle className="font-heading text-2xl font-light tracking-wide">
-            {isSignUp ? 'Create Account' : 'Sign In'}
-          </CardTitle>
-          <CardDescription className="font-mono text-[10px] tracking-[0.2em] uppercase">
-            EduPlus // Central Gateway
-          </CardDescription>
-        </CardHeader>
+    <div className="flex min-h-svh w-full items-center justify-center p-6 md:p-10 bg-background">
+      <div className="w-full max-w-sm">
 
-        <Tabs value={activeTab} onValueChange={(val) => setActiveTab(val as any)} className="w-full">
-          <div className="px-6">
-            <TabsList className="grid grid-cols-2 w-full mb-6">
-              <TabsTrigger value="secure" className="text-[10px] font-mono tracking-widest uppercase">
-                Secure Access
-              </TabsTrigger>
-              <TabsTrigger value="bypass" className="text-[10px] font-mono tracking-widest uppercase">
-                Dev Bypass
-              </TabsTrigger>
-            </TabsList>
-          </div>
+        {/* Tab switcher: Secure / Dev Bypass */}
+        <Tabs
+          value={activeTab}
+          onValueChange={(v) => setActiveTab(v as 'secure' | 'bypass')}
+          className="w-full"
+        >
+          <TabsList className="grid grid-cols-2 w-full mb-4">
+            <TabsTrigger value="secure" className="text-[10px] font-mono tracking-widest uppercase">
+              Secure Access
+            </TabsTrigger>
+            <TabsTrigger value="bypass" className="text-[10px] font-mono tracking-widest uppercase">
+              Dev Bypass
+            </TabsTrigger>
+          </TabsList>
 
-          <CardContent className="px-6 pb-6">
-            {/* SECURE ACCESS CONTENT */}
-            <TabsContent value="secure" className="space-y-4 text-left m-0 outline-none">
-              <form onSubmit={handleSubmit} className="space-y-4 text-left">
-                <div className="space-y-1.5">
-                  <Label htmlFor="email" className="text-xs font-mono uppercase tracking-wider">Email Address</Label>
-                  <Input
-                    id="email"
-                    type="email"
-                    required
-                    value={email}
-                    onChange={e => setEmail(e.target.value)}
-                    placeholder="name@eduplus.in"
-                  />
-                </div>
+          {/* ── Secure login tab ── */}
+          <TabsContent value="secure" className="m-0 outline-none">
+            <LoginForm
+              isSignUp={isSignUp}
+              setIsSignUp={setIsSignUp}
+              onSubmit={handleSubmit}
+              email={email}
+              setEmail={setEmail}
+              password={password}
+              setPassword={setPassword}
+              role={role}
+              setRole={setRole}
+              submitting={submitting}
+            />
+          </TabsContent>
 
-                <div className="space-y-1.5">
-                  <Label htmlFor="password" className="text-xs font-mono uppercase tracking-wider">Password</Label>
-                  <Input
-                    id="password"
-                    type="password"
-                    required
-                    value={password}
-                    onChange={e => setPassword(e.target.value)}
-                    placeholder="••••••••••••"
-                  />
-                </div>
-
-                {isSignUp && (
-                  <div className="space-y-1.5">
-                    <Label className="text-xs font-mono uppercase tracking-wider">Role</Label>
-                    <Select value={role} onValueChange={(val) => setRole(val as any)}>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select Role" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="admin">Administrator</SelectItem>
-                        <SelectItem value="educator">Educator</SelectItem>
-                        <SelectItem value="resource_person">Resource Expert</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                )}
-
-                <Button type="submit" disabled={submitting} className="w-full font-mono text-xs tracking-widest uppercase mt-2">
-                  {submitting ? 'Processing...' : isSignUp ? 'Create Account' : 'Authorize Access'}
-                </Button>
-
-                <div className="text-center pt-2">
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    onClick={() => setIsSignUp(!isSignUp)}
-                    className="text-xs font-mono text-muted-foreground hover:text-primary"
-                  >
-                    {isSignUp ? 'Already registered? Log in' : "Don't have an account? Sign up"}
-                  </Button>
-                </div>
-              </form>
-            </TabsContent>
-
-            {/* DEV BYPASS NODE CONTENT */}
-            <TabsContent value="bypass" className="space-y-4 text-left m-0 outline-none">
-              <div className="space-y-4 text-left">
+          {/* ── Dev bypass tab ── */}
+          <TabsContent value="bypass" className="m-0 outline-none">
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-xl">Dev Bypass</CardTitle>
+                <CardDescription>
+                  Inject a simulated role session without hitting the auth server.
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="flex flex-col gap-4">
                 <Alert>
                   <AlertDescription className="text-[10px] font-mono leading-relaxed">
-                    [DEV MODE]: Bypass remote server queries. Inject simulated role directly to unlock all dashboard sections immediately.
+                    [DEV MODE] — Bypasses Supabase auth. Inject a role directly to unlock all dashboard sections.
                   </AlertDescription>
                 </Alert>
 
-                <div className="space-y-2 pt-2">
+                <div className="flex flex-col gap-2">
                   <Button
                     onClick={() => handleBypass('admin')}
                     variant="outline"
@@ -188,11 +275,11 @@ export default function Login() {
                     Inject Resource Clearance
                   </Button>
                 </div>
-              </div>
-            </TabsContent>
-          </CardContent>
+              </CardContent>
+            </Card>
+          </TabsContent>
         </Tabs>
-      </Card>
+      </div>
     </div>
   );
 }
