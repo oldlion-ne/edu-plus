@@ -1,10 +1,9 @@
 import { useRef } from 'react';
 import { Link } from 'react-router';
-import {
-  ArrowRight,
-  Activity,
-} from 'lucide-react';
+import { ArrowRight, Activity } from 'lucide-react';
 import { TimelineAnimation } from '../components/timeline-animation';
+import { Button } from '../components/ui/button';
+import { Badge } from '../components/ui/badge';
 
 const STATS = [
   { value: '4,200+', label: 'Learners' },
@@ -19,7 +18,7 @@ export default function Hero() {
     <section
       ref={sectionRef}
       id="story"
-      className="relative w-full min-h-screen flex flex-col justify-center overflow-hidden bg-[#0B0F14]"
+      className="relative w-full min-h-screen flex flex-col justify-center overflow-hidden bg-background"
     >
       {/* ── Background video ── */}
       <video
@@ -67,30 +66,32 @@ export default function Hero() {
       {/* ── Main content ── */}
       <div className="relative z-10 flex flex-col items-center text-center px-6 md:px-12 pt-28 pb-16 max-w-5xl mx-auto w-full">
 
-        {/* Eyebrow */}
+        {/* Eyebrow Badge */}
         <TimelineAnimation
           once
           as="div"
           animationNum={1}
           timelineRef={sectionRef}
-          className="inline-flex items-center gap-2 border border-[#7DF9FF]/30 bg-[#7DF9FF]/05 px-4 py-1.5 mb-8"
+          className="mb-8"
         >
-          <Activity size={11} className="text-[#7DF9FF]" />
-          <span className="text-[10px] font-bold tracking-[0.3em] uppercase text-[#7DF9FF]">
-            Eduplus · Learning Intelligence Platform
-          </span>
+          <Badge variant="outline" className="inline-flex items-center gap-2 px-4 py-1.5">
+            <Activity size={11} />
+            <span className="text-[10px] font-bold tracking-[0.3em] uppercase">
+              Eduplus · Learning Intelligence Platform
+            </span>
+          </Badge>
         </TimelineAnimation>
 
-        {/* Headline — tighter, scaled down */}
+        {/* Headline */}
         <TimelineAnimation
           once
           as="h1"
           animationNum={2}
           timelineRef={sectionRef}
-          className="text-4xl sm:text-5xl md:text-[3.5rem] lg:text-6xl font-semibold tracking-tight leading-[1.1] text-[#E6EDF3] mb-5"
+          className="text-4xl sm:text-5xl md:text-[3.5rem] lg:text-6xl font-semibold tracking-tight leading-[1.1] text-foreground mb-5"
         >
           Shaping the builders{' '}
-          <span className="text-[#7DF9FF]">of tomorrow</span>
+          <span className="text-primary">of tomorrow</span>
         </TimelineAnimation>
 
         {/* Subtext */}
@@ -99,7 +100,7 @@ export default function Hero() {
           as="p"
           animationNum={3}
           timelineRef={sectionRef}
-          className="max-w-xl text-base md:text-lg text-[#E6EDF3]/55 leading-relaxed mb-10"
+          className="max-w-xl text-base md:text-lg text-muted-foreground leading-relaxed mb-10"
         >
           A global network of innovators, educators, and visionaries
           redefining human capability through AI-powered personalised pathways.
@@ -113,19 +114,17 @@ export default function Hero() {
           timelineRef={sectionRef}
           className="flex flex-col sm:flex-row items-center gap-3 mb-12"
         >
-          <Link
-            to="/contact"
-            className="inline-flex items-center gap-2 px-7 py-3 bg-[#7DF9FF] text-[#0B0F14] font-bold text-sm tracking-wide hover:bg-white transition-all duration-300 shadow-[0_0_28px_rgba(125,249,255,0.22)]"
-          >
-            Start Your Pathway
-            <ArrowRight size={14} />
-          </Link>
-          <Link
-            to="/about"
-            className="inline-flex items-center gap-2 px-7 py-3 border border-[#7DF9FF]/30 text-[#E6EDF3] font-medium text-sm tracking-wide hover:border-[#7DF9FF] hover:text-[#7DF9FF] transition-all duration-300"
-          >
-            Explore Network
-          </Link>
+          <Button asChild size="lg">
+            <Link to="/contact" className="inline-flex items-center gap-2">
+              Start Your Pathway
+              <ArrowRight size={14} />
+            </Link>
+          </Button>
+          <Button asChild variant="outline" size="lg">
+            <Link to="/about">
+              Explore Network
+            </Link>
+          </Button>
         </TimelineAnimation>
 
         {/* Stats strip */}
@@ -134,17 +133,17 @@ export default function Hero() {
           as="div"
           animationNum={5}
           timelineRef={sectionRef}
-          className="flex items-center gap-0 border border-[#7DF9FF]/15 bg-[#0E131A]/70 backdrop-blur-sm"
+          className="flex items-center gap-0 border border-border bg-card/70 backdrop-blur-sm"
         >
           {STATS.map((s, i) => (
             <div
               key={s.label}
-              className={`flex flex-col items-center px-7 py-4 ${i < STATS.length - 1 ? 'border-r border-[#7DF9FF]/10' : ''}`}
+              className={`flex flex-col items-center px-7 py-4 ${i < STATS.length - 1 ? 'border-r border-border' : ''}`}
             >
-              <span className="text-xl font-bold text-[#7DF9FF] font-mono">
+              <span className="text-xl font-bold text-primary font-mono">
                 {s.value}
               </span>
-              <span className="text-[10px] text-[#E6EDF3]/40 uppercase tracking-widest font-mono mt-0.5">
+              <span className="text-[10px] text-muted-foreground uppercase tracking-widest font-mono mt-0.5">
                 {s.label}
               </span>
             </div>
@@ -156,7 +155,7 @@ export default function Hero() {
       <div
         aria-hidden
         className="absolute bottom-0 left-0 right-0 h-32 z-[3] pointer-events-none"
-        style={{ background: 'linear-gradient(to top, #0B0F14 0%, transparent 100%)' }}
+        style={{ background: 'linear-gradient(to top, hsl(var(--background)) 0%, transparent 100%)' }}
       />
 
       {/* ── Bottom-right meta tag ── */}
@@ -166,8 +165,8 @@ export default function Hero() {
         timelineRef={sectionRef}
         className="absolute bottom-8 right-6 md:right-12 z-10"
       >
-        <div className="border border-[#7DF9FF]/20 bg-[#0B0F14]/80 backdrop-blur-md px-4 py-2">
-          <span className="text-[9px] font-mono font-bold tracking-[0.25em] uppercase text-[#7DF9FF]/70">
+        <div className="border border-border bg-card/80 backdrop-blur-md px-4 py-2">
+          <span className="text-[9px] font-mono font-bold tracking-[0.25em] uppercase text-muted-foreground">
             Investing · Building · Advisory
           </span>
         </div>

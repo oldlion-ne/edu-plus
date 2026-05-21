@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { Spotlight, SpotLightItem } from '../components/effects/Spotlight';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../components/ui/card';
 
 interface ServiceNode {
   title: string;
@@ -44,55 +45,52 @@ function ServiceCard({ service, index }: { service: ServiceNode; index: number }
   const [hovered, setHovered] = useState(false);
 
   return (
-    <div
-      className="group relative border border-[rgba(230,237,243,0.08)] p-8 md:p-10 transition-all duration-300 cursor-pointer"
-      style={{
-        borderColor: hovered ? '#7DF9FF' : 'rgba(230,237,243,0.08)',
-        transitionDelay: `${index * 50}ms`,
-      }}
+    <Card
+      className="group relative transition-all duration-300 cursor-pointer overflow-hidden"
+      style={{ transitionDelay: `${index * 50}ms` }}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
     >
-      {/* Icon */}
-      <div className="mb-6">
-        <svg
-          width="32"
-          height="32"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke={hovered ? '#7DF9FF' : '#E6EDF3'}
-          strokeWidth="1.5"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          className="transition-colors duration-300"
+      <CardHeader className="pb-2">
+        {/* Icon */}
+        <div className="mb-4">
+          <svg
+            width="32"
+            height="32"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke={hovered ? 'hsl(var(--primary))' : 'hsl(var(--foreground))'}
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="transition-colors duration-300"
+          >
+            <path d={service.icon} />
+          </svg>
+        </div>
+        <CardTitle
+          className={`font-heading text-xl md:text-2xl font-normal transition-colors duration-300 ${
+            hovered ? 'text-primary' : 'text-foreground'
+          }`}
         >
-          <path d={service.icon} />
-        </svg>
-      </div>
-
-      {/* Title */}
-      <h3
-        className={`font-heading text-xl md:text-2xl font-normal mb-4 transition-colors duration-300 ${
-          hovered ? 'text-[#7DF9FF]' : 'text-[#E6EDF3]'
-        }`}
-      >
-        {service.title}
-      </h3>
-
-      {/* Description */}
-      <p className="font-sans text-sm text-[#8B949E] leading-relaxed">
-        {service.description}
-      </p>
+          {service.title}
+        </CardTitle>
+      </CardHeader>
+      <CardContent>
+        <CardDescription className="font-sans text-sm leading-relaxed">
+          {service.description}
+        </CardDescription>
+      </CardContent>
 
       {/* Hover accent line */}
       <div
         className="absolute bottom-0 left-0 h-[1px] transition-all duration-500"
         style={{
           width: hovered ? '100%' : '0%',
-          background: 'linear-gradient(90deg, #7DF9FF, transparent)',
+          background: 'linear-gradient(90deg, hsl(var(--primary)), transparent)',
         }}
       />
-    </div>
+    </Card>
   );
 }
 
@@ -122,20 +120,20 @@ export default function ServicesMatrix() {
     <section
       ref={sectionRef}
       id="building"
-      className="relative w-full py-40 md:py-52 bg-[#0B0F14]"
+      className="relative w-full py-40 md:py-52 bg-background"
     >
       <div className="max-w-[1440px] mx-auto px-6 md:px-12">
         {/* Section Header */}
         <div className="mb-20">
           <span
-            className={`text-xs font-sans font-medium tracking-[0.3em] uppercase text-[#7DF9FF] mb-6 block transition-all duration-1000 ${
+            className={`text-xs font-sans font-medium tracking-[0.3em] uppercase text-primary mb-6 block transition-all duration-1000 ${
               visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
             }`}
           >
             Services Matrix
           </span>
           <h2
-            className={`font-heading text-4xl md:text-5xl lg:text-6xl font-light text-[#E6EDF3] max-w-2xl transition-all duration-1000 delay-200 ${
+            className={`font-heading text-4xl md:text-5xl lg:text-6xl font-light text-foreground max-w-2xl transition-all duration-1000 delay-200 ${
               visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
             }`}
           >
@@ -145,7 +143,7 @@ export default function ServicesMatrix() {
 
         {/* Services Grid */}
         <Spotlight
-          className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 transition-all duration-1000 delay-400 ${
+          className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-0 transition-all duration-1000 delay-400 ${
             visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
           }`}
         >
