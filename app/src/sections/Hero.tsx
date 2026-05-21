@@ -1,21 +1,10 @@
 import { useRef } from 'react';
 import { Link } from 'react-router';
 import {
-  BrainCircuit,
-  Zap,
-  Globe2,
-  TrendingUp,
   ArrowRight,
   Activity,
 } from 'lucide-react';
 import { TimelineAnimation } from '../components/timeline-animation';
-
-const PROGRAMS = [
-  { icon: BrainCircuit, label: 'AI & ML', active: true },
-  { icon: Zap, label: 'Energy', active: false },
-  { icon: Globe2, label: 'Leadership', active: false },
-  { icon: TrendingUp, label: 'Venture', active: false },
-];
 
 const STATS = [
   { value: '4,200+', label: 'Learners' },
@@ -145,7 +134,7 @@ export default function Hero() {
           as="div"
           animationNum={5}
           timelineRef={sectionRef}
-          className="flex items-center gap-0 border border-[#7DF9FF]/15 bg-[#0E131A]/70 backdrop-blur-sm mb-14"
+          className="flex items-center gap-0 border border-[#7DF9FF]/15 bg-[#0E131A]/70 backdrop-blur-sm"
         >
           {STATS.map((s, i) => (
             <div
@@ -160,83 +149,6 @@ export default function Hero() {
               </span>
             </div>
           ))}
-        </TimelineAnimation>
-
-        {/* ── Dashboard mockup ── */}
-        <TimelineAnimation
-          once
-          animationNum={6}
-          timelineRef={sectionRef}
-          className="w-full max-w-3xl border border-[#7DF9FF]/15 bg-[#0E131A]/80 backdrop-blur-sm shadow-[0_32px_80px_-16px_rgba(125,249,255,0.07)]"
-        >
-          {/* Chrome bar */}
-          <div className="flex items-center gap-2 px-4 py-2.5 border-b border-[#7DF9FF]/10 bg-[#0B0F14]/60">
-            <div className="w-2 h-2 bg-[#7DF9FF]/40" />
-            <div className="w-2 h-2 bg-[#7DF9FF]/20" />
-            <div className="w-2 h-2 bg-[#7DF9FF]/10" />
-            <span className="ml-3 text-[9px] tracking-widest text-[#E6EDF3]/20 uppercase font-mono">
-              eduplus · learning intelligence · ai track 2026
-            </span>
-            <div className="ml-auto flex items-center gap-1.5">
-              <div className="w-1.5 h-1.5 bg-emerald-400 animate-pulse" />
-              <span className="text-[9px] text-[#E6EDF3]/25 font-mono uppercase tracking-widest">
-                live
-              </span>
-            </div>
-          </div>
-
-          {/* Inner layout */}
-          <div className="p-6 grid grid-cols-12 gap-4">
-            {/* Left: progress */}
-            <div className="col-span-7 space-y-3">
-              <p className="text-[9px] font-bold text-[#E6EDF3]/30 uppercase tracking-widest font-mono mb-3">
-                Pathway Completion
-              </p>
-              <div className="relative h-1 bg-[#7DF9FF]/10">
-                <div className="absolute top-0 left-0 h-full bg-[#7DF9FF]" style={{ width: '62%' }} />
-              </div>
-              <div className="flex justify-between text-[9px] font-mono text-[#E6EDF3]/30">
-                <span>Module 8 of 13</span>
-                <span className="text-[#7DF9FF]">62%</span>
-              </div>
-              <div className="space-y-2 pt-2">
-                {[100, 90, 78].map((w) => (
-                  <div
-                    key={w}
-                    className="h-1.5 bg-[#7DF9FF]/06"
-                    style={{ width: `${w}%` }}
-                  />
-                ))}
-              </div>
-            </div>
-
-            {/* Right: program selector */}
-            <div className="col-span-5">
-              <p className="text-[9px] font-bold text-[#E6EDF3]/30 uppercase tracking-widest font-mono mb-3">
-                Domain
-              </p>
-              <div className="grid grid-cols-2 gap-1.5">
-                {PROGRAMS.map(({ icon: Icon, label, active }) => (
-                  <div
-                    key={label}
-                    className={`p-2.5 border flex items-center gap-2 transition-all ${
-                      active
-                        ? 'border-[#7DF9FF]/50 bg-[#7DF9FF]/06'
-                        : 'border-[#7DF9FF]/08 opacity-40'
-                    }`}
-                  >
-                    <Icon
-                      size={11}
-                      className={active ? 'text-[#7DF9FF]' : 'text-[#E6EDF3]/30'}
-                    />
-                    <span className="text-[9px] font-mono text-[#E6EDF3]/60 uppercase tracking-wider">
-                      {label}
-                    </span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
         </TimelineAnimation>
       </div>
 
