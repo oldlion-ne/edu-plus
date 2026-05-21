@@ -1,4 +1,4 @@
-import { createContext, useContext, useRef, useState, MouseEvent } from 'react';
+import { createContext, useContext, useRef, useState } from 'react';
 import { cn } from '../../lib/utils';
 
 interface SpotlightProps {
@@ -23,7 +23,7 @@ export const Spotlight = ({ children, className }: SpotlightProps) => {
   const [mouseX, setMouseX] = useState<number | null>(null);
   const [mouseY, setMouseY] = useState<number | null>(null);
 
-  const handleGlobalMouseMove = (e: MouseEvent) => {
+  const handleGlobalMouseMove = (e: React.MouseEvent) => {
     setMouseX(e.clientX);
     setMouseY(e.clientY);
   };
@@ -52,7 +52,7 @@ export const SpotLightItem = ({ children, className }: SpotlightItemProps) => {
   const cardRef = useRef<HTMLDivElement>(null);
   const [localMouse, setLocalMouse] = useState<{ x: number; y: number } | null>(null);
 
-  const handleMouseMove = (e: MouseEvent<HTMLDivElement>) => {
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!cardRef.current) return;
     const { left, top } = cardRef.current.getBoundingClientRect();
     const x = e.clientX - left;
@@ -85,7 +85,7 @@ export const SpotLightItem = ({ children, className }: SpotlightItemProps) => {
         />
       )}
       {/* Spotlight border glow layer */}
-      {context?.mouseX !== null && context?.mouseY !== null && cardRef.current && (
+      {context !== undefined && context.mouseX !== null && context.mouseY !== null && cardRef.current && (
         <div
           className="pointer-events-none absolute inset-0 z-0 rounded-none bg-fixed"
           style={{
