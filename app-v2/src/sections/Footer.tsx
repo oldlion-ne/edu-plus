@@ -27,7 +27,7 @@ export default function Footer() {
     <footer
       ref={footerRef}
       id="connect"
-      className="relative w-full pt-16 pb-6 md:pt-24 md:pb-8 bg-[#0E131A] border-t border-[#7DF9FF]/10 overflow-hidden"
+      className="relative w-full pt-16 pb-6 md:pt-24 md:pb-8 bg-[#0E131A] border-t border-border overflow-hidden"
     >
       {/* Soft Neon Accent Glow */}
       <div className="absolute -bottom-20 right-1/4 w-[350px] h-[350px] bg-[#7DF9FF]/3 rounded-none blur-[90px] pointer-events-none" />
@@ -130,7 +130,7 @@ export default function Footer() {
 
         {/* Bottom Bar */}
         <div
-          className={`pt-6 border-t border-[rgba(230,237,243,0.08)] flex flex-col md:flex-row md:items-center md:justify-between gap-4 transition-all duration-1000 delay-600 ${
+          className={`pt-6 border-t border-border flex flex-col md:flex-row md:items-center md:justify-between gap-4 transition-all duration-1000 delay-600 ${
             visible ? 'opacity-100' : 'opacity-0'
           }`}
         >
@@ -140,7 +140,7 @@ export default function Footer() {
           
           {/* Git Commit Status Badge - Centered in bottom section */}
           <div className="flex md:justify-center md:w-1/3">
-            <div className="inline-flex items-center gap-2 font-mono text-[9px] text-[#7DF9FF]/95 bg-[#0B0F14]/75 border border-[#7DF9FF]/15 px-3 py-1 shadow-[0_0_15px_rgba(125,249,255,0.03)] select-all hover:border-[#7DF9FF]/30 transition-all duration-300">
+            <div className="inline-flex items-center gap-2 font-mono text-[9px] text-[#7DF9FF]/95 bg-[#0B0F14]/75 border border-border px-3 py-1 shadow-[0_0_15px_rgba(125,249,255,0.03)] select-all hover:border-[#7DF9FF]/30 transition-all duration-300">
               <span className="relative flex h-1.5 w-1.5">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#4AF626] opacity-75" /> {/* ui-ignore */}
                 <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-[#4AF626]" /> {/* ui-ignore */}

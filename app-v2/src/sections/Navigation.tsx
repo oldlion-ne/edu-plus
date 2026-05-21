@@ -2,6 +2,9 @@ import { useEffect, useRef, useState } from 'react';
 import { NavLink, Link, useNavigate } from 'react-router';
 import { useAuth } from '../lib/AuthContext';
 import { toast } from 'sonner';
+import { Button } from '@/components/ui/button';
+import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { Menu, X } from 'lucide-react';
 
 const NAV_LINKS = [
   { label: 'About', path: '/about' },
@@ -48,8 +51,6 @@ export default function Navigation() {
     <nav
       ref={navRef}
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
-        isOpen ? '!overflow-visible' : ''
-      } ${
         scrolled ? 'liquid-glass-strong backdrop-blur-md shadow-lg border-b border-[#7DF9FF]/10' : 'liquid-glass'
       }`}
     >
@@ -94,112 +95,109 @@ export default function Navigation() {
           )}
 
           {user ? (
-            <button
+            <Button
+              variant="ghost"
               onClick={handleLogout}
-              className="font-mono text-xs tracking-widest uppercase text-white/50 hover:text-red-400 transition-colors duration-300 cursor-pointer"
+              className="rounded-none font-mono text-xs tracking-widest uppercase text-white/50 hover:text-red-400 hover:bg-transparent transition-colors duration-300 cursor-pointer h-auto p-0"
             >
               [ Logout ]
-            </button>
+            </Button>
           ) : (
-            <Link
-              to="/login"
-              className="font-mono text-xs tracking-widest uppercase text-[#7DF9FF] hover:text-white transition-colors duration-300"
+            <Button
+              asChild
+              variant="ghost"
+              className="rounded-none font-mono text-xs tracking-widest uppercase text-[#7DF9FF] hover:text-white hover:bg-transparent transition-colors duration-300 h-auto p-0"
             >
-              [ Login ]
-            </Link>
+              <Link to="/login">[ Login ]</Link>
+            </Button>
           )}
 
-          <Link
-            to="/contact"
-            className="inline-flex items-center px-5 py-2 text-sm font-sans text-[#7DF9FF] border border-[#7DF9FF] hover:bg-[#7DF9FF] hover:text-[#0B0F14] transition-all duration-300"
+          <Button
+            asChild
+            variant="outline"
+            className="rounded-none border-[#7DF9FF] text-[#7DF9FF] hover:bg-[#7DF9FF] hover:text-[#0B0F14] bg-transparent font-sans px-5 py-2 text-sm h-auto transition-all duration-300"
           >
-            Connect
-          </Link>
+            <Link to="/contact">Connect</Link>
+          </Button>
         </div>
 
-        {/* Mobile Menu Toggle */}
-        <button
-          onClick={() => setIsOpen(!isOpen)}
-          className="md:hidden flex flex-col gap-1.5 p-2 focus:outline-none z-50"
-          aria-label="Toggle menu"
-          aria-expanded={isOpen}
-          aria-controls="mobile-menu"
-        >
-          <span className={`w-5 h-0.5 bg-[#E6EDF3] transition-all duration-300 ${isOpen ? 'rotate-45 translate-y-[8px]' : ''}`} />
-          <span className={`w-5 h-0.5 bg-[#E6EDF3] transition-all duration-300 ${isOpen ? 'opacity-0' : ''}`} />
-          <span className={`w-5 h-0.5 bg-[#E6EDF3] transition-all duration-300 ${isOpen ? '-rotate-45 -translate-y-[8px]' : ''}`} />
-        </button>
+        {/* Mobile Menu via Sheet */}
+        <div className="md:hidden">
+          <Sheet open={isOpen} onOpenChange={setIsOpen}>
+            <SheetTrigger asChild>
+              <Button
+                variant="ghost"
+                className="p-2 h-auto text-[#E6EDF3] hover:bg-transparent hover:text-[#7DF9FF]"
+                aria-label="Toggle menu"
+              >
+                {isOpen ? <X className="size-6" /> : <Menu className="size-6" />}
+              </Button>
+            </SheetTrigger>
+            <SheetContent
+              side="top"
+              className="bg-[#0B0F14]/95 backdrop-blur-lg border-b border-[#7DF9FF]/10 pt-[80px] pb-8 px-8 flex flex-col gap-4 z-40 text-left w-full rounded-none"
+            >
+              {NAV_LINKS.map((link) => (
+                <NavLink
+                  key={link.label}
+                  to={link.path}
+                  onClick={() => setIsOpen(false)}
+                  className={({ isActive }) =>
+                    `text-lg font-sans transition-colors duration-300 ${
+                      isActive ? 'text-[#7DF9FF] font-medium' : 'text-[#E6EDF3]'
+                    }`
+                  }
+                >
+                  {link.label}
+                </NavLink>
+              ))}
+
+              {user && (
+                <NavLink
+                  to="/dashboard"
+                  onClick={() => setIsOpen(false)}
+                  className={({ isActive }) =>
+                    `text-lg font-mono tracking-wider uppercase transition-colors duration-300 ${
+                      isActive ? 'text-[#7DF9FF] font-medium' : 'text-white/70'
+                    }`
+                  }
+                >
+                  [ Dashboard ]
+                </NavLink>
+              )}
+
+              {user ? (
+                <Button
+                  variant="ghost"
+                  onClick={() => {
+                    setIsOpen(false);
+                    handleLogout();
+                  }}
+                  className="justify-start rounded-none p-0 h-auto text-left font-mono text-lg tracking-wider uppercase text-red-400 hover:text-red-300 hover:bg-transparent transition-colors duration-300 cursor-pointer"
+                >
+                  [ Logout ]
+                </Button>
+              ) : (
+                <Button
+                  asChild
+                  variant="ghost"
+                  className="justify-start rounded-none p-0 h-auto text-left font-mono text-lg tracking-wider uppercase text-[#7DF9FF] hover:text-white hover:bg-transparent transition-colors duration-300"
+                >
+                  <Link to="/login" onClick={() => setIsOpen(false)}>[ Login ]</Link>
+                </Button>
+              )}
+
+              <Button
+                asChild
+                variant="outline"
+                className="rounded-none border-[#7DF9FF] text-[#7DF9FF] hover:bg-[#7DF9FF] hover:text-[#0B0F14] bg-transparent font-sans py-2.5 text-center text-sm w-full transition-all duration-300 mt-2 h-auto"
+              >
+                <Link to="/contact" onClick={() => setIsOpen(false)}>Connect</Link>
+              </Button>
+            </SheetContent>
+          </Sheet>
+        </div>
       </div>
-
-      {/* Mobile Drawer Backdrop */}
-      {isOpen && (
-        <div
-          onClick={() => setIsOpen(false)}
-          className="md:hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-40 mt-[72px]"
-        />
-      )}
-
-      {/* Mobile Drawer */}
-      {isOpen && (
-        <div id="mobile-menu" className="md:hidden absolute top-[72px] left-0 right-0 bg-[#0B0F14]/95 backdrop-blur-lg border-b border-[#7DF9FF]/10 py-6 px-8 flex flex-col gap-4 z-50">
-          {NAV_LINKS.map((link) => (
-            <NavLink
-              key={link.label}
-              to={link.path}
-              onClick={() => setIsOpen(false)}
-              className={({ isActive }) =>
-                `text-lg font-sans transition-colors duration-300 ${
-                  isActive ? 'text-[#7DF9FF] font-medium' : 'text-[#E6EDF3]'
-                }`
-              }
-            >
-              {link.label}
-            </NavLink>
-          ))}
-
-          {user && (
-            <NavLink
-              to="/dashboard"
-              onClick={() => setIsOpen(false)}
-              className={({ isActive }) =>
-                `text-lg font-mono tracking-wider uppercase transition-colors duration-300 ${
-                  isActive ? 'text-[#7DF9FF] font-medium' : 'text-white/70'
-                }`
-              }
-            >
-              [ Dashboard ]
-            </NavLink>
-          )}
-
-          {user ? (
-            <button
-              onClick={() => {
-                setIsOpen(false);
-                handleLogout();
-              }}
-              className="text-left font-mono text-lg tracking-wider uppercase text-red-400 hover:text-red-300 transition-colors duration-300 cursor-pointer"
-            >
-              [ Logout ]
-            </button>
-          ) : (
-            <Link
-              to="/login"
-              onClick={() => setIsOpen(false)}
-              className="font-mono text-lg tracking-wider uppercase text-[#7DF9FF] hover:text-white transition-colors duration-300"
-            >
-              [ Login ]
-            </Link>
-          )}
-
-          <Link
-            to="/contact"
-            onClick={() => setIsOpen(false)}
-            className="inline-flex items-center justify-center py-2.5 text-center text-sm font-sans text-[#7DF9FF] border border-[#7DF9FF] hover:bg-[#7DF9FF] hover:text-[#0B0F14] transition-all duration-300 mt-2"
-          >
-            Connect
-          </Link>
-        </div>
-      )}
     </nav>
   );
 }

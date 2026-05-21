@@ -2,6 +2,23 @@ import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router';
 import { useAuth } from '../lib/AuthContext';
 import { toast } from 'sonner';
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Button } from "@/components/ui/button";
 
 export default function Login() {
   const { signIn, signUp, signInSimulated, user } = useAuth();
@@ -69,101 +86,111 @@ export default function Login() {
     <div className="min-h-screen bg-[#0B0F14] text-[#E6EDF3] flex justify-center items-center py-24 relative overflow-hidden font-sans pt-[100px] px-6 animate-fade-in">
       <div className="absolute top-1/4 left-1/4 w-[400px] h-[400px] bg-[#7DF9FF]/3 rounded-none blur-[120px] pointer-events-none" />
 
-      <div className="w-full max-w-[460px] bg-[#0E131A]/80 border border-[#7DF9FF]/20 p-8 shadow-[0_0_40px_rgba(11,15,20,0.85)] z-10 relative rounded-none">
+      <Card className="w-full max-w-[460px] bg-[#0E131A]/80 border-[#7DF9FF]/20 p-8 shadow-[0_0_40px_rgba(11,15,20,0.85)] z-10 relative rounded-none">
         
         {/* Neon Header Accent */}
         <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-[#7DF9FF] to-transparent shadow-[0_0_12px_#7DF9FF]"></div>
 
-        <div className="text-center mb-8">
-          <h1 className="font-heading text-2xl font-light tracking-wide">Secure Terminal Entry</h1>
-          <p className="font-mono text-[9px] text-[#7DF9FF] tracking-[0.2em] mt-1 uppercase">EduPlus // Central Gateway</p>
-        </div>
+        <CardHeader className="text-center p-0 mb-8 space-y-0">
+          <CardTitle className="font-heading text-2xl font-light tracking-wide text-[#E6EDF3] p-0">Secure Terminal Entry</CardTitle>
+          <CardDescription className="font-mono text-[9px] text-[#7DF9FF] tracking-[0.2em] mt-1 uppercase p-0">EduPlus // Central Gateway</CardDescription>
+        </CardHeader>
 
-        {/* Selector Tabs */}
-        <div className="grid grid-cols-2 gap-2 border-b border-[#7DF9FF]/10 pb-4 mb-6">
-          <button onClick={() => setActiveTab('secure')} className={`py-2 text-[10px] font-mono tracking-widest uppercase border rounded-none transition-all duration-300 cursor-pointer focus:outline-none focus:ring-1 focus:ring-[#7DF9FF] ${activeTab === 'secure' ? 'border-[#7DF9FF] bg-[#7DF9FF]/5 text-[#7DF9FF] hover:border-[#7DF9FF]' : 'border-transparent text-white/40 hover:text-white hover:border-[#7DF9FF]/30'}`}>
-            [ SECURE ACCESS ]
-          </button>
-          <button onClick={() => setActiveTab('bypass')} className={`py-2 text-[10px] font-mono tracking-widest uppercase border rounded-none transition-all duration-300 cursor-pointer focus:outline-none focus:ring-1 focus:ring-[#7DF9FF] ${activeTab === 'bypass' ? 'border-[#7DF9FF] bg-[#7DF9FF]/5 text-[#7DF9FF] hover:border-[#7DF9FF]' : 'border-transparent text-white/40 hover:text-white hover:border-[#7DF9FF]/30'}`}>
-            [ DEV BYPASS NODE ]
-          </button>
-        </div>
+        <Tabs value={activeTab} onValueChange={(val) => setActiveTab(val as any)} className="w-full">
+          <TabsList className="grid grid-cols-2 gap-2 bg-transparent border-b border-[#7DF9FF]/10 pb-4 mb-6 h-auto p-0 rounded-none">
+            <TabsTrigger 
+              value="secure" 
+              className="py-2 text-[10px] font-mono tracking-widest uppercase border rounded-none transition-all duration-300 cursor-pointer focus:outline-none data-[state=active]:border-[#7DF9FF] data-[state=active]:bg-[#7DF9FF]/5 data-[state=active]:text-[#7DF9FF] border-transparent text-white/40 hover:text-white hover:border-[#7DF9FF]/30"
+            >
+              [ SECURE ACCESS ]
+            </TabsTrigger>
+            <TabsTrigger 
+              value="bypass" 
+              className="py-2 text-[10px] font-mono tracking-widest uppercase border rounded-none transition-all duration-300 cursor-pointer focus:outline-none data-[state=active]:border-[#7DF9FF] data-[state=active]:bg-[#7DF9FF]/5 data-[state=active]:text-[#7DF9FF] border-transparent text-white/40 hover:text-white hover:border-[#7DF9FF]/30"
+            >
+              [ DEV BYPASS NODE ]
+            </TabsTrigger>
+          </TabsList>
 
-        {/* TAB A: SECURE ACCESS */}
-        {activeTab === 'secure' && (
-          <form onSubmit={handleSubmit} className="space-y-4 text-left">
-            <div className="space-y-1">
-              <label className="text-[9px] font-mono text-[#8B949E] uppercase tracking-wider">Email Address</label>
-              <input
-                type="email"
-                required
-                value={email}
-                onChange={e => setEmail(e.target.value)}
-                placeholder="name@eduplus.in"
-                className="w-full bg-[#0B0F14] border border-white/10 text-xs px-4 py-2.5 outline-none focus:border-[#7DF9FF] rounded-none text-white font-sans"
-              />
-            </div>
+          <CardContent className="p-0">
+            {/* SECURE ACCESS CONTENT */}
+            <TabsContent value="secure" className="space-y-4 text-left m-0 outline-none">
+              <form onSubmit={handleSubmit} className="space-y-4 text-left">
+                <div className="space-y-1">
+                  <label className="text-[9px] font-mono text-[#8B949E] uppercase tracking-wider">Email Address</label>
+                  <Input
+                    type="email"
+                    required
+                    value={email}
+                    onChange={e => setEmail(e.target.value)}
+                    placeholder="name@eduplus.in"
+                    className="w-full bg-[#0B0F14] border-white/10 text-xs px-4 py-2.5 outline-none focus-visible:ring-1 focus-visible:ring-[#7DF9FF] focus-visible:border-[#7DF9FF] rounded-none text-white font-sans h-auto"
+                  />
+                </div>
 
-            <div className="space-y-1">
-              <label className="text-[9px] font-mono text-[#8B949E] uppercase tracking-wider">Passkey Matrix</label>
-              <input
-                type="password"
-                required
-                value={password}
-                onChange={e => setPassword(e.target.value)}
-                placeholder="••••••••••••"
-                className="w-full bg-[#0B0F14] border border-white/10 text-xs px-4 py-2.5 outline-none focus:border-[#7DF9FF] rounded-none text-white font-sans"
-              />
-            </div>
+                <div className="space-y-1">
+                  <label className="text-[9px] font-mono text-[#8B949E] uppercase tracking-wider">Passkey Matrix</label>
+                  <Input
+                    type="password"
+                    required
+                    value={password}
+                    onChange={e => setPassword(e.target.value)}
+                    placeholder="••••••••••••"
+                    className="w-full bg-[#0B0F14] border-white/10 text-xs px-4 py-2.5 outline-none focus-visible:ring-1 focus-visible:ring-[#7DF9FF] focus-visible:border-[#7DF9FF] rounded-none text-white font-sans h-auto"
+                  />
+                </div>
 
-            {isSignUp && (
-              <div className="space-y-1">
-                <label className="text-[9px] font-mono text-[#8B949E] uppercase tracking-wider">Requested Security Clearance</label>
-                <select
-                  value={role}
-                  onChange={e => setRole(e.target.value as any)}
-                  className="w-full bg-[#0B0F14] border border-white/10 text-xs px-4 py-2.5 outline-none focus:border-[#7DF9FF] rounded-none text-white font-mono"
-                >
-                  <option value="admin">Administrator (Level A)</option>
-                  <option value="educator">Educator (Level B)</option>
-                  <option value="resource_person">Resource Expert (Level C)</option>
-                </select>
+                {isSignUp && (
+                  <div className="space-y-1">
+                    <label className="text-[9px] font-mono text-[#8B949E] uppercase tracking-wider">Requested Security Clearance</label>
+                    <Select value={role} onValueChange={(val) => setRole(val as any)}>
+                      <SelectTrigger className="w-full bg-[#0B0F14] border-white/10 text-xs px-4 py-2.5 outline-none focus:ring-1 focus:ring-[#7DF9FF] rounded-none text-white font-mono h-auto">
+                        <SelectValue placeholder="Select Clearance Level" />
+                      </SelectTrigger>
+                      <SelectContent className="bg-[#0E131A] border border-[#7DF9FF]/20 rounded-none text-white font-mono">
+                        <SelectItem value="admin" className="focus:bg-[#7DF9FF]/10 focus:text-[#7DF9FF] rounded-none">Administrator (Level A)</SelectItem>
+                        <SelectItem value="educator" className="focus:bg-[#7DF9FF]/10 focus:text-[#7DF9FF] rounded-none">Educator (Level B)</SelectItem>
+                        <SelectItem value="resource_person" className="focus:bg-[#7DF9FF]/10 focus:text-[#7DF9FF] rounded-none">Resource Expert (Level C)</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                )}
+
+                <Button type="submit" disabled={submitting} className="w-full py-3 bg-[#7DF9FF] text-[#0B0F14] hover:bg-white hover:text-[#0B0F14] focus:outline-none focus:ring-1 focus:ring-[#7DF9FF]/70 transition-all duration-300 font-mono text-[10px] font-bold tracking-widest uppercase cursor-pointer rounded-none mt-2 h-auto border-0">
+                  {submitting ? 'PROCESSING...' : isSignUp ? 'CREATE RECORD' : 'AUTHORIZE ACCESS'}
+                </Button>
+
+                <div className="text-center pt-2">
+                  <Button type="button" variant="ghost" onClick={() => setIsSignUp(!isSignUp)} className="text-[10px] font-mono text-white/50 hover:text-[#7DF9FF] hover:bg-transparent focus:text-[#7DF9FF] focus:outline-none transition-colors cursor-pointer p-0 h-auto rounded-none">
+                    {isSignUp ? 'Already registered? Log in here' : "Don't have credentials? Request key"}
+                  </Button>
+                </div>
+              </form>
+            </TabsContent>
+
+            {/* DEV BYPASS NODE CONTENT */}
+            <TabsContent value="bypass" className="space-y-4 text-left m-0 outline-none">
+              <div className="space-y-4 text-left">
+                <p className="text-[10px] font-mono text-[#8B949E] leading-relaxed border border-[#F59E0B]/20 bg-[#F59E0B]/5 p-3 rounded-none">
+                  [ DEV ENVIRONMENT MODE ]: Bypass remote server queries. Inject simulated telemetry directly into local storage matrices to unlock all dashboard sections immediately.
+                </p>
+                
+                <div className="space-y-2 pt-2">
+                  <Button onClick={() => handleBypass('admin')} variant="outline" className="w-full py-3 border-[#EF4444]/30 hover:border-[#EF4444] hover:bg-[#EF4444]/5 hover:text-[#F87171] text-[#F87171] font-mono text-[9px] font-bold tracking-widest uppercase cursor-pointer rounded-none transition-all duration-300 focus:outline-none h-auto bg-transparent">
+                    [ Inject Admin clearance ]
+                  </Button>
+                  <Button onClick={() => handleBypass('educator')} variant="outline" className="w-full py-3 border-[#22C55E]/30 hover:border-[#22C55E] hover:bg-[#22C55E]/5 hover:text-[#4ADE80] text-[#4ADE80] font-mono text-[9px] font-bold tracking-widest uppercase cursor-pointer rounded-none transition-all duration-300 focus:outline-none h-auto bg-transparent">
+                    [ Inject Educator clearance ]
+                  </Button>
+                  <Button onClick={() => handleBypass('resource_person')} variant="outline" className="w-full py-3 border-[#7DF9FF]/30 hover:border-[#7DF9FF] hover:bg-[#7DF9FF]/5 hover:text-[#7DF9FF] text-[#7DF9FF] font-mono text-[9px] font-bold tracking-widest uppercase cursor-pointer rounded-none transition-all duration-300 focus:outline-none h-auto bg-transparent">
+                    [ Inject Resource clearance ]
+                  </Button>
+                </div>
               </div>
-            )}
-
-            <button type="submit" disabled={submitting} className="w-full py-3 bg-[#7DF9FF] text-[#0B0F14] hover:bg-white hover:text-[#0B0F14] focus:outline-none focus:ring-1 focus:ring-[#7DF9FF]/70 transition-all duration-300 font-mono text-[10px] font-bold tracking-widest uppercase cursor-pointer rounded-none mt-2">
-              {submitting ? 'PROCESSING...' : isSignUp ? 'CREATE RECORD' : 'AUTHORIZE ACCESS'}
-            </button>
-
-            <div className="text-center pt-2">
-              <button type="button" onClick={() => setIsSignUp(!isSignUp)} className="text-[10px] font-mono text-white/50 hover:text-[#7DF9FF] focus:text-[#7DF9FF] focus:outline-none transition-colors cursor-pointer">
-                {isSignUp ? 'Already registered? Log in here' : "Don't have credentials? Request key"}
-              </button>
-            </div>
-          </form>
-        )}
-
-        {/* TAB B: DEV DECOY NODE */}
-        {activeTab === 'bypass' && (
-          <div className="space-y-4 text-left">
-            <p className="text-[10px] font-mono text-[#8B949E] leading-relaxed border border-[#F59E0B]/20 bg-[#F59E0B]/5 p-3 rounded-none">
-              [ DEV ENVIRONMENT MODE ]: Bypass remote server queries. Inject simulated telemetry directly into local storage matrices to unlock all dashboard sections immediately.
-            </p>
-            
-            <div className="space-y-2 pt-2">
-              <button onClick={() => handleBypass('admin')} className="w-full py-3 border border-[#EF4444]/30 hover:border-[#EF4444] hover:bg-[#EF4444]/5 text-[#F87171] font-mono text-[9px] font-bold tracking-widest uppercase cursor-pointer rounded-none transition-all duration-300 focus:outline-none focus:ring-1 focus:ring-[#EF4444]">
-                [ Inject Admin clearance ]
-              </button>
-              <button onClick={() => handleBypass('educator')} className="w-full py-3 border border-[#22C55E]/30 hover:border-[#22C55E] hover:bg-[#22C55E]/5 text-[#4ADE80] font-mono text-[9px] font-bold tracking-widest uppercase cursor-pointer rounded-none transition-all duration-300 focus:outline-none focus:ring-1 focus:ring-[#22C55E]">
-                [ Inject Educator clearance ]
-              </button>
-              <button onClick={() => handleBypass('resource_person')} className="w-full py-3 border border-[#7DF9FF]/30 hover:border-[#7DF9FF] hover:bg-[#7DF9FF]/5 text-[#7DF9FF] font-mono text-[9px] font-bold tracking-widest uppercase cursor-pointer rounded-none transition-all duration-300 focus:outline-none focus:ring-1 focus:ring-[#7DF9FF]">
-                [ Inject Resource clearance ]
-              </button>
-            </div>
-          </div>
-        )}
-      </div>
+            </TabsContent>
+          </CardContent>
+        </Tabs>
+      </Card>
     </div>
   );
 }
