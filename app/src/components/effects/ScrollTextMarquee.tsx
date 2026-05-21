@@ -20,7 +20,7 @@ export default function ScrollTextMarquee({ text, baseSpeed = -150, className }:
   return (
     <div 
       ref={targetRef} 
-      className="w-full overflow-hidden whitespace-nowrap flex select-none pointer-events-none opacity-[0.03]"
+      className="w-full overflow-hidden whitespace-nowrap flex select-none pointer-events-none opacity-[0.08]"
       data-testid="scroll-marquee-container"
     >
       <motion.div 

@@ -60,15 +60,21 @@ export const SpotLightItem = ({ children, className }: SpotlightItemProps) => {
     setLocalMouse({ x, y });
   };
 
-  const handleMouseLeave = () => {
-    setLocalMouse(null);
-  };
+  let borderX = 0;
+  let borderY = 0;
+  let hasGlobalMouse = false;
+  if (context && context.mouseX !== null && context.mouseY !== null && cardRef.current) {
+    const rect = cardRef.current.getBoundingClientRect();
+    borderX = context.mouseX - rect.left;
+    borderY = context.mouseY - rect.top;
+    hasGlobalMouse = true;
+  }
 
   return (
     <div
       ref={cardRef}
       onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
+      onMouseLeave={() => setLocalMouse(null)}
       className={cn(
         "relative rounded-none p-[1.5px] bg-[#ffffff08] overflow-hidden transition-colors duration-300",
         className
@@ -85,11 +91,11 @@ export const SpotLightItem = ({ children, className }: SpotlightItemProps) => {
         />
       )}
       {/* Spotlight border glow layer */}
-      {context !== undefined && context.mouseX !== null && context.mouseY !== null && cardRef.current && (
+      {hasGlobalMouse && (
         <div
-          className="pointer-events-none absolute inset-0 z-0 rounded-none bg-fixed"
+          className="pointer-events-none absolute inset-0 z-0 rounded-none"
           style={{
-            background: `radial-gradient(220px circle at ${context.mouseX}px ${context.mouseY}px, rgba(125, 249, 255, 0.22), transparent 80%)`
+            background: `radial-gradient(220px circle at ${borderX}px ${borderY}px, rgba(125, 249, 255, 0.22), transparent 80%)`
           }}
         />
       )}
