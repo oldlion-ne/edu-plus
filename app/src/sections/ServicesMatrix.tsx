@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { Spotlight, SpotLightItem } from '../components/effects/Spotlight';
 
 interface ServiceNode {
   title: string;
@@ -143,15 +144,17 @@ export default function ServicesMatrix() {
         </div>
 
         {/* Services Grid */}
-        <div
+        <Spotlight
           className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 transition-all duration-1000 delay-400 ${
             visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
           }`}
         >
           {SERVICES.map((service, index) => (
-            <ServiceCard key={service.title} service={service} index={index} />
+            <SpotLightItem key={service.title}>
+              <ServiceCard service={service} index={index} />
+            </SpotLightItem>
           ))}
-        </div>
+        </Spotlight>
       </div>
     </section>
   );
