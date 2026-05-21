@@ -55,8 +55,8 @@ export default function DashboardOnboardingTour({ onComplete }: { onComplete: ()
         left: rect.left - 8,
         width: rect.width + 16,
         height: rect.height + 16,
-        border: '2px solid hsl(var(--primary))',
-        boxShadow: '0 0 18px hsl(var(--primary)/0.6), inset 0 0 8px hsl(var(--primary)/0.3)',
+        border: '2px solid oklch(var(--primary))',
+        boxShadow: '0 0 18px oklch(var(--primary)/0.6), inset 0 0 8px oklch(var(--primary)/0.3)',
         transition: 'all 0.3s ease-in-out',
         zIndex: 99,
         pointerEvents: 'none'
@@ -109,7 +109,7 @@ export default function DashboardOnboardingTour({ onComplete }: { onComplete: ()
         }}
       >
         <div className="flex items-center gap-1.5 mb-2 border-b border-border pb-2">
-          <span className="w-1.5 h-1.5 bg-primary shadow-[0_0_6px_hsl(var(--primary))]"></span>
+          <span className="w-1.5 h-1.5 bg-primary shadow-[0_0_6px_oklch(var(--primary))]"></span>
           <span className="font-mono text-[9px] font-bold tracking-widest text-primary">
             {currentStep.title} (STEP {stepIndex + 1}/{TOUR_STEPS.length})
           </span>

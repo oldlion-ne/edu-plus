@@ -59,7 +59,7 @@ function ServiceCard({ service, index }: { service: ServiceNode; index: number }
             height="32"
             viewBox="0 0 24 24"
             fill="none"
-            stroke={hovered ? 'hsl(var(--primary))' : 'hsl(var(--foreground))'}
+            stroke={hovered ? 'oklch(var(--primary))' : 'oklch(var(--foreground))'}
             strokeWidth="1.5"
             strokeLinecap="round"
             strokeLinejoin="round"
@@ -87,7 +87,7 @@ function ServiceCard({ service, index }: { service: ServiceNode; index: number }
         className="absolute bottom-0 left-0 h-[1px] transition-all duration-500"
         style={{
           width: hovered ? '100%' : '0%',
-          background: 'linear-gradient(90deg, hsl(var(--primary)), transparent)',
+          background: 'linear-gradient(90deg, oklch(var(--primary)), transparent)',
         }}
       />
     </Card>

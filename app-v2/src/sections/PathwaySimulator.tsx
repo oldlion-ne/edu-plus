@@ -34,7 +34,7 @@ export default function PathwaySimulator() {
                 onClick={() => setSelected(idx)}
                 className={`w-full text-left p-6 border transition-all duration-300 rounded-none bg-card ${
                   selected === idx
-                    ? 'border-primary shadow-[0_0_15px_hsl(var(--primary)/0.08)]'
+                    ? 'border-primary shadow-[0_0_15px_oklch(var(--primary)/0.08)]'
                     : 'border-border hover:border-foreground/10'
                 }`}
               >
@@ -62,11 +62,11 @@ export default function PathwaySimulator() {
 
             {/* Dynamic pathway svg */}
             <div className="relative w-full h-[180px] bg-background/50 border border-border flex items-center justify-center">
-              <div className="absolute left-[10%] top-[50%] -translate-y-1/2 w-2 h-2 bg-primary shadow-[0_0_8px_hsl(var(--primary))]" />
-              <div className={`absolute left-[50%] -translate-x-1/2 w-2 h-2 bg-primary shadow-[0_0_8px_hsl(var(--primary))] transition-all duration-500 ${
+              <div className="absolute left-[10%] top-[50%] -translate-y-1/2 w-2 h-2 bg-primary shadow-[0_0_8px_oklch(var(--primary))]" />
+              <div className={`absolute left-[50%] -translate-x-1/2 w-2 h-2 bg-primary shadow-[0_0_8px_oklch(var(--primary))] transition-all duration-500 ${
                 selected === 0 || selected === 2 ? 'top-[25%]' : 'top-[75%]'
               }`} />
-              <div className="absolute right-[10%] top-[50%] -translate-y-1/2 w-2 h-2 bg-primary shadow-[0_0_8px_hsl(var(--primary))]" />
+              <div className="absolute right-[10%] top-[50%] -translate-y-1/2 w-2 h-2 bg-primary shadow-[0_0_8px_oklch(var(--primary))]" />
 
               <svg className="absolute inset-0 w-full h-full pointer-events-none">
                 {/* Dynamic path link */}

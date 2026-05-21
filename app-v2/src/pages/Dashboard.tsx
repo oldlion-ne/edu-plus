@@ -141,11 +141,11 @@ const chartConfig = {
   },
   desktop: {
     label: "Desktop",
-    color: "hsl(var(--primary))",
+    color: "oklch(var(--primary))",
   },
   mobile: {
     label: "Mobile",
-    color: "hsl(var(--secondary))",
+    color: "oklch(var(--secondary))",
   },
 } satisfies ChartConfig;
 
@@ -193,7 +193,7 @@ export default function Dashboard() {
           localStorage.setItem('edu_plus_sim_session', JSON.stringify(parsed));
           toast.success('[SIMULATED COGNITIVE OVERRIDE SUCCESS]', {
             description: 'Local simulated session profile nodes re-aligned successfully.',
-            style: { background: 'hsl(var(--card))', border: '1px solid hsl(var(--primary)/0.3)', color: 'hsl(var(--foreground))', borderRadius: '0px' }
+            style: { background: 'oklch(var(--card))', border: '1px solid oklch(var(--primary)/0.3)', color: 'oklch(var(--foreground))', borderRadius: '0px' }
           });
           window.location.reload();
         }
@@ -211,14 +211,14 @@ export default function Dashboard() {
 
         toast.success('[DATABASE SYNC COMPLETE]', {
           description: 'Your profile credentials have been updated securely.',
-          style: { background: 'hsl(var(--card))', border: '1px solid hsl(var(--primary)/0.3)', color: 'hsl(var(--foreground))', borderRadius: '0px' }
+          style: { background: 'oklch(var(--card))', border: '1px solid oklch(var(--primary)/0.3)', color: 'oklch(var(--foreground))', borderRadius: '0px' }
         });
       }
       setIsSettingsOpen(false);
     } catch (err: any) {
       toast.error('COMPILATION_ERROR', {
         description: err.message || 'Failed to update user profile.',
-        style: { background: 'hsl(var(--card))', border: '1px solid hsl(var(--destructive)/0.3)', color: 'hsl(var(--foreground))', borderRadius: '0px' }
+        style: { background: 'oklch(var(--card))', border: '1px solid oklch(var(--destructive)/0.3)', color: 'oklch(var(--foreground))', borderRadius: '0px' }
       });
     }
   };
@@ -228,13 +228,13 @@ export default function Dashboard() {
       await signOut();
       toast.success('[SESSION TERMINATED]', {
         description: 'You have logged out successfully from Dashboard.',
-        style: { background: 'hsl(var(--card))', border: '1px solid hsl(var(--primary)/0.3)', color: 'hsl(var(--foreground))', borderRadius: '0px' }
+        style: { background: 'oklch(var(--card))', border: '1px solid oklch(var(--primary)/0.3)', color: 'oklch(var(--foreground))', borderRadius: '0px' }
       });
       navigate('/', { replace: true });
     } catch (err: any) {
       toast.error('LOGOUT_ERROR', {
         description: err.message || 'Logout failed.',
-        style: { background: 'hsl(var(--card))', border: '1px solid hsl(var(--destructive)/0.3)', color: 'hsl(var(--foreground))', borderRadius: '0px' }
+        style: { background: 'oklch(var(--card))', border: '1px solid oklch(var(--destructive)/0.3)', color: 'oklch(var(--foreground))', borderRadius: '0px' }
       });
     }
   };
@@ -283,9 +283,9 @@ export default function Dashboard() {
           toast(`[ALERT // NEW INQUIRY TRANSMITTED]`, {
             description: `Sender: ${newMsg.name} (${newMsg.profile})`,
             style: {
-              background: 'hsl(var(--card))',
-              border: '1px solid hsl(var(--primary)/0.3)',
-              color: 'hsl(var(--foreground))',
+              background: 'oklch(var(--card))',
+              border: '1px solid oklch(var(--primary)/0.3)',
+              color: 'oklch(var(--foreground))',
               fontFamily: 'monospace',
               borderRadius: '0px'
             }
@@ -332,7 +332,7 @@ export default function Dashboard() {
 
       toast.success('[TRANSMISSION SUCCESSFUL]', {
         description: 'Knowledge node has been compiled to public database.',
-        style: { background: 'hsl(var(--card))', border: '1px solid hsl(var(--primary)/0.3)', color: 'hsl(var(--foreground))', borderRadius: '0px' }
+        style: { background: 'oklch(var(--card))', border: '1px solid oklch(var(--primary)/0.3)', color: 'oklch(var(--foreground))', borderRadius: '0px' }
       });
 
       setNewHubItem({
@@ -348,7 +348,7 @@ export default function Dashboard() {
     } catch (err) {
       toast.error('TRANSMISSION_ERROR', {
         description: 'Unauthorized role or empty input variables.',
-        style: { background: 'hsl(var(--card))', border: '1px solid hsl(var(--destructive)/0.3)', color: 'hsl(var(--foreground))', borderRadius: '0px' }
+        style: { background: 'oklch(var(--card))', border: '1px solid oklch(var(--destructive)/0.3)', color: 'oklch(var(--foreground))', borderRadius: '0px' }
       });
     }
   };
@@ -366,7 +366,7 @@ export default function Dashboard() {
 
       toast.success('[COGNITIVE COMPILATION SUCCESS]', {
         description: 'AI custom factual guideline loaded dynamically.',
-        style: { background: 'hsl(var(--card))', border: '1px solid hsl(var(--primary)/0.3)', color: 'hsl(var(--foreground))', borderRadius: '0px' }
+        style: { background: 'oklch(var(--card))', border: '1px solid oklch(var(--primary)/0.3)', color: 'oklch(var(--foreground))', borderRadius: '0px' }
       });
 
       setNewKbDoc({ question: '', answer: '' });
@@ -374,7 +374,7 @@ export default function Dashboard() {
     } catch (err) {
       toast.error('COMPILATION_ERROR', {
         description: 'Failed to write fact to AI matrix.',
-        style: { background: 'hsl(var(--card))', border: '1px solid hsl(var(--destructive)/0.3)', color: 'hsl(var(--foreground))', borderRadius: '0px' }
+        style: { background: 'oklch(var(--card))', border: '1px solid oklch(var(--destructive)/0.3)', color: 'oklch(var(--foreground))', borderRadius: '0px' }
       });
     }
   };
@@ -531,7 +531,7 @@ export default function Dashboard() {
             {/* Form and Settings section */}
             <form onSubmit={handleUpdateProfile} className="space-y-4 pt-2">
               <div className="flex justify-center mb-4">
-                <Avatar className="size-16 border-2 border-primary shadow-[0_0_12px_hsl(var(--primary))] rounded-none">
+                <Avatar className="size-16 border-2 border-primary shadow-[0_0_12px_oklch(var(--primary))] rounded-none">
                   <AvatarImage src={profileAvatar} className="rounded-none object-cover" />
                   <AvatarFallback className="bg-background text-primary font-mono font-bold text-lg rounded-none flex items-center justify-center">
                     {profileName.substring(0, 2).toUpperCase() || 'AD'}
@@ -578,7 +578,7 @@ export default function Dashboard() {
                   <span className="font-mono text-[8px] text-muted-foreground block">SWAP MOCK CLEARANCE ROLES DYNAMICALLY:</span>
                   <div className="grid grid-cols-3 gap-1.5">
                     {(['admin', 'educator', 'resource_person'] as const).map(role => (
-                      <Button key={role} type="button" variant="outline" onClick={() => { signInSimulated(role); toast.success(`[ROLE_OVERRIDE: ${role.toUpperCase()}]`, { description: `Simulated identity shifted successfully.`, style: { background: 'hsl(var(--card))', border: '1px solid hsl(var(--primary))', color: 'hsl(var(--foreground))', borderRadius: '0px' } }); setIsSettingsOpen(false); }} className={`py-1 text-center font-mono text-[8px] uppercase tracking-wider border cursor-pointer transition-all rounded-none focus:outline-none focus:ring-1 focus:ring-primary/70 ${selectedRole === role ? 'border-primary bg-primary/10 text-primary' : 'border-transparent text-muted-foreground hover:text-foreground hover:border-border'}`}>
+                      <Button key={role} type="button" variant="outline" onClick={() => { signInSimulated(role); toast.success(`[ROLE_OVERRIDE: ${role.toUpperCase()}]`, { description: `Simulated identity shifted successfully.`, style: { background: 'oklch(var(--card))', border: '1px solid oklch(var(--primary))', color: 'oklch(var(--foreground))', borderRadius: '0px' } }); setIsSettingsOpen(false); }} className={`py-1 text-center font-mono text-[8px] uppercase tracking-wider border cursor-pointer transition-all rounded-none focus:outline-none focus:ring-1 focus:ring-primary/70 ${selectedRole === role ? 'border-primary bg-primary/10 text-primary' : 'border-transparent text-muted-foreground hover:text-foreground hover:border-border'}`}>
                         {role.replace('_', ' ')}
                       </Button>
                     ))}
@@ -645,7 +645,7 @@ export default function Dashboard() {
           <div className="flex items-center gap-3">
             <span className="font-mono text-[10px] text-muted-foreground/50 tracking-wider">SECURE LINK STATUS:</span>
             <span className="font-mono text-[10px] text-primary tracking-wider uppercase">ACTIVE</span>
-            <span className="w-1.5 h-1.5 bg-primary shadow-[0_0_8px_hsl(var(--primary))] rounded-none"></span>
+            <span className="w-1.5 h-1.5 bg-primary shadow-[0_0_8px_oklch(var(--primary))] rounded-none"></span>
             
             <span className="text-muted-foreground/20 font-mono text-[10px] hidden sm:inline">|</span>
             
@@ -768,7 +768,7 @@ export default function Dashboard() {
                             <stop offset="95%" stopColor={chartConfig.mobile.color} stopOpacity={0.05} />
                           </linearGradient>
                         </defs>
-                        <CartesianGrid vertical={false} stroke="hsl(var(--border)/0.2)" />
+                        <CartesianGrid vertical={false} stroke="oklch(var(--border)/0.2)" />
                         <XAxis
                           dataKey="date"
                           tickLine={false}
@@ -849,7 +849,7 @@ export default function Dashboard() {
                           <div className="w-full bg-background h-2 border border-border rounded-none">
                             <div
                               style={{ width: `${percent}%` }}
-                              className="h-full bg-primary shadow-[0_0_8px_hsl(var(--primary))] rounded-none"
+                              className="h-full bg-primary shadow-[0_0_8px_oklch(var(--primary))] rounded-none"
                             ></div>
                           </div>
                         </div>

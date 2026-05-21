@@ -61,7 +61,7 @@ export default function ScrollToTop() {
   };
 
   return (
-    <button onClick={scrollToTop} aria-label="Go to top" className={`fixed bottom-8 left-8 z-50 p-3 bg-background/85 border border-border text-foreground rounded-none shadow-lg transition-all duration-300 hover:border-primary hover:text-primary hover:shadow-[0_0_20px_hsl(var(--primary)/0.25)] focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary ${showButton ? 'opacity-100 pointer-events-auto translate-y-0' : 'opacity-0 pointer-events-none translate-y-4'}`}>
+    <button onClick={scrollToTop} aria-label="Go to top" className={`fixed bottom-8 left-8 z-50 p-3 bg-background/85 border border-border text-foreground rounded-none shadow-lg transition-all duration-300 hover:border-primary hover:text-primary hover:shadow-[0_0_20px_oklch(var(--primary)/0.25)] focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary ${showButton ? 'opacity-100 pointer-events-auto translate-y-0' : 'opacity-0 pointer-events-none translate-y-4'}`}>
       <svg
         className="w-5 h-5 transform transition-transform duration-300 hover:-translate-y-0.5"
         fill="none"

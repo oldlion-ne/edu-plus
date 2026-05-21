@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { Separator } from '@/components/ui/separator';
+import { TextReveal } from '@/components/ui/text-reveal';
 
 export default function Vision() {
   const [visible, setVisible] = useState(false);
@@ -46,28 +46,9 @@ export default function Vision() {
 
           {/* Right Column - Flowing Text */}
           <div className="md:col-span-8">
-            <h2
-              className={`font-heading text-3xl md:text-4xl lg:text-5xl font-light leading-[1.15] text-foreground mb-10 transition-all duration-1000 delay-200 ${
-                visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
-              }`}
-            >
-              To construct the definitive global engine for skill engineering, replacing legacy learning paths with low-latency, real-world execution frameworks.
-            </h2>
-
-            <Separator
-              className={`mb-10 transition-all duration-1000 delay-500 ${
-                visible ? 'opacity-100 scale-x-100' : 'opacity-0 scale-x-0'
-              }`}
-              style={{ transformOrigin: 'left' }}
-            />
-
-            <h2
-              className={`font-heading text-3xl md:text-4xl lg:text-5xl font-light leading-[1.15] text-muted-foreground transition-all duration-1000 delay-700 ${
-                visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
-              }`}
-            >
-              To create a fluid, continuous global talent network where human capability dynamically scales alongside emerging technological horizons.
-            </h2>
+            <TextReveal>
+              To construct the definitive global engine for skill engineering, replacing legacy learning paths with low-latency, real-world execution frameworks. To create a fluid, continuous global talent network where human capability dynamically scales alongside emerging technological horizons.
+            </TextReveal>
           </div>
         </div>
       </div>

@@ -45,11 +45,11 @@ const Map = () => {
 const chartConfig = {
   desktop: {
     label: 'Desktop',
-    color: 'hsl(var(--primary))',
+    color: 'oklch(var(--primary))',
   },
   mobile: {
     label: 'Mobile',
-    color: 'hsl(var(--chart-1))',
+    color: 'oklch(var(--chart-1))',
   },
 } satisfies ChartConfig
 
@@ -114,7 +114,7 @@ const MonitoringChart = () => {
             />
           </linearGradient>
         </defs>
-        <CartesianGrid vertical={false} stroke="hsl(var(--border))" strokeDasharray="3 3" />
+        <CartesianGrid vertical={false} stroke="oklch(var(--border))" strokeDasharray="3 3" />
         <ChartTooltip
           active
           cursor={false}
@@ -177,7 +177,7 @@ export default function TelemetryStats() {
             <div className="w-full relative">
               <div 
                 className="absolute inset-0 z-10 pointer-events-none"
-                style={{ background: 'radial-gradient(circle, transparent 25%, hsl(var(--background)) 75%)' }}
+                style={{ background: 'radial-gradient(circle, transparent 25%, oklch(var(--background)) 75%)' }}
               />
               <Map />
             </div>
