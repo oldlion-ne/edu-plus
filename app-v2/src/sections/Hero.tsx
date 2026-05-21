@@ -65,11 +65,38 @@ export default function Hero() {
       {/* ── Main content ── */}
       <div className="relative z-10 flex flex-col items-center text-center px-6 md:px-12 pt-28 pb-16 max-w-5xl mx-auto w-full">
 
+        {/* ── Investing · Building · Advisory eyebrow ── */}
+        <TimelineAnimation
+          once
+          as="div"
+          animationNum={1}
+          timelineRef={sectionRef}
+          className="mb-8"
+        >
+          <div className="inline-flex items-center gap-2 border border-border bg-card/70 backdrop-blur-md px-4 py-2">
+            <span className="relative flex h-1.5 w-1.5">
+              <span className="animate-ping absolute inline-flex h-full w-full bg-primary opacity-75" />
+              <span className="relative inline-flex h-1.5 w-1.5 bg-primary" />
+            </span>
+            <span className="text-[10px] font-mono font-bold tracking-[0.25em] uppercase text-muted-foreground">
+              Investing
+            </span>
+            <span className="text-primary/40 text-[10px] font-mono">·</span>
+            <span className="text-[10px] font-mono font-bold tracking-[0.25em] uppercase text-muted-foreground">
+              Building
+            </span>
+            <span className="text-primary/40 text-[10px] font-mono">·</span>
+            <span className="text-[10px] font-mono font-bold tracking-[0.25em] uppercase text-muted-foreground">
+              Advisory
+            </span>
+          </div>
+        </TimelineAnimation>
+
         {/* Headline */}
         <TimelineAnimation
           once
           as="h1"
-          animationNum={1}
+          animationNum={2}
           timelineRef={sectionRef}
           className="text-4xl sm:text-5xl md:text-[3.5rem] lg:text-6xl font-semibold tracking-tight leading-[1.1] text-foreground mb-5"
         >
@@ -81,7 +108,7 @@ export default function Hero() {
         <TimelineAnimation
           once
           as="p"
-          animationNum={2}
+          animationNum={3}
           timelineRef={sectionRef}
           className="max-w-xl text-base md:text-lg text-muted-foreground leading-relaxed mb-10"
         >
@@ -140,19 +167,6 @@ export default function Hero() {
         style={{ background: 'linear-gradient(to top, oklch(var(--background)) 0%, transparent 100%)' }}
       />
 
-      {/* ── Bottom-right meta tag ── */}
-      <TimelineAnimation
-        once
-        animationNum={7}
-        timelineRef={sectionRef}
-        className="absolute bottom-8 right-6 md:right-12 z-10"
-      >
-        <div className="border border-border bg-card/80 backdrop-blur-md px-4 py-2">
-          <span className="text-[9px] font-mono font-bold tracking-[0.25em] uppercase text-muted-foreground">
-            Investing · Building · Advisory
-          </span>
-        </div>
-      </TimelineAnimation>
     </section>
   );
 }
