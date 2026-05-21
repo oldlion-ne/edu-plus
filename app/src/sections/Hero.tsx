@@ -1,122 +1,324 @@
-import { useEffect, useRef, useState } from 'react';
+import { useRef } from 'react';
 import { Link } from 'react-router';
-import RandomizedTextEffect from '../components/effects/RandomizedTextEffect';
-import ScrollTextMarquee from '../components/effects/ScrollTextMarquee';
+import {
+  BrainCircuit,
+  Zap,
+  Globe2,
+  TrendingUp,
+  ArrowRight,
+  Activity,
+} from 'lucide-react';
+import { TimelineAnimation } from '../components/timeline-animation';
+
+const PROGRAMS = [
+  { icon: BrainCircuit, label: 'AI & Machine Learning', active: true },
+  { icon: Zap, label: 'Energy Innovation', active: false },
+  { icon: Globe2, label: 'Global Leadership', active: false },
+  { icon: TrendingUp, label: 'Venture Strategy', active: false },
+];
+
+const STAT_NODES = [
+  { value: '4,200+', label: 'Active Learners' },
+  { value: '98%', label: 'Placement Rate' },
+  { value: '12ms', label: 'Avg. Response' },
+];
 
 export default function Hero() {
-  const [visible, setVisible] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
-
-  useEffect(() => {
-    const timer = setTimeout(() => setVisible(true), 300);
-    return () => clearTimeout(timer);
-  }, []);
 
   return (
     <section
       ref={sectionRef}
-      className="relative w-full min-h-screen flex items-center justify-center overflow-hidden"
       id="story"
+      className="relative min-h-screen bg-[#0B0F14] text-[#E6EDF3] overflow-hidden flex flex-col"
     >
-      {/* Video Background */}
-      <video
-        autoPlay
-        loop
-        muted
-        playsInline
-        className="absolute inset-0 w-full h-full object-cover z-0"
-        src="https://res.cloudinary.com/don7nlsnp/video/upload/v1779208942/hero-bg_dlyb9f.mp4"
-      />
-
-      {/* Sleek Dark Vignette & Gradient Overlay */}
+      {/* Ambient neon glow */}
       <div
-        className="absolute inset-0 z-[1] pointer-events-none"
+        aria-hidden
+        className="pointer-events-none absolute inset-0 z-0"
         style={{
-          background: `
-            radial-gradient(circle at center, rgba(11, 15, 20, 0.3) 0%, rgba(11, 15, 20, 0.7) 100%),
-            linear-gradient(to bottom, rgba(11, 15, 20, 0.6) 0%, transparent 40%, rgba(11, 15, 20, 0.9) 100%)
-          `
+          background:
+            'radial-gradient(ellipse 70% 50% at 50% -10%, rgba(125,249,255,0.07) 0%, transparent 70%)',
         }}
       />
 
-      {/* Parallax Scroll Marquee background watermark */}
-      <div className="absolute inset-x-0 bottom-24 z-[1] pointer-events-none">
-        <ScrollTextMarquee text="BUILDING • REDEFINING • REDIRECTION • MOBILIZING" baseSpeed={-300} />
-      </div>
-
-      {/* Content */}
-      <div className="relative z-10 max-w-[1440px] mx-auto px-6 md:px-12 text-center">
-        {/* Soft Radial Neon Glow behind text */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[350px] h-[350px] bg-[#7DF9FF]/8 rounded-none blur-[110px] pointer-events-none z-0" />
-
-        {/* Subtitle */}
-        <div
-          className={`mb-6 transition-all duration-1000 relative z-10 ${
-            visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
-          }`}
-        >
-          <span className="text-xs md:text-sm font-sans font-semibold tracking-[0.4em] uppercase text-[#7DF9FF]">
-            <RandomizedTextEffect text="Eduplus" triggerOnHover />
-          </span>
-        </div>
-
-        {/* Main Title */}
-        <h1 className="font-heading text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl font-light leading-[1.05] tracking-tight mb-8 relative z-10">
-          <span className="block text-[#E6EDF3]">
-            {'Shaping '}
-            <RandomizedTextEffect
-              text="tomorrow"
-              className="text-[#7DF9FF] font-heading"
-            />
-          </span>
-        </h1>
-
-        {/* Body */}
-        <p
-          className={`max-w-xl mx-auto text-base md:text-lg font-sans text-[#E6EDF3]/85 leading-relaxed mb-12 transition-all duration-1000 delay-500 relative z-10 ${
-            visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
-          }`}
-        >
-          We are building a global network of innovators, educators, and visionaries
-          to redefine human capability.
-        </p>
-
-        {/* CTAs */}
-        <div
-          className={`flex flex-col sm:flex-row items-center justify-center gap-4 transition-all duration-1000 delay-700 relative z-10 ${
-            visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
-          }`}
-        >
-          <Link
-            to="/contact"
-            className="inline-flex items-center justify-center px-8 py-3.5 bg-[#7DF9FF] text-[#0B0F14] font-sans font-semibold text-sm tracking-wide hover:bg-white transition-all duration-300 shadow-[0_0_20px_rgba(125,249,255,0.2)] hover:shadow-[0_0_30px_rgba(255,255,255,0.45)]"
-          >
-            Start a Chat
-          </Link>
-          <Link
-            to="/about"
-            className="liquid-glass inline-flex items-center justify-center px-8 py-3.5 text-[#E6EDF3] font-sans font-medium text-sm tracking-wide hover:text-[#7DF9FF] hover:border-[#7DF9FF]/40 transition-all duration-300"
-          >
-            Explore Now
-          </Link>
-        </div>
-      </div>
-
-      {/* Bottom Right Tag */}
+      {/* Grid overlay */}
       <div
-        className={`absolute bottom-8 right-6 md:right-12 z-10 transition-all duration-1000 delay-1000 ${
-          visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
-        }`}
-      >
-        <div className="border border-[#7DF9FF]/25 bg-[#0B0F14]/70 backdrop-blur-md px-5 py-3 shadow-[0_0_15px_rgba(125,249,255,0.08)]">
-          <span className="text-xs font-sans font-semibold tracking-[0.2em] uppercase text-[#7DF9FF]">
-            Investing. Building. Advisory.
-          </span>
+        aria-hidden
+        className="pointer-events-none absolute inset-0 z-0 opacity-[0.03]"
+        style={{
+          backgroundImage:
+            'linear-gradient(#7DF9FF 1px, transparent 1px), linear-gradient(90deg, #7DF9FF 1px, transparent 1px)',
+          backgroundSize: '60px 60px',
+        }}
+      />
+
+      {/* ── Hero headline block ── */}
+      <div className="relative z-10 px-6 md:px-12">
+        <article className="border-b border-[#7DF9FF]/10">
+          <div className="flex flex-col items-center text-center space-y-5 max-w-7xl mx-auto border-x border-[#7DF9FF]/10 px-8 pt-24 pb-10">
+            {/* Eyebrow tag */}
+            <TimelineAnimation
+              once
+              as="div"
+              animationNum={1}
+              timelineRef={sectionRef}
+              className="inline-flex items-center gap-2 border border-[#7DF9FF]/30 bg-[#7DF9FF]/5 px-4 py-1.5"
+            >
+              <Activity size={12} className="text-[#7DF9FF]" />
+              <span className="text-[10px] font-bold tracking-[0.3em] uppercase text-[#7DF9FF]">
+                Eduplus · Next-Gen Learning Intelligence
+              </span>
+            </TimelineAnimation>
+
+            {/* Main headline */}
+            <TimelineAnimation
+              once
+              as="h1"
+              animationNum={2}
+              timelineRef={sectionRef}
+              className="text-5xl md:text-7xl font-semibold tracking-tight leading-[1.05] text-[#E6EDF3]"
+            >
+              Shaping the builders{' '}
+              <br className="hidden md:block" />
+              <span className="text-[#7DF9FF]">of tomorrow</span>
+            </TimelineAnimation>
+
+            {/* Sub-headline */}
+            <TimelineAnimation
+              once
+              as="p"
+              animationNum={3}
+              timelineRef={sectionRef}
+              className="text-[#E6EDF3]/60 text-lg md:text-xl max-w-3xl font-medium leading-relaxed"
+            >
+              A global network of innovators, educators, and visionaries
+              redefining human capability through AI-powered personalised
+              learning pathways.
+            </TimelineAnimation>
+          </div>
+        </article>
+
+        {/* ── CTA + social proof ── */}
+        <div className="border-b border-[#7DF9FF]/10">
+          <div className="max-w-7xl mx-auto border-x border-[#7DF9FF]/10 flex flex-col items-center gap-6 py-10 px-10">
+            <TimelineAnimation
+              once
+              as="div"
+              animationNum={4}
+              timelineRef={sectionRef}
+              className="flex flex-col sm:flex-row items-center gap-4"
+            >
+              <Link
+                to="/contact"
+                className="inline-flex items-center gap-2 px-8 py-3.5 bg-[#7DF9FF] text-[#0B0F14] font-bold text-sm tracking-wide hover:bg-white transition-all duration-300 shadow-[0_0_24px_rgba(125,249,255,0.25)]"
+              >
+                Start Your Pathway
+                <ArrowRight size={16} />
+              </Link>
+              <Link
+                to="/about"
+                className="inline-flex items-center gap-2 px-8 py-3.5 border border-[#7DF9FF]/30 text-[#E6EDF3] font-medium text-sm tracking-wide hover:border-[#7DF9FF] hover:text-[#7DF9FF] transition-all duration-300"
+              >
+                Explore Network
+              </Link>
+            </TimelineAnimation>
+
+            {/* Social proof avatars */}
+            <div className="flex flex-col items-center gap-1">
+              <TimelineAnimation
+                once
+                as="p"
+                animationNum={5}
+                timelineRef={sectionRef}
+                className="text-[10px] font-bold text-[#E6EDF3]/40 uppercase tracking-[0.25em]"
+              >
+                Trusted by 4,200+ innovators worldwide
+              </TimelineAnimation>
+              <div className="flex items-center gap-2 mt-1">
+                <div className="flex -space-x-3">
+                  {[1, 2, 3, 4, 5].map((i) => (
+                    <TimelineAnimation
+                      once
+                      key={i}
+                      animationNum={6}
+                      timelineRef={sectionRef}
+                    >
+                      <img
+                        src={`https://picsum.photos/seed/ep-member-${i}/100`}
+                        className="w-9 h-9 border-2 border-[#0B0F14] object-cover grayscale opacity-70"
+                        alt=""
+                      />
+                    </TimelineAnimation>
+                  ))}
+                </div>
+                <TimelineAnimation
+                  once
+                  as="div"
+                  animationNum={7}
+                  timelineRef={sectionRef}
+                  className="border border-[#7DF9FF]/40 bg-[#7DF9FF]/10 text-[#7DF9FF] text-xs font-bold px-3 py-1"
+                >
+                  +1,234
+                </TimelineAnimation>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
-      {/* Bottom Edge Gradient for Transition */}
-      <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-[#0B0F14] to-transparent z-[2] pointer-events-none" />
+      {/* ── Dashboard mockup preview ── */}
+      <div className="relative z-10 w-full border-b border-[#7DF9FF]/10 pb-10">
+        <div className="max-w-7xl mx-auto border-x border-[#7DF9FF]/10 px-6 md:px-12">
+          <TimelineAnimation
+            once
+            animationNum={8}
+            timelineRef={sectionRef}
+            className="relative bg-[#0E131A] border border-[#7DF9FF]/15 shadow-[0_40px_100px_-20px_rgba(125,249,255,0.06)] p-2 mt-4"
+          >
+            {/* Mockup chrome bar */}
+            <div className="bg-[#0B0F14] border-b border-[#7DF9FF]/10 flex items-center gap-2 px-4 py-2">
+              <div className="w-2.5 h-2.5 bg-[#7DF9FF]/30" />
+              <div className="w-2.5 h-2.5 bg-[#7DF9FF]/15" />
+              <div className="w-2.5 h-2.5 bg-[#7DF9FF]/08" />
+              <span className="ml-4 text-[10px] tracking-widest text-[#E6EDF3]/25 uppercase font-mono">
+                eduplus · learning.intelligence · dashboard
+              </span>
+            </div>
+
+            {/* Mockup content */}
+            <TimelineAnimation
+              once
+              animationNum={9}
+              timelineRef={sectionRef}
+              className="bg-[#0E131A] p-8 md:p-12 flex flex-col gap-8 min-h-[400px]"
+            >
+              {/* Breadcrumb + meta */}
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="w-2 h-2 bg-[#7DF9FF] animate-pulse" />
+                  <span className="text-[11px] text-[#E6EDF3]/40 uppercase tracking-widest font-mono">
+                    my pathways /
+                  </span>
+                  <span className="text-[11px] text-[#7DF9FF] uppercase tracking-widest font-mono font-bold">
+                    AI Engineering Track 2026
+                  </span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="text-[10px] text-[#E6EDF3]/30 font-mono uppercase tracking-widest">
+                    Node 12ms ·
+                  </div>
+                  <div className="w-1.5 h-1.5 bg-emerald-400 animate-pulse" />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                {/* Left: Stats telemetry */}
+                <div className="lg:col-span-7 space-y-6">
+                  {/* Stat row */}
+                  <div className="grid grid-cols-3 gap-4">
+                    {STAT_NODES.map((s) => (
+                      <TimelineAnimation
+                        once
+                        key={s.label}
+                        animationNum={10}
+                        timelineRef={sectionRef}
+                        className="border border-[#7DF9FF]/15 bg-[#0B0F14] p-4"
+                      >
+                        <p className="text-[10px] text-[#E6EDF3]/40 uppercase tracking-widest font-mono mb-1">
+                          {s.label}
+                        </p>
+                        <p className="text-xl font-bold text-[#7DF9FF] font-mono">
+                          {s.value}
+                        </p>
+                      </TimelineAnimation>
+                    ))}
+                  </div>
+
+                  {/* Progress bar block */}
+                  <TimelineAnimation
+                    once
+                    animationNum={11}
+                    timelineRef={sectionRef}
+                    className="border border-[#7DF9FF]/10 bg-[#0B0F14] p-5 space-y-3"
+                  >
+                    <p className="text-[10px] font-bold text-[#E6EDF3]/40 uppercase tracking-widest font-mono">
+                      Pathway Completion
+                    </p>
+                    <div className="relative h-1.5 bg-[#7DF9FF]/10">
+                      <div
+                        className="absolute top-0 left-0 h-full bg-[#7DF9FF]"
+                        style={{ width: '62%' }}
+                      />
+                    </div>
+                    <div className="flex justify-between text-[10px] font-mono text-[#E6EDF3]/30">
+                      <span>Module 8 of 13</span>
+                      <span className="text-[#7DF9FF]">62%</span>
+                    </div>
+                    <div className="space-y-2 pt-2">
+                      <div className="w-full h-2 bg-[#7DF9FF]/08" />
+                      <div className="w-[90%] h-2 bg-[#7DF9FF]/06" />
+                      <div className="w-[80%] h-2 bg-[#7DF9FF]/04" />
+                    </div>
+                  </TimelineAnimation>
+                </div>
+
+                {/* Right: Program selection panel */}
+                <div className="lg:col-span-5">
+                  <TimelineAnimation
+                    once
+                    animationNum={12}
+                    timelineRef={sectionRef}
+                    className="bg-[#0B0F14] border border-[#7DF9FF]/15 p-6 space-y-4"
+                  >
+                    <p className="text-[10px] font-bold text-[#E6EDF3]/50 uppercase tracking-widest font-mono mb-4">
+                      Select Program Domain
+                    </p>
+                    <div className="grid grid-cols-2 gap-2">
+                      {PROGRAMS.map(({ icon: Icon, label, active }, idx) => (
+                        <TimelineAnimation
+                          once
+                          key={label}
+                          animationNum={13 + idx}
+                          timelineRef={sectionRef}
+                          className={`p-4 border flex flex-col gap-3 transition-all ${
+                            active
+                              ? 'border-[#7DF9FF] bg-[#7DF9FF]/05 shadow-[0_0_16px_rgba(125,249,255,0.10)]'
+                              : 'border-[#7DF9FF]/10 opacity-50'
+                          }`}
+                        >
+                          <div
+                            className={`w-8 h-8 flex items-center justify-center ${
+                              active
+                                ? 'bg-[#7DF9FF]/15 text-[#7DF9FF]'
+                                : 'bg-[#7DF9FF]/05 text-[#E6EDF3]/30'
+                            }`}
+                          >
+                            <Icon size={16} />
+                          </div>
+                          <p className="text-[10px] font-bold text-[#E6EDF3]/70 font-mono uppercase tracking-wider leading-tight">
+                            {label}
+                          </p>
+                        </TimelineAnimation>
+                      ))}
+                    </div>
+                  </TimelineAnimation>
+                </div>
+              </div>
+            </TimelineAnimation>
+          </TimelineAnimation>
+        </div>
+      </div>
+
+      {/* Bottom fade */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute bottom-0 left-0 right-0 h-32 z-10"
+        style={{
+          background:
+            'linear-gradient(to top, #0B0F14 0%, transparent 100%)',
+        }}
+      />
     </section>
   );
 }
