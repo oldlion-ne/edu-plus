@@ -54,9 +54,9 @@ export default function PartnerMarquee() {
   if (!mounted) return null;
 
   return (
-    <section className="relative w-full py-8 bg-muted border-y border-border overflow-hidden">
+    <section className="relative w-full py-5 bg-muted border-y border-border overflow-hidden">
       {/* Marquee Track Container */}
-      <div className="relative w-full flex items-center mb-5">
+      <div className="relative w-full flex items-center">
         {/* Left & Right Edge Fades */}
         <div className="absolute inset-y-0 left-0 w-24 md:w-48 bg-gradient-to-r from-muted to-transparent z-10 pointer-events-none" />
         <div className="absolute inset-y-0 right-0 w-24 md:w-48 bg-gradient-to-l from-muted to-transparent z-10 pointer-events-none" />
@@ -79,18 +79,6 @@ export default function PartnerMarquee() {
             </div>
           ))}
         </Marquee>
-      </div>
-
-      {/* Title / Intro Label */}
-      <div className="max-w-[1440px] mx-auto px-6 md:px-12">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-2">
-          <span className="text-[10px] md:text-xs font-sans font-semibold tracking-[0.25em] uppercase text-primary">
-            Technical Pedigree &amp; Advisory Network
-          </span>
-          <span className="text-[10px] md:text-xs font-sans font-medium text-muted-foreground">
-            Our founders &amp; advisors bring experience from world-class organizations
-          </span>
-        </div>
       </div>
     </section>
   );

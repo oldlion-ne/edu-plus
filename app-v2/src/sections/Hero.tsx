@@ -18,7 +18,7 @@ export default function Hero() {
     <section
       ref={sectionRef}
       id="story"
-      className="relative w-full min-h-screen flex flex-col justify-center overflow-hidden bg-background"
+      className="relative w-full min-h-screen flex flex-col justify-center overflow-hidden"
     >
       {/* ── Background video ── */}
       <video
@@ -26,7 +26,7 @@ export default function Hero() {
         loop
         muted
         playsInline
-        className="absolute inset-0 w-full h-full object-cover z-0 opacity-40"
+        className="absolute inset-0 w-full h-full object-cover z-0 opacity-55"
         src="/assets/hero-bg-new.mp4"
       />
 
@@ -36,8 +36,8 @@ export default function Hero() {
         className="absolute inset-0 z-[1] pointer-events-none"
         style={{
           background: [
-            'radial-gradient(ellipse 80% 60% at 50% 40%, oklch(var(--background) / 0.45) 0%, oklch(var(--background) / 0.85) 100%)',
-            'linear-gradient(to bottom, oklch(var(--background) / 0.6) 0%, transparent 45%, oklch(var(--background) / 0.95) 100%)',
+            'radial-gradient(ellipse 80% 60% at 50% 40%, oklch(var(--background) / 0.25) 0%, oklch(var(--background) / 0.7) 100%)',
+            'linear-gradient(to bottom, oklch(var(--background) / 0.35) 0%, transparent 40%, oklch(var(--background) / 0.85) 100%)',
           ].join(', '),
         }}
       />
