@@ -1,9 +1,8 @@
 import { useRef } from 'react';
 import { Link } from 'react-router';
-import { ArrowRight, Activity } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { TimelineAnimation } from '../components/timeline-animation';
 import { Button } from '../components/ui/button';
-import { Badge } from '../components/ui/badge';
 
 const STATS = [
   { value: '4,200+', label: 'Learners' },
@@ -66,47 +65,27 @@ export default function Hero() {
       {/* ── Main content ── */}
       <div className="relative z-10 flex flex-col items-center text-center px-6 md:px-12 pt-28 pb-16 max-w-5xl mx-auto w-full">
 
-        {/* Eyebrow Badge */}
-        <TimelineAnimation
-          once
-          as="div"
-          animationNum={1}
-          timelineRef={sectionRef}
-          className="mb-4 flex flex-col items-center gap-3"
-        >
-          <Badge variant="outline" className="inline-flex items-center gap-2 px-4 py-1.5">
-            <Activity size={11} />
-            <span className="text-[10px] font-bold tracking-[0.3em] uppercase">
-              Eduplus · Learning Intelligence Platform
-            </span>
-          </Badge>
-          <span className="font-mono text-[10px] tracking-[0.25em] uppercase text-primary/70">
-            Where Passion Meets Profession
-          </span>
-        </TimelineAnimation>
-
         {/* Headline */}
         <TimelineAnimation
           once
           as="h1"
-          animationNum={2}
+          animationNum={1}
           timelineRef={sectionRef}
           className="text-4xl sm:text-5xl md:text-[3.5rem] lg:text-6xl font-semibold tracking-tight leading-[1.1] text-foreground mb-5"
         >
-          Empowering Skills for{' '}
-          <span className="text-primary">a Brighter Future</span>
+          Elevate{' '}
+          <span className="text-primary">Tomorrow</span>
         </TimelineAnimation>
 
         {/* Subtext */}
         <TimelineAnimation
           once
           as="p"
-          animationNum={3}
+          animationNum={2}
           timelineRef={sectionRef}
           className="max-w-xl text-base md:text-lg text-muted-foreground leading-relaxed mb-10"
         >
-          A global network of innovators, educators, and visionaries
-          redefining human capability through AI-powered personalised pathways.
+          A global network redefining human potential through AI-powered learning.
         </TimelineAnimation>
 
         {/* CTAs */}
