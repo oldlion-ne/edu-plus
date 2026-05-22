@@ -21,7 +21,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 // ── LoginForm component (shadcn block pattern) ────────────────────────────────
 function LoginForm({
@@ -69,9 +68,9 @@ function LoginForm({
 
               {/* Email */}
               <div className="flex flex-col gap-2">
-                <Label htmlFor="email">Email</Label>
+                <Label htmlFor="login-email">Email</Label>
                 <Input
-                  id="email"
+                  id="login-email"
                   type="email"
                   placeholder="name@eduplus.in"
                   required
@@ -82,19 +81,21 @@ function LoginForm({
 
               {/* Password */}
               <div className="flex flex-col gap-2">
-                <div className="flex items-center">
-                  <Label htmlFor="password">Password</Label>
+                {/* BUG FIX: label row must be a block-level container so
+                    the label and link each sit on their own baseline */}
+                <div className="flex items-center justify-between">
+                  <Label htmlFor="login-password">Password</Label>
                   {!isSignUp && (
                     <Link
                       to="/contact"
-                      className="ml-auto inline-block text-sm underline-offset-4 hover:underline text-muted-foreground"
+                      className="text-sm text-muted-foreground underline-offset-4 hover:underline hover:text-primary transition-colors"
                     >
                       Forgot your password?
                     </Link>
                   )}
                 </div>
                 <Input
-                  id="password"
+                  id="login-password"
                   type="password"
                   placeholder="••••••••••••"
                   required
@@ -106,14 +107,14 @@ function LoginForm({
               {/* Role selector — sign-up only */}
               {isSignUp && (
                 <div className="flex flex-col gap-2">
-                  <Label htmlFor="role">Role</Label>
+                  <Label htmlFor="login-role">Role</Label>
                   <Select
                     value={role}
                     onValueChange={(val) =>
                       setRole(val as 'admin' | 'educator' | 'resource_person')
                     }
                   >
-                    <SelectTrigger id="role">
+                    <SelectTrigger id="login-role">
                       <SelectValue placeholder="Select your role" />
                     </SelectTrigger>
                     <SelectContent>
@@ -146,11 +147,60 @@ function LoginForm({
                   </button>
                 </p>
               </div>
+
             </div>
           </form>
         </CardContent>
       </Card>
     </div>
+  );
+}
+
+// ── Dev Bypass panel ──────────────────────────────────────────────────────────
+function DevBypassPanel({
+  onBypass,
+}: {
+  onBypass: (role: 'admin' | 'educator' | 'resource_person') => void;
+}) {
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle className="text-xl">Dev Bypass</CardTitle>
+        <CardDescription>
+          Inject a simulated role session without hitting the auth server.
+        </CardDescription>
+      </CardHeader>
+      <CardContent className="flex flex-col gap-4">
+        <Alert>
+          <AlertDescription className="text-[10px] font-mono leading-relaxed">
+            [DEV MODE] — Bypasses Supabase auth. Inject a role directly to unlock all dashboard sections.
+          </AlertDescription>
+        </Alert>
+        <div className="flex flex-col gap-2">
+          <Button
+            onClick={() => onBypass('admin')}
+            variant="outline"
+            className="w-full font-mono text-[9px] tracking-widest uppercase border-destructive/30 hover:border-destructive text-destructive hover:bg-destructive/5"
+          >
+            Inject Admin Clearance
+          </Button>
+          <Button
+            onClick={() => onBypass('educator')}
+            variant="outline"
+            className="w-full font-mono text-[9px] tracking-widest uppercase border-green-500/30 hover:border-green-500 text-green-600 dark:text-green-400 hover:bg-green-500/5"
+          >
+            Inject Educator Clearance
+          </Button>
+          <Button
+            onClick={() => onBypass('resource_person')}
+            variant="outline"
+            className="w-full font-mono text-[9px] tracking-widest uppercase border-primary/30 hover:border-primary text-primary hover:bg-primary/5"
+          >
+            Inject Resource Clearance
+          </Button>
+        </div>
+      </CardContent>
+    </Card>
   );
 }
 
@@ -202,83 +252,46 @@ export default function Login() {
   };
 
   return (
-    <div className="flex min-h-svh w-full items-center justify-center p-6 md:p-10 bg-background">
-      <div className="w-full max-w-sm">
+    <div className="flex min-h-screen w-full items-center justify-center p-6 md:p-10 bg-background">
+      <div className="w-full max-w-sm flex flex-col gap-4">
 
-        {/* Tab switcher: Secure / Dev Bypass */}
-        <Tabs
-          value={activeTab}
-          onValueChange={(v) => setActiveTab(v as 'secure' | 'bypass')}
-          className="w-full"
-        >
-          <TabsList className="grid grid-cols-2 w-full mb-4">
-            <TabsTrigger value="secure" className="text-[10px] font-mono tracking-widest uppercase">
-              Secure Access
-            </TabsTrigger>
-            <TabsTrigger value="bypass" className="text-[10px] font-mono tracking-widest uppercase">
-              Dev Bypass
-            </TabsTrigger>
-          </TabsList>
+        {/* ── Manual tab pills (avoids Tabs flex-row layout bug) ── */}
+        <div className="grid grid-cols-2 gap-2 bg-muted rounded-lg p-1">
+          {(['secure', 'bypass'] as const).map((tab) => (
+            <button
+              key={tab}
+              type="button"
+              onClick={() => setActiveTab(tab)}
+              className={cn(
+                'py-1.5 rounded-md text-[10px] font-mono tracking-widest uppercase transition-all duration-200',
+                activeTab === tab
+                  ? 'bg-background text-foreground shadow-sm'
+                  : 'text-muted-foreground hover:text-foreground',
+              )}
+            >
+              {tab === 'secure' ? 'Secure Access' : 'Dev Bypass'}
+            </button>
+          ))}
+        </div>
 
-          {/* ── Secure login tab ── */}
-          <TabsContent value="secure" className="m-0 outline-none">
-            <LoginForm
-              isSignUp={isSignUp}
-              setIsSignUp={setIsSignUp}
-              onSubmit={handleSubmit}
-              email={email}
-              setEmail={setEmail}
-              password={password}
-              setPassword={setPassword}
-              role={role}
-              setRole={setRole}
-              submitting={submitting}
-            />
-          </TabsContent>
+        {/* ── Panel content ── */}
+        {activeTab === 'secure' ? (
+          <LoginForm
+            isSignUp={isSignUp}
+            setIsSignUp={setIsSignUp}
+            onSubmit={handleSubmit}
+            email={email}
+            setEmail={setEmail}
+            password={password}
+            setPassword={setPassword}
+            role={role}
+            setRole={setRole}
+            submitting={submitting}
+          />
+        ) : (
+          <DevBypassPanel onBypass={handleBypass} />
+        )}
 
-          {/* ── Dev bypass tab ── */}
-          <TabsContent value="bypass" className="m-0 outline-none">
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-xl">Dev Bypass</CardTitle>
-                <CardDescription>
-                  Inject a simulated role session without hitting the auth server.
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="flex flex-col gap-4">
-                <Alert>
-                  <AlertDescription className="text-[10px] font-mono leading-relaxed">
-                    [DEV MODE] — Bypasses Supabase auth. Inject a role directly to unlock all dashboard sections.
-                  </AlertDescription>
-                </Alert>
-
-                <div className="flex flex-col gap-2">
-                  <Button
-                    onClick={() => handleBypass('admin')}
-                    variant="outline"
-                    className="w-full font-mono text-[9px] tracking-widest uppercase border-destructive/30 hover:border-destructive text-destructive hover:bg-destructive/5"
-                  >
-                    Inject Admin Clearance
-                  </Button>
-                  <Button
-                    onClick={() => handleBypass('educator')}
-                    variant="outline"
-                    className="w-full font-mono text-[9px] tracking-widest uppercase border-green-500/30 hover:border-green-500 text-green-600 dark:text-green-400 hover:bg-green-500/5"
-                  >
-                    Inject Educator Clearance
-                  </Button>
-                  <Button
-                    onClick={() => handleBypass('resource_person')}
-                    variant="outline"
-                    className="w-full font-mono text-[9px] tracking-widest uppercase border-primary/30 hover:border-primary text-primary hover:bg-primary/5"
-                  >
-                    Inject Resource Clearance
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-        </Tabs>
       </div>
     </div>
   );
