@@ -1,220 +1,18 @@
 import React, { useState } from 'react';
-import { Link, useNavigate, useLocation } from 'react-router';
+import { useNavigate, useLocation } from 'react-router';
 import { useAuth } from '../lib/AuthContext';
 import { toast } from 'sonner';
-import { cn } from '@/lib/utils';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
 
-// ── LoginForm component (shadcn block pattern) ────────────────────────────────
-function LoginForm({
-  className,
-  isSignUp,
-  setIsSignUp,
-  onSubmit,
-  email,
-  setEmail,
-  password,
-  setPassword,
-  role,
-  setRole,
-  submitting,
-}: {
-  className?: string;
-  isSignUp: boolean;
-  setIsSignUp: (v: boolean) => void;
-  onSubmit: (e: React.FormEvent) => void;
-  email: string;
-  setEmail: (v: string) => void;
-  password: string;
-  setPassword: (v: string) => void;
-  role: 'admin' | 'educator' | 'resource_person';
-  setRole: (v: 'admin' | 'educator' | 'resource_person') => void;
-  submitting: boolean;
-}) {
-  return (
-    <div className={cn('flex flex-col gap-6', className)}>
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-xl">
-            {isSignUp ? 'Create an account' : 'Login to your account'}
-          </CardTitle>
-          <CardDescription>
-            {isSignUp
-              ? 'Fill in the details below to create your EduPlus account'
-              : 'Enter your email below to login to your account'}
-          </CardDescription>
-        </CardHeader>
-
-        <CardContent>
-          <form onSubmit={onSubmit}>
-            <div className="flex flex-col gap-6">
-
-              {/* Email */}
-              <div className="flex flex-col gap-2">
-                <Label htmlFor="login-email">Email</Label>
-                <Input
-                  id="login-email"
-                  type="email"
-                  placeholder="name@eduplus.in"
-                  required
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                />
-              </div>
-
-              {/* Password */}
-              <div className="flex flex-col gap-2">
-                {/* BUG FIX: label row must be a block-level container so
-                    the label and link each sit on their own baseline */}
-                <div className="flex items-center justify-between">
-                  <Label htmlFor="login-password">Password</Label>
-                  {!isSignUp && (
-                    <Link
-                      to="/contact"
-                      className="text-sm text-muted-foreground underline-offset-4 hover:underline hover:text-primary transition-colors"
-                    >
-                      Forgot your password?
-                    </Link>
-                  )}
-                </div>
-                <Input
-                  id="login-password"
-                  type="password"
-                  placeholder="••••••••••••"
-                  required
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                />
-              </div>
-
-              {/* Role selector — sign-up only */}
-              {isSignUp && (
-                <div className="flex flex-col gap-2">
-                  <Label htmlFor="login-role">Role</Label>
-                  <Select
-                    value={role}
-                    onValueChange={(val) =>
-                      setRole(val as 'admin' | 'educator' | 'resource_person')
-                    }
-                  >
-                    <SelectTrigger id="login-role">
-                      <SelectValue placeholder="Select your role" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="admin">Administrator</SelectItem>
-                      <SelectItem value="educator">Educator</SelectItem>
-                      <SelectItem value="resource_person">Resource Expert</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-              )}
-
-              {/* Submit */}
-              <div className="flex flex-col gap-3">
-                <Button type="submit" className="w-full" disabled={submitting}>
-                  {submitting
-                    ? 'Processing...'
-                    : isSignUp
-                    ? 'Create Account'
-                    : 'Login'}
-                </Button>
-
-                <p className="text-center text-sm text-muted-foreground">
-                  {isSignUp ? 'Already have an account? ' : "Don't have an account? "}
-                  <button
-                    type="button"
-                    onClick={() => setIsSignUp(!isSignUp)}
-                    className="underline underline-offset-4 hover:text-primary transition-colors"
-                  >
-                    {isSignUp ? 'Sign in' : 'Sign up'}
-                  </button>
-                </p>
-              </div>
-
-            </div>
-          </form>
-        </CardContent>
-      </Card>
-    </div>
-  );
-}
-
-// ── Dev Bypass panel ──────────────────────────────────────────────────────────
-function DevBypassPanel({
-  onBypass,
-}: {
-  onBypass: (role: 'admin' | 'educator' | 'resource_person') => void;
-}) {
-  return (
-    <Card>
-      <CardHeader>
-        <CardTitle className="text-xl">Dev Bypass</CardTitle>
-        <CardDescription>
-          Inject a simulated role session without hitting the auth server.
-        </CardDescription>
-      </CardHeader>
-      <CardContent className="flex flex-col gap-4">
-        <Alert>
-          <AlertDescription className="text-[10px] font-mono leading-relaxed">
-            [DEV MODE] — Bypasses Supabase auth. Inject a role directly to unlock all dashboard sections.
-          </AlertDescription>
-        </Alert>
-        <div className="flex flex-col gap-2">
-          <Button
-            onClick={() => onBypass('admin')}
-            variant="outline"
-            className="w-full font-mono text-[9px] tracking-widest uppercase border-destructive/30 hover:border-destructive text-destructive hover:bg-destructive/5"
-          >
-            Inject Admin Clearance
-          </Button>
-          <Button
-            onClick={() => onBypass('educator')}
-            variant="outline"
-            className="w-full font-mono text-[9px] tracking-widest uppercase border-green-500/30 hover:border-green-500 text-green-600 dark:text-green-400 hover:bg-green-500/5"
-          >
-            Inject Educator Clearance
-          </Button>
-          <Button
-            onClick={() => onBypass('resource_person')}
-            variant="outline"
-            className="w-full font-mono text-[9px] tracking-widest uppercase border-primary/30 hover:border-primary text-primary hover:bg-primary/5"
-          >
-            Inject Resource Clearance
-          </Button>
-        </div>
-      </CardContent>
-    </Card>
-  );
-}
-
-// ── Page ──────────────────────────────────────────────────────────────────────
 export default function Login() {
-  const { signIn, signUp, signInSimulated, user } = useAuth();
+  const { signIn, user } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
 
-  const [activeTab, setActiveTab] = useState<'secure' | 'bypass'>('secure');
-  const [isSignUp, setIsSignUp] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [role, setRole] = useState<'admin' | 'educator' | 'resource_person'>('educator');
   const [submitting, setSubmitting] = useState(false);
 
   const from = (location.state as any)?.from?.pathname || '/dashboard';
@@ -227,70 +25,83 @@ export default function Login() {
     e.preventDefault();
     setSubmitting(true);
     try {
-      if (isSignUp) {
-        const { error } = await signUp(email, password, role);
-        if (error) throw error;
-        toast.success('Account created successfully.');
-        setIsSignUp(false);
-      } else {
-        const { error } = await signIn(email, password);
-        if (error) throw error;
-        toast.success('Welcome back.');
-        navigate(from, { replace: true });
-      }
+      const { error } = await signIn(email, password);
+      if (error) throw error;
+      toast.success('Welcome back.');
+      navigate(from, { replace: true });
     } catch (err: any) {
-      toast.error(err.message || 'Operation failed.');
+      toast.error(err.message || 'Invalid credentials.');
     } finally {
       setSubmitting(false);
     }
   };
 
-  const handleBypass = (selectedRole: 'admin' | 'educator' | 'resource_person') => {
-    signInSimulated(selectedRole);
-    toast.success(`Simulated session: ${selectedRole.toUpperCase()}`);
-    navigate(from, { replace: true });
-  };
-
   return (
-    <div className="flex min-h-screen w-full items-center justify-center p-6 md:p-10 bg-background">
-      <div className="w-full max-w-sm flex flex-col gap-4">
+    <div className="min-h-screen w-full flex items-center justify-center bg-background px-6">
 
-        {/* ── Manual tab pills (avoids Tabs flex-row layout bug) ── */}
-        <div className="grid grid-cols-2 gap-2 bg-muted rounded-lg p-1">
-          {(['secure', 'bypass'] as const).map((tab) => (
-            <button
-              key={tab}
-              type="button"
-              onClick={() => setActiveTab(tab)}
-              className={cn(
-                'py-1.5 rounded-md text-[10px] font-mono tracking-widest uppercase transition-all duration-200',
-                activeTab === tab
-                  ? 'bg-background text-foreground shadow-sm'
-                  : 'text-muted-foreground hover:text-foreground',
-              )}
-            >
-              {tab === 'secure' ? 'Secure Access' : 'Dev Bypass'}
-            </button>
-          ))}
+      {/* Card */}
+      <div className="w-full max-w-sm border border-border bg-card p-8 flex flex-col gap-8">
+
+        {/* Brand */}
+        <div className="flex flex-col gap-1">
+          <span className="font-heading font-bold text-2xl text-foreground leading-none">
+            Edu<span className="text-primary font-light">+</span>
+          </span>
+          <p className="text-xs text-muted-foreground font-mono uppercase tracking-widest mt-2">
+            Staff Portal
+          </p>
         </div>
 
-        {/* ── Panel content ── */}
-        {activeTab === 'secure' ? (
-          <LoginForm
-            isSignUp={isSignUp}
-            setIsSignUp={setIsSignUp}
-            onSubmit={handleSubmit}
-            email={email}
-            setEmail={setEmail}
-            password={password}
-            setPassword={setPassword}
-            role={role}
-            setRole={setRole}
-            submitting={submitting}
-          />
-        ) : (
-          <DevBypassPanel onBypass={handleBypass} />
-        )}
+        {/* Heading */}
+        <div className="flex flex-col gap-1">
+          <h1 className="text-xl font-semibold text-foreground">Sign in</h1>
+          <p className="text-sm text-muted-foreground">
+            Access is restricted to authorised staff only.
+          </p>
+        </div>
+
+        {/* Form */}
+        <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+
+          <div className="flex flex-col gap-2">
+            <Label htmlFor="login-email" className="text-xs uppercase tracking-wider font-mono">
+              Email
+            </Label>
+            <Input
+              id="login-email"
+              type="email"
+              placeholder="name@eduplus.in"
+              required
+              autoComplete="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+          </div>
+
+          <div className="flex flex-col gap-2">
+            <Label htmlFor="login-password" className="text-xs uppercase tracking-wider font-mono">
+              Password
+            </Label>
+            <Input
+              id="login-password"
+              type="password"
+              placeholder="••••••••••••"
+              required
+              autoComplete="current-password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </div>
+
+          <Button
+            type="submit"
+            className="w-full mt-1"
+            disabled={submitting}
+          >
+            {submitting ? 'Signing in…' : 'Sign in'}
+          </Button>
+
+        </form>
 
       </div>
     </div>
