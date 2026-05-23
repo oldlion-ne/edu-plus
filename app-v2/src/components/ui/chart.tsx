@@ -91,11 +91,10 @@ const ChartStyle = ({ id, config }: { id: string; config: ChartConfig }) => {
   }
 
   return (
-    <style
-      dangerouslySetInnerHTML={{
-        __html: Object.entries(THEMES)
-          .map(
-            ([theme, prefix]) => `
+    <style>
+      {Object.entries(THEMES)
+        .map(
+          ([theme, prefix]) => `
 ${prefix} [data-chart=${id}] {
 ${colorConfig
   .map(([key, itemConfig]) => {
@@ -107,10 +106,9 @@ ${colorConfig
   .join("\n")}
 }
 `
-          )
-          .join("\n"),
-      }}
-    />
+        )
+        .join("\n")}
+    </style>
   )
 }
 
@@ -345,13 +343,17 @@ function getPayloadConfigFromPayload(
 
   let configLabelKey: string = key
 
+  const isSafeKey = (k: string) => k !== "__proto__" && k !== "constructor" && k !== "prototype"
+
   if (
+    isSafeKey(key) &&
     key in payload &&
     typeof payload[key as keyof typeof payload] === "string"
   ) {
     configLabelKey = payload[key as keyof typeof payload] as string
   } else if (
     payloadPayload &&
+    isSafeKey(key) &&
     key in payloadPayload &&
     typeof payloadPayload[key as keyof typeof payloadPayload] === "string"
   ) {
@@ -360,7 +362,15 @@ function getPayloadConfigFromPayload(
     ] as string
   }
 
-  return configLabelKey in config ? config[configLabelKey] : config[key]
+  if (!isSafeKey(configLabelKey)) {
+    return undefined
+  }
+
+  return Object.prototype.hasOwnProperty.call(config, configLabelKey)
+    ? config[configLabelKey]
+    : Object.prototype.hasOwnProperty.call(config, key)
+    ? config[key]
+    : undefined
 }
 
 export {

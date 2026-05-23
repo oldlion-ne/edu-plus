@@ -7,6 +7,20 @@ import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Eye, EyeOff } from 'lucide-react';
 
+const translations = {
+  brandName: "Edu",
+  brandPlus: "+",
+  staffPortal: "Staff Portal",
+  signIn: "Sign in",
+  restrictedAccess: "Access is restricted to authorised staff only.",
+  emailLabel: "Email",
+  passwordLabel: "Password",
+  signingIn: "Signing in…",
+};
+
+const translationMap = new Map<string, string>(Object.entries(translations));
+const t = (key: keyof typeof translations) => translationMap.get(key) || '';
+
 export default function Login() {
   const { signIn, user } = useAuth();
   const navigate = useNavigate();
@@ -45,18 +59,18 @@ export default function Login() {
         {/* Brand */}
         <div>
           <span className="font-heading font-bold text-2xl text-card-foreground leading-none">
-            Edu<span className="text-primary font-light">+</span>
+            {t('brandName')}<span className="text-primary font-light">{t('brandPlus')}</span>
           </span>
           <p className="text-[10px] text-muted-foreground font-mono uppercase tracking-widest mt-2">
-            Staff Portal
+            {t('staffPortal')}
           </p>
         </div>
 
         {/* Heading */}
         <div>
-          <h1 className="text-xl font-semibold text-card-foreground">Sign in</h1>
+          <h1 className="text-xl font-semibold text-card-foreground">{t('signIn')}</h1>
           <p className="text-sm text-muted-foreground mt-1">
-            Access is restricted to authorised staff only.
+            {t('restrictedAccess')}
           </p>
         </div>
 
@@ -69,7 +83,7 @@ export default function Login() {
               htmlFor="login-email"
               className="text-[10px] font-mono uppercase tracking-widest text-card-foreground"
             >
-              Email
+              {t('emailLabel')}
             </Label>
             <input
               id="login-email"
@@ -98,7 +112,7 @@ export default function Login() {
               htmlFor="login-password"
               className="text-[10px] font-mono uppercase tracking-widest text-card-foreground"
             >
-              Password
+              {t('passwordLabel')}
             </Label>
             <div className="relative">
               <input
@@ -140,7 +154,7 @@ export default function Login() {
             className="w-full h-10 mt-1 font-mono text-xs tracking-widest uppercase"
             disabled={submitting}
           >
-            {submitting ? 'Signing in…' : 'Sign in'}
+            {submitting ? t('signingIn') : t('signIn')}
           </Button>
 
         </form>

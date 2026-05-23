@@ -5,6 +5,7 @@ import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { Menu, X } from 'lucide-react';
+import { AnimatedThemeToggler } from '@/components/ui/animated-theme-toggler';
 
 const NAV_LINKS = [
   { label: 'About', path: '/about' },
@@ -15,6 +16,19 @@ const NAV_LINKS = [
   { label: 'Guidance', path: '/guidance' },
   { label: 'News', path: '/news' },
 ];
+
+const translations = {
+  brandName: "Edu",
+  brandPlus: "+",
+  dashboard: "Dashboard",
+  logout: "Logout",
+  login: "Login",
+  connect: "Connect",
+  themeLabel: "Theme",
+};
+
+const translationMap = new Map<string, string>(Object.entries(translations));
+const t = (key: keyof typeof translations) => translationMap.get(key) || '';
 
 export default function Navigation() {
   const { user, signOut } = useAuth();
@@ -51,8 +65,8 @@ export default function Navigation() {
       <div className="max-w-[1440px] mx-auto flex items-center justify-between px-6 md:px-12 py-4">
         {/* Logo */}
         <Link to="/" className="flex items-center gap-0">
-          <span className="font-heading font-bold text-2xl text-foreground">Edu</span>
-          <span className="text-primary font-light text-2xl">+</span>
+          <span className="font-heading font-bold text-2xl text-foreground">{t('brandName')}</span>
+          <span className="text-primary font-light text-2xl">{t('brandPlus')}</span>
         </Link>
 
         {/* Center Nav Links */}
@@ -84,7 +98,7 @@ export default function Navigation() {
                 }`
               }
             >
-              Dashboard
+              {t('dashboard')}
             </NavLink>
           )}
 
@@ -94,7 +108,7 @@ export default function Navigation() {
               onClick={handleLogout}
               className="text-xs font-mono tracking-widest uppercase text-destructive hover:text-destructive hover:bg-destructive/10 h-auto p-0"
             >
-              Logout
+              {t('logout')}
             </Button>
           ) : (
             <Button
@@ -102,12 +116,14 @@ export default function Navigation() {
               variant="ghost"
               className="text-xs font-mono tracking-widest uppercase text-primary hover:text-primary hover:bg-primary/10 h-auto p-0"
             >
-              <Link to="/login">Login</Link>
+              <Link to="/login">{t('login')}</Link>
             </Button>
           )}
 
+          <AnimatedThemeToggler />
+
           <Button asChild variant="outline" className="font-sans px-5 py-2 text-sm h-auto">
-            <Link to="/contact">Connect</Link>
+            <Link to="/contact">{t('connect')}</Link>
           </Button>
         </div>
 
@@ -152,7 +168,7 @@ export default function Navigation() {
                     }`
                   }
                 >
-                  Dashboard
+                  {t('dashboard')}
                 </NavLink>
               )}
 
@@ -165,7 +181,7 @@ export default function Navigation() {
                   }}
                   className="justify-start p-0 h-auto text-left font-mono text-lg tracking-wider uppercase text-destructive hover:text-destructive hover:bg-transparent"
                 >
-                  Logout
+                  {t('logout')}
                 </Button>
               ) : (
                 <Button
@@ -173,7 +189,7 @@ export default function Navigation() {
                   variant="ghost"
                   className="justify-start p-0 h-auto text-left font-mono text-lg tracking-wider uppercase text-primary hover:text-primary hover:bg-transparent"
                 >
-                  <Link to="/login" onClick={() => setIsOpen(false)}>Login</Link>
+                  <Link to="/login" onClick={() => setIsOpen(false)}>{t('login')}</Link>
                 </Button>
               )}
 
@@ -182,8 +198,13 @@ export default function Navigation() {
                 variant="outline"
                 className="font-sans py-2.5 text-center text-sm w-full mt-2 h-auto"
               >
-                <Link to="/contact" onClick={() => setIsOpen(false)}>Connect</Link>
+                <Link to="/contact" onClick={() => setIsOpen(false)}>{t('connect')}</Link>
               </Button>
+
+              <div className="flex items-center justify-between pt-4 border-t border-border/40 mt-2">
+                <span className="text-sm text-muted-foreground font-sans">{t('themeLabel')}</span>
+                <AnimatedThemeToggler />
+              </div>
             </SheetContent>
           </Sheet>
         </div>

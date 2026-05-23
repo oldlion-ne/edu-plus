@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { supabase } from '../lib/supabaseClient';
 import ImmersiveHero from '../components/effects/ImmersiveHero';
 import { Button } from '../components/ui/button';
-import { Card, CardContent } from '../components/ui/card';
+import { MagicCard } from '../components/effects/CyberVisualizations';
 import { Input } from '../components/ui/input';
 import { X } from 'lucide-react';
 
@@ -18,6 +18,25 @@ interface KnowledgeItem {
 }
 
 const TABS = ['all', 'tutorial', 'podcast', 'webinar', 'study_material'];
+
+const translations = {
+  heroCategory: "Ecosystem Nodes",
+  heroTitleNormal: "Knowledge",
+  heroTitleHighlighted: "Hub",
+  heroDesc: "Access elite technical tutorials, educational webinars, and expert podcasts compiled to accelerate your academic and skill roadmap.",
+  searchPlaceholder: "Search resources...",
+  loadingResources: "LOADING RESOURCES...",
+  noResources: "NO RESOURCES MATCHING QUERY.",
+  srcPrefix: "SRC // ",
+  noSupplementaryData: "No supplementary data available.",
+  nodePrefix: "NODE: ",
+  launchPlayback: "LAUNCH PLAYBACK",
+  openLink: "OPEN LINK",
+  videoPlayback: "VIDEO PLAYBACK"
+};
+
+const translationMap = new Map<string, string>(Object.entries(translations));
+const t = (key: keyof typeof translations) => translationMap.get(key) || '';
 
 export default function KnowledgeHub() {
   const [items, setItems] = useState<KnowledgeItem[]>([]);
@@ -73,10 +92,10 @@ export default function KnowledgeHub() {
     <div className="min-h-screen bg-background text-foreground pb-32 relative overflow-hidden font-sans">
       <ImmersiveHero
         bgImage="/images/HubVisual.png"
-        category="Ecosystem Nodes"
-        titleNormal="Knowledge"
-        titleHighlighted="Hub"
-        description="Access elite technical tutorials, educational webinars, and expert podcasts compiled to accelerate your academic and skill roadmap."
+        category={t('heroCategory')}
+        titleNormal={t('heroTitleNormal')}
+        titleHighlighted={t('heroTitleHighlighted')}
+        description={t('heroDesc')}
         telemetryLeft="RESOURCES_DATABASE // ONLINE"
         telemetryRight="COORD_LEARNING_MATRIX"
       />
@@ -101,7 +120,7 @@ export default function KnowledgeHub() {
           <div className="w-full md:w-80">
             <Input
               type="text"
-              placeholder="Search resources..."
+              placeholder={t('searchPlaceholder')}
               value={searchQuery}
               onChange={e => setSearchQuery(e.target.value)}
               className="font-mono tracking-wider text-xs"
@@ -112,65 +131,64 @@ export default function KnowledgeHub() {
         {/* Grid display */}
         {loading ? (
           <div className="text-center py-20 font-mono text-primary text-sm tracking-widest animate-pulse">
-            LOADING RESOURCES...
+            {t('loadingResources')}
           </div>
         ) : filteredItems.length === 0 ? (
           <div className="text-center py-20 font-mono text-muted-foreground text-sm tracking-widest border border-border bg-muted/20">
-            NO RESOURCES MATCHING QUERY.
+            {t('noResources')}
           </div>
         ) : (
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredItems.map(item => {
               const isYoutube = item.media_type === 'video_embed' && getYoutubeId(item.url);
               return (
-                <Card
+                <MagicCard
                   key={item.id}
-                  className="flex flex-col justify-between hover:border-primary/40 hover:shadow-md transition-all duration-300 group relative overflow-hidden"
+                  heightClass="h-[300px] md:h-[320px]"
                 >
-                  <div className="absolute top-0 right-0 px-2 py-0.5 bg-primary/5 border-b border-l border-border text-[8px] font-mono text-primary tracking-widest uppercase">
-                    {item.category.replace('_', ' ')}
-                  </div>
-
-                  <CardContent className="p-6 flex flex-col justify-between h-full">
+                  <div className="flex flex-col justify-between h-full space-y-4">
                     <div>
-                      <span className="text-[10px] font-mono text-primary tracking-widest block mb-2 uppercase">
-                        SRC // {item.media_type.replace('_', ' ')}
-                      </span>
-                      <h3 className="font-heading text-lg font-light text-foreground mb-2 leading-snug group-hover:text-primary transition-colors">
+                      <div className="flex justify-between items-center text-[8px] font-mono text-primary tracking-widest uppercase border-b border-border/50 pb-2 mb-3">
+                        <span>{t('srcPrefix')}{item.media_type.replace('_', ' ')}</span>
+                        <span>{item.category.replace('_', ' ')}</span>
+                      </div>
+                      
+                      <h3 className="font-heading text-lg font-semibold text-foreground tracking-tight mb-2 leading-snug group-hover:text-primary transition-colors">
                         {item.title}
                       </h3>
-                      <p className="font-sans text-xs text-muted-foreground leading-relaxed mb-6">
-                        {item.description || 'No supplementary data available.'}
+                      <p className="font-sans text-xs text-muted-foreground leading-relaxed line-clamp-3">
+                        {item.description || t('noSupplementaryData')}
                       </p>
                     </div>
 
                     <div className="pt-4 border-t border-border flex items-center justify-between">
                       <span className="text-[9px] font-mono text-muted-foreground uppercase">
-                        NODE: {item.author_name}
+                        {t('nodePrefix')}{item.author_name}
                       </span>
                       {isYoutube ? (
                         <Button
                           size="sm"
                           variant="secondary"
                           onClick={() => setSelectedVideo(item.url)}
-                          className="font-mono text-[9px] tracking-wider uppercase"
+                          className="font-mono text-[9px] tracking-wider uppercase h-8"
                         >
-                          LAUNCH PLAYBACK
+                          {t('launchPlayback')}
                         </Button>
                       ) : (
                         <Button
                           size="sm"
                           variant="outline"
                           asChild
+                          className="h-8"
                         >
                           <a href={item.url} target="_blank" rel="noopener noreferrer" className="font-mono text-[9px] tracking-wider uppercase">
-                            OPEN LINK
+                            {t('openLink')}
                           </a>
                         </Button>
                       )}
                     </div>
-                  </CardContent>
-                </Card>
+                  </div>
+                </MagicCard>
               );
             })}
           </div>
@@ -182,7 +200,7 @@ export default function KnowledgeHub() {
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-background/90 backdrop-blur-sm animate-fade-in">
           <div className="w-full max-w-4xl bg-card border border-border shadow-2xl relative">
             <div className="flex items-center justify-between p-3 border-b border-border bg-muted">
-              <span className="font-mono text-[10px] font-bold tracking-widest text-primary">VIDEO PLAYBACK</span>
+              <span className="font-mono text-[10px] font-bold tracking-widest text-primary">{t('videoPlayback')}</span>
               <Button
                 variant="ghost"
                 size="icon"
