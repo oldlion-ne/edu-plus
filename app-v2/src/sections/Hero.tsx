@@ -3,12 +3,30 @@ import { Link } from 'react-router';
 import { ArrowRight } from 'lucide-react';
 import { TimelineAnimation } from '../components/timeline-animation';
 import { Button } from '../components/ui/button';
+import { KineticText } from '@/components/ui/kinetic-text';
 
 const STATS = [
-  { value: '4,200+', label: 'Learners' },
-  { value: '98%',    label: 'Placement' },
-  { value: '38',     label: 'Countries' },
+  { value: '4,200+', labelKey: 'learners' as const },
+  { value: '98%',    labelKey: 'placement' as const },
+  { value: '38',     labelKey: 'countries' as const },
 ];
+
+const translations = {
+  investing: 'Investing',
+  building: 'Building',
+  advisory: 'Advisory',
+  elevate: 'Elevate',
+  tomorrow: 'Tomorrow',
+  subtext: 'A global network redefining human potential through AI-powered learning.',
+  startPathway: 'Start Your Pathway',
+  exploreNetwork: 'Explore Network',
+  learners: 'Learners',
+  placement: 'Placement',
+  countries: 'Countries',
+};
+
+const translationMap = new Map<string, string>(Object.entries(translations));
+const t = (key: keyof typeof translations) => translationMap.get(key) || '';
 
 export default function Hero() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -79,15 +97,15 @@ export default function Hero() {
               <span className="relative inline-flex h-1.5 w-1.5 bg-primary" />
             </span>
             <span className="text-[10px] font-mono font-bold tracking-[0.25em] uppercase text-muted-foreground">
-              Investing
+              {t('investing')}
             </span>
             <span className="text-primary/40 text-[10px] font-mono">·</span>
             <span className="text-[10px] font-mono font-bold tracking-[0.25em] uppercase text-muted-foreground">
-              Building
+              {t('building')}
             </span>
             <span className="text-primary/40 text-[10px] font-mono">·</span>
             <span className="text-[10px] font-mono font-bold tracking-[0.25em] uppercase text-muted-foreground">
-              Advisory
+              {t('advisory')}
             </span>
           </div>
         </TimelineAnimation>
@@ -98,10 +116,10 @@ export default function Hero() {
           as="h1"
           animationNum={2}
           timelineRef={sectionRef}
-          className="text-4xl sm:text-5xl md:text-[3.5rem] lg:text-6xl font-semibold tracking-tight leading-[1.1] text-foreground mb-5"
+          className="text-4xl sm:text-5xl md:text-[3.5rem] lg:text-6xl font-semibold tracking-tight leading-[1.1] text-foreground mb-5 flex flex-wrap justify-center"
         >
-          Elevate{' '}
-          <span className="text-primary">Tomorrow</span>
+          <KineticText text={t('elevate')} as="span" className="mr-[0.25em]" />
+          <KineticText text={t('tomorrow')} as="span" className="text-primary" />
         </TimelineAnimation>
 
         {/* Subtext */}
@@ -112,7 +130,7 @@ export default function Hero() {
           timelineRef={sectionRef}
           className="max-w-xl text-base md:text-lg text-muted-foreground leading-relaxed mb-10"
         >
-          A global network redefining human potential through AI-powered learning.
+          {t('subtext')}
         </TimelineAnimation>
 
         {/* CTAs */}
@@ -125,13 +143,13 @@ export default function Hero() {
         >
           <Button asChild size="lg">
             <Link to="/contact" className="inline-flex items-center gap-2">
-              Start Your Pathway
+              {t('startPathway')}
               <ArrowRight size={14} />
             </Link>
           </Button>
           <Button asChild variant="outline" size="lg">
             <Link to="/about">
-              Explore Network
+              {t('exploreNetwork')}
             </Link>
           </Button>
         </TimelineAnimation>
@@ -146,14 +164,14 @@ export default function Hero() {
         >
           {STATS.map((s, i) => (
             <div
-              key={s.label}
+              key={s.labelKey}
               className={`flex flex-col items-center px-7 py-4 ${i < STATS.length - 1 ? 'border-r border-border' : ''}`}
             >
               <span className="text-xl font-bold text-primary font-mono">
                 {s.value}
               </span>
               <span className="text-[10px] text-muted-foreground uppercase tracking-widest font-mono mt-0.5">
-                {s.label}
+                {t(s.labelKey)}
               </span>
             </div>
           ))}
