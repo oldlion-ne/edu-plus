@@ -47,6 +47,14 @@
     --sidebar-ring: 71.4% 0.014 41.2deg;
   }
 
+  html, body {
+    height: 100dvh;
+    width: 100vw;
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
+  }
+
   body {
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
@@ -96,10 +104,6 @@
 
   * {
     @apply border-border outline-ring/50;
-  }
-
-  html {
-    @apply font-sans;
   }
 }
 

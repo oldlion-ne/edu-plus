@@ -3,7 +3,7 @@ import { NavLink, Link, useNavigate } from 'react-router';
 import { useAuth } from '../lib/AuthContext';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { Sheet, SheetContent, SheetTrigger, SheetTitle, SheetDescription } from '@/components/ui/sheet';
 import { Menu, X } from 'lucide-react';
 import { AnimatedThemeToggler } from '@/components/ui/animated-theme-toggler';
 
@@ -141,8 +141,10 @@ export default function Navigation() {
             </SheetTrigger>
             <SheetContent
               side="top"
-              className="bg-background border-b border-border pt-[80px] pb-8 px-8 flex flex-col gap-4 z-40 text-left w-full"
+              className="bg-background border-b border-border pt-[80px] pb-8 px-8 flex flex-col gap-4 text-left w-full"
             >
+              <SheetTitle className="sr-only">Navigation Menu</SheetTitle>
+              <SheetDescription className="sr-only">Access site sections and pages.</SheetDescription>
               {NAV_LINKS.map((link) => (
                 <NavLink /* ui-ignore */
                   key={link.label}

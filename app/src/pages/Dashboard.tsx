@@ -38,7 +38,7 @@ import { Card } from '../components/ui/card';
 import { Input } from '../components/ui/input';
 import { Textarea } from '../components/ui/textarea';
 import { Label } from '../components/ui/label';
-import { Sheet, SheetContent, SheetTitle } from '../components/ui/sheet';
+import { Sheet, SheetContent, SheetTitle, SheetDescription } from '../components/ui/sheet';
 import { AnimatedThemeToggler } from '../components/ui/animated-theme-toggler';
 import { 
   Bell, 
@@ -657,6 +657,7 @@ export default function Dashboard() {
       <Sheet open={isMobileOpen} onOpenChange={setIsMobileOpen}>
         <SheetContent side="left" className="w-64 p-0 border-r border-border animate-in slide-in-from-left duration-300 rounded-none" showCloseButton={false}>
           <SheetTitle className="sr-only">{t('dashboard.header.adminNavWorkspace')}</SheetTitle>
+          <SheetDescription className="sr-only">Admin navigation workspace menu drawer.</SheetDescription>
           {renderSidebarContents(() => setIsMobileOpen(false))}
         </SheetContent>
       </Sheet>
@@ -742,7 +743,7 @@ export default function Dashboard() {
                   <p className="font-mono text-xs text-muted-foreground mt-1">{t('dashboard.overview.telemetryLink')}</p>
                 </div>
 
-                <div className="grid sm:grid-cols-3 gap-5 w-full">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 w-full">
                   <Card className="border border-border bg-card rounded-none text-left p-5 flex flex-col gap-0 py-5">
                     <span className="font-mono text-[9px] text-primary tracking-wider block mb-1">{t('dashboard.overview.hubResources')}</span>
                     <span className="font-heading text-3xl font-light text-foreground">{knowledgeHubItems.length}</span>
@@ -792,7 +793,7 @@ export default function Dashboard() {
                   <div className="px-2 pt-4 pb-6 sm:px-6 sm:pt-6">
                     <ChartContainer
                       config={chartConfig}
-                      className="aspect-auto h-[250px] sm:h-[350px] w-full"
+                      className="aspect-[4/3] sm:aspect-auto h-[250px] sm:h-[350px] w-full"
                     >
                       <AreaChart data={filteredData} margin={{ left: 12, right: 12, top: 20, bottom: 12 }}>
                         <defs>

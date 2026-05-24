@@ -37,25 +37,12 @@ function App() {
   const showPublicNav = !isDashboard;
   const showPublicFooter = !isDashboard;
 
-  return (
-    <AuthProvider>
-      <div className="relative min-h-screen bg-background flex flex-col justify-between overflow-x-hidden">
-        <ScrollToTop />
-        {showChatAgent && <AIChatAgent />}
-        {showPublicNav && <Navigation />}
-        <main className="flex-grow">
+  if (isDashboard) {
+    return (
+      <AuthProvider>
+        <div className="relative h-[100dvh] w-full bg-background overflow-hidden [touch-action:none]">
           <Suspense fallback={<PageLoader />}>
             <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/about" element={<About />} />
-              <Route path="/programs" element={<Programs />} />
-              <Route path="/events" element={<SignatureExperiences />} />
-              <Route path="/council" element={<Council />} />
-              <Route path="/guidance" element={<Guidance />} />
-              <Route path="/news" element={<News />} />
-              <Route path="/contact" element={<Contact />} />
-              <Route path="/knowledge-hub" element={<KnowledgeHub />} />
-              <Route path="/login" element={<Login />} />
               <Route
                 path="/dashboard"
                 element={
@@ -66,8 +53,36 @@ function App() {
               />
             </Routes>
           </Suspense>
-        </main>
-        {showPublicFooter && <Footer />}
+        </div>
+      </AuthProvider>
+    );
+  }
+
+  return (
+    <AuthProvider>
+      <div className="relative h-[100dvh] w-full bg-background flex flex-col overflow-hidden [touch-action:none]">
+        <ScrollToTop />
+        {showChatAgent && <AIChatAgent />}
+        {showPublicNav && <Navigation />}
+        <div className="flex-1 overflow-y-auto flex flex-col justify-between min-h-0 [touch-action:pan-y_manipulation]">
+          <main className="flex-grow">
+            <Suspense fallback={<PageLoader />}>
+              <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/about" element={<About />} />
+                <Route path="/programs" element={<Programs />} />
+                <Route path="/events" element={<SignatureExperiences />} />
+                <Route path="/council" element={<Council />} />
+                <Route path="/guidance" element={<Guidance />} />
+                <Route path="/news" element={<News />} />
+                <Route path="/contact" element={<Contact />} />
+                <Route path="/knowledge-hub" element={<KnowledgeHub />} />
+                <Route path="/login" element={<Login />} />
+              </Routes>
+            </Suspense>
+          </main>
+          {showPublicFooter && <Footer />}
+        </div>
       </div>
     </AuthProvider>
   );

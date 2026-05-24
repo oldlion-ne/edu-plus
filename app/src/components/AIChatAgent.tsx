@@ -38,6 +38,15 @@ export default function AIChatAgent() {
   const [isLoading, setIsLoading] = useState(false);
   const [conversationId, setConversationId] = useState<string | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (isOpen) {
+      setTimeout(() => {
+        inputRef.current?.focus();
+      }, 300);
+    }
+  }, [isOpen]);
 
   useEffect(() => {
     if (!isOpen || conversationId) return;
@@ -216,56 +225,72 @@ export default function AIChatAgent() {
   };
 
   return (
-    <div className="fixed bottom-6 right-6 z-50 font-sans">
+    <div className="font-sans">
       {/* Toggle Button */}
       {!isOpen && (
-        <button /* ui-ignore */
-          onClick={() => setIsOpen(true)}
-          className="flex items-center justify-center h-10 w-10 bg-primary text-primary-foreground hover:bg-primary/90 transition-all duration-300 cursor-pointer relative shadow-md animate-chat-glow"
-          aria-label="Open AI chat support"
-        >
-          <span className="font-heading font-medium text-[10px] tracking-wider">AI</span>
-          <span className="absolute top-1 right-1 w-1.5 h-1.5 bg-primary-foreground animate-pulse" />
-        </button>
+        <div className="fixed bottom-6 right-6 z-50">
+          <button /* ui-ignore */
+            onClick={() => setIsOpen(true)}
+            className="group flex flex-col items-center justify-center h-14 w-14 bg-background border border-primary/30 text-foreground hover:border-primary/80 transition-all duration-300 cursor-pointer relative shadow-[0_0_15px_rgba(0,0,0,0.2)] animate-chat-glow rounded-none"
+            aria-label="Open AI chat support"
+          >
+            <span className="font-mono text-xs font-bold tracking-widest text-primary group-hover:scale-105 transition-transform duration-200">
+              [AI]
+            </span>
+            <div className="flex items-center gap-1 mt-1">
+              <span className="relative flex h-1.5 w-1.5">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-500 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-500"></span>
+              </span>
+              <span className="font-mono text-[6px] tracking-widest text-emerald-500 uppercase font-bold">ONLINE</span>
+            </div>
+            <svg className="absolute inset-0 w-full h-full text-primary/10 group-hover:text-primary/30 transition-colors duration-300 group-hover:animate-spin [animation-duration:6s] pointer-events-none" viewBox="0 0 100 100">
+              <circle cx="50" cy="50" r="46" stroke="currentColor" strokeWidth="1" strokeDasharray="4 4" fill="none" />
+            </svg>
+          </button>
+        </div>
       )}
 
       {/* Chat Widget Panel */}
       {isOpen && (
-        <div className="w-[280px] sm:w-[320px] h-[360px] sm:h-[400px] bg-card border border-border shadow-xl flex flex-col animate-in fade-in slide-in-from-bottom-5 duration-300">
+        <div className="fixed inset-y-0 right-0 z-50 w-full sm:w-[380px] h-[100dvh] bg-background/90 backdrop-blur-xl border-l border-primary/20 shadow-2xl flex flex-col animate-in slide-in-from-right duration-300">
           {/* Header */}
-          <div className="flex items-center justify-between px-3 py-2 bg-muted border-b border-border">
-            <div className="flex items-center gap-1.5">
-              <span className="w-1.5 h-1.5 bg-primary" />
-              <span className="font-mono text-[10px] font-bold tracking-widest text-primary">{t('advisorTitle')}</span>
+          <div className="flex items-center justify-between px-5 py-4 bg-muted/50 border-b border-border/80">
+            <div className="flex items-center gap-2">
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
+              </span>
+              <span className="font-mono text-xs font-bold tracking-widest text-primary uppercase">{t('advisorTitle')}</span>
             </div>
             <Button
               variant="ghost"
               size="icon"
               onClick={() => setIsOpen(false)}
-              className="h-6 w-6"
+              className="h-8 w-8 hover:bg-primary/10 text-muted-foreground hover:text-primary transition-colors border border-border/30 hover:border-primary/20 rounded-none cursor-pointer"
             >
-              <X className="size-3.5" />
+              <X className="size-4" />
             </Button>
           </div>
 
           {/* Messages */}
-          <div className="flex-1 overflow-y-auto p-3 space-y-3">
+          <div className="flex-1 overflow-y-auto p-5 space-y-4">
             {messages.map((msg, index) => (
               <div
                 key={index}
-                className={`flex flex-col gap-0.5 max-w-[88%] ${
+                className={`flex flex-col gap-1 max-w-[90%] ${
                   msg.role === 'user' ? 'ml-auto items-end' : 'mr-auto'
                 }`}
               >
-                <span className={`font-mono text-[8px] tracking-wider ${
+                <span className={`font-mono text-[9px] tracking-widest ${
                   msg.role === 'user' ? 'text-muted-foreground' : 'text-primary'
                 }`}>
                   {msg.role === 'user' ? '[YOU]' : '[ADVISOR]'}
                 </span>
-                <div className={`p-2.5 text-[11px] leading-relaxed border ${
+                <div className={`p-3.5 text-xs leading-relaxed border ${
                   msg.role === 'user'
-                    ? 'bg-muted border-border text-foreground'
-                    : 'bg-primary/5 border-primary/20 text-foreground'
+                    ? 'bg-muted/80 border-border text-foreground rounded-none'
+                    : 'bg-primary/5 border-primary/10 text-foreground rounded-none shadow-[0_0_10px_rgba(0,0,0,0.02)]'
                 }`}>
                   {formatMessageContent(msg.content)}
                 </div>
@@ -273,9 +298,9 @@ export default function AIChatAgent() {
             ))}
 
             {isLoading && (
-              <div className="flex flex-col gap-0.5 mr-auto max-w-[88%]">
-                <span className="font-mono text-[8px] tracking-wider text-primary">[ADVISOR]</span>
-                <div className="p-2.5 text-[11px] bg-primary/5 border border-primary/20 text-primary font-mono animate-pulse">
+              <div className="flex flex-col gap-1 mr-auto max-w-[90%]">
+                <span className="font-mono text-[9px] tracking-widest text-primary">[ADVISOR]</span>
+                <div className="p-3.5 text-xs bg-primary/5 border border-primary/10 text-primary font-mono animate-pulse rounded-none">
                   {t('thinking')}
                 </div>
               </div>
@@ -285,18 +310,18 @@ export default function AIChatAgent() {
 
           {/* Quick Suggestions */}
           {messages.length === 1 && (
-            <div className="px-3 py-1.5 border-t border-border flex flex-wrap gap-1.5">
+            <div className="px-5 py-3 border-t border-border/60 flex flex-wrap gap-2 bg-muted/20">
               <button /* ui-ignore */
                 onClick={() => handleSendMessage('Explore EduPlus Programs')}
-                className="px-2 py-0.5 text-[9px] font-sans border border-border text-muted-foreground hover:border-primary hover:text-primary transition-all duration-200 cursor-pointer"
+                className="px-3 py-1.5 text-[9px] font-mono border border-primary/20 bg-primary/5 text-primary hover:bg-primary/20 hover:border-primary transition-all duration-200 cursor-pointer rounded-none uppercase tracking-wider"
               >
-                {t('btnPrograms')}
+                [ {t('btnPrograms')} ]
               </button>
               <button /* ui-ignore */
                 onClick={() => handleSendMessage('I need career counseling')}
-                className="px-2 py-0.5 text-[9px] font-sans border border-border text-muted-foreground hover:border-primary hover:text-primary transition-all duration-200 cursor-pointer"
+                className="px-3 py-1.5 text-[9px] font-mono border border-primary/20 bg-primary/5 text-primary hover:bg-primary/20 hover:border-primary transition-all duration-200 cursor-pointer rounded-none uppercase tracking-wider"
               >
-                {t('btnCareerCounseling')}
+                [ {t('btnCareerCounseling')} ]
               </button>
             </div>
           )}
@@ -307,20 +332,21 @@ export default function AIChatAgent() {
               e.preventDefault();
               handleSendMessage(inputValue);
             }}
-            className="p-2 border-t border-border bg-background flex gap-1.5"
+            className="p-3 border-t border-border bg-background flex gap-2"
           >
             <input
+              ref={inputRef}
               type="text"
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
-              placeholder="Ask a question..."
+              placeholder="ENTER COGNITIVE INQUIRY..."
               disabled={isLoading}
-              className="flex-1 bg-background border border-input text-foreground text-[11px] px-2.5 py-1.5 outline-none focus:border-ring disabled:opacity-50 font-sans transition-colors"
+              className="flex-1 bg-background border border-input text-foreground text-xs px-3 py-2 outline-none focus:border-primary focus:ring-1 focus:ring-primary/25 disabled:opacity-50 font-mono transition-all rounded-none placeholder:text-muted-foreground/45"
             />
             <button /* ui-ignore */
               type="submit"
               disabled={isLoading || !inputValue.trim()}
-              className="px-3 py-1.5 bg-primary hover:bg-primary/90 disabled:opacity-40 text-primary-foreground font-mono text-[9px] font-bold tracking-wider transition-colors duration-300 cursor-pointer"
+              className="px-4 py-2 bg-primary hover:bg-primary/95 disabled:opacity-40 text-primary-foreground font-mono text-[10px] font-bold tracking-widest transition-all duration-300 cursor-pointer rounded-none border border-transparent hover:border-primary/20"
             >
               {t('btnSend')}
             </button>
