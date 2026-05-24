@@ -2,6 +2,10 @@ import { useEffect, useRef, useState } from 'react';
 import { NavLink, Link, useNavigate } from 'react-router';
 import { useAuth } from '../lib/AuthContext';
 import { toast } from 'sonner';
+import { Button } from '@/components/ui/button';
+import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { Menu, X } from 'lucide-react';
+import { AnimatedThemeToggler } from '@/components/ui/animated-theme-toggler';
 
 const NAV_LINKS = [
   { label: 'About', path: '/about' },
@@ -12,6 +16,19 @@ const NAV_LINKS = [
   { label: 'Guidance', path: '/guidance' },
   { label: 'News', path: '/news' },
 ];
+
+const translations = {
+  brandName: "Edu",
+  brandPlus: "+",
+  dashboard: "Dashboard",
+  logout: "Logout",
+  login: "Login",
+  connect: "Connect",
+  themeLabel: "Theme",
+};
+
+const translationMap = new Map<string, string>(Object.entries(translations));
+const t = (key: keyof typeof translations) => translationMap.get(key) || '';
 
 export default function Navigation() {
   const { user, signOut } = useAuth();
@@ -31,49 +48,41 @@ export default function Navigation() {
   const handleLogout = async () => {
     try {
       await signOut();
-      toast.success('[SESSION TERMINATED]', {
-        description: 'You have logged out successfully.',
-        style: { background: '#0E131A', border: '1px solid #7DF9FF', color: '#E6EDF3', borderRadius: '0px' }
-      });
+      toast.success('Logged out successfully.');
       navigate('/', { replace: true });
     } catch (err: any) {
-      toast.error('LOGOUT_ERROR', {
-        description: err.message || 'Logout failed.',
-        style: { borderRadius: '0px' }
-      });
+      toast.error(err.message || 'Logout failed.');
     }
   };
 
   return (
     <nav
       ref={navRef}
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
-        isOpen ? '!overflow-visible' : ''
-      } ${
-        scrolled ? 'liquid-glass-strong backdrop-blur-md shadow-lg border-b border-[#7DF9FF]/10' : 'liquid-glass'
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 bg-background/95 backdrop-blur-md ${
+        scrolled ? 'shadow-sm border-b border-border' : ''
       }`}
     >
       <div className="max-w-[1440px] mx-auto flex items-center justify-between px-6 md:px-12 py-4">
         {/* Logo */}
-        <Link to="/" className="flex items-center gap-0">
-          <span className="font-heading font-bold text-2xl text-[#E6EDF3]">Edu</span>
-          <span className="text-[#7DF9FF] font-light text-2xl">+</span>
+        <Link to="/" className="flex items-center gap-0 hover:text-primary focus:outline-none focus:text-primary">
+          <span className="font-heading font-bold text-2xl text-foreground">{t('brandName')}</span>
+          <span className="text-primary font-light text-2xl">{t('brandPlus')}</span>
         </Link>
 
         {/* Center Nav Links */}
         <div className="hidden md:flex items-center gap-8">
           {NAV_LINKS.map((link) => (
-            <NavLink
+            <NavLink /* ui-ignore */
               key={link.label}
               to={link.path}
               className={({ isActive }) =>
                 `text-sm font-sans transition-colors duration-300 relative group ${
-                  isActive ? 'text-[#7DF9FF]' : 'text-[#E6EDF3] hover:text-[#7DF9FF]'
+                  isActive ? 'text-primary' : 'text-foreground hover:text-primary'
                 }`
               }
             >
               {link.label}
-              <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-[#7DF9FF] transition-all duration-300 group-hover:w-full" />
+              <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-primary transition-all duration-300 group-hover:w-full" />
             </NavLink>
           ))}
         </div>
@@ -81,126 +90,125 @@ export default function Navigation() {
         {/* CTA & Auth Area */}
         <div className="hidden md:flex items-center gap-6">
           {user && (
-            <NavLink
+            <NavLink /* ui-ignore */
               to="/dashboard"
               className={({ isActive }) =>
-                `font-mono text-xs tracking-widest uppercase transition-all duration-300 relative group ${
-                  isActive ? 'text-[#7DF9FF]' : 'text-[#E6EDF3] hover:text-[#7DF9FF]'
+                `font-mono text-xs tracking-widest uppercase transition-all duration-300 ${
+                  isActive ? 'text-primary' : 'text-foreground hover:text-primary'
                 }`
               }
             >
-              [ Dashboard ]
+              {t('dashboard')}
             </NavLink>
           )}
 
           {user ? (
-            <button
+            <Button
+              variant="ghost"
               onClick={handleLogout}
-              className="font-mono text-xs tracking-widest uppercase text-white/50 hover:text-red-400 transition-colors duration-300 cursor-pointer"
+              className="text-xs font-mono tracking-widest uppercase text-destructive hover:text-destructive hover:bg-destructive/10 h-auto p-0"
             >
-              [ Logout ]
-            </button>
+              {t('logout')}
+            </Button>
           ) : (
-            <Link
-              to="/login"
-              className="font-mono text-xs tracking-widest uppercase text-[#7DF9FF] hover:text-white transition-colors duration-300"
+            <Button
+              asChild
+              variant="ghost"
+              className="text-xs font-mono tracking-widest uppercase text-primary hover:text-primary hover:bg-primary/10 h-auto p-0"
             >
-              [ Login ]
-            </Link>
+              <Link to="/login" /* ui-ignore */>{t('login')}</Link>
+            </Button>
           )}
 
-          <Link
-            to="/contact"
-            className="inline-flex items-center px-5 py-2 text-sm font-sans text-[#7DF9FF] border border-[#7DF9FF] hover:bg-[#7DF9FF] hover:text-[#0B0F14] transition-all duration-300"
-          >
-            Connect
-          </Link>
+          <AnimatedThemeToggler />
+
+          <Button asChild variant="outline" className="font-sans px-5 py-2 text-sm h-auto">
+            <Link to="/contact" /* ui-ignore */>{t('connect')}</Link>
+          </Button>
         </div>
 
-        {/* Mobile Menu Toggle */}
-        <button
-          onClick={() => setIsOpen(!isOpen)}
-          className="md:hidden flex flex-col gap-1.5 p-2 focus:outline-none z-50"
-          aria-label="Toggle menu"
-          aria-expanded={isOpen}
-          aria-controls="mobile-menu"
-        >
-          <span className={`w-5 h-0.5 bg-[#E6EDF3] transition-all duration-300 ${isOpen ? 'rotate-45 translate-y-[8px]' : ''}`} />
-          <span className={`w-5 h-0.5 bg-[#E6EDF3] transition-all duration-300 ${isOpen ? 'opacity-0' : ''}`} />
-          <span className={`w-5 h-0.5 bg-[#E6EDF3] transition-all duration-300 ${isOpen ? '-rotate-45 -translate-y-[8px]' : ''}`} />
-        </button>
+        {/* Mobile Menu via Sheet */}
+        <div className="md:hidden">
+          <Sheet open={isOpen} onOpenChange={setIsOpen}>
+            <SheetTrigger asChild>
+              <Button
+                variant="ghost"
+                className="p-2 h-auto"
+                aria-label="Toggle menu"
+              >
+                {isOpen ? <X className="size-6" /> : <Menu className="size-6" />}
+              </Button>
+            </SheetTrigger>
+            <SheetContent
+              side="top"
+              className="bg-background border-b border-border pt-[80px] pb-8 px-8 flex flex-col gap-4 z-40 text-left w-full"
+            >
+              {NAV_LINKS.map((link) => (
+                <NavLink /* ui-ignore */
+                  key={link.label}
+                  to={link.path}
+                  onClick={() => setIsOpen(false)}
+                  className={({ isActive }) =>
+                    `text-lg font-sans transition-colors duration-300 ${
+                      isActive ? 'text-primary font-medium' : 'text-foreground'
+                    }`
+                  }
+                >
+                  {link.label}
+                </NavLink>
+              ))}
+
+              {user && (
+                <NavLink /* ui-ignore */
+                  to="/dashboard"
+                  onClick={() => setIsOpen(false)}
+                  className={({ isActive }) =>
+                    `text-lg font-mono tracking-wider uppercase transition-colors duration-300 ${
+                      isActive ? 'text-primary font-medium' : 'text-muted-foreground'
+                    }`
+                  }
+                >
+                  {t('dashboard')}
+                </NavLink>
+              )}
+
+              {user ? (
+                <Button
+                  variant="ghost"
+                  onClick={() => {
+                    setIsOpen(false);
+                    handleLogout();
+                  }}
+                  className="justify-start p-0 h-auto text-left font-mono text-lg tracking-wider uppercase text-destructive hover:text-destructive hover:bg-transparent"
+                >
+                  {t('logout')}
+                </Button>
+              ) : (
+                <Button
+                  asChild
+                  variant="ghost"
+                  className="justify-start p-0 h-auto text-left font-mono text-lg tracking-wider uppercase text-primary hover:text-primary hover:bg-transparent"
+                >
+                  <Link to="/login" onClick={() => setIsOpen(false)} /* ui-ignore */>{t('login')}</Link>
+                </Button>
+              )}
+
+              <Button
+                asChild
+                variant="outline"
+                className="font-sans py-2.5 text-center text-sm w-full mt-2 h-auto"
+              >
+                <Link to="/contact" onClick={() => setIsOpen(false)} /* ui-ignore */>{t('connect')}</Link>
+              </Button>
+
+              <div className="flex items-center justify-between pt-4 border-t border-border/40 mt-2">
+                <span className="text-sm text-muted-foreground font-sans">{t('themeLabel')}</span>
+                <AnimatedThemeToggler />
+              </div>
+            </SheetContent>
+          </Sheet>
+        </div>
       </div>
-
-      {/* Mobile Drawer Backdrop */}
-      {isOpen && (
-        <div
-          onClick={() => setIsOpen(false)}
-          className="md:hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-40 mt-[72px]"
-        />
-      )}
-
-      {/* Mobile Drawer */}
-      {isOpen && (
-        <div id="mobile-menu" className="md:hidden absolute top-[72px] left-0 right-0 bg-[#0B0F14]/95 backdrop-blur-lg border-b border-[#7DF9FF]/10 py-6 px-8 flex flex-col gap-4 z-50">
-          {NAV_LINKS.map((link) => (
-            <NavLink
-              key={link.label}
-              to={link.path}
-              onClick={() => setIsOpen(false)}
-              className={({ isActive }) =>
-                `text-lg font-sans transition-colors duration-300 ${
-                  isActive ? 'text-[#7DF9FF] font-medium' : 'text-[#E6EDF3]'
-                }`
-              }
-            >
-              {link.label}
-            </NavLink>
-          ))}
-
-          {user && (
-            <NavLink
-              to="/dashboard"
-              onClick={() => setIsOpen(false)}
-              className={({ isActive }) =>
-                `text-lg font-mono tracking-wider uppercase transition-colors duration-300 ${
-                  isActive ? 'text-[#7DF9FF] font-medium' : 'text-white/70'
-                }`
-              }
-            >
-              [ Dashboard ]
-            </NavLink>
-          )}
-
-          {user ? (
-            <button
-              onClick={() => {
-                setIsOpen(false);
-                handleLogout();
-              }}
-              className="text-left font-mono text-lg tracking-wider uppercase text-red-400 hover:text-red-300 transition-colors duration-300 cursor-pointer"
-            >
-              [ Logout ]
-            </button>
-          ) : (
-            <Link
-              to="/login"
-              onClick={() => setIsOpen(false)}
-              className="font-mono text-lg tracking-wider uppercase text-[#7DF9FF] hover:text-white transition-colors duration-300"
-            >
-              [ Login ]
-            </Link>
-          )}
-
-          <Link
-            to="/contact"
-            onClick={() => setIsOpen(false)}
-            className="inline-flex items-center justify-center py-2.5 text-center text-sm font-sans text-[#7DF9FF] border border-[#7DF9FF] hover:bg-[#7DF9FF] hover:text-[#0B0F14] transition-all duration-300 mt-2"
-          >
-            Connect
-          </Link>
-        </div>
-      )}
     </nav>
   );
 }
-

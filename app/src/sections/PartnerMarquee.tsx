@@ -39,53 +39,40 @@ export default function PartnerMarquee() {
   const getIcon = (type: Partner['type']) => {
     switch (type) {
       case 'academic':
-        return <GraduationCap className="w-3.5 h-3.5 text-[#7DF9FF]" />;
+        return <GraduationCap className="w-3.5 h-3.5 text-primary" />;
       case 'corporate':
-        return <Briefcase className="w-3.5 h-3.5 text-[#7DF9FF]" />;
+        return <Briefcase className="w-3.5 h-3.5 text-primary" />;
       case 'community':
-        return <Globe className="w-3.5 h-3.5 text-[#7DF9FF]" />;
+        return <Globe className="w-3.5 h-3.5 text-primary" />;
       case 'research':
-        return <Cpu className="w-3.5 h-3.5 text-[#7DF9FF]" />;
+        return <Cpu className="w-3.5 h-3.5 text-primary" />;
       default:
-        return <Award className="w-3.5 h-3.5 text-[#7DF9FF]" />;
+        return <Award className="w-3.5 h-3.5 text-primary" />;
     }
   };
 
   if (!mounted) return null;
 
   return (
-    <section className="relative w-full py-8 bg-[#0B0F14] border-y border-white/[0.04] overflow-hidden">
-      {/* Title / Intro Label */}
-      <div className="max-w-[1440px] mx-auto px-6 md:px-12 mb-5">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-2">
-          <span className="text-[10px] md:text-xs font-sans font-semibold tracking-[0.25em] uppercase text-[#7DF9FF]">
-            Technical Pedigree & Advisory Network
-          </span>
-          <span className="text-[10px] md:text-xs font-sans font-medium text-[#8B949E]">
-            Our founders & advisors bring experience from world-class organizations
-          </span>
-        </div>
-      </div>
-
+    <section className="relative w-full py-5 bg-muted border-y border-border overflow-hidden">
       {/* Marquee Track Container */}
       <div className="relative w-full flex items-center">
         {/* Left & Right Edge Fades */}
-        <div className="absolute inset-y-0 left-0 w-24 md:w-48 bg-gradient-to-r from-[#0B0F14] to-transparent z-10 pointer-events-none" />
-        <div className="absolute inset-y-0 right-0 w-24 md:w-48 bg-gradient-to-l from-[#0B0F14] to-transparent z-10 pointer-events-none" />
+        <div className="absolute inset-y-0 left-0 w-24 md:w-48 bg-gradient-to-r from-muted to-transparent z-10 pointer-events-none" />
+        <div className="absolute inset-y-0 right-0 w-24 md:w-48 bg-gradient-to-l from-muted to-transparent z-10 pointer-events-none" />
 
-        {/* Magic UI Marquee Component */}
         <Marquee pauseOnHover className="[--duration:40s] py-2">
           {PARTNERS.map((partner) => (
             <div
               key={partner.name}
-              className="inline-flex items-center gap-3 px-5 py-2.5 bg-[#161B22]/40 border border-white/[0.04] rounded-none backdrop-blur-sm shadow-[inset_0_1px_1px_rgba(255,255,255,0.02)] transition-all duration-300 hover:border-[#7DF9FF]/30 hover:bg-[#161B22]/70 group mx-2 shrink-0"
+              className="inline-flex items-center gap-3 px-5 py-2.5 bg-card border border-border transition-all duration-300 hover:border-primary/40 hover:bg-accent group mx-2 shrink-0"
             >
               {getIcon(partner.type)}
               <div className="flex flex-col leading-none">
-                <span className="text-xs md:text-sm font-sans font-medium text-[#E6EDF3] group-hover:text-white transition-colors">
+                <span className="text-xs md:text-sm font-sans font-medium text-card-foreground group-hover:text-foreground transition-colors">
                   {partner.name}
                 </span>
-                <span className="text-[9px] md:text-[10px] font-sans text-[#8B949E] mt-0.5">
+                <span className="text-[9px] md:text-[10px] font-sans text-muted-foreground mt-0.5">
                   {partner.category}
                 </span>
               </div>

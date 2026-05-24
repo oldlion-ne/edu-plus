@@ -1,72 +1,13 @@
 import { useEffect, useRef, useState } from 'react';
-import { Spotlight, SpotLightItem } from '../components/effects/Spotlight';
-
-interface ExpertNode {
-  nodeId: string;
-  name: string;
-  domain: string;
-  role: string;
-  category: string;
-}
-
-const EXPERT_REGISTRY: ExpertNode[] = [
-  {
-    nodeId: '01',
-    name: 'Dr. Soram Bobby Singh',
-    domain: 'Green Hydrogen',
-    role: 'Principal Scientist leading clean-energy & hydrogen storage architectures.',
-    category: 'Research Node',
-  },
-  {
-    nodeId: '02',
-    name: 'Ms. Geetarani Takhellambam',
-    domain: 'Legal Operations',
-    role: 'GM and Head of Legal at Powerica Ltd, specializing in energy governance & compliance.',
-    category: 'Corporate Node',
-  },
-  {
-    nodeId: '03',
-    name: 'Smt. Purnimashi Moirangthem',
-    domain: 'Cognitive Development',
-    role: 'Assistant Director leading early childhood cognitive learning and research methodologies.',
-    category: 'Cognitive Node',
-  },
-  {
-    nodeId: '04',
-    name: 'Dr. Ngangbam Shantikumar Meetei',
-    domain: 'Advanced Linguistics',
-    role: 'Professor of Advanced Linguistics specializing in structural syntactic frameworks.',
-    category: 'Academic Node',
-  },
-  {
-    nodeId: '05',
-    name: 'Khumukcham Roshaan Singh',
-    domain: 'Career Strategy',
-    role: 'Executive Career Strategist designing pathways for global leadership pipelines.',
-    category: 'Strategy Node',
-  },
-  {
-    nodeId: '06',
-    name: 'Shri Romen Ningthoujam',
-    domain: 'Social Operations',
-    role: 'Operational Lead at Goonj, driving large-scale humanitarian logistics and systems.',
-    category: 'Logistics Node',
-  },
-  {
-    nodeId: '07',
-    name: 'Smt. Nutan Nongthongbam',
-    domain: 'Public Health',
-    role: 'International Public Health Speaker advocating global community healthcare protocols.',
-    category: 'Medical Node',
-  },
-  {
-    nodeId: '08',
-    name: 'Shri Rojit Keisham',
-    domain: 'Maritime Logistics',
-    role: 'Professor of Maritime Operations specializing in blue-ocean transport networks.',
-    category: 'Transport Node',
-  },
-];
+import { Card } from '../components/ui/card';
+import { HugeiconsIcon } from '@hugeicons/react';
+import { Shield01Icon } from '@hugeicons/core-free-icons';
+import { Vercel } from '../components/ui/svgs/vercel';
+import { Supabase } from '../components/ui/svgs/supabase';
+import { Linear } from '../components/ui/svgs/linear';
+import { Slack } from '../components/ui/svgs/slack';
+import { Firebase } from '../components/ui/svgs/firebase';
+import { ClerkIconDark as Clerk } from '../components/ui/svgs/clerk';
 
 export default function PedigreeShowcase() {
   const [visible, setVisible] = useState(false);
@@ -94,97 +35,267 @@ export default function PedigreeShowcase() {
     <section
       ref={sectionRef}
       id="advisory"
-      className="relative w-full min-h-screen bg-[#0B0F14] overflow-hidden"
+      className="relative w-full bg-background overflow-hidden py-24 md:py-32"
     >
-      {/* Section Header */}
-      <div className="relative z-10 pt-32 md:pt-40 pb-8">
-        <div className="max-w-[1440px] mx-auto px-6 md:px-12">
-          <span
-            className={`text-xs font-sans font-medium tracking-[0.3em] uppercase text-[#7DF9FF] mb-6 block transition-all duration-1000 ${
-              visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
-            }`}
-          >
-            Expert Registry
-          </span>
-          <h2
-            className={`font-heading text-4xl md:text-5xl lg:text-6xl font-light text-[#E6EDF3] max-w-3xl transition-all duration-1000 delay-200 ${
-              visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
-            }`}
-          >
-            Technical Pedigree
-          </h2>
-          <p
-            className={`font-sans text-sm text-[#8B949E] max-w-lg mt-6 leading-relaxed transition-all duration-1000 delay-400 ${
-              visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
-            }`}
-          >
-            Our advisory network spans scientists, strategists, linguists, and operational
-            leads across critical domains of human capability development.
-          </p>
-        </div>
-      </div>
-
-      {/* 8-Node Bento Grid Display */}
+      {/* Subtle background accent */}
       <div
-        className={`max-w-[1440px] mx-auto px-6 md:px-12 pb-24 transition-all duration-1000 delay-500 ${
-          visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-        }`}
-      >
-        <Spotlight className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {EXPERT_REGISTRY.map((expert) => (
-            <SpotLightItem key={expert.nodeId}>
-              <div
-                className="group relative bg-[#0E131A] border border-[#7DF9FF]/10 p-6 flex flex-col justify-between min-h-[220px] rounded-none transition-all duration-300 hover:border-[#7DF9FF]/40 hover:shadow-[0_4px_20px_rgba(125,249,255,0.08)] hover:-translate-y-0.5 h-full"
-              >
-                {/* Neon Cyan Border Top Ambient Light */}
-                <div className="absolute top-0 left-0 right-0 h-[2px] bg-transparent transition-colors duration-300 group-hover:bg-[#7DF9FF]" />
-
-                <div>
-                  <div className="flex justify-between items-center mb-4">
-                    <span className="font-mono text-[9px] text-[#8B949E] tracking-wider uppercase">
-                      NODE // {expert.nodeId}
-                    </span>
-                    <span className="font-mono text-[8px] text-[#34c759] flex items-center gap-1">
-                      <span className="w-1 h-1 bg-[#34c759] rounded-full inline-block animate-pulse" />
-                      SECURE
-                    </span>
-                  </div>
-
-                  <div className="font-mono text-[10px] text-[#7DF9FF] uppercase tracking-widest mb-3">
-                    // {expert.domain}
-                  </div>
-                  <h3 className="font-heading text-lg font-light text-[#E6EDF3] leading-snug mb-2">
-                    {expert.name}
-                  </h3>
-                  <p className="font-sans text-xs text-[#8B949E] leading-relaxed">
-                    {expert.role}
-                  </p>
-                </div>
-
-                <div className="border-t border-white/5 mt-6 pt-4 flex justify-between items-center">
-                  <span className="font-mono text-[8px] text-[#8B949E] uppercase tracking-wider">
-                    {expert.category}
-                  </span>
-                  <span className="font-mono text-[8px] text-[#7DF9FF] tracking-wider group-hover:underline cursor-pointer">
-                    [ PROFILE ]
-                  </span>
-                </div>
-              </div>
-            </SpotLightItem>
-          ))}
-        </Spotlight>
-      </div>
-
-      {/* Bottom Divider */}
-      <div
-        className={`h-[1px] max-w-[1440px] mx-auto px-6 md:px-12 transition-all duration-1000 delay-700 ${
-          visible ? 'opacity-100 scale-x-100' : 'opacity-0 scale-x-0'
-        }`}
+        aria-hidden
+        className="pointer-events-none absolute inset-0 z-0"
         style={{
-          background: 'linear-gradient(90deg, #0B0F14 0%, rgba(125,249,255,0.3) 50%, #0B0F14 100%)',
-          transformOrigin: 'center',
+          background:
+            'radial-gradient(ellipse 70% 50% at 20% 60%, oklch(var(--primary) / 0.04) 0%, transparent 70%)',
         }}
       />
+
+      <div className="relative z-10 mx-auto max-w-[1440px] px-6 md:px-12">
+
+        {/* ── Section Header ── */}
+        <div
+          className={`transition-all duration-1000 ${
+            visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
+          }`}
+        >
+          {/* Eyebrow */}
+          <div className="flex items-center gap-3 mb-6">
+            <span className="block h-px w-8 bg-primary opacity-60" />
+            <span className="text-xs font-sans font-semibold tracking-[0.3em] uppercase text-primary">
+              Technical Pedigree &amp; Advisory Network
+            </span>
+          </div>
+
+          {/* Main heading */}
+          <h2 className="font-sans text-3xl sm:text-4xl md:text-5xl lg:text-[3.25rem] font-light text-foreground max-w-4xl leading-[1.15] tracking-tight text-balance">
+            Our founders &amp; advisors bring experience from{' '}
+            <span className="text-primary">world-class organizations</span>
+          </h2>
+
+          {/* Sub-description */}
+          <p className="text-muted-foreground mt-5 text-balance max-w-2xl text-sm md:text-base leading-relaxed">
+            A robust framework of academic advisories, corporate expertise, and
+            secure operational nodes powering next-generation talent development.
+          </p>
+        </div>
+
+        {/* ── Card Grid ── */}
+        <div
+          className={`@container mt-14 transition-all duration-1000 delay-300 ${
+            visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+          }`}
+        >
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+            {/* ── Card 1: Strategic Integrations ── */}
+            <Card
+              variant="outline"
+              className="group relative row-span-2 grid grid-rows-subgrid p-6 md:p-8 transition-all duration-300 hover:-translate-y-1 hover:border-primary/30 hover:shadow-lg hover:shadow-primary/5 overflow-hidden"
+            >
+              {/* Card hover glow */}
+              <div
+                aria-hidden
+                className="pointer-events-none absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                style={{
+                  background:
+                    'radial-gradient(ellipse 60% 50% at 50% 0%, oklch(var(--primary) / 0.06) 0%, transparent 70%)',
+                }}
+              />
+
+              <div className="relative z-10 space-y-2">
+                {/* Card label */}
+                <span className="text-[9px] font-mono font-semibold tracking-[0.25em] uppercase text-primary/70 mb-3 block">
+                  01 — Integrations
+                </span>
+                <h3 className="text-foreground font-medium text-lg">
+                  Strategic Integrations
+                </h3>
+                <p className="text-muted-foreground text-sm leading-relaxed">
+                  Direct alignment with leading educational ministries, corporate
+                  partners, and humanitarian platforms.
+                </p>
+              </div>
+
+              <div
+                aria-hidden
+                className="relative z-10 [&_svg]:fill-foreground flex h-48 flex-col justify-between pt-8"
+              >
+                <div className="relative flex h-10 items-center gap-12 px-6">
+                  <div className="bg-border absolute inset-0 my-auto h-px" />
+                  <div className="bg-card shadow-black/10 ring-border relative flex h-9 items-center rounded-none px-3.5 shadow-md ring transition-transform duration-200 group-hover:scale-105">
+                    <Vercel className="size-3.5" />
+                  </div>
+                  <div className="bg-card shadow-black/10 ring-border relative flex h-9 items-center rounded-none px-3.5 shadow-md ring transition-transform duration-200 group-hover:scale-105">
+                    <Slack className="size-3.5" />
+                  </div>
+                </div>
+                <div className="pl-16 relative flex h-10 items-center justify-between gap-12 pr-6">
+                  <div className="bg-border absolute inset-0 my-auto h-px" />
+                  <div className="bg-card shadow-black/10 ring-border relative flex h-9 items-center rounded-none px-3.5 shadow-md ring transition-transform duration-200 group-hover:scale-105">
+                    <Clerk className="size-3.5" />
+                  </div>
+                  <div className="bg-card shadow-black/10 ring-border relative flex h-9 items-center rounded-none px-3.5 shadow-md ring transition-transform duration-200 group-hover:scale-105">
+                    <Linear className="size-3.5" />
+                  </div>
+                </div>
+                <div className="relative flex h-10 items-center gap-20 px-8">
+                  <div className="bg-border absolute inset-0 my-auto h-px" />
+                  <div className="bg-card shadow-black/10 ring-border relative flex h-9 items-center rounded-none px-3.5 shadow-md ring transition-transform duration-200 group-hover:scale-105">
+                    <Supabase className="size-3.5" />
+                  </div>
+                  <div className="bg-card shadow-black/10 ring-border relative flex h-9 items-center rounded-none px-3.5 shadow-md ring transition-transform duration-200 group-hover:scale-105">
+                    <Firebase className="size-3.5" />
+                  </div>
+                </div>
+              </div>
+            </Card>
+
+            {/* ── Card 2: Real-time Guidance ── */}
+            <Card
+              variant="outline"
+              className="group relative row-span-2 grid grid-rows-subgrid p-6 md:p-8 overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:border-primary/30 hover:shadow-lg hover:shadow-primary/5"
+            >
+              <div
+                aria-hidden
+                className="pointer-events-none absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                style={{
+                  background:
+                    'radial-gradient(ellipse 60% 50% at 50% 0%, oklch(var(--primary) / 0.06) 0%, transparent 70%)',
+                }}
+              />
+
+              <div className="relative z-10 space-y-2">
+                <span className="text-[9px] font-mono font-semibold tracking-[0.25em] uppercase text-primary/70 mb-3 block">
+                  02 — Guidance
+                </span>
+                <h3 className="text-foreground font-medium text-lg">
+                  Real-time Guidance
+                </h3>
+                <p className="text-muted-foreground text-sm leading-relaxed">
+                  Synchronized feedback loops between expert mentors and learner
+                  capability pathways.
+                </p>
+              </div>
+
+              <div
+                aria-hidden
+                className="relative z-10 h-48 translate-y-6"
+              >
+                <div className="bg-foreground/15 absolute inset-0 mx-auto w-px" />
+                <div className="absolute -inset-x-16 top-6 aspect-square rounded-none border border-border/60" />
+                <div
+                  className="absolute -inset-x-16 top-6 aspect-square rounded-none border border-primary transition-opacity duration-500 opacity-60 group-hover:opacity-100"
+                  style={{
+                    maskImage:
+                      'linear-gradient(to right, transparent, white 50%, transparent)',
+                    WebkitMaskImage:
+                      'linear-gradient(to right, transparent, white 50%, transparent)',
+                  }}
+                />
+                <div className="absolute -inset-x-8 top-24 aspect-square rounded-none border border-border/60" />
+                <div
+                  className="absolute -inset-x-8 top-24 aspect-square rounded-none border border-primary transition-opacity duration-500 opacity-60 group-hover:opacity-100"
+                  style={{
+                    maskImage:
+                      'linear-gradient(to right, transparent, white 50%, transparent)',
+                    WebkitMaskImage:
+                      'linear-gradient(to right, transparent, white 50%, transparent)',
+                  }}
+                />
+                {/* Center dot */}
+                <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 size-2 rounded-none bg-primary shadow-[0_0_8px_2px_oklch(var(--primary)/0.4)] transition-all duration-300 group-hover:shadow-[0_0_14px_4px_oklch(var(--primary)/0.5)]" />
+              </div>
+            </Card>
+
+            {/* ── Card 3: Framework Ready ── */}
+            <Card
+              variant="outline"
+              className="group relative row-span-2 grid grid-rows-subgrid p-6 md:p-8 overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:border-primary/30 hover:shadow-lg hover:shadow-primary/5"
+            >
+              <div
+                aria-hidden
+                className="pointer-events-none absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                style={{
+                  background:
+                    'radial-gradient(ellipse 60% 50% at 50% 0%, oklch(var(--primary) / 0.06) 0%, transparent 70%)',
+                }}
+              />
+
+              <div className="relative z-10 space-y-2">
+                <span className="text-[9px] font-mono font-semibold tracking-[0.25em] uppercase text-primary/70 mb-3 block">
+                  03 — Standards
+                </span>
+                <h3 className="text-foreground font-medium text-lg">
+                  Framework Ready
+                </h3>
+                <p className="text-muted-foreground text-sm leading-relaxed">
+                  Built on verified data structures, comprehensive academic APIs,
+                  and standardized evaluation protocols.
+                </p>
+              </div>
+
+              <div
+                aria-hidden
+                className="relative z-10 flex h-48 justify-between pb-6 pt-12"
+              >
+                {[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30].map((i) => {
+                  const isPrimary = [4, 9, 13, 18, 22, 28].includes(i);
+                  return (
+                    <div
+                      key={i}
+                      className={`h-full w-px transition-opacity duration-300 ${
+                        isPrimary
+                          ? 'bg-primary opacity-80 group-hover:opacity-100'
+                          : 'bg-foreground/15'
+                      }`}
+                    />
+                  );
+                })}
+              </div>
+            </Card>
+
+            {/* ── Card 4: Institution Ready ── */}
+            <Card
+              variant="outline"
+              className="group relative row-span-2 grid grid-rows-subgrid p-6 md:p-8 overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:border-primary/30 hover:shadow-lg hover:shadow-primary/5"
+            >
+              <div
+                aria-hidden
+                className="pointer-events-none absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                style={{
+                  background:
+                    'radial-gradient(ellipse 60% 50% at 50% 0%, oklch(var(--primary) / 0.06) 0%, transparent 70%)',
+                }}
+              />
+
+              <div className="relative z-10 space-y-2">
+                <span className="text-[9px] font-mono font-semibold tracking-[0.25em] uppercase text-primary/70 mb-3 block">
+                  04 — Scale
+                </span>
+                <h3 className="font-medium text-lg text-foreground">
+                  Institution Ready
+                </h3>
+                <p className="text-muted-foreground text-sm leading-relaxed">
+                  Scale confidently with national educational standards and
+                  secure credentialing verification.
+                </p>
+              </div>
+
+              <div
+                aria-hidden
+                className="pointer-events-none relative z-10 -ml-7 flex size-48 items-center justify-center pt-5"
+              >
+                <HugeiconsIcon
+                  icon={Shield01Icon}
+                  className="absolute inset-0 top-2.5 size-full stroke-[0.1px] opacity-10 text-primary transition-opacity duration-300 group-hover:opacity-20"
+                />
+                <HugeiconsIcon
+                  icon={Shield01Icon}
+                  className="size-32 stroke-[0.1px] text-primary transition-all duration-300 group-hover:drop-shadow-[0_0_12px_oklch(var(--primary)/0.4)]"
+                />
+              </div>
+            </Card>
+
+          </div>
+        </div>
+      </div>
     </section>
   );
 }

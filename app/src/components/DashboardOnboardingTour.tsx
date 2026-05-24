@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 interface TourStep {
   targetId: string;
@@ -10,71 +10,98 @@ const TOUR_STEPS: TourStep[] = [
   {
     targetId: 'nav-roles',
     title: 'TELEMETRY ACCESS MATRIX',
-    text: 'Switch authorized profiles instantly using this developer simulator. Explore layout access for Admin, Educator, and Resource Persons.'
+    text: 'Switch authorized profiles instantly using this developer simulator. Explore layout access for Admin, Educator, and Resource Persons.',
   },
   {
     targetId: 'tab-overview',
     title: 'DIAGNOSTICS & ANALYTICS',
-    text: 'Track real-time content volumes, load statistics, active chatbot factual matrices, and system telemetry from a high-level viewport.'
+    text: 'Track real-time content volumes, load statistics, active chatbot factual matrices, and system telemetry from a high-level viewport.',
   },
   {
     targetId: 'tab-uploader',
     title: 'CONTENT UPLOADER',
-    text: 'Upload and categorize online webinars, tutorials, or study materials. Authorized roles can update content nodes instantly.'
+    text: 'Upload and categorize online webinars, tutorials, or study materials. Authorized roles can update content nodes instantly.',
   },
   {
     targetId: 'tab-ai-matrix',
     title: 'AI COGNITIVE KNOWLEDGE GRID',
-    text: 'Train the Edu+ AI Cognitive Advisor. Add custom facts or specific QA points that compile dynamically into chatbot core prompts.'
+    text: 'Train the Edu+ AI Cognitive Advisor. Add custom facts or specific QA points that compile dynamically into chatbot core prompts.',
   },
   {
     targetId: 'tab-messages',
     title: 'SONAR MESSAGE TERMINAL',
-    text: 'Sync and read messages sent from the Contact page. Real-time sonar channels alert you instantly when a new inquire pings.'
-  }
+    text: 'Sync and read messages sent from the Contact page. Real-time sonar channels alert you instantly when a new inquire pings.',
+  },
 ];
 
-export default function DashboardOnboardingTour({ onComplete }: { onComplete: () => void }) {
+interface Rect {
+  top: number;
+  left: number;
+  width: number;
+  height: number;
+}
+
+const PADDING = 10; // px clearance around the highlighted element
+
+export default function DashboardOnboardingTour({
+  onComplete,
+}: {
+  onComplete: () => void;
+}) {
   const [stepIndex, setStepIndex] = useState(0);
-  const [boxStyle, setBoxStyle] = useState<React.CSSProperties>({ display: 'none' });
+  const [rect, setRect] = useState<Rect | null>(null);
+  const tooltipRef = useRef<HTMLDivElement>(null);
 
   const currentStep = TOUR_STEPS[stepIndex];
 
+  // ── Measure target element ──────────────────────────────────────────────────
   useEffect(() => {
-    function calculatePosition() {
-      const element = document.getElementById(currentStep.targetId);
-      if (!element) {
-        setBoxStyle({ display: 'none' });
+    function measure() {
+      const el = document.getElementById(currentStep.targetId);
+      if (!el) {
+        setRect(null);
         return;
       }
-
-      const rect = element.getBoundingClientRect();
-      setBoxStyle({
-        position: 'fixed',
-        top: rect.top - 8,
-        left: rect.left - 8,
-        width: rect.width + 16,
-        height: rect.height + 16,
-        border: '2px solid #7DF9FF',
-        boxShadow: '0 0 18px rgba(125,249,255,0.6), inset 0 0 8px rgba(125,249,255,0.3)',
-        transition: 'all 0.3s ease-in-out',
-        zIndex: 99,
-        pointerEvents: 'none'
+      const r = el.getBoundingClientRect();
+      setRect({
+        top:    r.top    - PADDING,
+        left:   r.left   - PADDING,
+        width:  r.width  + PADDING * 2,
+        height: r.height + PADDING * 2,
       });
     }
 
-    // Wait slightly to let DOM render
-    const timer = setTimeout(calculatePosition, 100);
-    window.addEventListener('resize', calculatePosition);
+    const t = setTimeout(measure, 80);
+    window.addEventListener('resize', measure);
+    window.addEventListener('scroll', measure, true);
     return () => {
-      clearTimeout(timer);
-      window.removeEventListener('resize', calculatePosition);
+      clearTimeout(t);
+      window.removeEventListener('resize', measure);
+      window.removeEventListener('scroll', measure, true);
     };
-  }, [stepIndex]);
+  }, [stepIndex, currentStep.targetId]);
+
+  // ── Tooltip placement — prefer below, fall back to above ───────────────────
+  function tooltipStyle(): React.CSSProperties {
+    if (!rect) return { top: '50%', left: '50%', transform: 'translate(-50%,-50%)' };
+
+    const TW = 300; // tooltip width
+    const GAP = 14;
+    const VP_W = window.innerWidth;
+    const VP_H = window.innerHeight;
+
+    const below = rect.top + rect.height + GAP;
+    const above = rect.top - GAP - 220; // estimated tooltip height
+
+    const top  = below + 220 < VP_H ? below : Math.max(8, above);
+    const left = Math.max(8, Math.min(VP_W - TW - 8, rect.left));
+
+    return { top, left, width: TW };
+  }
 
   const handleNext = () => {
     if (stepIndex < TOUR_STEPS.length - 1) {
-      setStepIndex(prev => prev + 1);
+      setStepIndex((p) => p + 1);
     } else {
       localStorage.setItem('edu_plus_onboarding_completed', 'true');
       onComplete();
@@ -82,9 +109,7 @@ export default function DashboardOnboardingTour({ onComplete }: { onComplete: ()
   };
 
   const handleBack = () => {
-    if (stepIndex > 0) {
-      setStepIndex(prev => prev - 1);
-    }
+    if (stepIndex > 0) setStepIndex((p) => p - 1);
   };
 
   const handleSkip = () => {
@@ -92,52 +117,129 @@ export default function DashboardOnboardingTour({ onComplete }: { onComplete: ()
     onComplete();
   };
 
+  // ── SVG spotlight mask ──────────────────────────────────────────────────────
+  // Strategy: render a full-viewport SVG with a rectangle cut out over the
+  // target element. The cut-out is transparent; everything else is the dark
+  // overlay. This guarantees the target element is ALWAYS clearly visible.
+  const VW = typeof window !== 'undefined' ? window.innerWidth  : 1440;
+  const VH = typeof window !== 'undefined' ? window.innerHeight : 900;
+
   return (
-    <div className="fixed inset-0 z-[98] pointer-events-auto">
-      {/* Dark Screen Matrix */}
-      <div className="absolute inset-0 bg-[#0B0F14]/80 backdrop-blur-[2px]" />
+    <div className="fixed inset-0 z-[98] pointer-events-none">
 
-      {/* Cyberpunk Highlight Box */}
-      <div style={boxStyle} className="rounded-none animate-pulse" />
-
-      {/* floating Instruction Guidance Card */}
-      <div
-        className="fixed z-[100] w-[320px] bg-[#0E131A] border border-[#7DF9FF]/30 p-5 rounded-none shadow-[0_0_20px_rgba(0,0,0,0.8)] text-[#E6EDF3] transition-all duration-300 font-sans"
-        style={{
-          top: boxStyle.top ? Number(boxStyle.top) + Number(boxStyle.height) + 16 : '40%',
-          left: boxStyle.left ? Math.max(16, Math.min(window.innerWidth - 336, Number(boxStyle.left))) : '50%'
-        }}
+      {/* ── SVG overlay with spotlight cutout ── */}
+      <svg
+        className="absolute inset-0 w-full h-full pointer-events-auto"
+        style={{ display: 'block' }} /* ui-ignore */
+        xmlns="http://www.w3.org/2000/svg"
       >
-        <div className="flex items-center gap-1.5 mb-2 border-b border-[#7DF9FF]/10 pb-2">
-          <span className="w-1.5 h-1.5 bg-[#7DF9FF] shadow-[0_0_6px_#7DF9FF]"></span>
-          <span className="font-mono text-[9px] font-bold tracking-widest text-[#7DF9FF]">
-            {currentStep.title} (STEP {stepIndex + 1}/{TOUR_STEPS.length})
+        <defs>
+          <mask id="spotlight-mask">
+            {/* White = visible (the overlay shows here) */}
+            <rect width={VW} height={VH} fill="white" />
+            {/* Black = transparent (the cutout — target element shows through) */}
+            {rect && (
+              <rect
+                x={rect.left}
+                y={rect.top}
+                width={rect.width}
+                height={rect.height}
+                fill="black"
+                rx="2"
+              />
+            )}
+          </mask>
+        </defs>
+
+        {/* Dark overlay applied only where mask is white */}
+        <rect
+          width={VW}
+          height={VH}
+          fill="rgba(0,0,0,0.72)"
+          mask="url(#spotlight-mask)"
+        />
+
+        {/* Highlight border around cutout */}
+        {rect && (
+          <rect
+            x={rect.left}
+            y={rect.top}
+            width={rect.width}
+            height={rect.height}
+            fill="none"
+            stroke="oklch(76.8% 0.233 130.85)"   /* --primary value */
+            strokeWidth="1.5"
+            rx="2"
+            style={{
+              filter: 'drop-shadow(0 0 6px oklch(76.8% 0.233 130.85 / 0.7))',
+            }}
+          />
+        )}
+      </svg>
+
+      {/* ── Tooltip card (pointer-events-auto so buttons work) ── */}
+      <div
+        ref={tooltipRef}
+        className="fixed z-[100] bg-card border border-border shadow-2xl pointer-events-auto"
+        style={tooltipStyle()}
+      >
+        {/* Header */}
+        <div className="flex items-center gap-2 px-4 pt-4 pb-3 border-b border-border">
+          <span
+            className="w-1.5 h-1.5 bg-primary shrink-0"
+            style={{ boxShadow: '0 0 6px oklch(76.8% 0.233 130.85 / 0.8)' }} /* ui-ignore */
+          />
+          <span className="font-mono text-[9px] font-bold tracking-widest text-primary leading-none">
+            {currentStep.title}
+          </span>
+          <span className="ml-auto font-mono text-[9px] text-muted-foreground shrink-0">
+            {stepIndex + 1} / {TOUR_STEPS.length}
           </span>
         </div>
 
-        <p className="text-[11px] leading-relaxed mb-4 text-[#8B949E] min-h-[44px]">
+        {/* Body */}
+        <p className="px-4 py-3 text-xs text-muted-foreground leading-relaxed min-h-[56px]">
           {currentStep.text}
         </p>
 
-        <div className="flex items-center justify-between pt-2 border-t border-white/5">
-          <button
+        {/* Progress dots */}
+        <div className="flex justify-center gap-1.5 pb-2">
+          {TOUR_STEPS.map((_, i) => (
+            <span
+              key={i}
+              className="w-1 h-1 rounded-none transition-all duration-300"
+              style={{
+                background: i === stepIndex
+                  ? 'oklch(76.8% 0.233 130.85)'
+                  : 'oklch(76.8% 0.233 130.85 / 0.25)',
+              }}
+            />
+          ))}
+        </div>
+
+        {/* Footer */}
+        <div className="flex items-center justify-between px-4 pb-4 pt-2 border-t border-border">
+          <button /* ui-ignore */
+            type="button"
             onClick={handleSkip}
-            className="text-[9px] font-mono text-[#8B949E] hover:text-white cursor-pointer uppercase"
+            className="text-[9px] font-mono text-muted-foreground hover:text-foreground transition-colors uppercase tracking-widest cursor-pointer"
           >
             [ SKIP TOUR ]
           </button>
           <div className="flex gap-2">
             {stepIndex > 0 && (
-              <button
+              <button /* ui-ignore */
+                type="button"
                 onClick={handleBack}
-                className="px-2.5 py-1 bg-white/5 border border-white/10 hover:border-white hover:text-[#0B0F14] transition-all duration-200 text-[9px] font-mono rounded-none cursor-pointer"
+                className="px-3 py-1.5 border border-border hover:border-foreground hover:text-foreground transition-all text-[9px] font-mono cursor-pointer"
               >
                 PREV
               </button>
             )}
-            <button
+            <button /* ui-ignore */
+              type="button"
               onClick={handleNext}
-              className="px-3 py-1 bg-[#7DF9FF] hover:bg-white text-[#0B0F14] font-bold transition-all duration-200 text-[9px] font-mono rounded-none cursor-pointer"
+              className="px-3 py-1.5 bg-primary hover:bg-primary/90 text-primary-foreground font-bold transition-all text-[9px] font-mono cursor-pointer"
             >
               {stepIndex === TOUR_STEPS.length - 1 ? 'COMPLETE' : 'NEXT'}
             </button>

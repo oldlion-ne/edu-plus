@@ -24,7 +24,7 @@ export default function ScrollTextMarquee({ text, baseSpeed = -150, className }:
       data-testid="scroll-marquee-container"
     >
       <motion.div 
-        style={{ x }} 
+        style={{ x }} /* ui-ignore */
         className={cn("flex whitespace-nowrap gap-16 font-heading text-8xl md:text-9xl uppercase font-extrabold tracking-widest", className)}
       >
         <span>{text}</span>

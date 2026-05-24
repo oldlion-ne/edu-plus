@@ -9,7 +9,6 @@ class IntersectionObserverMock {
     this.callback = callback;
   }
   observe() {
-    // Instantly trigger callback to simulate element visibility when observed
     this.callback([{ isIntersecting: true }]);
   }
   unobserve() {}
@@ -28,26 +27,16 @@ class ResizeObserverMock {
 describe('PedigreeShowcase Component', () => {
   it('renders the Technical Pedigree section header', () => {
     render(<PedigreeShowcase />);
-    expect(screen.getByText('Expert Registry')).toBeDefined();
-    expect(screen.getByText('Technical Pedigree')).toBeDefined();
+    expect(screen.getByText('Technical Pedigree & Advisory Network')).toBeDefined();
+    expect(screen.getByText('Advisory Framework')).toBeDefined();
+    expect(screen.getByText(/A robust framework of academic advisories/i)).toBeDefined();
   });
 
-  it('renders all 8 advisors in the bento grid', () => {
+  it('renders all 4 bento cards', () => {
     render(<PedigreeShowcase />);
-    
-    const expectedAdvisors = [
-      'Dr. Soram Bobby Singh',
-      'Ms. Geetarani Takhellambam',
-      'Smt. Purnimashi Moirangthem',
-      'Dr. Ngangbam Shantikumar Meetei',
-      'Khumukcham Roshaan Singh',
-      'Shri Romen Ningthoujam',
-      'Smt. Nutan Nongthongbam',
-      'Shri Rojit Keisham'
-    ];
-
-    expectedAdvisors.forEach(name => {
-      expect(screen.getByText(name)).toBeDefined();
-    });
+    expect(screen.getByText('Strategic Integrations')).toBeDefined();
+    expect(screen.getByText('Real-time Guidance')).toBeDefined();
+    expect(screen.getByText('Framework Ready')).toBeDefined();
+    expect(screen.getByText('Institution Ready')).toBeDefined();
   });
 });

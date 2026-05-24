@@ -1,16 +1,32 @@
 import { useRef } from 'react';
 import { Link } from 'react-router';
-import {
-  ArrowRight,
-  Activity,
-} from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { TimelineAnimation } from '../components/timeline-animation';
+import { Button } from '../components/ui/button';
+import { KineticText } from '@/components/ui/kinetic-text';
 
 const STATS = [
-  { value: '4,200+', label: 'Learners' },
-  { value: '98%', label: 'Placement' },
-  { value: '12ms', label: 'Latency' },
+  { value: '4,200+', labelKey: 'learners' as const },
+  { value: '98%',    labelKey: 'placement' as const },
+  { value: '38',     labelKey: 'countries' as const },
 ];
+
+const translations = {
+  investing: 'Investing',
+  building: 'Building',
+  advisory: 'Advisory',
+  elevate: 'Elevate',
+  tomorrow: 'Tomorrow',
+  subtext: 'A global network redefining human potential through AI-powered learning.',
+  startPathway: 'Start Your Pathway',
+  exploreNetwork: 'Explore Network',
+  learners: 'Learners',
+  placement: 'Placement',
+  countries: 'Countries',
+};
+
+const translationMap = new Map<string, string>(Object.entries(translations));
+const t = (key: keyof typeof translations) => translationMap.get(key) || '';
 
 export default function Hero() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -19,7 +35,7 @@ export default function Hero() {
     <section
       ref={sectionRef}
       id="story"
-      className="relative w-full min-h-screen flex flex-col justify-center overflow-hidden bg-[#0B0F14]"
+      className="relative w-full min-h-screen flex flex-col justify-center overflow-hidden"
     >
       {/* ── Background video ── */}
       <video
@@ -27,8 +43,8 @@ export default function Hero() {
         loop
         muted
         playsInline
-        className="absolute inset-0 w-full h-full object-cover z-0 opacity-40"
-        src="/assets/hero-bg-new.mp4"
+        className="absolute inset-0 w-full h-full object-cover z-0 opacity-55"
+        src="/assets/bg-hero-new.mp4"
       />
 
       {/* ── Dark overlays ── */}
@@ -37,8 +53,8 @@ export default function Hero() {
         className="absolute inset-0 z-[1] pointer-events-none"
         style={{
           background: [
-            'radial-gradient(ellipse 80% 60% at 50% 40%, rgba(11,15,20,0.45) 0%, rgba(11,15,20,0.85) 100%)',
-            'linear-gradient(to bottom, rgba(11,15,20,0.6) 0%, transparent 45%, rgba(11,15,20,0.95) 100%)',
+            'radial-gradient(ellipse 80% 60% at 50% 40%, oklch(var(--background) / 0.25) 0%, oklch(var(--background) / 0.7) 100%)',
+            'linear-gradient(to bottom, oklch(var(--background) / 0.35) 0%, transparent 40%, oklch(var(--background) / 0.85) 100%)',
           ].join(', '),
         }}
       />
@@ -49,7 +65,7 @@ export default function Hero() {
         className="absolute top-0 left-0 right-0 z-[2] pointer-events-none h-[40%]"
         style={{
           background:
-            'radial-gradient(ellipse 60% 40% at 50% 0%, rgba(125,249,255,0.06) 0%, transparent 80%)',
+            'radial-gradient(ellipse 60% 40% at 50% 0%, oklch(var(--primary) / 0.06) 0%, transparent 80%)',
         }}
       />
 
@@ -59,7 +75,7 @@ export default function Hero() {
         className="absolute inset-0 z-[2] pointer-events-none opacity-[0.025]"
         style={{
           backgroundImage:
-            'linear-gradient(#7DF9FF 1px, transparent 1px), linear-gradient(90deg, #7DF9FF 1px, transparent 1px)',
+            'linear-gradient(oklch(var(--primary)) 1px, transparent 1px), linear-gradient(90deg, oklch(var(--primary)) 1px, transparent 1px)',
           backgroundSize: '48px 48px',
         }}
       />
@@ -67,30 +83,43 @@ export default function Hero() {
       {/* ── Main content ── */}
       <div className="relative z-10 flex flex-col items-center text-center px-6 md:px-12 pt-28 pb-16 max-w-5xl mx-auto w-full">
 
-        {/* Eyebrow */}
+        {/* ── Investing · Building · Advisory eyebrow ── */}
         <TimelineAnimation
           once
           as="div"
           animationNum={1}
           timelineRef={sectionRef}
-          className="inline-flex items-center gap-2 border border-[#7DF9FF]/30 bg-[#7DF9FF]/05 px-4 py-1.5 mb-8"
+          className="mb-8"
         >
-          <Activity size={11} className="text-[#7DF9FF]" />
-          <span className="text-[10px] font-bold tracking-[0.3em] uppercase text-[#7DF9FF]">
-            Eduplus · Learning Intelligence Platform
-          </span>
+          <div className="inline-flex items-center gap-2 border border-border bg-card/70 backdrop-blur-md px-4 py-2">
+            <span className="relative flex h-1.5 w-1.5">
+              <span className="animate-ping absolute inline-flex h-full w-full bg-primary opacity-75" />
+              <span className="relative inline-flex h-1.5 w-1.5 bg-primary" />
+            </span>
+            <span className="text-[10px] font-mono font-bold tracking-[0.25em] uppercase text-muted-foreground">
+              {t('investing')}
+            </span>
+            <span className="text-primary/40 text-[10px] font-mono">·</span>
+            <span className="text-[10px] font-mono font-bold tracking-[0.25em] uppercase text-muted-foreground">
+              {t('building')}
+            </span>
+            <span className="text-primary/40 text-[10px] font-mono">·</span>
+            <span className="text-[10px] font-mono font-bold tracking-[0.25em] uppercase text-muted-foreground">
+              {t('advisory')}
+            </span>
+          </div>
         </TimelineAnimation>
 
-        {/* Headline — tighter, scaled down */}
+        {/* Headline */}
         <TimelineAnimation
           once
           as="h1"
           animationNum={2}
           timelineRef={sectionRef}
-          className="text-4xl sm:text-5xl md:text-[3.5rem] lg:text-6xl font-semibold tracking-tight leading-[1.1] text-[#E6EDF3] mb-5"
+          className="text-4xl sm:text-5xl md:text-[3.5rem] lg:text-6xl font-semibold tracking-tight leading-[1.1] text-foreground mb-5 flex flex-wrap justify-center"
         >
-          Shaping the builders{' '}
-          <span className="text-[#7DF9FF]">of tomorrow</span>
+          <KineticText text={t('elevate')} as="span" className="mr-[0.25em]" />
+          <KineticText text={t('tomorrow')} as="span" className="text-primary" />
         </TimelineAnimation>
 
         {/* Subtext */}
@@ -99,10 +128,9 @@ export default function Hero() {
           as="p"
           animationNum={3}
           timelineRef={sectionRef}
-          className="max-w-xl text-base md:text-lg text-[#E6EDF3]/55 leading-relaxed mb-10"
+          className="max-w-xl text-base md:text-lg text-muted-foreground leading-relaxed mb-10"
         >
-          A global network of innovators, educators, and visionaries
-          redefining human capability through AI-powered personalised pathways.
+          {t('subtext')}
         </TimelineAnimation>
 
         {/* CTAs */}
@@ -113,19 +141,17 @@ export default function Hero() {
           timelineRef={sectionRef}
           className="flex flex-col sm:flex-row items-center gap-3 mb-12"
         >
-          <Link
-            to="/contact"
-            className="inline-flex items-center gap-2 px-7 py-3 bg-[#7DF9FF] text-[#0B0F14] font-bold text-sm tracking-wide hover:bg-white transition-all duration-300 shadow-[0_0_28px_rgba(125,249,255,0.22)]"
-          >
-            Start Your Pathway
-            <ArrowRight size={14} />
-          </Link>
-          <Link
-            to="/about"
-            className="inline-flex items-center gap-2 px-7 py-3 border border-[#7DF9FF]/30 text-[#E6EDF3] font-medium text-sm tracking-wide hover:border-[#7DF9FF] hover:text-[#7DF9FF] transition-all duration-300"
-          >
-            Explore Network
-          </Link>
+          <Button asChild size="lg">
+            <Link to="/contact" className="inline-flex items-center gap-2" /* ui-ignore */>
+              {t('startPathway')}
+              <ArrowRight size={14} />
+            </Link>
+          </Button>
+          <Button asChild variant="outline" size="lg">
+            <Link to="/about" /* ui-ignore */>
+              {t('exploreNetwork')}
+            </Link>
+          </Button>
         </TimelineAnimation>
 
         {/* Stats strip */}
@@ -134,18 +160,18 @@ export default function Hero() {
           as="div"
           animationNum={5}
           timelineRef={sectionRef}
-          className="flex items-center gap-0 border border-[#7DF9FF]/15 bg-[#0E131A]/70 backdrop-blur-sm"
+          className="flex items-center gap-0 border border-border bg-card/70 backdrop-blur-sm"
         >
           {STATS.map((s, i) => (
             <div
-              key={s.label}
-              className={`flex flex-col items-center px-7 py-4 ${i < STATS.length - 1 ? 'border-r border-[#7DF9FF]/10' : ''}`}
+              key={s.labelKey}
+              className={`flex flex-col items-center px-7 py-4 ${i < STATS.length - 1 ? 'border-r border-border' : ''}`}
             >
-              <span className="text-xl font-bold text-[#7DF9FF] font-mono">
+              <span className="text-xl font-bold text-primary font-mono">
                 {s.value}
               </span>
-              <span className="text-[10px] text-[#E6EDF3]/40 uppercase tracking-widest font-mono mt-0.5">
-                {s.label}
+              <span className="text-[10px] text-muted-foreground uppercase tracking-widest font-mono mt-0.5">
+                {t(s.labelKey)}
               </span>
             </div>
           ))}
@@ -156,22 +182,9 @@ export default function Hero() {
       <div
         aria-hidden
         className="absolute bottom-0 left-0 right-0 h-32 z-[3] pointer-events-none"
-        style={{ background: 'linear-gradient(to top, #0B0F14 0%, transparent 100%)' }}
+        style={{ background: 'linear-gradient(to top, oklch(var(--background)) 0%, transparent 100%)' }} /* ui-ignore */
       />
 
-      {/* ── Bottom-right meta tag ── */}
-      <TimelineAnimation
-        once
-        animationNum={7}
-        timelineRef={sectionRef}
-        className="absolute bottom-8 right-6 md:right-12 z-10"
-      >
-        <div className="border border-[#7DF9FF]/20 bg-[#0B0F14]/80 backdrop-blur-md px-4 py-2">
-          <span className="text-[9px] font-mono font-bold tracking-[0.25em] uppercase text-[#7DF9FF]/70">
-            Investing · Building · Advisory
-          </span>
-        </div>
-      </TimelineAnimation>
     </section>
   );
 }

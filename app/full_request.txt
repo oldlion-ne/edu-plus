@@ -1,0 +1,77 @@
+<USER_REQUEST>
+import { Card } from '@/components/ui/card'
+import { Shield } from 'lucide-react'
+import { Vercel } from '@/components/ui/svgs/vercel'
+import { Supabase } from '@/components/ui/svgs/supabase'
+import { Linear } from '@/components/ui/svgs/linear'
+import { Slack } from '@/components/ui/svgs/slack'
+import { Firebase } from '@/components/ui/svgs/firebase'
+import { ClerkIconDark as Clerk } from '@/components/ui/svgs/clerk'
+
+export default function Features() {
+    return (
+        <section className="bg-background @container py-24">
+            <div className="mx-auto max-w-2xl px-6">
+                <div>
+                    <h2 className="text-balance font-serif text-4xl font-medium">Powerful Features for Modern Teams</h2>
+                    <p className="text-muted-foreground mt-4 text-balance">Everything you need to build, connect, and scale your integrations effortlessly.</p>
+                </div>
+                <div className="@xl:grid-cols-2 mt-12 grid gap-3 *:p-6">
+                    <Card
+                        variant="outline"
+                        className="row-span-2 grid grid-rows-subgrid">
+                        <div className="space-y-2">
+                            <h3 className="text-foreground font-medium">Seamless Integrations</h3>
+                            <p className="text-muted-foreground text-sm">Connect your favorite tools and services with just a few clicks.</p>
+                        </div>
+                        <div
+                            aria-hidden
+                            className="**:fill-foreground flex h-44 flex-col justify-between pt-8">
+                            <div className="relative flex h-10 items-center gap-12 px-6">
+                                <div className="bg-border absolute inset-0 my-auto h-px"></div>
+
+                                <div className="bg-card shadow-black/6.5 ring-border relative flex h-8 items-center rounded-full px-3 shadow-sm ring">
+                                    <Vercel className="size-3.5" />
+          
+<truncated 4591 bytes>
+                         <div></div>
+                            <div></div>
+                            <div></div>
+                            <div className="bg-primary!"></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div className="bg-primary!"></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div className="bg-primary!"></div>
+                        </div>
+                    </Card>
+                    <Card
+                        variant="outline"
+                        className="row-span-2 grid grid-rows-subgrid">
+                        <div className="space-y-2">
+                            <h3 className="font-medium">Enterprise Ready</h3>
+                            <p className="text-muted-foreground text-sm">Scale confidently with enterprise-grade security and reliability.</p>
+                        </div>
+
+                        <div className="pointer-events-none relative -ml-7 flex size-44 items-center justify-center pt-5">
+                            <Shield className="absolute inset-0 top-2.5 size-full stroke-[0.1px] opacity-15" />
+                            <Shield className="size-32 stroke-[0.1px]" />
+                        </div>
+                    </Card>
+                </div>
+            </div>
+        </section>
+    ) implement that component in the Technical Pedigree & Advisory Network section, it should be 100% the same, only the text contents need to be of eduplus other than that everything need to be the same but follow the preset template of the project
+}
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-05-21T17:37:19-04:00.
+</ADDITIONAL_METADATA>

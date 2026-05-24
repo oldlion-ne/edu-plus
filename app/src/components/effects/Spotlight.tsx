@@ -76,7 +76,7 @@ export const SpotLightItem = ({ children, className }: SpotlightItemProps) => {
       onMouseMove={handleMouseMove}
       onMouseLeave={() => setLocalMouse(null)}
       className={cn(
-        "relative rounded-none p-[1.5px] bg-[#ffffff08] overflow-hidden transition-colors duration-300",
+        "relative rounded-none p-[1.5px] bg-border/30 overflow-hidden transition-colors duration-300",
         className
       )}
       data-testid="spotlight-item"
@@ -86,7 +86,7 @@ export const SpotLightItem = ({ children, className }: SpotlightItemProps) => {
         <div
           className="pointer-events-none absolute inset-0 z-10 rounded-none transition duration-300 opacity-100"
           style={{
-            background: `radial-gradient(180px circle at ${localMouse.x}px ${localMouse.y}px, rgba(125, 249, 255, 0.12), transparent 80%)`
+            background: `radial-gradient(180px circle at ${localMouse.x}px ${localMouse.y}px, oklch(var(--primary) / 0.12), transparent 80%)`
           }}
         />
       )}
@@ -95,11 +95,11 @@ export const SpotLightItem = ({ children, className }: SpotlightItemProps) => {
         <div
           className="pointer-events-none absolute inset-0 z-0 rounded-none"
           style={{
-            background: `radial-gradient(220px circle at ${borderX}px ${borderY}px, rgba(125, 249, 255, 0.22), transparent 80%)`
+            background: `radial-gradient(220px circle at ${borderX}px ${borderY}px, oklch(var(--primary) / 0.22), transparent 80%)`
           }}
         />
       )}
-      <div className="relative z-20 h-full w-full bg-[#0B0F14] rounded-none">
+      <div className="relative z-20 h-full w-full bg-card rounded-none">
         {children}
       </div>
     </div>

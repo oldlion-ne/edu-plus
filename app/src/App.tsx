@@ -28,7 +28,7 @@ function App() {
 
   return (
     <AuthProvider>
-      <div className="relative min-h-screen bg-[#0B0F14] flex flex-col justify-between overflow-x-hidden">
+      <div className="relative min-h-screen bg-background flex flex-col justify-between overflow-x-hidden">
         <ScrollToTop />
         {showChatAgent && <AIChatAgent />}
         {showPublicNav && <Navigation />}

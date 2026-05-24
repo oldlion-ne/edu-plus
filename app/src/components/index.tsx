@@ -20,13 +20,25 @@ const kpis = [
   { label: 'Churn Rate', value: '1.2%', change: '-0.4%', status: 'down' },
 ]
 
+const translations = {
+  primaryGoal: "Primary Goal",
+  enterpriseAdoption: "Enterprise Adoption",
+  targetLabel: "Target: 90%",
+  userGrowth: "User Growth",
+  organicAcquisitionUp: "Organic acquisition is up",
+  comparedToQuarter: "compared to previous quarter."
+};
+
+const translationMap = new Map<string, string>(Object.entries(translations));
+const t = (key: keyof typeof translations) => translationMap.get(key) || '';
+
 export const AdvancedStats: React.FC = () => {
   const timelineRef = useRef<HTMLDivElement>(null)
 
   return (
     <section
       ref={timelineRef}
-      className="flex flex-col gap-8 py-4 bg-white min-h-screen justify-center md:px-0 px-5 font-dmSans"
+      className="flex flex-col gap-8 py-4 bg-background min-h-screen justify-center md:px-0 px-5 font-sans"
     >
       <div className="max-w-6xl mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -34,7 +46,7 @@ export const AdvancedStats: React.FC = () => {
           <TimelineAnimation
             animationNum={1}
             timelineRef={timelineRef}
-            className="lg:col-span-2 p-8 rounded-3xl bg-zinc-50 border border-zinc-200"
+            className="lg:col-span-2 p-8 rounded-none bg-card border border-border"
           >
             <ClippedAreaChart />
           </TimelineAnimation>
@@ -45,14 +57,14 @@ export const AdvancedStats: React.FC = () => {
               <TimelineAnimation
                 animationNum={2}
                 timelineRef={timelineRef}
-                className="p-6 rounded-3xl h-full bg-zinc-900 text-white flex flex-col justify-between shadow-lg"
+                className="p-6 rounded-none h-full bg-[#0B0F14] text-foreground flex flex-col justify-between shadow-lg"
               >
                 <div>
-                  <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-zinc-500 mb-2">
-                    Primary Goal
+                  <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground mb-2">
+                    {t('primaryGoal')}
                   </p>
                   <h4 className="text-xl font-bold tracking-tight">
-                    Enterprise Adoption
+                    {t('enterpriseAdoption')}
                   </h4>
                 </div>
                 <div className="mt-8">
@@ -60,12 +72,12 @@ export const AdvancedStats: React.FC = () => {
                     <span className="text-3xl font-semibold tracking-tighter ">
                       82%
                     </span>
-                    <span className="text-xs font-medium text-zinc-400 mb-1">
-                      Target: 90%
+                    <span className="text-xs font-medium text-muted-foreground mb-1">
+                      {t('targetLabel')}
                     </span>
                   </div>
-                  <div className="w-full h-1.5 bg-zinc-800 rounded-full overflow-hidden">
-                    <div className="h-full bg-white w-[82%] rounded-full" />
+                  <div className="w-full h-1.5 bg-[#1A202A] rounded-none overflow-hidden">
+                    <div className="h-full bg-[#7DF9FF] w-[82%] rounded-none" />
                   </div>
                 </div>
               </TimelineAnimation>
@@ -73,17 +85,17 @@ export const AdvancedStats: React.FC = () => {
               <TimelineAnimation
                 animationNum={3}
                 timelineRef={timelineRef}
-                className="p-6 rounded-3xl h-full bg-zinc-50 border border-zinc-200"
+                className="p-6 rounded-none h-full bg-card border border-border"
               >
                 <div className="flex items-center gap-3 mb-4">
-                  <div className="size-8 rounded-lg bg-zinc-50 flex items-center justify-center border border-zinc-100">
+                  <div className="size-8 rounded-none bg-muted flex items-center justify-center border border-border">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       viewBox="0 0 24 24"
                       className="w-6 h-6"
-                      color="#000000"
+                      color="currentColor"
                       fill="none"
-                      stroke="#141B34"
+                      stroke="currentColor"
                       strokeWidth="1.5"
                       strokeLinecap="round"
                       strokeLinejoin="round"
@@ -96,12 +108,12 @@ export const AdvancedStats: React.FC = () => {
                       <path d="M3.71429 19C2.76751 19 2 18.2325 2 17.2857C2 14.9188 3.91878 13 6.28571 13" />
                     </svg>
                   </div>
-                  <h4 className="font-bold text-zinc-900">User Growth</h4>
+                  <h4 className="font-bold text-foreground">{t('userGrowth')}</h4>
                 </div>
-                <p className="text-sm text-zinc-500">
-                  Organic acquisition is up{' '}
-                  <span className="text-zinc-900 font-semibold">24%</span>{' '}
-                  compared to previous quarter.
+                <p className="text-sm text-muted-foreground">
+                  {t('organicAcquisitionUp')}{' '}
+                  <span className="text-[#7DF9FF] font-semibold">24%</span>{' '}
+                  {t('comparedToQuarter')}
                 </p>
               </TimelineAnimation>
             </div>
@@ -116,25 +128,25 @@ export const AdvancedStats: React.FC = () => {
               timelineRef={timelineRef}
               key={kpi.label}
               className={cn(
-                'p-6 rounded-2xl border bg-zinc-50 border-zinc-200 transition-colors',
+                'p-6 rounded-none border bg-card border-border transition-colors',
                 kpi.status === 'up'
-                  ? 'hover:border-emerald-400 hover:bg-emerald-50'
-                  : 'hover:border-rose-400 hover:bg-rose-50'
+                  ? 'hover:border-[#22C55E] hover:bg-[#22C55E]/10'
+                  : 'hover:border-[#EF4444] hover:bg-[#EF4444]/10'
               )}
             >
-              <p className="text-xs font-bold text-zinc-400 uppercase tracking-widest mb-2">
+              <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest mb-2">
                 {kpi.label}
               </p>
               <div className="flex items-baseline justify-between">
-                <p className="text-2xl font-black text-zinc-900  tracking-tighter">
+                <p className="text-2xl font-black text-foreground tracking-tighter">
                   {kpi.value}
                 </p>
                 <span
                   className={cn(
-                    'text-xs font-bold  px-1.5 py-0.5 rounded',
+                    'text-xs font-bold px-1.5 py-0.5 rounded-none',
                     kpi.status === 'up'
-                      ? 'text-emerald-600 bg-emerald-50'
-                      : 'text-rose-600 bg-rose-50'
+                      ? 'text-[#22C55E] bg-[#22C55E]/10'
+                      : 'text-[#EF4444] bg-[#EF4444]/10'
                   )}
                 >
                   {kpi.change}
