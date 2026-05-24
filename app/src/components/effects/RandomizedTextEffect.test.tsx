@@ -4,5 +4,5 @@ import RandomizedTextEffect from './RandomizedTextEffect';
 
 test('renders RandomizedTextEffect component', () => {
   render(<RandomizedTextEffect text="test" />);
-  expect(screen.getByTestId('random-text-span')).toBeInTheDocument();
+  expect(screen.getByTestId('random-text-span')).toBeDefined();
 });

@@ -14,7 +14,7 @@ class IntersectionObserverMock {
   unobserve() {}
   disconnect() {}
 }
-(globalThis as any).IntersectionObserver = IntersectionObserverMock as any;
+globalThis.IntersectionObserver = IntersectionObserverMock as unknown as typeof IntersectionObserver;
 
 // Mock ResizeObserver for JSDOM
 class ResizeObserverMock {
@@ -22,13 +22,13 @@ class ResizeObserverMock {
   unobserve() {}
   disconnect() {}
 }
-(globalThis as any).ResizeObserver = ResizeObserverMock as any;
+globalThis.ResizeObserver = ResizeObserverMock as unknown as typeof ResizeObserver;
 
 describe('PedigreeShowcase Component', () => {
   it('renders the Technical Pedigree section header', () => {
     render(<PedigreeShowcase />);
     expect(screen.getByText('Technical Pedigree & Advisory Network')).toBeDefined();
-    expect(screen.getByText('Advisory Framework')).toBeDefined();
+    expect(screen.getByText(/world-class organizations/i)).toBeDefined();
     expect(screen.getByText(/A robust framework of academic advisories/i)).toBeDefined();
   });
 
