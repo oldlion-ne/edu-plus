@@ -25,6 +25,27 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   // immediately after getSession resolves (eliminating 4→2 network calls).
   const roleFetchedForRef = useRef<string | null>(null);
 
+  async function fetchUserRole(userId: string): Promise<boolean> {
+    try {
+      const { data, error } = await supabase
+        .from('user_roles')
+        .select('role')
+        .eq('id', userId)
+        .single();
+
+      if (data && !error) {
+        setRole(data.role as any);
+        return true;
+      } else {
+        setRole('resource_person');
+        return false;
+      }
+    } catch (err) {
+      setRole('resource_person');
+      return false;
+    }
+  }
+
   useEffect(() => {
     // 1. Check simulated session in localStorage — resolves instantly, no network
     const cachedSim = localStorage.getItem('edu_plus_sim_session');
@@ -82,27 +103,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     return () => subscription.unsubscribe();
   }, []);
-
-  const fetchUserRole = async (userId: string): Promise<boolean> => {
-    try {
-      const { data, error } = await supabase
-        .from('user_roles')
-        .select('role')
-        .eq('id', userId)
-        .single();
-
-      if (data && !error) {
-        setRole(data.role as any);
-        return true;
-      } else {
-        setRole('resource_person');
-        return false;
-      }
-    } catch (err) {
-      setRole('resource_person');
-      return false;
-    }
-  };
 
   const signIn = async (email: string, password: string) => {
     localStorage.removeItem('edu_plus_sim_session');

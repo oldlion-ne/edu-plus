@@ -1,4 +1,4 @@
-import { createContext, useContext, useRef, useState, useCallback } from 'react';
+import { createContext, useContext, useRef, useState, useCallback, useEffect } from 'react';
 import { cn } from '../../lib/utils';
 
 interface SpotlightProps {
@@ -54,8 +54,11 @@ export const Spotlight = ({ children, className }: SpotlightProps) => {
 
 export const SpotLightItem = ({ children, className }: SpotlightItemProps) => {
   const context = useContext(SpotlightContext);
+  const mouseX = context?.mouseX ?? null;
+  const mouseY = context?.mouseY ?? null;
   const cardRef = useRef<HTMLDivElement>(null);
   const [localMouse, setLocalMouse] = useState<{ x: number; y: number } | null>(null);
+  const [globalMouse, setGlobalMouse] = useState<{ x: number; y: number } | null>(null);
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!cardRef.current) return;
@@ -65,15 +68,21 @@ export const SpotLightItem = ({ children, className }: SpotlightItemProps) => {
     setLocalMouse({ x, y });
   };
 
-  let borderX = 0;
-  let borderY = 0;
-  let hasGlobalMouse = false;
-  if (context && context.mouseX !== null && context.mouseY !== null && cardRef.current) {
-    const rect = cardRef.current.getBoundingClientRect();
-    borderX = context.mouseX - rect.left;
-    borderY = context.mouseY - rect.top;
-    hasGlobalMouse = true;
-  }
+  useEffect(() => {
+    if (mouseX !== null && mouseY !== null && cardRef.current) {
+      const rect = cardRef.current.getBoundingClientRect();
+      setGlobalMouse({
+        x: mouseX - rect.left,
+        y: mouseY - rect.top
+      });
+    } else {
+      setGlobalMouse(null);
+    }
+  }, [mouseX, mouseY]);
+
+  const hasGlobalMouse = globalMouse !== null;
+  const borderX = globalMouse ? globalMouse.x : 0;
+  const borderY = globalMouse ? globalMouse.y : 0;
 
   return (
     <div
