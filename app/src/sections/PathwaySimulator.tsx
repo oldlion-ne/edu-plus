@@ -91,7 +91,7 @@ export default function PathwaySimulator() {
             </h2>
 
             <p className="text-muted-foreground text-sm md:text-base leading-relaxed max-w-md">
-              EduPlus plugs into the platforms your learners and institutions already trust — syncing progress, credentials, and communication in one intelligent network.
+              EduPlus plugs into the platforms your learners and institutions already trust - syncing progress, credentials, and communication in one intelligent network.
             </p>
 
             <Button asChild variant="outline" size="sm" className="group inline-flex items-center gap-2 font-mono text-xs tracking-wider uppercase hover:border-primary/50 focus:outline-none focus:ring-1 focus:ring-primary/40">
@@ -111,7 +111,7 @@ export default function PathwaySimulator() {
             </div>
             <blockquote>
               <p className="text-sm text-foreground leading-relaxed">
-                "EduPlus bridges the gap between academic learning and real-world industry expectations — equipping learners with global competence and operational excellence from day one."
+                "EduPlus bridges the gap between academic learning and real-world industry expectations - equipping learners with global competence and operational excellence from day one."
               </p>
               <div className="mt-3 flex gap-2 text-xs">
                 <cite className="font-medium text-foreground not-italic">Shri Rojit Keisham</cite>

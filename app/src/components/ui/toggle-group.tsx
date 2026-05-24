@@ -24,7 +24,27 @@ function ToggleGroup({
   spacing = 2,
   orientation = "horizontal",
   children,
-  ...props
+  asChild,
+  disabled,
+  rovingFocus,
+  loop,
+  dir,
+  type,
+  value,
+  defaultValue,
+  onValueChange,
+  id,
+  role,
+  tabIndex,
+  'aria-label': ariaLabel,
+  'aria-labelledby': ariaLabelledby,
+  'aria-describedby': ariaDescribedby,
+  style: externalStyle,
+  onClick,
+  onKeyDown,
+  onKeyUp,
+  onFocus,
+  onBlur,
 }: React.ComponentProps<typeof ToggleGroupPrimitive.Root> &
   VariantProps<typeof toggleVariants> & {
     spacing?: number
@@ -37,12 +57,32 @@ function ToggleGroup({
       data-size={size}
       data-spacing={spacing}
       data-orientation={orientation}
-      style={{ "--gap": spacing } as React.CSSProperties}
+      orientation={orientation}
+      style={{ "--gap": `${spacing * 0.25}rem`, ...externalStyle } as React.CSSProperties}
       className={cn(
-        "group/toggle-group flex w-fit flex-row items-center gap-[--spacing(var(--gap))] rounded-none data-[size=sm]:rounded-none data-vertical:flex-col data-vertical:items-stretch",
+        "group/toggle-group flex w-fit flex-row items-center gap-[var(--gap)] rounded-none data-[size=sm]:rounded-none data-vertical:flex-col data-vertical:items-stretch",
         className
       )}
-      {...props}
+      asChild={asChild}
+      disabled={disabled}
+      rovingFocus={rovingFocus}
+      loop={loop}
+      dir={dir}
+      type={type as any}
+      value={value as any}
+      defaultValue={defaultValue as any}
+      onValueChange={onValueChange as any}
+      id={id}
+      role={role}
+      tabIndex={tabIndex}
+      aria-label={ariaLabel}
+      aria-labelledby={ariaLabelledby}
+      aria-describedby={ariaDescribedby}
+      onClick={onClick}
+      onKeyDown={onKeyDown}
+      onKeyUp={onKeyUp}
+      onFocus={onFocus}
+      onBlur={onBlur}
     >
       <ToggleGroupContext.Provider
         value={{ variant, size, spacing, orientation }}
@@ -58,7 +98,21 @@ function ToggleGroupItem({
   children,
   variant = "default",
   size = "default",
-  ...props
+  asChild,
+  value,
+  disabled,
+  id,
+  role,
+  tabIndex,
+  'aria-label': ariaLabel,
+  'aria-labelledby': ariaLabelledby,
+  'aria-describedby': ariaDescribedby,
+  onClick,
+  onKeyDown,
+  onKeyUp,
+  onFocus,
+  onBlur,
+  style,
 }: React.ComponentProps<typeof ToggleGroupPrimitive.Item> &
   VariantProps<typeof toggleVariants>) {
   const context = React.useContext(ToggleGroupContext)
@@ -70,14 +124,28 @@ function ToggleGroupItem({
       data-size={context.size || size}
       data-spacing={context.spacing}
       className={cn(
-        "shrink-0 group-data-[spacing=0]/toggle-group:rounded-none group-data-[spacing=0]/toggle-group:px-2 focus:z-10 focus-visible:z-10 group-data-[spacing=0]/toggle-group:has-data-[icon=inline-end]:pr-1.5 group-data-[spacing=0]/toggle-group:has-data-[icon=inline-start]:pl-1.5 group-data-horizontal/toggle-group:data-[spacing=0]:first:rounded-l-md group-data-vertical/toggle-group:data-[spacing=0]:first:rounded-t-md group-data-horizontal/toggle-group:data-[spacing=0]:last:rounded-r-md group-data-vertical/toggle-group:data-[spacing=0]:last:rounded-b-md group-data-horizontal/toggle-group:data-[spacing=0]:data-[variant=outline]:border-l-0 group-data-vertical/toggle-group:data-[spacing=0]:data-[variant=outline]:border-t-0 group-data-horizontal/toggle-group:data-[spacing=0]:data-[variant=outline]:first:border-l group-data-vertical/toggle-group:data-[spacing=0]:data-[variant=outline]:first:border-t",
+        "shrink-0 group-data-[spacing=0]/toggle-group:rounded-none group-data-[spacing=0]/toggle-group:px-2 focus:z-10 focus-visible:z-10 group-data-[spacing=0]/toggle-group:has-data-[icon=inline-end]:pr-1.5 group-data-[spacing=0]/toggle-group:has-data-[icon=inline-start]:pl-1.5 group-data-horizontal/toggle-group:data-[spacing=0]:first:rounded-none group-data-vertical/toggle-group:data-[spacing=0]:first:rounded-none group-data-horizontal/toggle-group:data-[spacing=0]:last:rounded-none group-data-vertical/toggle-group:data-[spacing=0]:last:rounded-none group-data-horizontal/toggle-group:data-[spacing=0]:data-[variant=outline]:border-l-0 group-data-vertical/toggle-group:data-[spacing=0]:data-[variant=outline]:border-t-0 group-data-horizontal/toggle-group:data-[spacing=0]:data-[variant=outline]:first:border-l group-data-vertical/toggle-group:data-[spacing=0]:data-[variant=outline]:first:border-t",
         toggleVariants({
           variant: context.variant || variant,
           size: context.size || size,
         }),
         className
       )}
-      {...props}
+      asChild={asChild}
+      value={value!}
+      disabled={disabled}
+      id={id}
+      role={role}
+      tabIndex={tabIndex}
+      aria-label={ariaLabel}
+      aria-labelledby={ariaLabelledby}
+      aria-describedby={ariaDescribedby}
+      onClick={onClick}
+      onKeyDown={onKeyDown}
+      onKeyUp={onKeyUp}
+      onFocus={onFocus}
+      onBlur={onBlur}
+      style={style}
     >
       {children}
     </ToggleGroupPrimitive.Item>

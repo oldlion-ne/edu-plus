@@ -43,7 +43,7 @@ export default function Hero() {
         loop
         muted
         playsInline
-        className="absolute inset-0 w-full h-full object-cover z-0 opacity-55"
+        className="absolute inset-0 w-full h-full object-cover z-0 opacity-30 dark:opacity-55 dark:invert-0 invert grayscale-[0.95] dark:grayscale-0 contrast-[1.1] dark:contrast-100 brightness-[1.02] dark:brightness-100 transition-all duration-700"
         src="/assets/bg-hero-new.mp4"
       />
 

@@ -38,3 +38,8 @@ Thumbs.db
 # Agent/system dirs
 .agents/
 .superpowers/
+
+# Scratch files
+app/extract.cjs
+app/extract.js
+

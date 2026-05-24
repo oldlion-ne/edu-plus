@@ -1,6 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router';
 import { describe, it, expect, vi } from 'vitest';
+import '@testing-library/jest-dom';
 import App from './App';
 
 // Mock ResizeObserver for JSDOM
@@ -35,15 +36,15 @@ describe('App Routing', () => {
       </MemoryRouter>
     );
     // Home renders the main application structure
-    expect(screen.getByRole('main')).toBeDefined();
+    expect(screen.getByRole('main')).toBeInTheDocument();
   });
 
-  it('renders About page title on /about', () => {
+  it('renders About page title on /about', async () => {
     render(
       <MemoryRouter initialEntries={['/about']}>
         <App />
       </MemoryRouter>
     );
-    expect(screen.getByText(/Know Who/i)).toBeDefined();
+    expect(await screen.findByText(/Know Who/i, {}, { timeout: 5000 })).toBeInTheDocument();
   });
 });

@@ -10,11 +10,15 @@ const data = [
   { name: 'Jun', value: 700 },
 ]
 
-export const ClippedAreaChart: React.FC = () => {
+interface ClippedAreaChartProps {
+  data?: Array<{ name: string; value: number }>;
+}
+
+export const ClippedAreaChart: React.FC<ClippedAreaChartProps> = ({ data: chartData = data }) => {
   return (
     <div className="w-full h-[240px]">
       <ResponsiveContainer width="100%" height="100%">
-        <AreaChart data={data} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
+        <AreaChart data={chartData} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
           <defs>
             <linearGradient id="colorValue" x1="0" y1="0" x2="0" y2="1">
               <stop offset="5%" stopColor="oklch(0.841 0.238 128.85)" stopOpacity={0.3}/>

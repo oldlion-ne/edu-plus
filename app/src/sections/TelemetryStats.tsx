@@ -52,7 +52,7 @@ export default function TelemetryStats() {
             </span>
 
             <p className="mt-8 text-2xl font-light text-foreground leading-snug">
-              Learners from 38 countries — every timezone, one platform.
+              Learners from 38 countries - every timezone, one platform.
             </p>
           </div>
 
@@ -88,7 +88,7 @@ export default function TelemetryStats() {
             </span>
 
             <p className="my-8 text-2xl font-light text-foreground leading-snug">
-              Instant guidance, available 24/7 — no learner left without a next step.
+              Instant guidance, available 24/7 - no learner left without a next step.
             </p>
           </div>
 
@@ -112,7 +112,7 @@ export default function TelemetryStats() {
             {/* EduPlus AI response */}
             <div>
               <div className="rounded-none mb-1 ml-auto w-4/5 bg-primary p-3 text-xs text-primary-foreground font-sans leading-relaxed">
-                Based on your profile, the Product Design Pathway aligns best. Start with the Foundations module — it maps directly to your goals.
+                Based on your profile, the Product Design Pathway aligns best. Start with the Foundations module - it maps directly to your goals.
               </div>
               <span className="text-muted-foreground block text-right font-mono text-[9px] uppercase tracking-widest mt-1">
                 Now

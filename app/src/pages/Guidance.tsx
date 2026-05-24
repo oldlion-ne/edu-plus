@@ -42,7 +42,7 @@ const translations = {
   
   // Parents data
   parentsTitle: "Empower Your Child Without the Pressure",
-  parentsDesc: "Equip yourself with the tools, frameworks, and information needed to support your child's professional and personal growth. Our sessions help you decode rapidly changing education and career landscapes so that you can guide—not pressure—your child toward realistic, fulfilling paths.",
+  parentsDesc: "Equip yourself with the tools, frameworks, and information needed to support your child's professional and personal growth. Our sessions help you decode rapidly changing education and career landscapes so that you can guide-not pressure-your child toward realistic, fulfilling paths.",
   parentsCta: "Schedule Parent Consultation",
   
   // Seekers data

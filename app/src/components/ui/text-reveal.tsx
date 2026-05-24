@@ -2,7 +2,6 @@
 
 import {
   useRef,
-  type ComponentPropsWithoutRef,
   type FC,
   type ReactNode,
 } from "react"
@@ -10,11 +9,13 @@ import { motion, MotionValue, useScroll, useTransform } from "framer-motion"
 
 import { cn } from "@/lib/utils"
 
-export interface TextRevealProps extends ComponentPropsWithoutRef<"div"> {
+export interface TextRevealProps {
   children: string
+  className?: string
+  id?: string
 }
 
-export const TextReveal: FC<TextRevealProps> = ({ children, className, ...props }) => {
+export const TextReveal: FC<TextRevealProps> = ({ children, className, id }) => {
   const sectionRef = useRef<HTMLDivElement | null>(null)
   
   // Track scroll position of this container relative to the viewport.
@@ -32,7 +33,7 @@ export const TextReveal: FC<TextRevealProps> = ({ children, className, ...props 
   const words = children.split(" ")
 
   return (
-    <div ref={sectionRef} className={cn("relative z-0 h-auto py-2", className)} {...props}>
+    <div ref={sectionRef} id={id} className={cn("relative z-0 h-auto py-2", className)}>
       <span
         className={
           "flex flex-wrap text-3xl md:text-4xl lg:text-5xl font-light leading-[1.15] text-foreground/15"

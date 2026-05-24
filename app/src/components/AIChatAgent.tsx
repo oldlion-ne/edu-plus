@@ -40,6 +40,8 @@ export default function AIChatAgent() {
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    if (!isOpen || conversationId) return;
+
     const initSession = async () => {
       let session = localStorage.getItem('edu_plus_chat_session_id');
       if (!session) {
@@ -82,7 +84,7 @@ export default function AIChatAgent() {
     };
 
     initSession();
-  }, []);
+  }, [isOpen, conversationId]);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -219,7 +221,7 @@ export default function AIChatAgent() {
       {!isOpen && (
         <button /* ui-ignore */
           onClick={() => setIsOpen(true)}
-          className="flex items-center justify-center h-10 w-10 bg-primary text-primary-foreground hover:bg-primary/90 transition-all duration-300 cursor-pointer relative shadow-md"
+          className="flex items-center justify-center h-10 w-10 bg-primary text-primary-foreground hover:bg-primary/90 transition-all duration-300 cursor-pointer relative shadow-md animate-chat-glow"
           aria-label="Open AI chat support"
         >
           <span className="font-heading font-medium text-[10px] tracking-wider">AI</span>

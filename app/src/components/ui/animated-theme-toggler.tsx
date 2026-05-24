@@ -17,8 +17,14 @@ const translations = {
   toggleTheme: "Toggle theme",
 };
 
-const translationMap = new Map<string, string>(Object.entries(translations));
-const t = (key: keyof typeof translations) => translationMap.get(key) || '';
+const t = (key: keyof typeof translations) => {
+  switch (key) {
+    case "toggleTheme":
+      return "Toggle theme";
+    default:
+      return "";
+  }
+};
 
 interface AnimatedThemeTogglerProps extends React.ComponentPropsWithoutRef<"button"> {
   duration?: number
@@ -136,7 +142,14 @@ export const AnimatedThemeToggler = ({
   duration = 400,
   variant,
   fromCenter = false,
-  ...props
+  id,
+  disabled,
+  tabIndex,
+  'aria-label': ariaLabel,
+  'aria-labelledby': ariaLabelledby,
+  'aria-describedby': ariaDescribedby,
+  onFocus,
+  onBlur,
 }: AnimatedThemeTogglerProps) => {
   const shape = variant ?? "circle"
   const [isDark, setIsDark] = useState(false)
@@ -245,21 +258,26 @@ export const AnimatedThemeToggler = ({
     }
   }, [shape, fromCenter, duration, isDark])
 
-  return React.createElement(
-    "button",
-    {
-      type: "button",
-      ref: buttonRef,
-      onClick: toggleTheme,
-      className: cn(
+  return (
+    <button
+      type="button"
+      ref={buttonRef}
+      onClick={toggleTheme}
+      className={cn(
         "inline-flex items-center justify-center p-2 text-foreground hover:bg-muted focus:outline-none transition-colors border border-border bg-card/70 backdrop-blur-md size-9 hover:border-primary/50 focus:ring-1 focus:ring-primary/20 rounded-none",
         className
-      ),
-      ...props,
-    } as any,
-    <>
+      )}
+      id={id}
+      disabled={disabled}
+      tabIndex={tabIndex}
+      aria-label={ariaLabel}
+      aria-labelledby={ariaLabelledby}
+      aria-describedby={ariaDescribedby}
+      onFocus={onFocus}
+      onBlur={onBlur}
+    >
       {isDark ? <Sun className="size-4 text-primary" /> : <Moon className="size-4" />}
       <span className="sr-only">{t('toggleTheme')}</span>
-    </>
-  )
+    </button>
+  );
 }
