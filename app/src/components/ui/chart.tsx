@@ -91,11 +91,10 @@ const ChartStyle = ({ id, config }: { id: string; config: ChartConfig }) => {
   }
 
   return (
-    <style
-      dangerouslySetInnerHTML={{
-        __html: Object.entries(THEMES)
-          .map(
-            ([theme, prefix]) => `
+    <style>
+      {Object.entries(THEMES)
+        .map(
+          ([theme, prefix]) => `
 ${prefix} [data-chart=${id}] {
 ${colorConfig
   .map(([key, itemConfig]) => {
@@ -107,10 +106,9 @@ ${colorConfig
   .join("\n")}
 }
 `
-          )
-          .join("\n"),
-      }}
-    />
+        )
+        .join("\n")}
+    </style>
   )
 }
 
@@ -191,7 +189,7 @@ function ChartTooltipContent({
   return (
     <div
       className={cn(
-        "grid min-w-32 items-start gap-1.5 bg-popover px-2.5 py-1.5 text-xs text-popover-foreground shadow-sm ring-1 ring-foreground/10",
+        "grid min-w-32 items-start gap-1.5 rounded-none border border-border/50 bg-background px-2.5 py-1.5 text-xs/relaxed shadow-xl",
         className
       )}
     >
@@ -222,7 +220,7 @@ function ChartTooltipContent({
                       !hideIndicator && (
                         <div
                           className={cn(
-                            "shrink-0 rounded-[2px] border-(--color-border) bg-(--color-bg)",
+                            "shrink-0 rounded-none border-(--color-border) bg-(--color-bg)",
                             {
                               "h-2.5 w-2.5": indicator === "dot",
                               "w-1": indicator === "line",
@@ -313,7 +311,7 @@ function ChartLegendContent({
                 <itemConfig.icon />
               ) : (
                 <div
-                  className="h-2 w-2 shrink-0 rounded-[2px]"
+                  className="h-2 w-2 shrink-0 rounded-none"
                   style={{
                     backgroundColor: item.color,
                   }}
@@ -345,13 +343,17 @@ function getPayloadConfigFromPayload(
 
   let configLabelKey: string = key
 
+  const isSafeKey = (k: string) => k !== "__proto__" && k !== "constructor" && k !== "prototype"
+
   if (
+    isSafeKey(key) &&
     key in payload &&
     typeof payload[key as keyof typeof payload] === "string"
   ) {
     configLabelKey = payload[key as keyof typeof payload] as string
   } else if (
     payloadPayload &&
+    isSafeKey(key) &&
     key in payloadPayload &&
     typeof payloadPayload[key as keyof typeof payloadPayload] === "string"
   ) {
@@ -360,7 +362,15 @@ function getPayloadConfigFromPayload(
     ] as string
   }
 
-  return configLabelKey in config ? config[configLabelKey] : config[key]
+  if (!isSafeKey(configLabelKey)) {
+    return undefined
+  }
+
+  return Object.prototype.hasOwnProperty.call(config, configLabelKey)
+    ? config[configLabelKey]
+    : Object.prototype.hasOwnProperty.call(config, key)
+    ? config[key]
+    : undefined
 }
 
 export {

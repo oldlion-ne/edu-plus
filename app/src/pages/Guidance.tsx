@@ -1,68 +1,146 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router';
 import ImmersiveHero from '../components/effects/ImmersiveHero';
+import { Button } from '../components/ui/button';
+import { Card } from '../components/ui/card';
+import { MagicCard } from '../components/effects/CyberVisualizations';
+import { ArrowRight, Check } from 'lucide-react';
+
+const translations = {
+  heroCategory: "Advisory Services",
+  heroTitleNormal: "One-to-One",
+  heroTitleHighlighted: "Guidance",
+  heroDesc: "EduPlus Skills offers dedicated, one-on-one support tailored to each stakeholder in the education ecosystem. We guide you toward realistic, fulfilling paths with confidence.",
+  tailoredRoadmap: "Tailored Roadmap",
+  milestonesStrategy: "Milestones & Strategy:",
+  logPort: "LOG_PORT: TERMINAL_EXECUTION_DEV",
+  terminalExecSh: "EXEC_SH",
+  terminalReadyPrmpt: "READY_PRMPT",
+  
+  // Call to Action
+  ctaTitle: "Transform Your Learning & Career Journey",
+  ctaDesc: "Experience the power of structured, one-on-one expert counseling. Get absolute clarity on your core strengths and actionable map directions.",
+  ctaBenefit1: "1-on-1 Personalized Discovery Session",
+  ctaBenefit2: "Aptitude & Cognitive Mapping (DMIT)",
+  ctaBenefit3: "Detailed Career Pathway & College Prep Reports",
+  ctaBenefit4: "Direct Alignment With Global Internships & Camps",
+  ctaStartingAt: "Starting at",
+  ctaFreeLabel: "Discovery Call",
+  ctaFreeSubText: "Free forever for initial discovery sessions",
+  ctaButtonText: "Book Free Advisory Consult",
+  
+  // Tabs
+  studentsLabel: "For Students",
+  parentsLabel: "For Parents",
+  seekersLabel: "For Job Seekers",
+  teachersLabel: "For Teachers",
+  
+  // Student data
+  studentsTitle: "Chart Your Personal Academic & Career Path",
+  studentsDesc: "Navigate academic choices, discover your passions, and understand how your strengths connect to real-world opportunities. From subject selection and career mapping to entrance exam strategies and higher studies planning, you gain a personal roadmap instead of generic advice.",
+  studentsCta: "Schedule Student Advisory",
+  
+  // Parents data
+  parentsTitle: "Empower Your Child Without the Pressure",
+  parentsDesc: "Equip yourself with the tools, frameworks, and information needed to support your child's professional and personal growth. Our sessions help you decode rapidly changing education and career landscapes so that you can guide—not pressure—your child toward realistic, fulfilling paths.",
+  parentsCta: "Schedule Parent Consultation",
+  
+  // Seekers data
+  seekersTitle: "Bridge the Gap Between Learning & Placement",
+  seekersDesc: "Support your professional transition with structured career counseling, profile building, and targeted upskilling recommendations. Gain absolute clarity on your core strengths, international options, and the actions required to move from where you are to where you want to be.",
+  seekersCta: "Launch Placement Pathway",
+  
+  // Teachers data
+  teachersTitle: "Evolve From Instructors Into Mentors",
+  teachersDesc: "Enhance your classroom impact, mentorship capabilities, and academic leadership profile. Through reflective coaching, modern pedagogy training, and technology integration workshops, learn how to guide students not only to test success but to life readiness.",
+  teachersCta: "Register for Educator Mentorship",
+  
+  // Roadmap milestones
+  studentMilestone1: "Core Strengths & Passion Discovery",
+  studentMilestone2: "Customized Subject & Stream Selection",
+  studentMilestone3: "Entrance Exam (JEE, NEET, CUET) Goal-Setting",
+  studentMilestone4: "University Matching & Application Strategy",
+  
+  parentMilestone1: "Understanding Modern Career Landscapes",
+  parentMilestone2: "DMIT & Psychometrics Outcomes Explanation",
+  parentMilestone3: "Academic Stress Mitigation Strategies",
+  parentMilestone4: "Financial Planning for Higher Education",
+  
+  seekerMilestone1: "Industrial Skill Gap Assessments",
+  seekerMilestone2: "Resume & LinkedIn Profile Optimization",
+  seekerMilestone3: "Mock Technical & HR Interviews",
+  seekerMilestone4: "Global Job Placement Routing",
+  
+  teacherMilestone1: "Advanced Pedagogy & Active Learning",
+  teacherMilestone2: "E-Learning & Tech Tools Integration",
+  teacherMilestone3: "Student Mentorship & Counseling Basics",
+  teacherMilestone4: "Professional Leadership & Career Growth"
+};
+
+const translationMap = new Map<string, string>(Object.entries(translations));
+const t = (key: keyof typeof translations) => translationMap.get(key) || '';
 
 interface StakeholderDetails {
   id: string;
-  label: string;
-  title: string;
-  desc: string;
-  roadmap: string[];
-  ctaText: string;
+  labelKey: keyof typeof translations;
+  titleKey: keyof typeof translations;
+  descKey: keyof typeof translations;
+  roadmapKeys: (keyof typeof translations)[];
+  ctaTextKey: keyof typeof translations;
 }
 
 const STAKEHOLDERS: StakeholderDetails[] = [
   {
     id: 'students',
-    label: 'For Students',
-    title: 'Chart Your Personal Academic & Career Path',
-    desc: 'Navigate academic choices, discover your passions, and understand how your strengths connect to real-world opportunities. From subject selection and career mapping to entrance exam strategies and higher studies planning, you gain a personal roadmap instead of generic advice.',
-    roadmap: [
-      'Core Strengths & Passion Discovery',
-      'Customized Subject & Stream Selection',
-      'Entrance Exam (JEE, NEET, CUET) Goal-Setting',
-      'University Matching & Application Strategy'
+    labelKey: 'studentsLabel',
+    titleKey: 'studentsTitle',
+    descKey: 'studentsDesc',
+    roadmapKeys: [
+      'studentMilestone1',
+      'studentMilestone2',
+      'studentMilestone3',
+      'studentMilestone4'
     ],
-    ctaText: 'Schedule Student Advisory'
+    ctaTextKey: 'studentsCta'
   },
   {
     id: 'parents',
-    label: 'For Parents',
-    title: 'Empower Your Child Without the Pressure',
-    desc: 'Equip yourself with the tools, frameworks, and information needed to support your child’s professional and personal growth. Our sessions help you decode rapidly changing education and career landscapes so that you can guide—not pressure—your child toward realistic, fulfilling paths.',
-    roadmap: [
-      'Understanding Modern Career Landscapes',
-      'DMIT & Psychometrics Outcomes Explanation',
-      'Academic Stress Mitigation Strategies',
-      'Financial Planning for Higher Education'
+    labelKey: 'parentsLabel',
+    titleKey: 'parentsTitle',
+    descKey: 'parentsDesc',
+    roadmapKeys: [
+      'parentMilestone1',
+      'parentMilestone2',
+      'parentMilestone3',
+      'parentMilestone4'
     ],
-    ctaText: 'Schedule Parent Consultation'
+    ctaTextKey: 'parentsCta'
   },
   {
     id: 'seekers',
-    label: 'For Job Seekers',
-    title: 'Bridge the Gap Between Learning & Placement',
-    desc: 'Support your professional transition with structured career counseling, profile building, and targeted upskilling recommendations. Gain absolute clarity on your core strengths, international options, and the actions required to move from where you are to where you want to be.',
-    roadmap: [
-      'Industrial Skill Gap Assessments',
-      'Resume & LinkedIn Profile Optimization',
-      'Mock Technical & HR Interviews',
-      'Global Job Placement Routing'
+    labelKey: 'seekersLabel',
+    titleKey: 'seekersTitle',
+    descKey: 'seekersDesc',
+    roadmapKeys: [
+      'seekerMilestone1',
+      'seekerMilestone2',
+      'seekerMilestone3',
+      'seekerMilestone4'
     ],
-    ctaText: 'Launch Placement Pathway'
+    ctaTextKey: 'seekersCta'
   },
   {
     id: 'teachers',
-    label: 'For Teachers',
-    title: 'Evolve From Instructors Into Mentors',
-    desc: 'Enhance your classroom impact, mentorship capabilities, and academic leadership profile. Through reflective coaching, modern pedagogy training, and technology integration workshops, learn how to guide students not only to test success but to life readiness.',
-    roadmap: [
-      'Advanced Pedagogy & Active Learning',
-      'E-Learning & Tech Tools Integration',
-      'Student Mentorship & Counseling Basics',
-      'Professional Leadership & Career Growth'
+    labelKey: 'teachersLabel',
+    titleKey: 'teachersTitle',
+    descKey: 'teachersDesc',
+    roadmapKeys: [
+      'teacherMilestone1',
+      'teacherMilestone2',
+      'teacherMilestone3',
+      'teacherMilestone4'
     ],
-    ctaText: 'Register for Educator Mentorship'
+    ctaTextKey: 'teachersCta'
   }
 ];
 
@@ -76,14 +154,13 @@ export default function Guidance() {
     setMounted(true);
   }, []);
 
-  // Retro Terminal script log typewriter flow triggered on tab changes
   useEffect(() => {
     let isMounted = true;
     setIsRunning(true);
     setTerminalLogs([]);
 
-    const scripts: Record<string, string[]> = {
-      students: [
+    const scripts = new Map<string, string[]>([
+      ['students', [
         '[GUEST@EDU-PLUS:~]$ ./futurepath-navigator.sh --assess',
         '>> INITIALIZING PSYCHOMETRIC TEST ENGINE...',
         '>> CAPTURING STRENGTHS MATRIX [COGNITIVE & CREATIVE]...',
@@ -93,8 +170,8 @@ export default function Guidance() {
         '   - SPATIAL INTERPRETATION: 88.6%',
         '   - RECOMMENDATION: APPLIED SCIENCES & DEEP TECH',
         '>> SYSTEM STATUS: READY FOR 1-ON-1 ADVISORY SESSION _'
-      ],
-      parents: [
+      ]],
+      ['parents', [
         '[GUEST@EDU-PLUS:~]$ ./parent-consultation.sh --mitigate',
         '>> LOADING ACADEMIC STRESS INDEX (ASI)...',
         '>> DETECTING BOARD EXAM PRESSURE INDICES...',
@@ -104,8 +181,8 @@ export default function Guidance() {
         '   - NON-INTRUSIVE ACADEMIC PROGRESS CHECKS',
         '   - FINANCIAL PLAN MATCHED TO ASIA GOALS',
         '>> SYSTEM STATUS: STRATEGY SHEET READY _'
-      ],
-      seekers: [
+      ]],
+      ['seekers', [
         '[GUEST@EDU-PLUS:~]$ ./career-launchpad.sh --region "singapore"',
         '>> RUNNING SKILLS CAPABILITY GAP ANALYSIS...',
         '>> SCANNING RESUME FOR DIGITAL AND ANALYTICAL TOOLS...',
@@ -115,8 +192,8 @@ export default function Guidance() {
         '   - REGIONAL FIT INDEX: 97.4%',
         '   - GLOBAL ROUTING STATUS: PLACEMENT-READY',
         '>> SYSTEM STATUS: RESUME OPTIMIZED FOR SG PORTAL _'
-      ],
-      teachers: [
+      ]],
+      ['teachers', [
         '[GUEST@EDU-PLUS:~]$ ./educator-academy.sh --train',
         '>> LOADING PEDAGOGICAL METRIC DIAGNOSTICS...',
         '>> VERIFYING ACTIVE-LEARNING MODULE RATINGS...',
@@ -126,10 +203,10 @@ export default function Guidance() {
         '   - HYBRID TECH BENCHMARK: EXCELLENT',
         '   - OUTCOMES METRIC: 98.2/100',
         '>> SYSTEM STATUS: REGISTRATION COMPLETED _'
-      ]
-    };
+      ]]
+    ]);
 
-    const lines = scripts[activeTab] || [];
+    const lines = scripts.get(activeTab) || [];
     let currentLineIndex = 0;
 
     const typeNextLine = () => {
@@ -155,75 +232,58 @@ export default function Guidance() {
   const activeStakeholder = STAKEHOLDERS.find(s => s.id === activeTab) || STAKEHOLDERS[0];
 
   return (
-    <div className="min-h-screen bg-[#0B0F14] text-[#E6EDF3] pb-32 relative overflow-hidden">
-      {/* Decorative Glows */}
-      <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-[#7DF9FF]/5 rounded-none blur-[130px] pointer-events-none" />
-      <div className="absolute bottom-1/4 right-1/4 w-[500px] h-[500px] bg-[#7DF9FF]/3 rounded-none blur-[130px] pointer-events-none" />
-
+    <div className="min-h-screen bg-background text-foreground pb-32 relative overflow-hidden">
       {/* Immersive Top Hero Viewport */}
       <ImmersiveHero
         bgImage="/images/MentorshipVisual.png"
-        category="Advisory Services"
-        titleNormal="One-to-One"
-        titleHighlighted="Guidance"
-        description="EduPlus Skills offers dedicated, one-on-one support tailored to each stakeholder in the education ecosystem. We guide you toward realistic, fulfilling paths with confidence."
+        category={t('heroCategory')}
+        titleNormal={t('heroTitleNormal')}
+        titleHighlighted={t('heroTitleHighlighted')}
+        description={t('heroDesc')}
         telemetryLeft="MENTORSHIP_STREAM // ACTIVE"
         telemetryRight="UTC_COORD_GUIDANCE"
       />
 
       <div className="max-w-[1200px] mx-auto px-6 md:px-12 relative z-10 mt-16">
-        {/* Dynamic Stakeholder Tabs & Dashboard Grid */}
         <div className={`flex flex-col lg:flex-row gap-8 transition-all duration-1000 delay-300 transform ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-          
-          {/* Left Navigation and Retro Terminal Control Block */}
+
+          {/* Left Navigation and Terminal Block */}
           <div className="lg:w-1/3 flex flex-col gap-6">
             {/* Tab Selectors */}
-            <div className="flex flex-row lg:flex-col gap-1 overflow-x-auto lg:overflow-x-visible pb-4 lg:pb-0 border-b lg:border-b-0 lg:border-r border-white/[0.08] lg:pr-4 whitespace-nowrap bg-black/10 p-2">
+            <div className="flex flex-row lg:flex-col gap-1 overflow-x-auto lg:overflow-x-visible pb-4 lg:pb-0 border-b lg:border-b-0 lg:border-r border-border lg:pr-4 whitespace-nowrap bg-muted/40 p-2">
               {STAKEHOLDERS.map(stakeholder => (
-                <button
+                <button /* ui-ignore */
                   key={stakeholder.id}
                   onClick={() => setActiveTab(stakeholder.id)}
-                  className={`px-4 py-3 text-left font-sans text-sm tracking-wide transition-all duration-300 rounded-none w-full ${
+                  className={`px-4 py-3 text-left font-sans text-sm tracking-wide transition-all duration-300 w-full border-l-2 ${
                     activeTab === stakeholder.id
-                      ? 'text-[#7DF9FF] bg-[#7DF9FF]/5 border-b-2 lg:border-b-0 lg:border-l-2 border-[#7DF9FF] font-semibold'
-                      : 'text-[#8B949E] hover:text-[#7DF9FF] hover:bg-[#7DF9FF]/2 border-b-2 lg:border-b-0 lg:border-l-2 border-transparent'
+                      ? 'text-primary bg-primary/5 border-l-primary font-semibold'
+                      : 'text-muted-foreground hover:text-primary hover:bg-primary/5 border-l-transparent'
                   }`}
                 >
-                  {stakeholder.label}
+                  {t(stakeholder.labelKey)}
                 </button>
               ))}
             </div>
 
-            {/* Typing Retro Log Terminal */}
-            <div className="relative border border-white/[0.08] bg-[#0E131A] p-1 rounded-none">
-              <div className="relative bg-[#090D12] p-4 font-mono text-[10px] leading-relaxed text-[#4AF626] h-[220px] overflow-hidden rounded-none select-none flex flex-col justify-start">
-                
-                {/* scanline glass filter overlay */}
-                <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#7DF9FF]/2 to-transparent opacity-30 pointer-events-none" />
-                
-                {/* Simulated Scanlines */}
-                <div className="absolute inset-0 pointer-events-none opacity-[0.03]" 
-                     style={{ 
-                       backgroundImage: 'linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%)', 
-                       backgroundSize: '100% 4px' 
-                     }} 
-                />
-
+            {/* Retro Terminal Log */}
+            <div className="border border-border bg-card/60 backdrop-blur-sm p-1">
+              <div className="bg-card p-4 font-mono text-[10px] leading-relaxed text-[#22C55E] dark:text-[#4ADE80] h-[220px] overflow-hidden select-none flex flex-col justify-start relative">
                 {/* Console header */}
-                <div className="flex justify-between items-center text-[8px] text-[#7DF9FF]/60 border-b border-white/[0.08] pb-2 mb-3">
-                  <span>LOG_PORT: TERMINAL_EXECUTION_DEV</span>
+                <div className="flex justify-between items-center text-[8px] text-primary/60 border-b border-border pb-2 mb-3">
+                  <span>{t('logPort')}</span>
                   <span className="flex items-center gap-1.5">
-                    <span className={`w-1.5 h-1.5 rounded-none bg-[#4AF626] ${isRunning ? 'animate-ping' : ''}`} />
-                    {isRunning ? 'EXEC_SH' : 'READY_PRMPT'}
+                    <span className={`w-1.5 h-1.5 bg-[#22C55E] ${isRunning ? 'animate-ping' : ''}`} />
+                    {isRunning ? t('terminalExecSh') : t('terminalReadyPrmpt')}
                   </span>
                 </div>
 
                 {/* Log outputs stream */}
-                <div className="space-y-1 overflow-y-auto flex-1 font-mono pr-2 scrollbar-thin scrollbar-thumb-white/[0.04] scrollbar-track-transparent">
+                <div className="space-y-1 overflow-y-auto flex-1 font-mono pr-2">
                   {terminalLogs.map((log, idx) => {
                     const isCmd = log.startsWith('[GUEST');
                     return (
-                      <div key={idx} className={isCmd ? 'text-[#7DF9FF]' : 'text-[#4AF626]'}>
+                      <div key={idx} className={isCmd ? 'text-primary' : 'text-[#22C55E] dark:text-[#4ADE80]'}>
                         {log}
                       </div>
                     );
@@ -235,48 +295,99 @@ export default function Guidance() {
 
           {/* Right Active Details Panel */}
           <div className="lg:w-2/3 flex flex-col gap-6">
-            
-            {/* Active Tab Panel */}
-            <div className="liquid-glass p-8 md:p-12 min-h-[380px] flex flex-col justify-between border border-white/[0.08] rounded-none">
-              <div className="space-y-6">
-                <span className="text-xs font-sans text-[#7DF9FF] tracking-wider uppercase block opacity-60">
-                  Tailored Roadmap
-                </span>
-                <h2 className="font-heading text-2xl md:text-3xl font-light text-[#E6EDF3]">
-                  {activeStakeholder.title}
-                </h2>
-                <p className="font-sans text-sm md:text-base text-[#8B949E] leading-relaxed">
-                  {activeStakeholder.desc}
-                </p>
+            <MagicCard heightClass="min-h-[460px]">
+              <div className="flex flex-col justify-between h-full space-y-6 p-2">
+                <div className="space-y-6">
+                  <span className="text-xs font-mono text-primary tracking-wider uppercase block opacity-60">
+                    {t('tailoredRoadmap')}
+                  </span>
+                  <h2 className="font-heading text-2xl md:text-3xl font-semibold text-foreground tracking-tight">
+                    {t(activeStakeholder.titleKey)}
+                  </h2>
+                  <p className="font-sans text-sm md:text-base text-muted-foreground leading-relaxed">
+                    {t(activeStakeholder.descKey)}
+                  </p>
 
-                {/* Milestones list */}
-                <div className="pt-6">
-                  <h4 className="font-heading text-sm text-[#E6EDF3] uppercase tracking-wider mb-4">Milestones & Strategy:</h4>
-                  <div className="grid sm:grid-cols-2 gap-4">
-                    {activeStakeholder.roadmap.map((step, idx) => (
-                      <div key={idx} className="flex items-center gap-3 text-sm text-[#8B949E] font-sans">
-                        <span className="w-6 h-6 rounded-none bg-[#7DF9FF]/10 border border-[#7DF9FF]/20 flex items-center justify-center text-xs text-[#7DF9FF] font-medium font-heading">
-                          {idx + 1}
-                        </span>
-                        <span>{step}</span>
-                      </div>
-                    ))}
+                  {/* Milestones list */}
+                  <div className="pt-6">
+                    <h4 className="font-mono text-xs text-foreground uppercase tracking-wider mb-4">
+                      {t('milestonesStrategy')}
+                    </h4>
+                    <div className="grid sm:grid-cols-2 gap-4">
+                      {activeStakeholder.roadmapKeys.map((stepKey, idx) => (
+                        <div key={stepKey} className="flex items-center gap-3 text-sm text-muted-foreground font-sans">
+                          <span className="w-6 h-6 bg-primary/10 border border-primary/20 flex items-center justify-center text-xs text-primary font-medium font-heading shrink-0">
+                            {idx + 1}
+                          </span>
+                          <span>{t(stepKey)}</span>
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              <div className="mt-12 pt-6 border-t border-white/[0.08] flex justify-end">
-                <Link
-                  to="/contact"
-                  className="px-6 py-3 bg-[#7DF9FF] text-[#0B0F14] hover:bg-white font-sans text-sm font-medium tracking-wide transition-all duration-300 rounded-none border border-transparent hover:border-[#7DF9FF]"
-                >
-                  {activeStakeholder.ctaText}
-                </Link>
+                <div className="mt-12 pt-6 border-t border-border flex justify-end">
+                  <Button asChild>
+                    <Link to="/contact" /* ui-ignore */>{t(activeStakeholder.ctaTextKey)}</Link>
+                  </Button>
+                </div>
               </div>
-            </div>
+            </MagicCard>
           </div>
 
         </div>
+
+        {/* Call to Action Section */}
+        <section className="mt-28 border-t border-border/60 pt-20">
+          <div className="max-w-3xl mx-auto">
+            <Card
+              className="bg-card/40 border border-border grid md:grid-cols-2 gap-8 p-6 md:p-8 backdrop-blur-sm rounded-none"
+            >
+              <div>
+                <h3 className="font-heading text-2xl md:text-3xl font-semibold text-foreground tracking-tight">
+                  {t('ctaTitle')}
+                </h3>
+                <p className="text-muted-foreground mt-3 text-xs leading-relaxed font-sans">
+                  {t('ctaDesc')}
+                </p>
+                <ul className="mt-6 space-y-2">
+                  {[
+                    t('ctaBenefit1'),
+                    t('ctaBenefit2'),
+                    t('ctaBenefit3'),
+                    t('ctaBenefit4')
+                  ].map((benefit, index) => (
+                    <li
+                      key={index}
+                      className="text-muted-foreground flex items-center gap-2 text-xs font-sans"
+                    >
+                      <Check className="text-primary size-4 shrink-0" />
+                      <span>{benefit}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              
+              <div className="bg-muted/30 flex flex-col justify-center rounded-none border border-border/60 p-6">
+                <p className="text-muted-foreground text-xs font-mono uppercase tracking-wider">{t('ctaStartingAt')}</p>
+                <p className="mt-1 font-heading text-4xl font-bold text-foreground">
+                  $0<span className="text-muted-foreground text-lg font-normal">/month</span>
+                </p>
+                <p className="text-muted-foreground mt-2 text-xs font-sans">{t('ctaFreeSubText')}</p>
+                <Button
+                  asChild
+                  className="mt-6 gap-2 rounded-none font-mono text-xs uppercase tracking-wider h-10 w-full"
+                >
+                  <Link to="/contact" /* ui-ignore */>
+                    {t('ctaButtonText')}
+                    <ArrowRight className="size-4" />
+                  </Link>
+                </Button>
+              </div>
+            </Card>
+          </div>
+        </section>
+
       </div>
     </div>
   );

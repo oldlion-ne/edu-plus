@@ -40,7 +40,7 @@ describe('AIChatAgent component', () => {
     const button = screen.getByRole('button', { name: /open ai chat support/i });
     fireEvent.click(button);
     
-    expect(screen.getByText('EDU+ COGNITIVE LINK')).toBeDefined();
-    expect(screen.getByPlaceholderText('Transmit query...')).toBeDefined();
+    expect(screen.getByText('EDU+ AI ADVISOR')).toBeDefined();
+    expect(screen.getByPlaceholderText('Ask a question...')).toBeDefined();
   });
 });

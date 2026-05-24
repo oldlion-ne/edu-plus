@@ -22,3 +22,10 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Developer-only scratch scripts (local utility, not for version control)
+scratch/
+extract.cjs
+extract.js
+full_request.txt
+user_input.json

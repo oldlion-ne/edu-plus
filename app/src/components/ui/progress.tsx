@@ -8,21 +8,23 @@ function Progress({
   value,
   ...props
 }: React.ComponentProps<typeof ProgressPrimitive.Root>) {
-  return (
-    <ProgressPrimitive.Root
-      data-slot="progress"
-      className={cn(
-        "relative flex h-0.5 w-full items-center overflow-x-hidden rounded-none bg-muted",
+  return React.createElement(
+    ProgressPrimitive.Root,
+    Object.assign({}, props, {
+      "data-slot": "progress",
+      className: cn(
+        "relative flex h-1 w-full items-center overflow-x-hidden rounded-none bg-muted",
         className
-      )}
-      {...props}
-    >
-      <ProgressPrimitive.Indicator
-        data-slot="progress-indicator"
-        className="size-full flex-1 bg-primary transition-all"
-        style={{ transform: `translateX(-${100 - (value || 0)}%)` }}
-      />
-    </ProgressPrimitive.Root>
+      ),
+    }) as React.ComponentProps<typeof ProgressPrimitive.Root> & { "data-slot": string },
+    React.createElement(
+      ProgressPrimitive.Indicator,
+      Object.assign({}, {
+        "data-slot": "progress-indicator",
+        className: "size-full flex-1 bg-primary transition-all",
+        style: { transform: `translateX(-${100 - (value || 0)}%)` },
+      }) as React.ComponentProps<typeof ProgressPrimitive.Indicator> & { "data-slot": string }
+    )
   )
 }
 

@@ -1,166 +1,119 @@
-@import "tw-animate-css";
-@import "shadcn/tailwind.css";
-@import "@fontsource-variable/outfit";
-@import "@fontsource-variable/merriweather";
+@import url("tw-animate-css");
+@import url("shadcn/tailwind.css");
+@import url("@fontsource-variable/outfit");
+@import url("@fontsource-variable/merriweather");
+@import url("@fontsource-variable/inter");
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
   :root {
-    --background: oklch(1 0 0);
-    --foreground: oklch(0.147 0.004 49.3);
-    --card: oklch(1 0 0);
-    --card-foreground: oklch(0.147 0.004 49.3);
-    --popover: oklch(1 0 0);
-    --popover-foreground: oklch(0.147 0.004 49.3);
-    --primary: oklch(0.841 0.238 128.85);
-    --primary-foreground: oklch(0.405 0.101 131.063);
-    --secondary: oklch(0.967 0.001 286.375);
-    --secondary-foreground: oklch(0.21 0.006 285.885);
-    --muted: oklch(0.96 0.002 17.2);
-    --muted-foreground: oklch(0.547 0.021 43.1);
-    --accent: oklch(0.96 0.002 17.2);
-    --accent-foreground: oklch(0.214 0.009 43.1);
-    --destructive: oklch(0.577 0.245 27.325);
-    --destructive-foreground: 0 0% 98%;
-    --border: oklch(0.922 0.005 34.3);
-    --input: oklch(0.922 0.005 34.3);
-    --ring: oklch(0.714 0.014 41.2);
-    --radius: 0px;
-    --sidebar-background: 210 25% 5%;
-    --sidebar-foreground: oklch(0.147 0.004 49.3);
-    --sidebar-primary: oklch(0.648 0.2 131.684);
-    --sidebar-primary-foreground: oklch(0.986 0.031 120.757);
-    --sidebar-accent: oklch(0.96 0.002 17.2);
-    --sidebar-accent-foreground: oklch(0.214 0.009 43.1);
-    --sidebar-border: oklch(0.922 0.005 34.3);
-    --sidebar-ring: oklch(0.714 0.014 41.2);
-    --chart-1: oklch(0.785 0.115 274.713);
-    --chart-2: oklch(0.585 0.233 277.117);
-    --chart-3: oklch(0.511 0.262 276.966);
-    --chart-4: oklch(0.457 0.24 277.023);
-    --chart-5: oklch(0.398 0.195 277.366);
-    --sidebar: oklch(0.986 0.002 67.8);
+    --font-sans: 'Inter Variable', sans-serif;
+    --font-heading: 'Inter Variable', sans-serif;
+    --background: 100% 0 0deg;
+    --foreground: 14.7% 0.004 49.3deg;
+    --card: 100% 0 0deg;
+    --card-foreground: 14.7% 0.004 49.3deg;
+    --popover: 100% 0 0deg;
+    --popover-foreground: 14.7% 0.004 49.3deg;
+    --primary: 84.1% 0.238 128.85deg;
+    --primary-foreground: 40.5% 0.101 131.063deg;
+    --secondary: 96.7% 0.001 286.375deg;
+    --secondary-foreground: 21% 0.006 285.885deg;
+    --muted: 96% 0.002 17.2deg;
+    --muted-foreground: 54.7% 0.021 43.1deg;
+    --accent: 96% 0.002 17.2deg;
+    --accent-foreground: 21.4% 0.009 43.1deg;
+    --destructive: 57.7% 0.245 27.325deg;
+    --border: 92.2% 0.005 34.3deg;
+    --input: 92.2% 0.005 34.3deg;
+    --ring: 71.4% 0.014 41.2deg;
+    --chart-1: 78.5% 0.115 274.713deg;
+    --chart-2: 58.5% 0.233 277.117deg;
+    --chart-3: 51.1% 0.262 276.966deg;
+    --chart-4: 45.7% 0.24 277.023deg;
+    --chart-5: 39.8% 0.195 277.366deg;
+    --radius: 0;
+    --sidebar: 98.6% 0.002 67.8deg;
+    --sidebar-foreground: 14.7% 0.004 49.3deg;
+    --sidebar-primary: 64.8% 0.2 131.684deg;
+    --sidebar-primary-foreground: 98.6% 0.031 120.757deg;
+    --sidebar-accent: 96% 0.002 17.2deg;
+    --sidebar-accent-foreground: 21.4% 0.009 43.1deg;
+    --sidebar-border: 92.2% 0.005 34.3deg;
+    --sidebar-ring: 71.4% 0.014 41.2deg;
   }
 
   body {
-    background-color: #0B0F14;
-    color: #E6EDF3;
-    font-family: 'Outfit', sans-serif;
+    font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+
     @apply bg-background text-foreground;
   }
 
   h1, h2, h3, h4, h5, h6, .font-heading {
-    font-family: 'Merriweather', serif;
+    font-family: var(--font-heading);
   }
+
   .dark {
-    --background: oklch(0.147 0.004 49.3);
-    --foreground: oklch(0.986 0.002 67.8);
-    --card: oklch(0.214 0.009 43.1);
-    --card-foreground: oklch(0.986 0.002 67.8);
-    --popover: oklch(0.214 0.009 43.1);
-    --popover-foreground: oklch(0.986 0.002 67.8);
-    --primary: oklch(0.768 0.233 130.85);
-    --primary-foreground: oklch(0.405 0.101 131.063);
-    --secondary: oklch(0.274 0.006 286.033);
-    --secondary-foreground: oklch(0.985 0 0);
-    --muted: oklch(0.268 0.011 36.5);
-    --muted-foreground: oklch(0.714 0.014 41.2);
-    --accent: oklch(0.268 0.011 36.5);
-    --accent-foreground: oklch(0.986 0.002 67.8);
-    --destructive: oklch(0.704 0.191 22.216);
-    --border: oklch(1 0 0 / 10%);
-    --input: oklch(1 0 0 / 15%);
-    --ring: oklch(0.547 0.021 43.1);
-    --chart-1: oklch(0.785 0.115 274.713);
-    --chart-2: oklch(0.585 0.233 277.117);
-    --chart-3: oklch(0.511 0.262 276.966);
-    --chart-4: oklch(0.457 0.24 277.023);
-    --chart-5: oklch(0.398 0.195 277.366);
-    --sidebar: oklch(0.214 0.009 43.1);
-    --sidebar-foreground: oklch(0.986 0.002 67.8);
-    --sidebar-primary: oklch(0.768 0.233 130.85);
-    --sidebar-primary-foreground: oklch(0.274 0.072 132.109);
-    --sidebar-accent: oklch(0.268 0.011 36.5);
-    --sidebar-accent-foreground: oklch(0.986 0.002 67.8);
-    --sidebar-border: oklch(1 0 0 / 10%);
-    --sidebar-ring: oklch(0.547 0.021 43.1);
+    --background: 14.7% 0.004 49.3deg;
+    --foreground: 98.6% 0.002 67.8deg;
+    --card: 21.4% 0.009 43.1deg;
+    --card-foreground: 98.6% 0.002 67.8deg;
+    --popover: 21.4% 0.009 43.1deg;
+    --popover-foreground: 98.6% 0.002 67.8deg;
+    --primary: 76.8% 0.233 130.85deg;
+    --primary-foreground: 40.5% 0.101 131.063deg;
+    --secondary: 27.4% 0.006 286.033deg;
+    --secondary-foreground: 98.5% 0 0deg;
+    --muted: 26.8% 0.011 36.5deg;
+    --muted-foreground: 71.4% 0.014 41.2deg;
+    --accent: 26.8% 0.011 36.5deg;
+    --accent-foreground: 98.6% 0.002 67.8deg;
+    --destructive: 70.4% 0.191 22.216deg;
+    --border: 100% 0 0deg / 0.1;
+    --input: 100% 0 0deg / 0.15;
+    --ring: 54.7% 0.021 43.1deg;
+    --chart-1: 78.5% 0.115 274.713deg;
+    --chart-2: 58.5% 0.233 277.117deg;
+    --chart-3: 51.1% 0.262 276.966deg;
+    --chart-4: 45.7% 0.24 277.023deg;
+    --chart-5: 39.8% 0.195 277.366deg;
+    --sidebar: 21.4% 0.009 43.1deg;
+    --sidebar-foreground: 98.6% 0.002 67.8deg;
+    --sidebar-primary: 76.8% 0.233 130.85deg;
+    --sidebar-primary-foreground: 27.4% 0.072 132.109deg;
+    --sidebar-accent: 26.8% 0.011 36.5deg;
+    --sidebar-accent-foreground: 98.6% 0.002 67.8deg;
+    --sidebar-border: 100% 0 0deg / 0.1;
+    --sidebar-ring: 54.7% 0.021 43.1deg;
   }
-  .theme {
-    --font-sans: 'Outfit Variable', sans-serif;
-    --font-heading: 'Merriweather Variable', serif;
-  }
+
   * {
     @apply border-border outline-ring/50;
   }
+
   html {
     @apply font-sans;
   }
 }
 
-@layer components {
-  .liquid-glass {
-    background: rgba(11, 15, 20, 0.4);
-    background-blend-mode: luminosity;
-    backdrop-filter: blur(4px);
-    -webkit-backdrop-filter: blur(4px);
-    border: none;
-    box-shadow: inset 0 1px 1px rgba(230, 237, 243, 0.1);
-    position: relative;
-    overflow: hidden;
-  }
 
-  .liquid-glass::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    border-radius: inherit;
-    padding: 1.4px;
-    background: linear-gradient(180deg, rgba(230,237,243,0.3) 0%, rgba(230,237,243,0.1) 20%, rgba(230,237,243,0) 40%, rgba(230,237,243,0) 60%, rgba(230,237,243,0.1) 80%, rgba(230,237,243,0.3) 100%);
-    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-    -webkit-mask-composite: xor;
-    mask-composite: exclude;
-    pointer-events: none;
-  }
-
-  .liquid-glass-strong {
-    background: rgba(11, 15, 20, 0.6);
-    background-blend-mode: luminosity;
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border: none;
-    box-shadow: inset 0 1px 1px rgba(230, 237, 243, 0.15);
-    position: relative;
-    overflow: hidden;
-  }
-
-  .liquid-glass-strong::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    border-radius: inherit;
-    padding: 1.4px;
-    background: linear-gradient(180deg, rgba(230,237,243,0.4) 0%, rgba(230,237,243,0.15) 20%, rgba(230,237,243,0) 40%, rgba(230,237,243,0) 60%, rgba(230,237,243,0.15) 80%, rgba(230,237,243,0.4) 100%);
-    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-    -webkit-mask-composite: xor;
-    mask-composite: exclude;
-    pointer-events: none;
-  }
-}
 
 @layer utilities {
   .scramble-glow {
     animation: glow 3s infinite;
   }
-  
+
   @keyframes fadeIn {
     from {
       opacity: 0;
       transform: scale(0.98);
     }
+
     to {
       opacity: 1;
       transform: scale(1);
@@ -170,4 +123,15 @@
   .animate-fade-in {
     animation: fadeIn 0.25s ease-out forwards;
   }
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+/* Scoped to AnimatedThemeToggler — the toggler sets the data-attribute and the variable only during a theme toggle. */
+html[data-magicui-theme-vt="active"]::view-transition-group(root) {
+  animation-duration: var(--magicui-theme-toggle-vt-duration);
 }

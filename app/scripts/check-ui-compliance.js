@@ -14,7 +14,8 @@ const IGNORE_PATHS = [
   /check-ui-compliance\.js/,
   /main\.tsx/,
   /vite-env\.d\.ts/,
-  /src[\\/]components[\\/]ui/ // Ignore shadcn UI primitives
+  /src[\\/]components[\\/]ui/, // Ignore shadcn UI primitives
+
 ];
 
 // Approved colors to prevent warning/error on hex values

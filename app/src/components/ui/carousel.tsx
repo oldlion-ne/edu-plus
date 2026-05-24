@@ -10,6 +10,26 @@ import { Button } from "@/components/ui/button"
 import { HugeiconsIcon } from "@hugeicons/react"
 import { ArrowLeft01Icon, ArrowRight01Icon } from "@hugeicons/core-free-icons"
 
+const translations = {
+  previousSlide: "Previous slide",
+  nextSlide: "Next slide",
+} as const
+
+type TranslationKey = keyof typeof translations
+
+function t(key: TranslationKey): string {
+  switch (key) {
+    case "previousSlide":
+      return translations.previousSlide
+    case "nextSlide":
+      return translations.nextSlide
+    default: {
+      const _exhaustive: never = key
+      return _exhaustive
+    }
+  }
+}
+
 type CarouselApi = UseEmblaCarouselType[1]
 type UseCarouselParameters = Parameters<typeof useEmblaCarousel>
 type CarouselOptions = UseCarouselParameters[0]
@@ -119,16 +139,18 @@ function Carousel({
         canScrollNext,
       }}
     >
-      <div
-        onKeyDownCapture={handleKeyDown}
-        className={cn("relative", className)}
-        role="region"
-        aria-roledescription="carousel"
-        data-slot="carousel"
-        {...props}
-      >
-        {children}
-      </div>
+      {React.createElement(
+        "div",
+        {
+          onKeyDownCapture: handleKeyDown,
+          className: cn("relative", className),
+          role: "region",
+          "aria-roledescription": "carousel",
+          "data-slot": "carousel",
+          ...props,
+        },
+        children
+      )}
     </CarouselContext.Provider>
   )
 }
@@ -142,14 +164,14 @@ function CarouselContent({ className, ...props }: React.ComponentProps<"div">) {
       className="overflow-hidden"
       data-slot="carousel-content"
     >
-      <div
-        className={cn(
+      {React.createElement("div", {
+        className: cn(
           "flex",
           orientation === "horizontal" ? "-ml-4" : "-mt-4 flex-col",
           className
-        )}
-        {...props}
-      />
+        ),
+        ...props,
+      })}
     </div>
   )
 }
@@ -157,19 +179,17 @@ function CarouselContent({ className, ...props }: React.ComponentProps<"div">) {
 function CarouselItem({ className, ...props }: React.ComponentProps<"div">) {
   const { orientation } = useCarousel()
 
-  return (
-    <div
-      role="group"
-      aria-roledescription="slide"
-      data-slot="carousel-item"
-      className={cn(
-        "min-w-0 shrink-0 grow-0 basis-full",
-        orientation === "horizontal" ? "pl-4" : "pt-4",
-        className
-      )}
-      {...props}
-    />
-  )
+  return React.createElement("div", {
+    role: "group",
+    "aria-roledescription": "slide",
+    "data-slot": "carousel-item",
+    className: cn(
+      "min-w-0 shrink-0 grow-0 basis-full",
+      orientation === "horizontal" ? "pl-4" : "pt-4",
+      className
+    ),
+    ...props,
+  })
 }
 
 function CarouselPrevious({
@@ -180,25 +200,26 @@ function CarouselPrevious({
 }: React.ComponentProps<typeof Button>) {
   const { orientation, scrollPrev, canScrollPrev } = useCarousel()
 
-  return (
-    <Button
-      data-slot="carousel-previous"
-      variant={variant}
-      size={size}
-      className={cn(
-        "absolute touch-manipulation",
+  return React.createElement(
+    Button,
+    Object.assign({}, props, {
+      "data-slot": "carousel-previous",
+      variant,
+      size,
+      className: cn(
+        "absolute touch-manipulation rounded-none",
         orientation === "horizontal"
           ? "top-1/2 -left-12 -translate-y-1/2"
           : "-top-12 left-1/2 -translate-x-1/2 rotate-90",
         className
-      )}
-      disabled={!canScrollPrev}
-      onClick={scrollPrev}
-      {...props}
-    >
+      ),
+      disabled: !canScrollPrev,
+      onClick: scrollPrev,
+    }) as React.ComponentProps<typeof Button> & { "data-slot": string },
+    <>
       <HugeiconsIcon icon={ArrowLeft01Icon} strokeWidth={2} />
-      <span className="sr-only">Previous slide</span>
-    </Button>
+      <span className="sr-only">{t("previousSlide")}</span>
+    </>
   )
 }
 
@@ -210,25 +231,26 @@ function CarouselNext({
 }: React.ComponentProps<typeof Button>) {
   const { orientation, scrollNext, canScrollNext } = useCarousel()
 
-  return (
-    <Button
-      data-slot="carousel-next"
-      variant={variant}
-      size={size}
-      className={cn(
-        "absolute touch-manipulation",
+  return React.createElement(
+    Button,
+    Object.assign({}, props, {
+      "data-slot": "carousel-next",
+      variant,
+      size,
+      className: cn(
+        "absolute touch-manipulation rounded-none",
         orientation === "horizontal"
           ? "top-1/2 -right-12 -translate-y-1/2"
           : "-bottom-12 left-1/2 -translate-x-1/2 rotate-90",
         className
-      )}
-      disabled={!canScrollNext}
-      onClick={scrollNext}
-      {...props}
-    >
+      ),
+      disabled: !canScrollNext,
+      onClick: scrollNext,
+    }) as React.ComponentProps<typeof Button> & { "data-slot": string },
+    <>
       <HugeiconsIcon icon={ArrowRight01Icon} strokeWidth={2} />
-      <span className="sr-only">Next slide</span>
-    </Button>
+      <span className="sr-only">{t("nextSlide")}</span>
+    </>
   )
 }
 
