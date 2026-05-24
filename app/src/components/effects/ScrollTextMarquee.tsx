@@ -1,6 +1,7 @@
 import { useRef } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { cn } from '../../lib/utils';
+import { useScrollContainer } from '../../lib/ScrollContext';
 
 interface ScrollTextMarqueeProps {
   text: string;
@@ -10,9 +11,11 @@ interface ScrollTextMarqueeProps {
 
 export default function ScrollTextMarquee({ text, baseSpeed = -150, className }: ScrollTextMarqueeProps) {
   const targetRef = useRef<HTMLDivElement>(null);
+  const scrollContext = useScrollContainer();
   const { scrollYProgress } = useScroll({
     target: targetRef,
-    offset: ["start end", "end start"]
+    offset: ["start end", "end start"],
+    container: scrollContext?.scrollContainerRef || undefined
   });
 
   const x = useTransform(scrollYProgress, [0, 1], [0, baseSpeed]);

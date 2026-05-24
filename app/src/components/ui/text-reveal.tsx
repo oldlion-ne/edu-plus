@@ -8,6 +8,7 @@ import {
 import { motion, MotionValue, useScroll, useTransform } from "framer-motion"
 
 import { cn } from "@/lib/utils"
+import { useScrollContainer } from "@/lib/ScrollContext"
 
 export interface TextRevealProps {
   children: string
@@ -17,6 +18,7 @@ export interface TextRevealProps {
 
 export const TextReveal: FC<TextRevealProps> = ({ children, className, id }) => {
   const sectionRef = useRef<HTMLDivElement | null>(null)
+  const scrollContext = useScrollContainer()
   
   // Track scroll position of this container relative to the viewport.
   // Animation starts when the container top enters 85% viewport height
@@ -24,6 +26,7 @@ export const TextReveal: FC<TextRevealProps> = ({ children, className, id }) => 
   const { scrollYProgress } = useScroll({
     target: sectionRef,
     offset: ["start 85%", "end 45%"],
+    container: scrollContext?.scrollContainerRef || undefined,
   })
 
   if (typeof children !== "string") {

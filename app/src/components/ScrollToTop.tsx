@@ -1,21 +1,28 @@
 import { useEffect, useState, useRef } from 'react';
 import { useLocation } from 'react-router';
+import { useScrollContainer } from '../lib/ScrollContext';
 
 export default function ScrollToTop() {
   const { pathname } = useLocation();
   const [showButton, setShowButton] = useState(false);
   const timeoutRef = useRef<any>(null);
+  const scrollContext = useScrollContainer();
 
   // Scroll to top on navigation/page change
   useEffect(() => {
-    window.scrollTo(0, 0);
-  }, [pathname]);
+    if (scrollContext?.scrollContainerRef.current) {
+      scrollContext.scrollContainerRef.current.scrollTo(0, 0);
+    }
+  }, [pathname, scrollContext?.scrollContainerRef]);
 
   // Handle auto-fadeout on idle state (inactive for 2.5 seconds)
   useEffect(() => {
+    const container = scrollContext?.scrollContainerRef.current;
+    if (!container) return;
+
     const resetIdleTimer = () => {
       // Only show the button if scrolled past 300px
-      if (window.scrollY > 300) {
+      if (container.scrollTop > 300) {
         setShowButton(true);
 
         if (timeoutRef.current) {
@@ -34,15 +41,15 @@ export default function ScrollToTop() {
       }
     };
 
-    // Listen to scroll, movement, tap/touch, keypress, and click interactions
-    window.addEventListener('scroll', resetIdleTimer, { passive: true });
+    container.addEventListener('scroll', resetIdleTimer, { passive: true });
+    // Keep window listeners for user interactions other than scroll
     window.addEventListener('mousemove', resetIdleTimer, { passive: true });
     window.addEventListener('touchstart', resetIdleTimer, { passive: true });
     window.addEventListener('click', resetIdleTimer, { passive: true });
     window.addEventListener('keydown', resetIdleTimer, { passive: true });
 
     return () => {
-      window.removeEventListener('scroll', resetIdleTimer);
+      container.removeEventListener('scroll', resetIdleTimer);
       window.removeEventListener('mousemove', resetIdleTimer);
       window.removeEventListener('touchstart', resetIdleTimer);
       window.removeEventListener('click', resetIdleTimer);
@@ -51,13 +58,15 @@ export default function ScrollToTop() {
         clearTimeout(timeoutRef.current);
       }
     };
-  }, []);
+  }, [scrollContext?.scrollContainerRef]);
 
   const scrollToTop = () => {
-    window.scrollTo({
-      top: 0,
-      behavior: 'smooth'
-    });
+    if (scrollContext?.scrollContainerRef.current) {
+      scrollContext.scrollContainerRef.current.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    }
   };
 
   return (
