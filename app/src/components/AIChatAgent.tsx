@@ -25,7 +25,8 @@ const translations = {
   thinking: "Thinking...",
   btnPrograms: "Programs",
   btnCareerCounseling: "Career Counseling",
-  btnSend: "SEND"
+  btnSend: "SEND",
+  statusOnline: "ONLINE"
 };
 
 const translationMap = new Map<string, string>(Object.entries(translations));
@@ -242,7 +243,7 @@ export default function AIChatAgent() {
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-500 opacity-75"></span>
                 <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-500"></span>
               </span>
-              <span className="font-mono text-[6px] tracking-widest text-emerald-500 uppercase font-bold">ONLINE</span>
+              <span className="font-mono text-[6px] tracking-widest text-emerald-500 uppercase font-bold">{t('statusOnline')}</span>
             </div>
             <svg className="absolute inset-0 w-full h-full text-primary/10 group-hover:text-primary/30 transition-colors duration-300 group-hover:animate-spin [animation-duration:6s] pointer-events-none" viewBox="0 0 100 100">
               <circle cx="50" cy="50" r="46" stroke="currentColor" strokeWidth="1" strokeDasharray="4 4" fill="none" />

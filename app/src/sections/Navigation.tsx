@@ -25,6 +25,8 @@ const translations = {
   login: "Login",
   connect: "Connect",
   themeLabel: "Theme",
+  menuTitle: "Navigation Menu",
+  menuDesc: "Access site sections and pages.",
 };
 
 const translationMap = new Map<string, string>(Object.entries(translations));
@@ -143,8 +145,8 @@ export default function Navigation() {
               side="top"
               className="bg-background border-b border-border pt-[80px] pb-8 px-8 flex flex-col gap-4 text-left w-full"
             >
-              <SheetTitle className="sr-only">Navigation Menu</SheetTitle>
-              <SheetDescription className="sr-only">Access site sections and pages.</SheetDescription>
+              <SheetTitle className="sr-only">{t('menuTitle')}</SheetTitle>
+              <SheetDescription className="sr-only">{t('menuDesc')}</SheetDescription>
               {NAV_LINKS.map((link) => (
                 <NavLink /* ui-ignore */
                   key={link.label}

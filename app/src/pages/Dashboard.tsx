@@ -657,7 +657,7 @@ export default function Dashboard() {
       <Sheet open={isMobileOpen} onOpenChange={setIsMobileOpen}>
         <SheetContent side="left" className="w-64 p-0 border-r border-border animate-in slide-in-from-left duration-300 rounded-none" showCloseButton={false}>
           <SheetTitle className="sr-only">{t('dashboard.header.adminNavWorkspace')}</SheetTitle>
-          <SheetDescription className="sr-only">Admin navigation workspace menu drawer.</SheetDescription>
+          <SheetDescription className="sr-only">{t('dashboard.header.adminNavWorkspaceDesc')}</SheetDescription>
           {renderSidebarContents(() => setIsMobileOpen(false))}
         </SheetContent>
       </Sheet>

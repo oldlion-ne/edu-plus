@@ -21,7 +21,8 @@
       "linkActive": "Link: Active",
       "adminBreadcrumb": "Admin",
       "noActivePings": "NO ACTIVE INBOUND PINGS.",
-      "adminNavWorkspace": "Admin Navigation Workspace"
+      "adminNavWorkspace": "Admin Navigation Workspace",
+      "adminNavWorkspaceDesc": "Admin navigation workspace menu drawer."
     },
     "overview": {
       "heading": "Ecosystem Overview",
