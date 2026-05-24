@@ -38,12 +38,12 @@ describe('App Routing', () => {
     expect(screen.getByRole('main')).toBeDefined();
   });
 
-  it('renders About page title on /about', () => {
+  it('renders About page title on /about', async () => {
     render(
       <MemoryRouter initialEntries={['/about']}>
         <App />
       </MemoryRouter>
     );
-    expect(screen.getByText(/Know Who/i)).toBeDefined();
+    expect(await screen.findByText(/Know Who/i)).toBeDefined();
   });
 });

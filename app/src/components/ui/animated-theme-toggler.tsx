@@ -17,8 +17,14 @@ const translations = {
   toggleTheme: "Toggle theme",
 };
 
-const translationMap = new Map<string, string>(Object.entries(translations));
-const t = (key: keyof typeof translations) => translationMap.get(key) || '';
+const t = (key: keyof typeof translations) => {
+  switch (key) {
+    case "toggleTheme":
+      return "Toggle theme";
+    default:
+      return "";
+  }
+};
 
 interface AnimatedThemeTogglerProps extends React.ComponentPropsWithoutRef<"button"> {
   duration?: number

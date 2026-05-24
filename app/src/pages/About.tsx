@@ -9,7 +9,7 @@ const translations = {
   aboutCategory: "Inside EduPlus Skills",
   aboutTitleNormal: "Know Who",
   aboutTitleHighlighted: "We Are",
-  aboutDesc: "EduPlus Skills is an innovation-led skills and career platform that seamlessly combines education, training, and employment enablement. We operate both online and offline, ensuring access and outreach across regions—from local communities in Manipur to global education and career pathways.",
+  aboutDesc: "EduPlus Skills is an innovation-led skills and career platform that seamlessly combines education, training, and employment enablement. We operate both online and offline, ensuring access and outreach across regions-from local communities in Manipur to global education and career pathways.",
   learnMore: "Learn More",
   specializeDesc: "We specialize in structured skill-building, career mapping, higher studies support, and curated placement opportunities, supported by a diverse network of experts from India, Asia, and beyond. Our programs are designed to be practical, experiential, and outcomes-focused, so that learning translates directly into confidence, clarity, and career progress.",
   whatWeStandFor: "What We Stand For",

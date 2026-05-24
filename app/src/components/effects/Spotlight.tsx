@@ -1,4 +1,4 @@
-import { createContext, useContext, useRef, useState } from 'react';
+import { createContext, useContext, useRef, useState, useCallback } from 'react';
 import { cn } from '../../lib/utils';
 
 interface SpotlightProps {
@@ -33,8 +33,13 @@ export const Spotlight = ({ children, className }: SpotlightProps) => {
     setMouseY(null);
   };
 
+  const setMousePos = useCallback((x: number | null, y: number | null) => {
+    setMouseX(x);
+    setMouseY(y);
+  }, []);
+
   return (
-    <SpotlightContext.Provider value={{ mouseX, mouseY, setMousePos: (x, y) => { setMouseX(x); setMouseY(y); } }}>
+    <SpotlightContext.Provider value={{ mouseX, mouseY, setMousePos }}>
       <div 
         className={cn("relative z-10", className)}
         onMouseMove={handleGlobalMouseMove}

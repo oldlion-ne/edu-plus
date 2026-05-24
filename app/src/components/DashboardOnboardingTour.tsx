@@ -30,7 +30,7 @@ const TOUR_STEPS: TourStep[] = [
   {
     targetId: 'tab-messages',
     title: 'SONAR MESSAGE TERMINAL',
-    text: 'Sync and read messages sent from the Contact page. Real-time sonar channels alert you instantly when a new inquire pings.',
+    text: 'Sync and read messages sent from the Contact page. Real-time sonar channels alert you instantly when a new inquiry pings.',
   },
 ];
 
@@ -81,7 +81,7 @@ export default function DashboardOnboardingTour({
     };
   }, [stepIndex, currentStep.targetId]);
 
-  // ── Tooltip placement — prefer below, fall back to above ───────────────────
+  // ── Tooltip placement - prefer below, fall back to above ───────────────────
   function tooltipStyle(): React.CSSProperties {
     if (!rect) return { top: '50%', left: '50%', transform: 'translate(-50%,-50%)' };
 
@@ -137,7 +137,7 @@ export default function DashboardOnboardingTour({
           <mask id="spotlight-mask">
             {/* White = visible (the overlay shows here) */}
             <rect width={VW} height={VH} fill="white" />
-            {/* Black = transparent (the cutout — target element shows through) */}
+            {/* Black = transparent (the cutout - target element shows through) */}
             {rect && (
               <rect
                 x={rect.left}

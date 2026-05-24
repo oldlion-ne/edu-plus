@@ -1,8 +1,9 @@
 import { render, screen } from '@testing-library/react';
 import { describe, it, expect } from 'vitest';
+import '@testing-library/jest-dom';
 import Vision from './Vision';
 
-// Mock IntersectionObserver for JSDOM
+// Mock IntersectionObserver cleanly for JSDOM
 class IntersectionObserverMock {
   callback: any;
   constructor(callback: any) {
@@ -21,7 +22,7 @@ describe('Vision Component', () => {
     render(<Vision />);
     
     // Check for "Our Mission" label
-    expect(screen.getByText('Our Mission')).toBeDefined();
+    expect(screen.getByText('Our Mission')).toBeInTheDocument();
     
     // Check that individual key words from the mission statement are rendered in the DOM
     expect(screen.getAllByText('become').length).toBeGreaterThan(0);

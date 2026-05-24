@@ -15,7 +15,7 @@ const PROGRAMS = [
   { id: '06', name: 'Innovation Studio & Educator Academy',tag: 'Alpha Projects'         },
 ];
 
-// Row 1 — forward; Row 2 — reverse; Row 3 — forward (rotated set)
+// Row 1 - forward; Row 2 - reverse; Row 3 - forward (rotated set)
 const ROW_1 = [PROGRAMS[0], PROGRAMS[2], PROGRAMS[4], PROGRAMS[1], PROGRAMS[3], PROGRAMS[5]];
 const ROW_2 = [PROGRAMS[3], PROGRAMS[1], PROGRAMS[5], PROGRAMS[0], PROGRAMS[4], PROGRAMS[2]];
 const ROW_3 = [PROGRAMS[2], PROGRAMS[4], PROGRAMS[0], PROGRAMS[5], PROGRAMS[1], PROGRAMS[3]];
@@ -122,21 +122,21 @@ export default function ServicesMatrix() {
                 'radial-gradient(ellipse 80% 80% at 50% 50%, #000 55%, transparent 100%)',
             }}
           >
-            {/* Row 1 — forward */}
+            {/* Row 1 - forward */}
             <Marquee pauseOnHover className="[--duration:30s] [--gap:12px]">
               {ROW_1.map((p) => (
                 <ProgramCard key={p.id + '-r1'} id={p.id} name={p.name} tag={p.tag} />
               ))}
             </Marquee>
 
-            {/* Row 2 — reverse */}
+            {/* Row 2 - reverse */}
             <Marquee pauseOnHover reverse className="[--duration:28s] [--gap:12px]">
               {ROW_2.map((p) => (
                 <ProgramCard key={p.id + '-r2'} id={p.id} name={p.name} tag={p.tag} />
               ))}
             </Marquee>
 
-            {/* Row 3 — forward */}
+            {/* Row 3 - forward */}
             <Marquee pauseOnHover className="[--duration:32s] [--gap:12px]">
               {ROW_3.map((p) => (
                 <ProgramCard key={p.id + '-r3'} id={p.id} name={p.name} tag={p.tag} />
@@ -167,7 +167,7 @@ export default function ServicesMatrix() {
           </h2>
 
           <p className="font-sans text-sm text-muted-foreground leading-relaxed">
-            Six interconnected programs — from self-discovery and skills training to global admissions,
+            Six interconnected programs - from self-discovery and skills training to global admissions,
             career placement, and institutional innovation.
           </p>
 

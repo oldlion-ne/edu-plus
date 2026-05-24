@@ -19,7 +19,7 @@ const translations = {
   heroCategory: "Leadership & Global Expert Council",
   heroTitleNormal: "Expert",
   heroTitleHighlighted: "Council",
-  heroDesc: "The people powering EduPlus Skills — uniting researchers, corporate leaders, and community builders across Asia, Europe, and North America.",
+  heroDesc: "The people powering EduPlus Skills - uniting researchers, corporate leaders, and community builders across Asia, Europe, and North America.",
   councilStructureForum: "Council Structure // Methodology Forum",
   innovativeCouncil: "Innovative Methodology Council",
   councilDescription: "The Council comprises five distinct committees of academics, industry experts, and community leaders. Together, they deliberate, analyze, and design future-ready curricula to ensure teaching methodology bridges the gap between regional potential and global opportunity.",

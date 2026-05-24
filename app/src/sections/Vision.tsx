@@ -44,7 +44,7 @@ export default function Vision() {
                 <div className="h-px w-8 bg-primary/40" />
               </div>
 
-              {/* Vision label — staggered in */}
+              {/* Vision label - staggered in */}
               <div
                 className={`transition-all duration-1000 delay-300 ${
                   visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
@@ -73,12 +73,12 @@ export default function Vision() {
           {/* Right column: Mission + Vision text reveals */}
           <div className="md:col-span-8 space-y-20">
 
-            {/* Mission — TextReveal */}
+            {/* Mission - TextReveal */}
             <TextReveal>
-              To become a leading skills development platform that reimagines how people learn, grow, and work — creating measurable impact on the global workforce and the communities we serve. We aim to make world-class skill development accessible, practical, and outcomes-driven for every learner, irrespective of geography or background.
+              To become a leading skills development platform that reimagines how people learn, grow, and work - creating measurable impact on the global workforce and the communities we serve. We aim to make world-class skill development accessible, practical, and outcomes-driven for every learner, irrespective of geography or background.
             </TextReveal>
 
-            {/* Vision — static reveal with animation */}
+            {/* Vision - static reveal with animation */}
             <div
               className={`border-l-2 border-primary/20 pl-8 transition-all duration-1000 delay-500 ${
                 visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'

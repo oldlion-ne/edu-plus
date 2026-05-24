@@ -27,6 +27,7 @@
     --accent: 96% 0.002 17.2deg;
     --accent-foreground: 21.4% 0.009 43.1deg;
     --destructive: 57.7% 0.245 27.325deg;
+    --destructive-foreground: 98.6% 0.002 67.8deg;
     --border: 92.2% 0.005 34.3deg;
     --input: 92.2% 0.005 34.3deg;
     --ring: 71.4% 0.014 41.2deg;
@@ -74,6 +75,7 @@
     --accent: 26.8% 0.011 36.5deg;
     --accent-foreground: 98.6% 0.002 67.8deg;
     --destructive: 70.4% 0.191 22.216deg;
+    --destructive-foreground: 98.6% 0.002 67.8deg;
     --border: 100% 0 0deg / 0.1;
     --input: 100% 0 0deg / 0.15;
     --ring: 54.7% 0.021 43.1deg;
@@ -123,6 +125,19 @@
   .animate-fade-in {
     animation: fadeIn 0.25s ease-out forwards;
   }
+
+  @keyframes chatGlow {
+    0%, 100% {
+      box-shadow: 0 0 0 0 oklch(var(--primary) / 0.4);
+    }
+    50% {
+      box-shadow: 0 0 15px 4px oklch(var(--primary) / 0.7);
+    }
+  }
+
+  .animate-chat-glow {
+    animation: chatGlow 2.5s infinite ease-in-out;
+  }
 }
 
 ::view-transition-old(root),
@@ -131,7 +146,7 @@
   mix-blend-mode: normal;
 }
 
-/* Scoped to AnimatedThemeToggler — the toggler sets the data-attribute and the variable only during a theme toggle. */
+/* Scoped to AnimatedThemeToggler - the toggler sets the data-attribute and the variable only during a theme toggle. */
 html[data-magicui-theme-vt="active"]::view-transition-group(root) {
   animation-duration: var(--magicui-theme-toggle-vt-duration);
 }

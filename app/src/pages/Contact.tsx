@@ -20,7 +20,7 @@ const translations = {
   heroCategory: "Connect With Us",
   heroTitleNormal: "Contact &",
   heroTitleHighlighted: "Locations",
-  heroDesc: "Let's Build Your Next Chapter. Whether you seek strategic collaboration, student enrollment, counselor support, or training resources—we are here to launch you forward.",
+  heroDesc: "Let's Build Your Next Chapter. Whether you seek strategic collaboration, student enrollment, counselor support, or training resources-we are here to launch you forward.",
   officeTitle: "Primary Head Office",
   officeName: "Mommy Complex",
   officeAddress: "Nambol Bazar, Bishnupur District, Nambol 795134, Manipur, India",

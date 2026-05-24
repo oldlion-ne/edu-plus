@@ -102,7 +102,7 @@ export default function PedigreeShowcase() {
               <div className="relative z-10 space-y-2">
                 {/* Card label */}
                 <span className="text-[9px] font-mono font-semibold tracking-[0.25em] uppercase text-primary/70 mb-3 block">
-                  01 — Integrations
+                  01 - Integrations
                 </span>
                 <h3 className="text-foreground font-medium text-lg">
                   Strategic Integrations
@@ -163,7 +163,7 @@ export default function PedigreeShowcase() {
 
               <div className="relative z-10 space-y-2">
                 <span className="text-[9px] font-mono font-semibold tracking-[0.25em] uppercase text-primary/70 mb-3 block">
-                  02 — Guidance
+                  02 - Guidance
                 </span>
                 <h3 className="text-foreground font-medium text-lg">
                   Real-time Guidance
@@ -220,7 +220,7 @@ export default function PedigreeShowcase() {
 
               <div className="relative z-10 space-y-2">
                 <span className="text-[9px] font-mono font-semibold tracking-[0.25em] uppercase text-primary/70 mb-3 block">
-                  03 — Standards
+                  03 - Standards
                 </span>
                 <h3 className="text-foreground font-medium text-lg">
                   Framework Ready
@@ -267,7 +267,7 @@ export default function PedigreeShowcase() {
 
               <div className="relative z-10 space-y-2">
                 <span className="text-[9px] font-mono font-semibold tracking-[0.25em] uppercase text-primary/70 mb-3 block">
-                  04 — Scale
+                  04 - Scale
                 </span>
                 <h3 className="font-medium text-lg text-foreground">
                   Institution Ready

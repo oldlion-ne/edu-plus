@@ -38,6 +38,16 @@ import { Input } from '../components/ui/input';
 import { Textarea } from '../components/ui/textarea';
 import { Label } from '../components/ui/label';
 import { Sheet, SheetContent, SheetTitle } from '../components/ui/sheet';
+import { AnimatedThemeToggler } from '../components/ui/animated-theme-toggler';
+import { 
+  Bell, 
+  LayoutDashboard, 
+  UploadCloud, 
+  Cpu, 
+  Mail, 
+  Menu, 
+  X
+} from 'lucide-react';
 
 type UserRole = 'admin' | 'educator' | 'resource_person' | 'none';
 
@@ -301,9 +311,15 @@ export default function Dashboard() {
 
   const fetchData = async () => {
     try {
-      const { data: hub } = await supabase.from('knowledge_hub').select('*').order('created_at', { ascending: false });
-      const { data: kb } = await supabase.from('kb_documents').select('*').order('created_at', { ascending: false });
-      const { data: contact } = await supabase.from('contact_messages').select('*').order('created_at', { ascending: false });
+      const [hubRes, kbRes, contactRes] = await Promise.all([
+        supabase.from('knowledge_hub').select('*').order('created_at', { ascending: false }),
+        supabase.from('kb_documents').select('*').order('created_at', { ascending: false }),
+        supabase.from('contact_messages').select('*').order('created_at', { ascending: false }),
+      ]);
+
+      const hub = hubRes.data;
+      const kb = kbRes.data;
+      const contact = contactRes.data;
 
       setKnowledgeHubItems(hub || []);
       setKbDocuments(kb || []);
@@ -418,22 +434,23 @@ export default function Dashboard() {
   });
 
   const renderSidebarContents = (onNavItemClick?: () => void) => (
-    <div className="flex flex-col h-full justify-between bg-card text-card-foreground border-r border-border font-mono">
+    <div className="flex flex-col h-full justify-between bg-card text-card-foreground border-r border-border font-sans">
       <div className="flex flex-col flex-1">
         {/* Brand header */}
         <div className="p-6 border-b border-border flex items-center justify-between">
           <Link to="/" className="flex items-center gap-0 hover:text-primary focus:outline-none focus:ring-1 focus:ring-primary/70">
             <span className="font-heading font-bold text-xl text-foreground">Edu</span>
-            <span className="text-primary font-light text-xl">+=</span>
+            <span className="text-primary font-light text-xl">+</span>
+            <span className="font-mono text-[9px] text-muted-foreground tracking-widest uppercase ml-2">// ADMIN</span>
           </Link>
           {onNavItemClick && (
-            <Button variant="ghost" onClick={onNavItemClick} className="md:hidden text-muted-foreground hover:text-foreground focus:text-primary font-mono text-xs cursor-pointer">
-              [X]
+            <Button variant="ghost" onClick={onNavItemClick} className="md:hidden text-muted-foreground hover:text-foreground focus:text-primary cursor-pointer p-1.5 h-8 w-8 flex items-center justify-center">
+              <X className="size-4" />
             </Button>
           )}
         </div>
         <div className="px-6 py-4">
-          <span className="font-mono text-[9px] text-primary tracking-[0.25em] uppercase font-bold block">ADMIN TERMINAL</span>
+          <span className="font-mono text-[9px] text-primary tracking-[0.2em] uppercase font-bold block">WORKSPACE PORTAL</span>
         </div>
 
         {/* Navigation Sidebar Tabs */}
@@ -442,66 +459,70 @@ export default function Dashboard() {
             id="tab-overview"
             variant="ghost"
             onClick={() => { setActiveTab('overview'); onNavItemClick?.(); }}
-            className={`w-full justify-start px-4 py-3 font-mono text-xs tracking-wider transition-all duration-300 rounded-none border ${
+            className={`w-full justify-start gap-3 px-4 py-2.5 font-sans text-sm font-medium transition-all duration-200 rounded-none border-l-2 ${
               activeTab === 'overview'
-                ? 'border-primary bg-primary/5 text-primary shadow-[0_0_8px_rgba(var(--primary),0.15)]'
-                : 'border-transparent text-muted-foreground hover:border-border hover:text-foreground'
+                ? 'border-l-primary bg-primary/10 text-primary font-semibold'
+                : 'border-l-transparent text-muted-foreground hover:text-primary hover:bg-primary/5'
             }`}
           >
-            [ 01 // Overview Telemetry ]
+            <LayoutDashboard className="size-4 shrink-0" />
+            <span>Overview</span>
           </Button>
           <Button
             id="tab-uploader"
             variant="ghost"
             onClick={() => { setActiveTab('uploader'); onNavItemClick?.(); }}
-            className={`w-full justify-start px-4 py-3 font-mono text-xs tracking-wider transition-all duration-300 rounded-none border ${
+            className={`w-full justify-start gap-3 px-4 py-2.5 font-sans text-sm font-medium transition-all duration-200 rounded-none border-l-2 ${
               activeTab === 'uploader'
-                ? 'border-primary bg-primary/5 text-primary shadow-[0_0_8px_rgba(var(--primary),0.15)]'
-                : 'border-transparent text-muted-foreground hover:border-border hover:text-foreground'
+                ? 'border-l-primary bg-primary/10 text-primary font-semibold'
+                : 'border-l-transparent text-muted-foreground hover:text-primary hover:bg-primary/5'
             }`}
           >
-            [ 02 // Upload Station ]
+            <UploadCloud className="size-4 shrink-0" />
+            <span>Upload Station</span>
           </Button>
           <Button
             id="tab-ai-matrix"
             variant="ghost"
             onClick={() => { setActiveTab('ai-matrix'); onNavItemClick?.(); }}
-            className={`w-full justify-start px-4 py-3 font-mono text-xs tracking-wider transition-all duration-300 rounded-none border ${
+            className={`w-full justify-start gap-3 px-4 py-2.5 font-sans text-sm font-medium transition-all duration-200 rounded-none border-l-2 ${
               activeTab === 'ai-matrix'
-                ? 'border-primary bg-primary/5 text-primary shadow-[0_0_8px_rgba(var(--primary),0.15)]'
-                : 'border-transparent text-muted-foreground hover:border-border hover:text-foreground'
+                ? 'border-l-primary bg-primary/10 text-primary font-semibold'
+                : 'border-l-transparent text-muted-foreground hover:text-primary hover:bg-primary/5'
             }`}
           >
-            [ 03 // AI Chat Training ]
+            <Cpu className="size-4 shrink-0" />
+            <span>AI Chat Training</span>
           </Button>
           <Button
             id="tab-messages"
             variant="ghost"
             onClick={() => { setActiveTab('messages'); onNavItemClick?.(); }}
-            className={`w-full justify-start px-4 py-3 font-mono text-xs tracking-wider transition-all duration-300 rounded-none border ${
+            className={`w-full justify-start gap-3 px-4 py-2.5 font-sans text-sm font-medium transition-all duration-200 rounded-none border-l-2 ${
               activeTab === 'messages'
-                ? 'border-primary bg-primary/5 text-primary shadow-[0_0_8px_rgba(var(--primary),0.15)]'
-                : 'border-transparent text-muted-foreground hover:border-border hover:text-foreground'
+                ? 'border-l-primary bg-primary/10 text-primary font-semibold'
+                : 'border-l-transparent text-muted-foreground hover:text-primary hover:bg-primary/5'
             }`}
           >
-            [ 04 // Message Hub ]
+            <Mail className="size-4 shrink-0" />
+            <span>Message Hub</span>
           </Button>
         </nav>
       </div>
 
       {/* Footer profile card trigger dialog */}
-      <div className="p-4 border-t border-border bg-background/50">
+      <div className="p-4 border-t border-border bg-background/50 font-sans">
         <Dialog open={isSettingsOpen} onOpenChange={setIsSettingsOpen}>
           <DialogTrigger asChild>
             <button className="w-full flex items-center gap-3 p-3 border border-border hover:border-primary/30 bg-card hover:bg-primary/5 focus:outline-none focus:ring-1 focus:ring-primary/70 focus:border-primary/30 transition-all duration-300 text-left cursor-pointer rounded-none group">
-              <Avatar className="border border-primary/20 group-hover:border-primary shadow-[0_0_8px_rgba(var(--primary),0.05)] rounded-none shrink-0">
+              <Avatar className="border border-primary/20 group-hover:border-primary shadow-[0_0_8px_oklch(var(--primary)/0.05)] rounded-none shrink-0">
                 <AvatarImage src={user?.user_metadata?.avatar_url} className="rounded-none object-cover" />
                 <AvatarFallback className="bg-background text-primary font-mono font-bold text-xs rounded-none flex items-center justify-center">
                   {profileName.substring(0, 2).toUpperCase() || 'AD'}
                 </AvatarFallback>
               </Avatar>
               <div className="flex-grow min-w-0">
-                <p className="font-heading text-xs font-semibold text-foreground truncate group-hover:text-primary transition-colors">
+                <p className="font-sans text-xs font-semibold text-foreground truncate group-hover:text-primary transition-colors">
                   {profileName}
                 </p>
                 <p className="font-mono text-[9px] text-muted-foreground truncate">
@@ -520,20 +541,20 @@ export default function Dashboard() {
             </button>
           </DialogTrigger>
 
-          <DialogContent className="max-w-md bg-card border border-primary/30 text-foreground rounded-none p-6 shadow-[0_0_24px_rgba(var(--primary),0.15)] font-sans">
+          <DialogContent className="max-w-md bg-card border border-border text-foreground rounded-none p-6 shadow-xl font-sans animate-fade-in">
             <DialogHeader className="border-b border-border pb-4">
-              <DialogTitle className="text-primary font-mono tracking-widest text-sm">[ SYS // PROFILE_SETTINGS ]</DialogTitle>
-              <DialogDescription className="text-muted-foreground font-mono text-[10px] uppercase">
-                Manage cryptographic node credentials and workspace parameters.
+              <DialogTitle className="text-foreground font-sans font-semibold text-lg tracking-tight">Profile Settings</DialogTitle>
+              <DialogDescription className="text-muted-foreground font-sans text-xs">
+                Manage your display name, avatar image, and workspace parameters.
               </DialogDescription>
             </DialogHeader>
 
             {/* Form and Settings section */}
-            <form onSubmit={handleUpdateProfile} className="space-y-4 pt-2">
+            <form onSubmit={handleUpdateProfile} className="space-y-4 pt-3 font-sans">
               <div className="flex justify-center mb-4">
-                <Avatar className="size-16 border-2 border-primary shadow-[0_0_12px_oklch(var(--primary))] rounded-none">
+                <Avatar className="size-16 border-2 border-primary rounded-none shadow-md animate-pulse">
                   <AvatarImage src={profileAvatar} className="rounded-none object-cover" />
-                  <AvatarFallback className="bg-background text-primary font-mono font-bold text-lg rounded-none flex items-center justify-center">
+                  <AvatarFallback className="bg-background text-primary font-sans font-bold text-lg rounded-none flex items-center justify-center">
                     {profileName.substring(0, 2).toUpperCase() || 'AD'}
                   </AvatarFallback>
                 </Avatar>
@@ -614,14 +635,14 @@ export default function Dashboard() {
       <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-primary/3 rounded-none blur-[140px] pointer-events-none" />
 
       {/* Mobile Drawer Header */}
-      <div className="md:hidden flex items-center justify-between px-6 py-4 bg-card border-b border-border z-40 w-full">
+      <div className="md:hidden flex items-center justify-between px-6 py-4 bg-card border-b border-border z-40 w-full font-sans">
         <Link to="/" className="flex items-center gap-0 hover:text-primary focus:outline-none focus:ring-1 focus:ring-primary/70">
           <span className="font-heading font-bold text-lg text-foreground">Edu</span>
           <span className="text-primary font-light text-lg">+</span>
           <span className="font-mono text-[9px] text-muted-foreground tracking-widest uppercase ml-2">// ADMIN</span>
         </Link>
-        <Button variant="outline" onClick={() => setIsMobileOpen(!isMobileOpen)} className="p-2 border border-primary/20 hover:border-primary text-primary text-xs font-mono tracking-widest uppercase cursor-pointer rounded-none focus:outline-none focus:ring-1 focus:ring-primary/70">
-          [ MENU ]
+        <Button variant="outline" onClick={() => setIsMobileOpen(!isMobileOpen)} className="p-2 border border-border hover:border-primary text-muted-foreground hover:text-primary rounded-none h-9 w-9 flex items-center justify-center cursor-pointer">
+          <Menu className="size-4" />
         </Button>
       </div>
 
@@ -632,8 +653,8 @@ export default function Dashboard() {
 
       {/* Mobile Drawer (via shadcn Sheet) */}
       <Sheet open={isMobileOpen} onOpenChange={setIsMobileOpen}>
-        <SheetContent side="left" className="w-64 p-0 border-r border-border" showCloseButton={false}>
-          <SheetTitle className="sr-only">Admin Navigation Terminal</SheetTitle>
+        <SheetContent side="left" className="w-64 p-0 border-r border-border animate-in slide-in-from-left duration-300" showCloseButton={false}>
+          <SheetTitle className="sr-only">Admin Navigation Workspace</SheetTitle>
           {renderSidebarContents(() => setIsMobileOpen(false))}
         </SheetContent>
       </Sheet>
@@ -643,42 +664,50 @@ export default function Dashboard() {
         {/* Topbar Telemetry Header */}
         <header className="bg-card border-b border-border px-6 md:px-12 py-4 flex flex-col sm:flex-row gap-4 justify-between items-center z-30">
           <div className="flex items-center gap-3">
-            <span className="font-mono text-[10px] text-muted-foreground/50 tracking-wider">SECURE LINK STATUS:</span>
-            <span className="font-mono text-[10px] text-primary tracking-wider uppercase">ACTIVE</span>
-            <span className="w-1.5 h-1.5 bg-primary shadow-[0_0_8px_oklch(var(--primary))] rounded-none"></span>
+            <div className="flex items-center gap-2 px-2.5 py-1 bg-primary/10 border border-primary/20 text-primary font-mono text-[9px] uppercase tracking-wider select-none">
+              <span>Link: Active</span>
+              <span className="w-1.5 h-1.5 bg-primary rounded-none animate-pulse"></span>
+            </div>
             
             <span className="text-muted-foreground/20 font-mono text-[10px] hidden sm:inline">|</span>
             
             {/* Breadcrumb based on active tab */}
-            <span className="font-mono text-[10px] text-muted-foreground uppercase tracking-widest hidden sm:inline">
-              SYS // {activeTab.replace('-', '_')}
-            </span>
+            <div className="hidden sm:flex items-center gap-1.5 text-xs text-muted-foreground font-sans">
+              <span>Admin</span>
+              <span>/</span>
+              <span className="text-foreground capitalize font-medium">{activeTab.replace('-', ' ')}</span>
+            </div>
           </div>
 
           <div className="flex items-center gap-6">
             {/* Sonar Bell notifications */}
             <div className="relative">
-              <Button id="bell-sonar" variant="ghost" onClick={() => { setShowBellDropdown(!showBellDropdown); setUnreadMessagesCount(0); }} className="relative p-2 text-primary hover:text-foreground hover:bg-transparent transition-colors cursor-pointer font-mono text-[10px] tracking-widest">
-                [ SONAR_PING ]
+              <Button
+                id="bell-sonar"
+                variant="ghost"
+                onClick={() => { setShowBellDropdown(!showBellDropdown); setUnreadMessagesCount(0); }}
+                className="relative p-2 text-muted-foreground hover:text-primary hover:bg-accent/50 transition-colors cursor-pointer rounded-none"
+              >
+                <Bell className="size-4" />
                 {unreadMessagesCount > 0 && (
-                  <span className="absolute -top-1 -right-1 w-2 h-2 bg-primary rounded-none animate-ping"></span>
+                  <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-primary rounded-none animate-ping"></span>
                 )}
               </Button>
 
               {showBellDropdown && (
-                <div className="absolute right-0 mt-3 w-80 bg-card border border-primary/30 p-4 shadow-[0_0_24px_rgba(0,0,0,0.85)] z-50 rounded-none text-left font-sans">
-                  <h4 className="font-mono text-[10px] font-bold text-primary tracking-wider border-b border-border pb-2 mb-2 uppercase">
-                    Unread Signal Inbound
+                <div className="absolute right-0 mt-3 w-80 bg-card border border-border p-4 shadow-xl z-50 rounded-none text-left font-sans animate-fade-in">
+                  <h4 className="font-sans text-xs font-semibold text-foreground tracking-wide border-b border-border pb-2 mb-2">
+                    Inbound Inquiry Signals
                   </h4>
-                  <div className="space-y-2.5 max-h-60 overflow-y-auto">
+                  <div className="space-y-2.5 max-h-60 overflow-y-auto pr-1">
                     {contactMessages.filter(m => m.status === 'unread').length === 0 ? (
-                      <p className="text-[10px] text-muted-foreground/50 font-mono py-4">NO ACTIVE INBOUND PINGS.</p>
+                      <p className="text-[10px] text-muted-foreground/50 font-mono py-4 text-center">NO ACTIVE INBOUND PINGS.</p>
                     ) : (
                       contactMessages
                         .filter(m => m.status === 'unread')
                         .map(m => (
-                          <div key={m.id} className="border-b border-border pb-2 text-[10px]">
-                            <p className="font-mono text-primary">{m.name} // {m.profile.toUpperCase()}</p>
+                          <div key={m.id} className="border-b border-border pb-2 text-[11px] last:border-0 last:pb-0">
+                            <p className="font-mono text-[10px] text-primary">{m.name} // {m.profile.toUpperCase()}</p>
                             <p className="text-muted-foreground line-clamp-1 mt-0.5">{m.message}</p>
                           </div>
                         ))
@@ -688,8 +717,14 @@ export default function Dashboard() {
               )}
             </div>
 
-            <Button variant="outline" onClick={() => { localStorage.removeItem('edu_plus_onboarding_completed'); setShowTour(true); }} className="border border-primary/20 hover:border-primary text-primary hover:bg-primary/5 focus:outline-none focus:ring-1 focus:ring-primary px-3 py-1.5 font-mono text-[9px] uppercase tracking-widest transition-all duration-300 cursor-pointer rounded-none h-8">
-              [ RUN PROTOCOL TUTORIAL ]
+            <AnimatedThemeToggler variant="circle" duration={400} className="text-muted-foreground hover:text-primary transition-colors cursor-pointer" />
+
+            <Button
+              variant="outline"
+              onClick={() => { localStorage.removeItem('edu_plus_onboarding_completed'); setShowTour(true); }}
+              className="border border-border hover:border-primary text-foreground hover:text-primary hover:bg-primary/5 focus:outline-none px-3.5 py-1.5 font-sans text-xs transition-all duration-300 cursor-pointer rounded-none h-8"
+            >
+              Tutorial Tour
             </Button>
           </div>
         </header>
@@ -819,7 +854,7 @@ export default function Dashboard() {
                       </AreaChart>
                     </ChartContainer>
 
-                    {/* Manual legend — rendered outside SVG so it's never clipped */}
+                    {/* Manual legend - rendered outside SVG so it's never clipped */}
                     <div className="flex items-center justify-center gap-6 pt-3 pb-1">
                       <div className="flex items-center gap-2">
                         <div className="h-[2px] w-5 rounded-none" style={{ backgroundColor: chartConfig.desktop.color, boxShadow: `0 0 6px ${chartConfig.desktop.color}` }} />
@@ -1058,7 +1093,7 @@ export default function Dashboard() {
                             key={msg.id}
                             className={`p-5 border text-left transition-colors duration-300 rounded-none flex flex-col gap-0 py-5 ${
                               msg.status === 'unread'
-                                ? 'border-primary/40 bg-primary/5 shadow-[0_0_8px_rgba(var(--primary),0.05)]'
+                                ? 'border-primary/40 bg-primary/5 shadow-[0_0_8px_oklch(var(--primary)/0.05)]'
                                 : 'border-border bg-card/30'
                             }`}
                           >
