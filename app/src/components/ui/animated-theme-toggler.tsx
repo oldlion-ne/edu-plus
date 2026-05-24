@@ -260,6 +260,7 @@ export const AnimatedThemeToggler = ({
         "inline-flex items-center justify-center p-2 text-foreground hover:bg-muted focus:outline-none transition-colors border border-border bg-card/70 backdrop-blur-md size-9 hover:border-primary/50 focus:ring-1 focus:ring-primary/20 rounded-none",
         className
       )}
+      {...props}
     >
       {isDark ? <Sun className="size-4 text-primary" /> : <Moon className="size-4" />}
       <span className="sr-only">{t('toggleTheme')}</span>
