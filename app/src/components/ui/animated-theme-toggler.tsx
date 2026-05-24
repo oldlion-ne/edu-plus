@@ -184,7 +184,7 @@ export const AnimatedThemeToggler = ({
     const applyTheme = () => {
       const newTheme = !isDark
       setIsDark(newTheme)
-      document.documentElement.classList.toggle("dark")
+      document.documentElement.classList.toggle("dark", newTheme)
       localStorage.setItem("theme", newTheme ? "dark" : "light")
     }
 
@@ -252,7 +252,7 @@ export const AnimatedThemeToggler = ({
       ref: buttonRef,
       onClick: toggleTheme,
       className: cn(
-        "inline-flex items-center justify-center p-2 text-foreground hover:bg-muted focus:outline-none transition-colors border border-border bg-card/70 backdrop-blur-md size-9 hover:border-primary/50 focus:ring-1 focus:ring-primary/20",
+        "inline-flex items-center justify-center p-2 text-foreground hover:bg-muted focus:outline-none transition-colors border border-border bg-card/70 backdrop-blur-md size-9 hover:border-primary/50 focus:ring-1 focus:ring-primary/20 rounded-none",
         className
       ),
       ...props,

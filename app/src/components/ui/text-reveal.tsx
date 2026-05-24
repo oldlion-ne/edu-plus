@@ -14,7 +14,7 @@ export interface TextRevealProps extends ComponentPropsWithoutRef<"div"> {
   children: string
 }
 
-export const TextReveal: FC<TextRevealProps> = ({ children, className }) => {
+export const TextReveal: FC<TextRevealProps> = ({ children, className, ...props }) => {
   const sectionRef = useRef<HTMLDivElement | null>(null)
   
   // Track scroll position of this container relative to the viewport.
@@ -32,7 +32,7 @@ export const TextReveal: FC<TextRevealProps> = ({ children, className }) => {
   const words = children.split(" ")
 
   return (
-    <div ref={sectionRef} className={cn("relative z-0 h-auto py-2", className)}>
+    <div ref={sectionRef} className={cn("relative z-0 h-auto py-2", className)} {...props}>
       <span
         className={
           "flex flex-wrap text-3xl md:text-4xl lg:text-5xl font-light leading-[1.15] text-foreground/15"
@@ -61,8 +61,8 @@ interface WordProps {
 const Word: FC<WordProps> = ({ children, progress, range }) => {
   const opacity = useTransform(progress, range, [0, 1])
   return (
-    <span className="xl:lg-3 relative mx-1 lg:mx-1.5">
-      <span className="absolute text-foreground/15">{children}</span>
+    <span className="xl:mx-3 relative mx-1 lg:mx-1.5">
+      <span className="absolute text-foreground/15" aria-hidden="true">{children}</span>
       <motion.span
         style={{ opacity: opacity }}
         className={"text-foreground"}

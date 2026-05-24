@@ -14,14 +14,14 @@ class IntersectionObserverMock {
   unobserve() {}
   disconnect() {}
 }
-(globalThis as any).IntersectionObserver = IntersectionObserverMock as any;
+globalThis.IntersectionObserver = IntersectionObserverMock as unknown as typeof IntersectionObserver;
 
 describe('Vision Component', () => {
   it('renders the Vision section with The Mission label and scroll reveal text', () => {
     render(<Vision />);
     
     // Check for "The Mission" label
-    expect(screen.getByText('The Mission')).toBeDefined();
+    expect(screen.getByText('The Mission')).toBeInTheDocument();
     
     // Check that individual key words from the mission statement are rendered in the DOM
     expect(screen.getAllByText('construct').length).toBeGreaterThan(0);

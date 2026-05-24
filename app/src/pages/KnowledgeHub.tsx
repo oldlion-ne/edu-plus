@@ -205,6 +205,7 @@ export default function KnowledgeHub() {
                 variant="ghost"
                 size="icon"
                 onClick={() => setSelectedVideo(null)}
+                aria-label="Close video"
               >
                 <X className="size-4" />
               </Button>

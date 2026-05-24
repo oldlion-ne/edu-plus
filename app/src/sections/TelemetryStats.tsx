@@ -17,8 +17,7 @@ const points = map.getPoints()
 const Map = () => (
   <svg
     viewBox="0 0 120 60"
-    className="w-full h-auto text-muted-foreground/35"
-    style={{ background: 'oklch(var(--background))' }} /* ui-ignore */
+    className="w-full h-auto text-muted-foreground/35 bg-[oklch(var(--background))]"
     aria-label="Dotted World Map showing global learner reach"
   >
     {points.map((point, index) => (
@@ -73,11 +72,7 @@ export default function TelemetryStats() {
             {/* Dotted map */}
             <div className="w-full relative">
               <div
-                className="absolute inset-0 z-10 pointer-events-none"
-                style={{
-                  background:
-                    'radial-gradient(circle, transparent 25%, oklch(var(--background)) 75%)',
-                }}
+                className="absolute inset-0 z-10 pointer-events-none bg-[radial-gradient(circle,transparent_25%,oklch(var(--background))_75%)]"
               />
               <Map />
             </div>
