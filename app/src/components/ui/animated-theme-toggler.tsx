@@ -142,7 +142,14 @@ export const AnimatedThemeToggler = ({
   duration = 400,
   variant,
   fromCenter = false,
-  ...props
+  id,
+  disabled,
+  tabIndex,
+  'aria-label': ariaLabel,
+  'aria-labelledby': ariaLabelledby,
+  'aria-describedby': ariaDescribedby,
+  onFocus,
+  onBlur,
 }: AnimatedThemeTogglerProps) => {
   const shape = variant ?? "circle"
   const [isDark, setIsDark] = useState(false)
@@ -260,7 +267,14 @@ export const AnimatedThemeToggler = ({
         "inline-flex items-center justify-center p-2 text-foreground hover:bg-muted focus:outline-none transition-colors border border-border bg-card/70 backdrop-blur-md size-9 hover:border-primary/50 focus:ring-1 focus:ring-primary/20 rounded-none",
         className
       )}
-      {...props}
+      id={id}
+      disabled={disabled}
+      tabIndex={tabIndex}
+      aria-label={ariaLabel}
+      aria-labelledby={ariaLabelledby}
+      aria-describedby={ariaDescribedby}
+      onFocus={onFocus}
+      onBlur={onBlur}
     >
       {isDark ? <Sun className="size-4 text-primary" /> : <Moon className="size-4" />}
       <span className="sr-only">{t('toggleTheme')}</span>
