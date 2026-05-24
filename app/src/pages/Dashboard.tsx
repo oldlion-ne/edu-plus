@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router';
+import { useTranslation } from 'react-i18next';
 import { supabase } from '../lib/supabaseClient';
 import { toast } from 'sonner';
 import { useAuth } from '../lib/AuthContext';
@@ -160,6 +161,7 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 export default function Dashboard() {
+  const { t } = useTranslation();
   const { user, role: selectedRole, isSimulated, signOut, signInSimulated } = useAuth();
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<'overview' | 'uploader' | 'ai-matrix' | 'messages'>('overview');
@@ -439,9 +441,9 @@ export default function Dashboard() {
         {/* Brand header */}
         <div className="p-6 border-b border-border flex items-center justify-between">
           <Link to="/" className="flex items-center gap-0 hover:text-primary focus:outline-none focus:ring-1 focus:ring-primary/70">
-            <span className="font-heading font-bold text-xl text-foreground">Edu</span>
-            <span className="text-primary font-light text-xl">+</span>
-            <span className="font-mono text-[9px] text-muted-foreground tracking-widest uppercase ml-2">// ADMIN</span>
+            <span className="font-heading font-bold text-xl text-foreground">{t('dashboard.brand')}</span>
+            <span className="text-primary font-light text-xl">{t('dashboard.brandPlus')}</span>
+            <span className="font-mono text-[9px] text-muted-foreground tracking-widest uppercase ml-2">{t('dashboard.brandSuffix')}</span>
           </Link>
           {onNavItemClick && (
             <Button variant="ghost" onClick={onNavItemClick} className="md:hidden text-muted-foreground hover:text-foreground focus:text-primary cursor-pointer p-1.5 h-8 w-8 flex items-center justify-center rounded-none">
@@ -450,7 +452,7 @@ export default function Dashboard() {
           )}
         </div>
         <div className="px-6 py-4">
-          <span className="font-mono text-[9px] text-primary tracking-[0.2em] uppercase font-bold block">WORKSPACE PORTAL</span>
+          <span className="font-mono text-[9px] text-primary tracking-[0.2em] uppercase font-bold block">{t('dashboard.workspacePortal')}</span>
         </div>
 
         {/* Navigation Sidebar Tabs */}
@@ -466,7 +468,7 @@ export default function Dashboard() {
             }`}
           >
             <LayoutDashboard className="size-4 shrink-0" />
-            <span>Overview</span>
+            <span>{t('dashboard.nav.overview')}</span>
           </Button>
           <Button
             id="tab-uploader"
@@ -479,7 +481,7 @@ export default function Dashboard() {
             }`}
           >
             <UploadCloud className="size-4 shrink-0" />
-            <span>Upload Station</span>
+            <span>{t('dashboard.nav.uploadStation')}</span>
           </Button>
           <Button
             id="tab-ai-matrix"
@@ -492,7 +494,7 @@ export default function Dashboard() {
             }`}
           >
             <Cpu className="size-4 shrink-0" />
-            <span>AI Chat Training</span>
+            <span>{t('dashboard.nav.aiChatTraining')}</span>
           </Button>
           <Button
             id="tab-messages"
@@ -505,7 +507,7 @@ export default function Dashboard() {
             }`}
           >
             <Mail className="size-4 shrink-0" />
-            <span>Message Hub</span>
+            <span>{t('dashboard.nav.messageHub')}</span>
           </Button>
         </nav>
       </div>
@@ -543,7 +545,7 @@ export default function Dashboard() {
 
           <DialogContent className="max-w-md bg-card border border-border text-foreground rounded-none p-6 shadow-xl font-sans animate-fade-in">
             <DialogHeader className="border-b border-border pb-4">
-              <DialogTitle className="text-foreground font-sans font-semibold text-lg tracking-tight">Profile Settings</DialogTitle>
+              <DialogTitle className="text-foreground font-sans font-semibold text-lg tracking-tight">{t('dashboard.profile.title')}</DialogTitle>
               <DialogDescription className="text-muted-foreground font-sans text-xs">
                 Manage your display name, avatar image, and workspace parameters.
               </DialogDescription>
@@ -561,7 +563,7 @@ export default function Dashboard() {
               </div>
 
               <div className="space-y-1.5">
-                <Label className="text-[9px] font-mono text-muted-foreground uppercase tracking-wider block">Display Full Name</Label>
+                <Label className="text-[9px] font-mono text-muted-foreground uppercase tracking-wider block">{t('dashboard.profile.displayFullName')}</Label>
                 <Input
                   type="text"
                   required
@@ -572,7 +574,7 @@ export default function Dashboard() {
               </div>
 
               <div className="space-y-1.5">
-                <Label className="text-[9px] font-mono text-muted-foreground uppercase tracking-wider block">Avatar Image URL</Label>
+                <Label className="text-[9px] font-mono text-muted-foreground uppercase tracking-wider block">{t('dashboard.profile.avatarImageUrl')}</Label>
                 <Input
                   type="url"
                   value={profileAvatar}
@@ -583,7 +585,7 @@ export default function Dashboard() {
               </div>
 
               <div className="space-y-1.5">
-                <Label className="text-[9px] font-mono text-muted-foreground uppercase tracking-wider block">Administrative Summary (Bio)</Label>
+                <Label className="text-[9px] font-mono text-muted-foreground uppercase tracking-wider block">{t('dashboard.profile.administrativeSummary')}</Label>
                 <Textarea
                   value={profileBio}
                   onChange={e => setProfileBio(e.target.value)}
@@ -596,7 +598,7 @@ export default function Dashboard() {
               {isSimulated && (
                 <div className="border border-primary/20 bg-primary/5 p-3 rounded-none mt-2 text-left space-y-2">
                   <span className="font-mono text-[9px] text-primary tracking-wider uppercase block font-bold">// DEV BYPASS ACCESS PANEL</span>
-                  <span className="font-mono text-[8px] text-muted-foreground block">SWAP MOCK CLEARANCE ROLES DYNAMICALLY:</span>
+                  <span className="font-mono text-[8px] text-muted-foreground block">{t('dashboard.profile.swapRoles')}</span>
                   <div className="grid grid-cols-3 gap-1.5">
                     {(['admin', 'educator', 'resource_person'] as const).map(role => (
                       <Button key={role} type="button" variant="outline" onClick={() => { signInSimulated(role); toast.success(`[ROLE_OVERRIDE: ${role.toUpperCase()}]`, { description: `Simulated identity shifted successfully.`, style: { background: 'oklch(var(--card))', border: '1px solid oklch(var(--primary))', color: 'oklch(var(--foreground))', borderRadius: '0px' } }); setIsSettingsOpen(false); }} className={`py-1 text-center font-mono text-[8px] uppercase tracking-wider border cursor-pointer transition-all rounded-none focus:outline-none focus:ring-1 focus:ring-primary/70 ${selectedRole === role ? 'border-primary bg-primary/10 text-primary' : 'border-transparent text-muted-foreground hover:text-foreground hover:border-border'}`}>
@@ -637,9 +639,9 @@ export default function Dashboard() {
       {/* Mobile Drawer Header */}
       <div className="md:hidden flex items-center justify-between px-6 py-4 bg-card border-b border-border z-40 w-full font-sans">
         <Link to="/" className="flex items-center gap-0 hover:text-primary focus:outline-none focus:ring-1 focus:ring-primary/70">
-          <span className="font-heading font-bold text-lg text-foreground">Edu</span>
-          <span className="text-primary font-light text-lg">+</span>
-          <span className="font-mono text-[9px] text-muted-foreground tracking-widest uppercase ml-2">// ADMIN</span>
+          <span className="font-heading font-bold text-lg text-foreground">{t('dashboard.brand')}</span>
+          <span className="text-primary font-light text-lg">{t('dashboard.brandPlus')}</span>
+          <span className="font-mono text-[9px] text-muted-foreground tracking-widest uppercase ml-2">{t('dashboard.brandSuffix')}</span>
         </Link>
         <Button variant="outline" onClick={() => setIsMobileOpen(!isMobileOpen)} className="p-2 border border-border hover:border-primary text-muted-foreground hover:text-primary rounded-none h-9 w-9 flex items-center justify-center cursor-pointer">
           <Menu className="size-4" />
@@ -654,7 +656,7 @@ export default function Dashboard() {
       {/* Mobile Drawer (via shadcn Sheet) */}
       <Sheet open={isMobileOpen} onOpenChange={setIsMobileOpen}>
         <SheetContent side="left" className="w-64 p-0 border-r border-border animate-in slide-in-from-left duration-300 rounded-none" showCloseButton={false}>
-          <SheetTitle className="sr-only">Admin Navigation Workspace</SheetTitle>
+          <SheetTitle className="sr-only">{t('dashboard.header.adminNavWorkspace')}</SheetTitle>
           {renderSidebarContents(() => setIsMobileOpen(false))}
         </SheetContent>
       </Sheet>
@@ -665,7 +667,7 @@ export default function Dashboard() {
         <header className="bg-card border-b border-border px-6 md:px-12 py-4 flex flex-col sm:flex-row gap-4 justify-between items-center z-30">
           <div className="flex items-center gap-3">
             <div className="flex items-center gap-2 px-2.5 py-1 bg-primary/10 border border-primary/20 text-primary font-mono text-[9px] uppercase tracking-wider select-none">
-              <span>Link: Active</span>
+              <span>{t('dashboard.header.linkActive')}</span>
               <span className="w-1.5 h-1.5 bg-primary rounded-none animate-pulse"></span>
             </div>
             
@@ -673,7 +675,7 @@ export default function Dashboard() {
             
             {/* Breadcrumb based on active tab */}
             <div className="hidden sm:flex items-center gap-1.5 text-xs text-muted-foreground font-sans">
-              <span>Admin</span>
+              <span>{t('dashboard.header.adminBreadcrumb')}</span>
               <span>/</span>
               <span className="text-foreground capitalize font-medium">{activeTab.replace('-', ' ')}</span>
             </div>
@@ -701,7 +703,7 @@ export default function Dashboard() {
                   </h4>
                   <div className="space-y-2.5 max-h-60 overflow-y-auto pr-1">
                     {contactMessages.filter(m => m.status === 'unread').length === 0 ? (
-                      <p className="text-[10px] text-muted-foreground/50 font-mono py-4 text-center">NO ACTIVE INBOUND PINGS.</p>
+                      <p className="text-[10px] text-muted-foreground/50 font-mono py-4 text-center">{t('dashboard.header.noActivePings')}</p>
                     ) : (
                       contactMessages
                         .filter(m => m.status === 'unread')
@@ -736,21 +738,21 @@ export default function Dashboard() {
             {activeTab === 'overview' && (
               <div id="view-overview" className="space-y-8 animate-in fade-in duration-300">
                 <div className="border-b border-border pb-4">
-                  <h2 className="font-heading text-2xl font-light text-foreground">Ecosystem Overview</h2>
-                  <p className="font-mono text-xs text-muted-foreground mt-1">TELEMETRY_LINK // DIAGNOSTIC_ACTIVE</p>
+                  <h2 className="font-heading text-2xl font-light text-foreground">{t('dashboard.overview.heading')}</h2>
+                  <p className="font-mono text-xs text-muted-foreground mt-1">{t('dashboard.overview.telemetryLink')}</p>
                 </div>
 
                 <div className="grid sm:grid-cols-3 gap-5 w-full">
                   <Card className="border border-border bg-card rounded-none text-left p-5 flex flex-col gap-0 py-5">
-                    <span className="font-mono text-[9px] text-primary tracking-wider block mb-1">HUB RESOURCES</span>
+                    <span className="font-mono text-[9px] text-primary tracking-wider block mb-1">{t('dashboard.overview.hubResources')}</span>
                     <span className="font-heading text-3xl font-light text-foreground">{knowledgeHubItems.length}</span>
                   </Card>
                   <Card className="border border-border bg-card rounded-none text-left p-5 flex flex-col gap-0 py-5">
-                    <span className="font-mono text-[9px] text-primary tracking-wider block mb-1">AI TRAINING RULES</span>
+                    <span className="font-mono text-[9px] text-primary tracking-wider block mb-1">{t('dashboard.overview.aiTrainingRules')}</span>
                     <span className="font-heading text-3xl font-light text-foreground">{kbDocuments.length}</span>
                   </Card>
                   <Card className="border border-border bg-card rounded-none text-left p-5 flex flex-col gap-0 py-5">
-                    <span className="font-mono text-[9px] text-primary tracking-wider block mb-1">INBOUND INQUIRIES</span>
+                    <span className="font-mono text-[9px] text-primary tracking-wider block mb-1">{t('dashboard.overview.inboundInquiries')}</span>
                     <span className="font-heading text-3xl font-light text-foreground">{contactMessages.length}</span>
                   </Card>
                 </div>
@@ -760,7 +762,7 @@ export default function Dashboard() {
                   {/* Chart Header */}
                   <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 border-b border-border py-5 px-6">
                     <div className="grid flex-1 gap-1 text-left">
-                      <div className="font-mono text-[11px] font-bold text-primary tracking-[0.2em] uppercase">SYSTEM ANALYTICS TELEMETRY</div>
+                      <div className="font-mono text-[11px] font-bold text-primary tracking-[0.2em] uppercase">{t('dashboard.overview.systemAnalytics')}</div>
                       <div className="text-muted-foreground/50 font-mono text-[9px] uppercase tracking-wider">
                         Showing interactive visitor metric influx nodes
                       </div>
@@ -858,11 +860,11 @@ export default function Dashboard() {
                     <div className="flex items-center justify-center gap-6 pt-3 pb-1">
                       <div className="flex items-center gap-2">
                         <div className="h-[2px] w-5 rounded-none" style={{ backgroundColor: chartConfig.desktop.color, boxShadow: `0 0 6px ${chartConfig.desktop.color}` }} />
-                        <span className="font-mono text-[10px] text-muted-foreground uppercase tracking-wider">Desktop</span>
+                        <span className="font-mono text-[10px] text-muted-foreground uppercase tracking-wider">{t('dashboard.overview.desktop')}</span>
                       </div>
                       <div className="flex items-center gap-2">
                         <div className="h-[2px] w-5 rounded-none" style={{ backgroundColor: chartConfig.mobile.color, boxShadow: `0 0 6px ${chartConfig.mobile.color}` }} />
-                        <span className="font-mono text-[10px] text-muted-foreground uppercase tracking-wider">Mobile</span>
+                        <span className="font-mono text-[10px] text-muted-foreground uppercase tracking-wider">{t('dashboard.overview.mobile')}</span>
                       </div>
                     </div>
                   </div>
@@ -870,7 +872,7 @@ export default function Dashboard() {
 
                 {/* Content Category Distribution */}
                 <Card className="border border-border p-6 bg-card rounded-none text-left flex flex-col gap-0 py-6">
-                  <h3 className="font-mono text-[10px] font-bold text-primary tracking-wider mb-4 uppercase">Content Category Distribution</h3>
+                  <h3 className="font-mono text-[10px] font-bold text-primary tracking-wider mb-4 uppercase">{t('dashboard.overview.contentCategoryDistribution')}</h3>
                   <div className="space-y-4">
                     {['tutorial', 'podcast', 'webinar', 'study_material'].map(cat => {
                       const count = knowledgeHubItems.filter(i => i.category === cat).length;
@@ -899,15 +901,15 @@ export default function Dashboard() {
             {activeTab === 'uploader' && (
               <div id="view-uploader" className="space-y-6 animate-in fade-in duration-300 text-left">
                 <div className="border-b border-border pb-4">
-                  <h2 className="font-heading text-2xl font-light text-foreground">Content Upload Station</h2>
-                  <p className="font-mono text-xs text-muted-foreground mt-1">Compile new courses, files, and lectures.</p>
+                  <h2 className="font-heading text-2xl font-light text-foreground">{t('dashboard.uploader.heading')}</h2>
+                  <p className="font-mono text-xs text-muted-foreground mt-1">{t('dashboard.uploader.subheading')}</p>
                 </div>
 
                 {hasPermission(['admin', 'educator', 'resource_person']) ? (
                   <form onSubmit={handleCreateHubItem} className="space-y-5">
                     <div className="grid md:grid-cols-2 gap-5">
                       <div className="space-y-2">
-                        <Label className="text-[10px] font-mono text-muted-foreground uppercase tracking-wider block">Title</Label>
+                        <Label className="text-[10px] font-mono text-muted-foreground uppercase tracking-wider block">{t('dashboard.uploader.title')}</Label>
                         <Input
                           type="text"
                           required
@@ -918,7 +920,7 @@ export default function Dashboard() {
                         />
                       </div>
                       <div className="space-y-2">
-                        <Label className="text-[10px] font-mono text-muted-foreground uppercase tracking-wider block">Author Name</Label>
+                        <Label className="text-[10px] font-mono text-muted-foreground uppercase tracking-wider block">{t('dashboard.uploader.authorName')}</Label>
                         <Input
                           type="text"
                           required
@@ -932,7 +934,7 @@ export default function Dashboard() {
 
                     <div className="grid md:grid-cols-2 gap-5">
                       <div className="space-y-2 flex flex-col gap-1.5">
-                        <Label className="text-[10px] font-mono text-muted-foreground uppercase tracking-wider block">Category</Label>
+                        <Label className="text-[10px] font-mono text-muted-foreground uppercase tracking-wider block">{t('dashboard.uploader.category')}</Label>
                         <Select
                           value={newHubItem.category}
                           onValueChange={val => setNewHubItem(p => ({ ...p, category: val }))}
@@ -941,15 +943,15 @@ export default function Dashboard() {
                             <SelectValue placeholder="Select Category" />
                           </SelectTrigger>
                           <SelectContent className="rounded-none bg-card border border-border text-foreground font-mono text-xs z-50">
-                            <SelectItem value="tutorial" className="rounded-none cursor-pointer">Tutorial</SelectItem>
-                            <SelectItem value="podcast" className="rounded-none cursor-pointer">Podcast</SelectItem>
-                            <SelectItem value="webinar" className="rounded-none cursor-pointer">Webinar</SelectItem>
-                            <SelectItem value="study_material" className="rounded-none cursor-pointer">Study Material</SelectItem>
+                            <SelectItem value="tutorial" className="rounded-none cursor-pointer">{t('dashboard.uploader.tutorial')}</SelectItem>
+                            <SelectItem value="podcast" className="rounded-none cursor-pointer">{t('dashboard.uploader.podcast')}</SelectItem>
+                            <SelectItem value="webinar" className="rounded-none cursor-pointer">{t('dashboard.uploader.webinar')}</SelectItem>
+                            <SelectItem value="study_material" className="rounded-none cursor-pointer">{t('dashboard.uploader.studyMaterial')}</SelectItem>
                           </SelectContent>
                         </Select>
                       </div>
                       <div className="space-y-2 flex flex-col gap-1.5">
-                        <Label className="text-[10px] font-mono text-muted-foreground uppercase tracking-wider block">Media Type</Label>
+                        <Label className="text-[10px] font-mono text-muted-foreground uppercase tracking-wider block">{t('dashboard.uploader.mediaType')}</Label>
                         <Select
                           value={newHubItem.media_type}
                           onValueChange={val => setNewHubItem(p => ({ ...p, media_type: val }))}
@@ -958,16 +960,16 @@ export default function Dashboard() {
                             <SelectValue placeholder="Select Media Type" />
                           </SelectTrigger>
                           <SelectContent className="rounded-none bg-card border border-border text-foreground font-mono text-xs z-50">
-                            <SelectItem value="video_embed" className="rounded-none cursor-pointer">YouTube/Video link (Embedded player)</SelectItem>
-                            <SelectItem value="document_url" className="rounded-none cursor-pointer">Study PDF link</SelectItem>
-                            <SelectItem value="external_link" className="rounded-none cursor-pointer">Generic External Link</SelectItem>
+                             <SelectItem value="video_embed" className="rounded-none cursor-pointer">{t('dashboard.uploader.videoLink')}</SelectItem>
+                             <SelectItem value="document_url" className="rounded-none cursor-pointer">{t('dashboard.uploader.pdfLink')}</SelectItem>
+                             <SelectItem value="external_link" className="rounded-none cursor-pointer">{t('dashboard.uploader.externalLink')}</SelectItem>
                           </SelectContent>
                         </Select>
                       </div>
                     </div>
 
                     <div className="space-y-2">
-                      <Label className="text-[10px] font-mono text-muted-foreground uppercase tracking-wider block">Resource URL</Label>
+                      <Label className="text-[10px] font-mono text-muted-foreground uppercase tracking-wider block">{t('dashboard.uploader.resourceUrl')}</Label>
                       <Input
                         type="url"
                         required
@@ -979,7 +981,7 @@ export default function Dashboard() {
                     </div>
 
                     <div className="space-y-2">
-                      <Label className="text-[10px] font-mono text-muted-foreground uppercase tracking-wider block">Brief Description</Label>
+                      <Label className="text-[10px] font-mono text-muted-foreground uppercase tracking-wider block">{t('dashboard.uploader.briefDescription')}</Label>
                       <Textarea
                         value={newHubItem.description}
                         onChange={e => setNewHubItem(p => ({ ...p, description: e.target.value }))}
@@ -1005,14 +1007,14 @@ export default function Dashboard() {
             {activeTab === 'ai-matrix' && (
               <div id="view-ai-matrix" className="space-y-6 animate-in fade-in duration-300 text-left">
                 <div className="border-b border-border pb-4">
-                  <h2 className="font-heading text-2xl font-light text-foreground">AI Cognitive Training Matrix</h2>
-                  <p className="font-mono text-xs text-muted-foreground mt-1">Inject custom facts directly into the site advisor chatbot.</p>
+                  <h2 className="font-heading text-2xl font-light text-foreground">{t('dashboard.aiMatrix.heading')}</h2>
+                  <p className="font-mono text-xs text-muted-foreground mt-1">{t('dashboard.aiMatrix.subheading')}</p>
                 </div>
 
                 {hasPermission(['admin', 'educator']) ? (
                   <div className="space-y-8">
                     <form onSubmit={handleCreateKbDoc} className="space-y-4 border border-border p-5 bg-card rounded-none">
-                      <h3 className="font-mono text-[10px] font-bold text-primary tracking-wider uppercase mb-2">New Factual Guideline Influx</h3>
+                      <h3 className="font-mono text-[10px] font-bold text-primary tracking-wider uppercase mb-2">{t('dashboard.aiMatrix.newFactualGuideline')}</h3>
                       <div className="space-y-3">
                         <Input
                           type="text"
@@ -1038,15 +1040,15 @@ export default function Dashboard() {
 
                     {/* Loaded Rules */}
                     <div className="space-y-3">
-                      <h3 className="font-mono text-[10px] font-bold text-muted-foreground tracking-wider uppercase">Active Fact Matrix</h3>
+                      <h3 className="font-mono text-[10px] font-bold text-muted-foreground tracking-wider uppercase">{t('dashboard.aiMatrix.activeFactMatrix')}</h3>
                       {kbDocuments.length === 0 ? (
-                        <p className="text-xs text-muted-foreground/30 font-mono py-4">NO TRAINING INJECTIONS RECORDED.</p>
+                        <p className="text-xs text-muted-foreground/30 font-mono py-4">{t('dashboard.aiMatrix.noTrainingInjections')}</p>
                       ) : (
                         <div className="space-y-2 max-h-80 overflow-y-auto">
                           {kbDocuments.map(doc => (
                             <Card key={doc.id} className="border border-border p-4 flex justify-between items-center rounded-none bg-card/30 flex-row gap-4 py-4">
                               <div className="text-left max-w-[80%]">
-                                <p className="font-mono text-[10px] text-primary">TOPIC: {doc.question}</p>
+                                <p className="font-mono text-[10px] text-primary">{t('dashboard.aiMatrix.topicPrefix')}{doc.question}</p>
                                 <p className="text-xs text-muted-foreground mt-1">{doc.answer}</p>
                               </div>
                               <Button
@@ -1078,14 +1080,14 @@ export default function Dashboard() {
             {activeTab === 'messages' && (
               <div id="view-message-hub" className="space-y-6 animate-in fade-in duration-300 text-left">
                 <div className="border-b border-border pb-4">
-                  <h2 className="font-heading text-2xl font-light text-foreground">Sonar Inquiries Terminal</h2>
-                  <p className="font-mono text-xs text-muted-foreground mt-1">Signals received from public contact nodes.</p>
+                  <h2 className="font-heading text-2xl font-light text-foreground">{t('dashboard.messages.heading')}</h2>
+                  <p className="font-mono text-xs text-muted-foreground mt-1">{t('dashboard.messages.subheading')}</p>
                 </div>
 
                 {hasPermission(['admin', 'educator']) ? (
                   <div className="space-y-4">
                     {contactMessages.length === 0 ? (
-                      <p className="text-center py-10 font-mono text-muted-foreground/40 text-xs uppercase">No inquiries received yet.</p>
+                      <p className="text-center py-10 font-mono text-muted-foreground/40 text-xs uppercase">{t('dashboard.messages.noInquiries')}</p>
                     ) : (
                       <div className="space-y-3.5 max-h-[500px] overflow-y-auto pr-2">
                         {contactMessages.map(msg => (

@@ -1,0 +1,68 @@
+{
+  "dashboard": {
+    "brand": "Edu",
+    "brandPlus": "+",
+    "brandSuffix": "// ADMIN",
+    "workspacePortal": "WORKSPACE PORTAL",
+    "nav": {
+      "overview": "Overview",
+      "uploadStation": "Upload Station",
+      "aiChatTraining": "AI Chat Training",
+      "messageHub": "Message Hub"
+    },
+    "profile": {
+      "title": "Profile Settings",
+      "displayFullName": "Display Full Name",
+      "avatarImageUrl": "Avatar Image URL",
+      "administrativeSummary": "Administrative Summary (Bio)",
+      "swapRoles": "SWAP MOCK CLEARANCE ROLES DYNAMICALLY:"
+    },
+    "header": {
+      "linkActive": "Link: Active",
+      "adminBreadcrumb": "Admin",
+      "noActivePings": "NO ACTIVE INBOUND PINGS.",
+      "adminNavWorkspace": "Admin Navigation Workspace"
+    },
+    "overview": {
+      "heading": "Ecosystem Overview",
+      "telemetryLink": "TELEMETRY_LINK // DIAGNOSTIC_ACTIVE",
+      "hubResources": "HUB RESOURCES",
+      "aiTrainingRules": "AI TRAINING RULES",
+      "inboundInquiries": "INBOUND INQUIRIES",
+      "systemAnalytics": "SYSTEM ANALYTICS TELEMETRY",
+      "desktop": "Desktop",
+      "mobile": "Mobile",
+      "contentCategoryDistribution": "Content Category Distribution"
+    },
+    "uploader": {
+      "heading": "Content Upload Station",
+      "subheading": "Compile new courses, files, and lectures.",
+      "title": "Title",
+      "authorName": "Author Name",
+      "category": "Category",
+      "tutorial": "Tutorial",
+      "podcast": "Podcast",
+      "webinar": "Webinar",
+      "studyMaterial": "Study Material",
+      "mediaType": "Media Type",
+      "videoLink": "YouTube/Video link (Embedded player)",
+      "pdfLink": "Study PDF link",
+      "externalLink": "Generic External Link",
+      "resourceUrl": "Resource URL",
+      "briefDescription": "Brief Description"
+    },
+    "aiMatrix": {
+      "heading": "AI Cognitive Training Matrix",
+      "subheading": "Inject custom facts directly into the site advisor chatbot.",
+      "newFactualGuideline": "New Factual Guideline Influx",
+      "activeFactMatrix": "Active Fact Matrix",
+      "noTrainingInjections": "NO TRAINING INJECTIONS RECORDED.",
+      "topicPrefix": "TOPIC: "
+    },
+    "messages": {
+      "heading": "Sonar Inquiries Terminal",
+      "subheading": "Signals received from public contact nodes.",
+      "noInquiries": "No inquiries received yet."
+    }
+  }
+}

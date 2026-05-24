@@ -24,7 +24,27 @@ function ToggleGroup({
   spacing = 2,
   orientation = "horizontal",
   children,
-  ...props
+  asChild,
+  disabled,
+  rovingFocus,
+  loop,
+  dir,
+  type,
+  value,
+  defaultValue,
+  onValueChange,
+  id,
+  role,
+  tabIndex,
+  'aria-label': ariaLabel,
+  'aria-labelledby': ariaLabelledby,
+  'aria-describedby': ariaDescribedby,
+  style: externalStyle,
+  onClick,
+  onKeyDown,
+  onKeyUp,
+  onFocus,
+  onBlur,
 }: React.ComponentProps<typeof ToggleGroupPrimitive.Root> &
   VariantProps<typeof toggleVariants> & {
     spacing?: number
@@ -37,12 +57,31 @@ function ToggleGroup({
       data-size={size}
       data-spacing={spacing}
       data-orientation={orientation}
-      style={{ "--gap": `${spacing * 0.25}rem` } as React.CSSProperties}
+      style={{ "--gap": `${spacing * 0.25}rem`, ...externalStyle } as React.CSSProperties}
       className={cn(
         "group/toggle-group flex w-fit flex-row items-center gap-[var(--gap)] rounded-none data-[size=sm]:rounded-none data-vertical:flex-col data-vertical:items-stretch",
         className
       )}
-      {...props}
+      asChild={asChild}
+      disabled={disabled}
+      rovingFocus={rovingFocus}
+      loop={loop}
+      dir={dir}
+      type={type as any}
+      value={value as any}
+      defaultValue={defaultValue as any}
+      onValueChange={onValueChange as any}
+      id={id}
+      role={role}
+      tabIndex={tabIndex}
+      aria-label={ariaLabel}
+      aria-labelledby={ariaLabelledby}
+      aria-describedby={ariaDescribedby}
+      onClick={onClick}
+      onKeyDown={onKeyDown}
+      onKeyUp={onKeyUp}
+      onFocus={onFocus}
+      onBlur={onBlur}
     >
       <ToggleGroupContext.Provider
         value={{ variant, size, spacing, orientation }}
@@ -58,7 +97,21 @@ function ToggleGroupItem({
   children,
   variant = "default",
   size = "default",
-  ...props
+  asChild,
+  value,
+  disabled,
+  id,
+  role,
+  tabIndex,
+  'aria-label': ariaLabel,
+  'aria-labelledby': ariaLabelledby,
+  'aria-describedby': ariaDescribedby,
+  onClick,
+  onKeyDown,
+  onKeyUp,
+  onFocus,
+  onBlur,
+  style,
 }: React.ComponentProps<typeof ToggleGroupPrimitive.Item> &
   VariantProps<typeof toggleVariants>) {
   const context = React.useContext(ToggleGroupContext)
@@ -77,7 +130,21 @@ function ToggleGroupItem({
         }),
         className
       )}
-      {...props}
+      asChild={asChild}
+      value={value!}
+      disabled={disabled}
+      id={id}
+      role={role}
+      tabIndex={tabIndex}
+      aria-label={ariaLabel}
+      aria-labelledby={ariaLabelledby}
+      aria-describedby={ariaDescribedby}
+      onClick={onClick}
+      onKeyDown={onKeyDown}
+      onKeyUp={onKeyUp}
+      onFocus={onFocus}
+      onBlur={onBlur}
+      style={style}
     >
       {children}
     </ToggleGroupPrimitive.Item>
