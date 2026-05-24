@@ -71,8 +71,8 @@ function App() {
     <AuthProvider>
       <ScrollContext.Provider value={{ scrollContainerRef }}>
         <div className="relative h-[100dvh] w-full bg-background flex flex-col overflow-hidden [touch-action:none]">
-          {showChatAgent && <AIChatAgent />}
           {showPublicNav && <Navigation />}
+          {showChatAgent && <AIChatAgent />}
           <div 
             ref={handleScrollRef}
             id="main-scroll-container"
