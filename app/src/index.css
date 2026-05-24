@@ -128,10 +128,11 @@
 
   @keyframes chatGlow {
     0%, 100% {
-      box-shadow: 0 0 0 0 oklch(var(--primary) / 0.4);
+      box-shadow: 0 0 0 0 oklch(var(--primary) / 40%);
     }
+
     50% {
-      box-shadow: 0 0 15px 4px oklch(var(--primary) / 0.7);
+      box-shadow: 0 0 15px 4px oklch(var(--primary) / 70%);
     }
   }
 

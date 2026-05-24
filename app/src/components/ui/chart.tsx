@@ -349,8 +349,6 @@ function getPayloadConfigFromPayload(
 
   let configLabelKey: string = key
 
-  const isSafeKey = (k: string) => k !== "__proto__" && k !== "constructor" && k !== "prototype"
-
   if (
     isSafeKey(key) &&
     key in payload &&

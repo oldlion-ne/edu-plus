@@ -44,8 +44,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         setUser(session.user);
         // Only fetch role if we haven't already for this user
         if (roleFetchedForRef.current !== session.user.id) {
-          await fetchUserRole(session.user.id);
-          roleFetchedForRef.current = session.user.id;
+          const resolved = await fetchUserRole(session.user.id);
+          if (resolved) {
+            roleFetchedForRef.current = session.user.id;
+          }
         }
       } else {
         setUser(null);
@@ -64,8 +66,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         setUser(session.user);
         // Deduplicate: skip fetchUserRole if initializeAuth already fetched it
         if (roleFetchedForRef.current !== session.user.id) {
-          await fetchUserRole(session.user.id);
-          roleFetchedForRef.current = session.user.id;
+          const resolved = await fetchUserRole(session.user.id);
+          if (resolved) {
+            roleFetchedForRef.current = session.user.id;
+          }
         }
       } else {
         setUser(null);
@@ -79,7 +83,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return () => subscription.unsubscribe();
   }, []);
 
-  const fetchUserRole = async (userId: string) => {
+  const fetchUserRole = async (userId: string): Promise<boolean> => {
     try {
       const { data, error } = await supabase
         .from('user_roles')
@@ -89,11 +93,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
       if (data && !error) {
         setRole(data.role as any);
+        return true;
       } else {
         setRole('resource_person');
+        return false;
       }
     } catch (err) {
       setRole('resource_person');
+      return false;
     }
   };
 

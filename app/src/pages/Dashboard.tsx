@@ -444,7 +444,7 @@ export default function Dashboard() {
             <span className="font-mono text-[9px] text-muted-foreground tracking-widest uppercase ml-2">// ADMIN</span>
           </Link>
           {onNavItemClick && (
-            <Button variant="ghost" onClick={onNavItemClick} className="md:hidden text-muted-foreground hover:text-foreground focus:text-primary cursor-pointer p-1.5 h-8 w-8 flex items-center justify-center">
+            <Button variant="ghost" onClick={onNavItemClick} className="md:hidden text-muted-foreground hover:text-foreground focus:text-primary cursor-pointer p-1.5 h-8 w-8 flex items-center justify-center rounded-none">
               <X className="size-4" />
             </Button>
           )}
@@ -653,7 +653,7 @@ export default function Dashboard() {
 
       {/* Mobile Drawer (via shadcn Sheet) */}
       <Sheet open={isMobileOpen} onOpenChange={setIsMobileOpen}>
-        <SheetContent side="left" className="w-64 p-0 border-r border-border animate-in slide-in-from-left duration-300" showCloseButton={false}>
+        <SheetContent side="left" className="w-64 p-0 border-r border-border animate-in slide-in-from-left duration-300 rounded-none" showCloseButton={false}>
           <SheetTitle className="sr-only">Admin Navigation Workspace</SheetTitle>
           {renderSidebarContents(() => setIsMobileOpen(false))}
         </SheetContent>
