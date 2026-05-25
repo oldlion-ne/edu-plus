@@ -11,7 +11,12 @@ export default function ScrollToTop() {
   // Scroll to top on navigation/page change
   useEffect(() => {
     if (scrollContext?.scrollContainerRef.current) {
-      scrollContext.scrollContainerRef.current.scrollTo(0, 0);
+      const container = scrollContext.scrollContainerRef.current;
+      if (typeof container.scrollTo === 'function') {
+        container.scrollTo(0, 0);
+      } else {
+        container.scrollTop = 0;
+      }
     }
   }, [pathname, scrollContext?.scrollContainerRef]);
 
@@ -62,10 +67,15 @@ export default function ScrollToTop() {
 
   const scrollToTop = () => {
     if (scrollContext?.scrollContainerRef.current) {
-      scrollContext.scrollContainerRef.current.scrollTo({
-        top: 0,
-        behavior: 'smooth'
-      });
+      const container = scrollContext.scrollContainerRef.current;
+      if (typeof container.scrollTo === 'function') {
+        container.scrollTo({
+          top: 0,
+          behavior: 'smooth'
+        });
+      } else {
+        container.scrollTop = 0;
+      }
     }
   };
 
