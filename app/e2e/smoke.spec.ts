@@ -40,16 +40,16 @@ test.describe('EduPlus E2E Smoke Tests', () => {
 
     for (const route of routes) {
       await page.goto(route.path);
-      // Wait for layout to load
-      await page.waitForLoadState('domcontentloaded');
+      // Wait for layout and lazy-loaded content to fully render
+      await page.waitForLoadState('networkidle');
       
       // Basic validation that we loaded the page and the container is visible
       const container = page.locator('#main-scroll-container');
       await expect(container).toBeVisible();
 
-      // Verify expected heading is present
-      const heading = page.locator('h1, h2, h3, h4, [role="heading"]').first();
-      await expect(heading).toContainText(route.expectedHeading);
+      // Verify expected heading is present inside the main content area
+      const heading = container.locator('h1, h2, h3').first();
+      await expect(heading).toContainText(route.expectedHeading, { timeout: 10000 });
     }
   });
 
