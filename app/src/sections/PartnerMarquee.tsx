@@ -51,18 +51,43 @@ export default function PartnerMarquee() {
     }
   };
 
+  const firstHalf = PARTNERS.slice(0, Math.ceil(PARTNERS.length / 2));
+  const secondHalf = PARTNERS.slice(Math.ceil(PARTNERS.length / 2));
+
   if (!mounted) return null;
 
   return (
-    <section className="relative w-full py-5 bg-muted border-y border-border overflow-hidden">
-      {/* Marquee Track Container */}
-      <div className="relative w-full flex items-center">
-        {/* Left & Right Edge Fades */}
-        <div className="absolute inset-y-0 left-0 w-24 md:w-48 bg-gradient-to-r from-muted to-transparent z-10 pointer-events-none" />
-        <div className="absolute inset-y-0 right-0 w-24 md:w-48 bg-gradient-to-l from-muted to-transparent z-10 pointer-events-none" />
+    <section className="relative w-full py-8 bg-muted border-y border-border overflow-hidden space-y-4">
+      {/* Edge Fades */}
+      <div className="absolute inset-y-0 left-0 w-24 md:w-48 bg-gradient-to-r from-muted to-transparent z-10 pointer-events-none" />
+      <div className="absolute inset-y-0 right-0 w-24 md:w-48 bg-gradient-to-l from-muted to-transparent z-10 pointer-events-none" />
 
-        <Marquee pauseOnHover className="[--duration:40s] py-2">
-          {PARTNERS.map((partner) => (
+      {/* Row 1: Forward Scrolling */}
+      <div className="relative w-full flex items-center">
+        <Marquee pauseOnHover className="[--duration:35s] py-1">
+          {firstHalf.map((partner) => (
+            <div
+              key={partner.name}
+              className="inline-flex items-center gap-3 px-5 py-2.5 bg-card border border-border transition-all duration-300 hover:border-primary/40 hover:bg-accent group mx-2 shrink-0"
+            >
+              {getIcon(partner.type)}
+              <div className="flex flex-col leading-none">
+                <span className="text-xs md:text-sm font-sans font-medium text-card-foreground group-hover:text-foreground transition-colors">
+                  {partner.name}
+                </span>
+                <span className="text-[9px] md:text-[10px] font-sans text-muted-foreground mt-0.5">
+                  {partner.category}
+                </span>
+              </div>
+            </div>
+          ))}
+        </Marquee>
+      </div>
+
+      {/* Row 2: Reverse Scrolling */}
+      <div className="relative w-full flex items-center">
+        <Marquee reverse pauseOnHover className="[--duration:35s] py-1">
+          {secondHalf.map((partner) => (
             <div
               key={partner.name}
               className="inline-flex items-center gap-3 px-5 py-2.5 bg-card border border-border transition-all duration-300 hover:border-primary/40 hover:bg-accent group mx-2 shrink-0"

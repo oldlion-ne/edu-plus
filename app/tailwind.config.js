@@ -136,6 +136,14 @@ module.exports = {
           "66%":  { transform: "translate(-6px, 6px) rotate(-4deg)" },
           "100%": { transform: "translate(0px, 0px) rotate(0deg)" },
         },
+        "background-position-spin": {
+          "0%": { backgroundPosition: "top center" },
+          "100%": { backgroundPosition: "bottom center" }
+        },
+        rippling: {
+          "0%": { opacity: "1" },
+          "100%": { transform: "scale(2)", opacity: "0" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -152,6 +160,8 @@ module.exports = {
         twinkle: "twinkle 2.5s ease-in-out infinite",
         "pulse-ring": "pulse-ring 2s cubic-bezier(0.4, 0, 0.6, 1) infinite",
         drift: "drift 7s ease-in-out infinite",
+        "background-position-spin": "background-position-spin 3000ms infinite alternate",
+        rippling: "rippling var(--duration) ease-out",
       },
       transitionTimingFunction: {
         "out-cubic": "cubic-bezier(0.22, 1, 0.36, 1)",

@@ -3,11 +3,10 @@ import { Link } from 'react-router';
 const links = [
   { title: 'About',       href: '/about'    },
   { title: 'Programs',    href: '/programs' },
-  { title: 'Events',      href: '/events'   },
   { title: 'Council',     href: '/council'  },
-  { title: 'Guidance',    href: '/guidance' },
-  { title: 'News',        href: '/news'     },
-  { title: 'Contact',     href: '/contact'  },
+  { title: 'Resources',   href: '/resources' },
+  { title: 'Pricing',     href: '/pricing'  },
+  { title: 'Connect',     href: '/connect'  },
 ];
 
 export default function Footer() {

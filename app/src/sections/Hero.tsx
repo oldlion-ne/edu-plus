@@ -1,9 +1,10 @@
 import { useRef } from 'react';
-import { Link } from 'react-router';
+import { useNavigate } from 'react-router';
 import { ArrowRight } from 'lucide-react';
 import { TimelineAnimation } from '../components/timeline-animation';
-import { Button } from '../components/ui/button';
-import { KineticText } from '@/components/ui/kinetic-text';
+import { RippleButton } from '../components/ui/ripple-button';
+import FadingVideo from '../components/effects/FadingVideo';
+import WordsPullUp from '../components/effects/WordsPullUp';
 
 const STATS = [
   { value: '4,200+', labelKey: 'learners' as const },
@@ -30,6 +31,7 @@ const t = (key: keyof typeof translations) => translationMap.get(key) || '';
 
 export default function Hero() {
   const sectionRef = useRef<HTMLElement>(null);
+  const navigate = useNavigate();
 
   return (
     <section
@@ -38,13 +40,10 @@ export default function Hero() {
       className="relative w-full min-h-screen flex flex-col justify-center overflow-hidden"
     >
       {/* ── Background video ── */}
-      <video
-        autoPlay
-        loop
-        muted
-        playsInline
-        className="absolute inset-0 w-full h-full object-cover z-0 opacity-30 dark:opacity-55 dark:invert-0 invert grayscale-[0.95] dark:grayscale-0 contrast-[1.1] dark:contrast-100 brightness-[1.02] dark:brightness-100 transition-all duration-700"
+      <FadingVideo
         src="/assets/bg-hero-new.mp4"
+        targetOpacity={0.55}
+        className="absolute inset-0 w-full h-full object-cover z-0"
       />
 
       {/* ── Dark overlays ── */}
@@ -118,8 +117,11 @@ export default function Hero() {
           timelineRef={sectionRef}
           className="text-4xl sm:text-5xl md:text-[3.5rem] lg:text-6xl font-semibold tracking-tight leading-[1.1] text-foreground mb-5 flex flex-wrap justify-center"
         >
-          <KineticText text={t('elevate')} as="span" className="mr-[0.25em]" />
-          <KineticText text={t('tomorrow')} as="span" className="text-primary" />
+          <WordsPullUp 
+            text={`${t('elevate')} ${t('tomorrow')}`} 
+            showAsterisk 
+            highlightLastWord 
+          />
         </TimelineAnimation>
 
         {/* Subtext */}
@@ -141,17 +143,23 @@ export default function Hero() {
           timelineRef={sectionRef}
           className="flex flex-col sm:flex-row items-center gap-3 mb-12"
         >
-          <Button asChild size="lg">
-            <Link to="/contact" className="inline-flex items-center gap-2" /* ui-ignore */>
+          <RippleButton
+            rippleColor="oklch(var(--primary))"
+            duration="700ms"
+            onClick={() => navigate('/contact')}
+          >
+            <span className="inline-flex items-center gap-2">
               {t('startPathway')}
               <ArrowRight size={14} />
-            </Link>
-          </Button>
-          <Button asChild variant="outline" size="lg">
-            <Link to="/about" /* ui-ignore */>
-              {t('exploreNetwork')}
-            </Link>
-          </Button>
+            </span>
+          </RippleButton>
+          <RippleButton
+            rippleColor="oklch(var(--foreground))"
+            duration="700ms"
+            onClick={() => navigate('/about')}
+          >
+            {t('exploreNetwork')}
+          </RippleButton>
         </TimelineAnimation>
 
         {/* Stats strip */}

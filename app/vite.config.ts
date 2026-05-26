@@ -59,6 +59,14 @@ export default defineConfig(({ mode }) => {
     test: {
       environment: "jsdom",
       globals: true,
+      exclude: [
+        '**/node_modules/**',
+        '**/dist/**',
+        '**/cypress/**',
+        '**/.{idea,git,cache,output,temp}/**',
+        '**/{karma,rollup,webpack,vite,vitest}.config.*',
+        'e2e/**'
+      ],
     },
   };
 });

@@ -1,5 +1,5 @@
 import { lazy, Suspense, useState, useRef } from 'react';
-import { Routes, Route, useLocation } from 'react-router';
+import { Routes, Route, useLocation, Navigate } from 'react-router';
 import Navigation from './sections/Navigation';
 import Footer from './sections/Footer';
 import ScrollToTop from './components/ScrollToTop';
@@ -13,14 +13,12 @@ import { ScrollContext } from './lib/ScrollContext';
 const Home = lazy(() => import('./pages/Home'));
 const About = lazy(() => import('./pages/About'));
 const Programs = lazy(() => import('./pages/Programs'));
-const SignatureExperiences = lazy(() => import('./pages/SignatureExperiences'));
 const Council = lazy(() => import('./pages/Council'));
-const Guidance = lazy(() => import('./pages/Guidance'));
-const News = lazy(() => import('./pages/News'));
-const Contact = lazy(() => import('./pages/Contact'));
-const KnowledgeHub = lazy(() => import('./pages/KnowledgeHub'));
+const Resources = lazy(() => import('./pages/Resources')); // resolved
+const Connect = lazy(() => import('./pages/Connect')); // resolved
 const Dashboard = lazy(() => import('./pages/Dashboard'));
 const Login = lazy(() => import('./pages/Login'));
+const Pricing = lazy(() => import('./pages/Pricing'));
 
 // Minimal inline fallback — renders instantly, no layout shift
 const PageLoader = () => (
@@ -86,12 +84,17 @@ function App() {
                     <Route path="/" element={<Home />} />
                     <Route path="/about" element={<About />} />
                     <Route path="/programs" element={<Programs />} />
-                    <Route path="/events" element={<SignatureExperiences />} />
+                    <Route path="/events" element={<Navigate to="/programs" replace />} />
                     <Route path="/council" element={<Council />} />
-                    <Route path="/guidance" element={<Guidance />} />
-                    <Route path="/news" element={<News />} />
-                    <Route path="/contact" element={<Contact />} />
-                    <Route path="/knowledge-hub" element={<KnowledgeHub />} />
+                    <Route path="/resources" element={<Resources />} />
+                    <Route path="/knowledge-hub" element={<Navigate to="/resources" replace />} />
+                    <Route path="/news" element={<Navigate to="/resources" replace />} />
+                    <Route path="/connect" element={<Connect />} />
+                    <Route path="/pricing" element={<Pricing />} />
+                    <Route path="/fees" element={<Navigate to="/pricing" replace />} />
+                    <Route path="/plans" element={<Navigate to="/pricing" replace />} />
+                    <Route path="/guidance" element={<Navigate to="/connect" replace />} />
+                    <Route path="/contact" element={<Navigate to="/connect" replace />} />
                     <Route path="/login" element={<Login />} />
                   </Routes>
                 )}

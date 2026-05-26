@@ -8,6 +8,7 @@ import { Linear } from '../components/ui/svgs/linear';
 import { Slack } from '../components/ui/svgs/slack';
 import { Firebase } from '../components/ui/svgs/firebase';
 import { ClerkIconDark as Clerk } from '../components/ui/svgs/clerk';
+import Magnet from '../components/effects/Magnet';
 
 export default function PedigreeShowcase() {
   const [visible, setVisible] = useState(false);
@@ -119,30 +120,42 @@ export default function PedigreeShowcase() {
               >
                 <div className="relative flex h-10 items-center gap-12 px-6">
                   <div className="bg-border absolute inset-0 my-auto h-px" />
-                  <div className="bg-card shadow-black/10 ring-border relative flex h-9 items-center rounded-none px-3.5 shadow-md ring transition-transform duration-200 group-hover:scale-105">
-                    <Vercel className="size-3.5" />
-                  </div>
-                  <div className="bg-card shadow-black/10 ring-border relative flex h-9 items-center rounded-none px-3.5 shadow-md ring transition-transform duration-200 group-hover:scale-105">
-                    <Slack className="size-3.5" />
-                  </div>
+                  <Magnet range={40} strength={0.4}>
+                    <div className="bg-card shadow-black/10 ring-border relative flex h-9 items-center rounded-none px-3.5 shadow-md ring transition-transform duration-200 hover:border-primary/30">
+                      <Vercel className="size-3.5" />
+                    </div>
+                  </Magnet>
+                  <Magnet range={40} strength={0.4}>
+                    <div className="bg-card shadow-black/10 ring-border relative flex h-9 items-center rounded-none px-3.5 shadow-md ring transition-transform duration-200 hover:border-primary/30">
+                      <Slack className="size-3.5" />
+                    </div>
+                  </Magnet>
                 </div>
                 <div className="pl-16 relative flex h-10 items-center justify-between gap-12 pr-6">
                   <div className="bg-border absolute inset-0 my-auto h-px" />
-                  <div className="bg-card shadow-black/10 ring-border relative flex h-9 items-center rounded-none px-3.5 shadow-md ring transition-transform duration-200 group-hover:scale-105">
-                    <Clerk className="size-3.5" />
-                  </div>
-                  <div className="bg-card shadow-black/10 ring-border relative flex h-9 items-center rounded-none px-3.5 shadow-md ring transition-transform duration-200 group-hover:scale-105">
-                    <Linear className="size-3.5" />
-                  </div>
+                  <Magnet range={40} strength={0.4}>
+                    <div className="bg-card shadow-black/10 ring-border relative flex h-9 items-center rounded-none px-3.5 shadow-md ring transition-transform duration-200 hover:border-primary/30">
+                      <Clerk className="size-3.5" />
+                    </div>
+                  </Magnet>
+                  <Magnet range={40} strength={0.4}>
+                    <div className="bg-card shadow-black/10 ring-border relative flex h-9 items-center rounded-none px-3.5 shadow-md ring transition-transform duration-200 hover:border-primary/30">
+                      <Linear className="size-3.5" />
+                    </div>
+                  </Magnet>
                 </div>
                 <div className="relative flex h-10 items-center gap-20 px-8">
                   <div className="bg-border absolute inset-0 my-auto h-px" />
-                  <div className="bg-card shadow-black/10 ring-border relative flex h-9 items-center rounded-none px-3.5 shadow-md ring transition-transform duration-200 group-hover:scale-105">
-                    <Supabase className="size-3.5" />
-                  </div>
-                  <div className="bg-card shadow-black/10 ring-border relative flex h-9 items-center rounded-none px-3.5 shadow-md ring transition-transform duration-200 group-hover:scale-105">
-                    <Firebase className="size-3.5" />
-                  </div>
+                  <Magnet range={40} strength={0.4}>
+                    <div className="bg-card shadow-black/10 ring-border relative flex h-9 items-center rounded-none px-3.5 shadow-md ring transition-transform duration-200 hover:border-primary/30">
+                      <Supabase className="size-3.5" />
+                    </div>
+                  </Magnet>
+                  <Magnet range={40} strength={0.4}>
+                    <div className="bg-card shadow-black/10 ring-border relative flex h-9 items-center rounded-none px-3.5 shadow-md ring transition-transform duration-200 hover:border-primary/30">
+                      <Firebase className="size-3.5" />
+                    </div>
+                  </Magnet>
                 </div>
               </div>
             </Card>
@@ -286,10 +299,12 @@ export default function PedigreeShowcase() {
                   icon={Shield01Icon}
                   className="absolute inset-0 top-2.5 size-full stroke-[0.1px] opacity-10 text-primary transition-opacity duration-300 group-hover:opacity-20"
                 />
-                <HugeiconsIcon
-                  icon={Shield01Icon}
-                  className="size-32 stroke-[0.1px] text-primary transition-all duration-300 group-hover:drop-shadow-[0_0_12px_oklch(var(--primary)/0.4)]"
-                />
+                <Magnet range={80} strength={0.3}>
+                  <HugeiconsIcon
+                    icon={Shield01Icon}
+                    className="size-32 stroke-[0.1px] text-primary transition-all duration-300 group-hover:drop-shadow-[0_0_12px_oklch(var(--primary)/0.4)] cursor-pointer"
+                  />
+                </Magnet>
               </div>
             </Card>
 

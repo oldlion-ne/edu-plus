@@ -9,6 +9,9 @@
     ],
     "no-descending-specificity": null,
     "color-function-notation": "modern",
-    "keyframes-name-pattern": null
+    "keyframes-name-pattern": null,
+    "property-no-vendor-prefix": null,
+    "value-no-vendor-prefix": null,
+    "alpha-value-notation": null
   }
 }

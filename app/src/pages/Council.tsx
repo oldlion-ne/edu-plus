@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import FadingVideo from '../components/effects/FadingVideo';
 import { CustomIcon } from '../components/ui/custom-icon';
 import { Link } from 'react-router';
 import ImmersiveHero from '../components/effects/ImmersiveHero';
@@ -307,17 +308,51 @@ export default function Council() {
 
       <div className={`max-w-[1200px] mx-auto px-6 md:px-12 relative z-10 mt-20 transition-all duration-1000 delay-300 transform ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
         
-        {/* Page Explanation */}
-        <div className="max-w-3xl mb-16">
-          <span className="text-xs font-mono font-medium tracking-[0.3em] uppercase text-primary block mb-2">
+        {/* Council Structure Section with Video Banner */}
+        <div className="mb-16">
+          {/* Kicker label */}
+          <span className="text-xs font-mono font-medium tracking-[0.3em] uppercase text-primary block mb-4">
             {t('councilStructureForum')}
           </span>
-          <h2 className="font-heading text-3xl md:text-5xl font-semibold tracking-tight text-foreground mb-4">
-            {t('innovativeCouncil')}
-          </h2>
-          <p className="font-sans text-muted-foreground text-base leading-relaxed">
-            {t('councilDescription')}
-          </p>
+
+          {/* Cinematic video banner with overlaid text */}
+          <div className="relative w-full overflow-hidden border border-border/60" style={{ height: '440px' }}>
+            {/* Background video */}
+            <FadingVideo
+              src="/assets/about-us-bg-new.mp4"
+              className="absolute inset-0 w-full h-full object-cover" /* ui-ignore */
+              targetOpacity={0.38}
+            />
+
+            {/* Left-to-right gradient overlay so text stays legible */}
+            <div className="absolute inset-0 bg-gradient-to-r from-background/95 via-background/70 to-background/20 pointer-events-none" />
+            {/* Bottom gradient for depth */}
+            <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent pointer-events-none" />
+
+            {/* CRT scan-line texture for cyberpunk feel */}
+            <div
+              className="absolute inset-0 pointer-events-none opacity-[0.025]"
+              style={{ background: 'repeating-linear-gradient(0deg, transparent, transparent 2px, #000 2px, #000 4px)' }} /* ui-ignore */
+            />
+
+            {/* Telemetry tag top-right */}
+            <div className="absolute top-4 right-4 font-mono text-[9px] text-primary/50 tracking-widest select-none">
+              COUNCIL_STRUCTURE // LIVE_FEED
+            </div>
+
+            {/* Overlaid content — anchored bottom-left */}
+            <div className="relative z-10 h-full flex flex-col justify-end p-8 md:p-12 max-w-3xl">
+              <h2 className="font-heading text-3xl md:text-5xl font-semibold tracking-tight text-foreground mb-4 drop-shadow-lg">
+                {t('innovativeCouncil')}
+              </h2>
+              <p className="font-sans text-muted-foreground text-sm md:text-base leading-relaxed max-w-2xl">
+                {t('councilDescription')}
+              </p>
+            </div>
+
+            {/* Neon accent left edge */}
+            <div className="absolute left-0 inset-y-0 w-[2px] bg-gradient-to-b from-transparent via-primary/60 to-transparent pointer-events-none" />
+          </div>
         </div>
 
         {/* Unified Collapsible Accordion Council */}

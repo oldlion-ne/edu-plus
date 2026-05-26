@@ -29,3 +29,8 @@ extract.cjs
 extract.js
 full_request.txt
 user_input.json
+
+# Playwright
+playwright-report/
+test-results/
+

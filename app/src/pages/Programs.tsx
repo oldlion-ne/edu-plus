@@ -1,10 +1,12 @@
 import { useEffect, useState } from 'react';
 import ImmersiveHero from '../components/effects/ImmersiveHero';
 import { Button } from '../components/ui/button';
-import { MagicCard } from '../components/effects/CyberVisualizations';
-import { ArrowRight, Compass, Layers, Users, GraduationCap, Rocket, Lightbulb, Star, Shield } from 'lucide-react';
+import { NeonGradientCard } from '../components/ui/neon-gradient-card';
+import Magnet from '../components/effects/Magnet';
+import { ArrowRight, Compass, Layers, Users, GraduationCap, Rocket, Lightbulb, Star, Shield, ClipboardList, HelpCircle } from 'lucide-react';
 import { Link } from 'react-router';
-import { cn } from '../lib/utils';
+import { Badge } from '../components/ui/badge';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '../components/ui/accordion';
 
 const translations = {
   heroCategory: "Curriculum Pathways",
@@ -34,7 +36,77 @@ const translations = {
   interviewFeedback: "INTERVIEW FEEDBACK",
   globalPlacement: "GLOBAL PLACEMENT",
   systemicScale: "SYSTEMIC SCALE",
-  pedagogyLabs: "PEDAGOGY & LABS"
+  pedagogyLabs: "PEDAGOGY & LABS",
+
+  // Merged from SignatureExperiences
+  expHeroCategory: "Flagship Events",
+  expHeroTitleNormal: "Signature",
+  expHeroTitleHighlighted: "Experiences",
+  expHeroDesc: "Our flagship events bring energy, community, and real-world exposure into the learning experience. These curated experiences connect students, educators, and industry experts.",
+  timelineHeader: "Flagship Event Logs // Historical Tracks",
+  durationLabel: "DURATION // ",
+  targetLabel: "TARGET // ",
+  highlightsHeader: "Experience Highlights:",
+  
+  // Event 1
+  evt1Title: "Winter Camp",
+  evt1Subtitle: "Ignite Curiosity",
+  evt1Duration: "5–7 Days Immersive",
+  evt1Target: "Middle & High School Students",
+  evt1Desc: "An immersive journey blending technical skill development, creativity, and adventure. Designed to unlock hidden talents and spark early curiosity about STEM fields, culture, and career pathways.",
+  evt1Highlight1: "Interactive STEM & Robotics labs",
+  evt1Highlight2: "Adventure-based team-building",
+  evt1Highlight3: "Creative arts & cultural showcases",
+  evt1Highlight4: "Early career discovery workshops",
+
+  // Event 2
+  evt2Title: "Summer Camp",
+  evt2Subtitle: "Scale Your Potential",
+  evt2Duration: "2–3 Weeks Bootcamp",
+  evt2Target: "High School & Higher Secondary",
+  evt2Desc: "An intensive, project-driven camp designed to build future academic profiles, college readiness, and competitive advantages for higher education selection.",
+  evt2Highlight1: "Advanced subject & exam bootcamps",
+  evt2Highlight2: "Leadership & public speaking modules",
+  evt2Highlight3: "Corporate & industry exposure visits",
+  evt2Highlight4: "Project-based innovation challenges",
+
+  // Event 3
+  evt3Title: "Education Fair",
+  evt3Subtitle: "Connect, Explore, Decide",
+  evt3Duration: "1–2 Days Expo",
+  evt3Target: "Aspirants, Parents, & Educators",
+  evt3Desc: "Our premier annual expo bringing global universities, career counselors, financial institutions, and industry advisors together under one roof to simplify admissions.",
+  evt3Highlight1: "Interact with university officials",
+  evt3Highlight2: "Free psychometrics & aptitude assessments",
+  evt3Highlight3: "Admissions & visa masterclasses",
+  evt3Highlight4: "Scholarship & financial aid seminars",
+
+  // FAQs
+  faqTitle: "Frequently Asked Questions",
+  faqSubtitle: "Got questions about our camps or fair? Find answers to commonly asked questions below.",
+  faqContactText: "Need more help? ",
+  faqContactLink: "Contact our coordination team",
+  
+  // FAQs Cat 1: Registration
+  faqCat1Title: "Registration & Requirements",
+  faqCat1Q1: "Who is eligible to join the Winter and Summer camps?",
+  faqCat1A1: "Winter Camp is open to Middle & High School students (grades 6-10). Summer Camp is tailored for High School & Higher Secondary students preparing for college profile building.",
+  faqCat1Q2: "How do I register for the upcoming Education Fair?",
+  faqCat1A2: "Registration for the Education Fair is free for parents, students, and educators. Simply register online via our dashboard to reserve your entry pass.",
+  
+  // FAQs Cat 2: Accommodation
+  faqCat2Title: "Accommodation & Safety",
+  faqCat2Q1: "Are the immersive camps residential?",
+  faqCat2A1: "Yes, both camps offer secure, fully supervised residential facilities with separate hostels for boys and girls, nutritious meals, and 24/7 staff support.",
+  faqCat2Q2: "What safety measures are in place during camp activities?",
+  faqCat2A2: "All technical workshops and outdoor team-building activities are guided by certified instructors, with comprehensive emergency medical services on-site.",
+
+  // FAQs Cat 3: Support
+  faqCat3Title: "Fees & Financial Aid",
+  faqCat3Q1: "Do you offer scholarships or sibling discounts?",
+  faqCat3A1: "Yes, we offer early-bird discounts, sibling packages, and need-based scholarships for talented students from grassroots backgrounds. Apply during enrollment.",
+  faqCat3Q2: "What is the refund policy for cancellations?",
+  faqCat3A2: "Cancellations made 14 days prior to the camp start date are eligible for a full refund. Cancellations made within 14 days will be issued as credits for future programs."
 };
 
 const translationMap = new Map<string, string>(Object.entries(translations));
@@ -107,6 +179,99 @@ const PROGRAMS_DATA: Program[] = [
   }
 ];
 
+const PROGRAM_IMAGES = [
+  '/assets/futurepath-navigator.png',
+  '/assets/lifeskills-lab.png',
+  '/assets/expert-connect.png',
+  '/assets/global-admissions.png',
+  '/assets/career-launchpad.png',
+  '/assets/innovation-studio.png'
+];
+
+const EVENTS_KEYS = [
+  {
+    title: 'evt1Title',
+    subtitle: 'evt1Subtitle',
+    duration: 'evt1Duration',
+    target: 'evt1Target',
+    desc: 'evt1Desc',
+    highlights: ['evt1Highlight1', 'evt1Highlight2', 'evt1Highlight3', 'evt1Highlight4'],
+    status: 'LOG_01 // COMPLETED',
+    active: false
+  },
+  {
+    title: 'evt2Title',
+    subtitle: 'evt2Subtitle',
+    duration: 'evt2Duration',
+    target: 'evt2Target',
+    desc: 'evt2Desc',
+    highlights: ['evt2Highlight1', 'evt2Highlight2', 'evt2Highlight3', 'evt2Highlight4'],
+    status: 'LOG_02 // COMPLETED',
+    active: false
+  },
+  {
+    title: 'evt3Title',
+    subtitle: 'evt3Subtitle',
+    duration: 'evt3Duration',
+    target: 'evt3Target',
+    desc: 'evt3Desc',
+    highlights: ['evt3Highlight1', 'evt3Highlight2', 'evt3Highlight3', 'evt3Highlight4'],
+    status: 'LOG_03 // ACTIVE_ENROLLMENT',
+    active: true
+  }
+] as const;
+
+const faqCategories = [
+  {
+    title: 'faqCat1Title' as const,
+    icon: ClipboardList,
+    items: [
+      {
+        id: 'faq-1-1',
+        question: 'faqCat1Q1' as const,
+        answer: 'faqCat1A1' as const,
+      },
+      {
+        id: 'faq-1-2',
+        question: 'faqCat1Q2' as const,
+        answer: 'faqCat1A2' as const,
+      },
+    ],
+  },
+  {
+    title: 'faqCat2Title' as const,
+    icon: Shield,
+    items: [
+      {
+        id: 'faq-2-1',
+        question: 'faqCat2Q1' as const,
+        answer: 'faqCat2A1' as const,
+      },
+      {
+        id: 'faq-2-2',
+        question: 'faqCat2Q2' as const,
+        answer: 'faqCat2A2' as const,
+      },
+    ],
+  },
+  {
+    title: 'faqCat3Title' as const,
+    icon: HelpCircle,
+    items: [
+      {
+        id: 'faq-3-1',
+        question: 'faqCat3Q1' as const,
+        answer: 'faqCat3A1' as const,
+      },
+      {
+        id: 'faq-3-2',
+        question: 'faqCat3Q2' as const,
+        answer: 'faqCat3A2' as const,
+      },
+    ],
+  },
+] as const;
+
 export default function Programs() {
   const [mounted, setMounted] = useState(false);
   const [activeIdx, setActiveIdx] = useState<number>(0);
@@ -120,9 +285,12 @@ export default function Programs() {
 
   return (
     <div className="min-h-screen bg-background text-foreground pb-32 relative overflow-hidden">
+      {/* Decorative Glows */}
+      <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-primary/5 rounded-none blur-[120px] pointer-events-none" />
+      <div className="absolute bottom-1/4 right-1/4 w-[600px] h-[600px] bg-primary/3 rounded-none blur-[150px] pointer-events-none" />
+
       {/* Immersive Top Hero Viewport */}
       <ImmersiveHero
-        bgImage="/images/CurriculumVisual.png"
         category={t('heroCategory')}
         titleNormal={t('heroTitleNormal')}
         titleHighlighted={t('heroTitleHighlighted')}
@@ -167,14 +335,14 @@ export default function Programs() {
                   className="w-full text-left flex items-start gap-4 p-4 border transition-all duration-500 rounded-none relative outline-none focus:ring-1 focus:ring-primary/30 bg-card/40 border-border hover:border-primary/30 hover:bg-card/70 hover:translate-x-1 data-[selected=true]:bg-card data-[selected=true]:border-primary/50 data-[selected=true]:shadow-md data-[selected=true]:translate-x-2 group/btn"
                 >
                   {/* Step status dot indicator */}
-                  <div className="relative z-10 mt-1 shrink-0">
+                  <Magnet range={40} strength={0.4} className="relative z-10 mt-1 shrink-0">
                     <div className="w-6 h-6 rounded-none flex items-center justify-center font-mono text-[10px] border transition-all duration-300 bg-background text-muted-foreground border-border group-data-[selected=true]/btn:bg-primary group-data-[selected=true]/btn:text-background group-data-[selected=true]/btn:border-primary">
                       0{index + 1}
                     </div>
                     {isActive && (
                       <span className="absolute -inset-1 rounded-none border border-primary/40 animate-ping -z-10" />
                     )}
-                  </div>
+                  </Magnet>
 
                   {/* Step name / summary */}
                   <div className="space-y-1">
@@ -190,49 +358,30 @@ export default function Programs() {
                   </div>
 
                   {/* Icon indicator right */}
-                  <div className="ml-auto mt-2 shrink-0">
+                  <Magnet range={30} strength={0.3} className="ml-auto mt-2 shrink-0">
                     <Icon className="size-4 transition-colors duration-300 text-muted-foreground/40 group-data-[selected=true]/btn:text-primary group-hover/btn:text-primary" />
-                  </div>
+                  </Magnet>
                 </button>
               );
             })}
           </div>
 
-          {/* Right Column: Detailed Phase Dossier Viewer using MagicCard */}
+          {/* Right Column: Detailed Phase Dossier Viewer using NeonGradientCard */}
           <div className="lg:col-span-7">
             <div className="sticky top-28">
-              <MagicCard heightClass="h-auto min-h-[640px]">
+              <NeonGradientCard className="border border-border/50 h-auto min-h-[640px]">
                 <div className="flex flex-col justify-between h-full space-y-6">
                   
-                  {/* Visual Top Header Box (Dynamic Background & SVGs) */}
-                  <div className="relative h-56 border-b border-border/80 flex items-center justify-center bg-card/10 overflow-hidden -mx-6 -mt-6 mb-2">
-                    
-                    {/* Dynamic Shifting Grid Background */}
-                    <div
-                      aria-hidden
-                      className={cn(
-                        'absolute inset-0 grid grid-cols-4 opacity-15 transition-all duration-700 ease-in-out select-none pointer-events-none',
-                        activeIdx === 0 && '[&>*]:bg-gradient-to-t grid-cols-1 grid-rows-6',
-                        activeIdx === 1 && '[&>*]:bg-gradient-to-b grid-cols-3 opacity-20',
-                        activeIdx === 2 && '[&>*]:bg-gradient-to-r opacity-30',
-                        activeIdx === 3 && '[&>*]:bg-gradient-to-l grid-cols-2 opacity-25',
-                        activeIdx === 4 && '[&>*]:bg-gradient-to-tr grid-cols-3',
-                        activeIdx === 5 && '[&>*]:bg-gradient-to-br opacity-20'
-                      )}
-                    >
-                      <div className="bg-gradient-to-r from-primary/10 to-transparent" />
-                      <div className="bg-gradient-to-r from-primary/10 to-transparent" />
-                      <div className="bg-gradient-to-r from-primary/10 to-transparent" />
-                      <div className="bg-gradient-to-r from-primary/10 to-transparent" />
-                    </div>
-                    
-                    {/* Phase Illustrations */}
-                    {activeIdx === 0 && <DiscoveryIllustration />}
-                    {activeIdx === 1 && <CapabilityIllustration />}
-                    {activeIdx === 2 && <MentorshipIllustration />}
-                    {activeIdx === 3 && <PrepIllustration />}
-                    {activeIdx === 4 && <PlacementIllustration />}
-                    {activeIdx === 5 && <SystemicIllustration />}
+                  {/* Visual Top Header Box with Diorama Image */}
+                  <div className="relative w-[calc(100%+3rem)] aspect-video border-b border-border/80 overflow-hidden -mx-6 -mt-6 mb-2 group/program-image">
+                    {/* Image Background */}
+                    <img
+                      src={PROGRAM_IMAGES[activeIdx]}
+                      alt={activeProgram.title}
+                      className="absolute inset-0 w-full h-full object-cover opacity-95 transition-transform duration-700 group-hover/program-image:scale-105"
+                    />
+                    {/* Overlay gradient to keep text highly readable */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent z-[1]" />
                   </div>
 
                   {/* Header */}
@@ -290,190 +439,171 @@ export default function Programs() {
                       {t('refRoute')}{activeIdx + 1}
                     </span>
                     <Button asChild size="sm" className="w-full sm:w-auto font-mono text-[10px] uppercase tracking-wider">
-                      <Link to="/guidance" /* ui-ignore */>
+                      <Link to="/connect" /* ui-ignore */>
                         {t('requestAdvisoryConsult')}
                         <ArrowRight className="size-3.5 ml-1" />
                       </Link>
                     </Button>
                   </div>
                 </div>
-              </MagicCard>
+              </NeonGradientCard>
             </div>
           </div>
 
         </div>
+
+        {/* Immersive Flagship Experiences Section */}
+        <section id="experiences" className="mt-32 border-t border-border/60 pt-24">
+          <div className="max-w-3xl mb-16">
+            <span className="text-xs font-mono font-medium tracking-[0.3em] uppercase text-primary block mb-2">
+              {t('timelineHeader')}
+            </span>
+            <h2 className="font-heading text-3xl md:text-5xl font-semibold tracking-tight text-foreground mb-4">
+              {t('expHeroTitleNormal')} {t('expHeroTitleHighlighted')}
+            </h2>
+            <p className="font-sans text-muted-foreground text-base leading-relaxed">
+              {t('expHeroDesc')}
+            </p>
+          </div>
+
+          {/* Timeline Path */}
+          <div className="relative border-l border-border pl-8 md:pl-16 ml-4 md:ml-8 space-y-16">
+            {EVENTS_KEYS.map((event, idx) => {
+              const hasPing = event.active;
+
+              return (
+                <div 
+                  key={event.title}
+                  className="relative sticky transition-all duration-1000 transform"
+                  style={{
+                    top: `${120 + idx * 32}px`,
+                  }}
+                >
+                  {/* Timeline node */}
+                  <div className="absolute -left-[41px] md:-left-[73px] top-4 flex items-center justify-center">
+                    <span className="relative flex h-5 w-5">
+                      {hasPing && (
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-none bg-primary/20 opacity-75"></span>
+                      )}
+                      <span className={`relative inline-flex rounded-none h-5 w-5 border-4 border-background ${
+                        hasPing ? 'bg-primary' : 'bg-muted'
+                      }`}></span>
+                    </span>
+                  </div>
+
+                  {/* Event details card */}
+                  <NeonGradientCard className="border border-border/50 h-auto">
+                    <div className="p-2 space-y-6">
+                      {/* Header */}
+                      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-border/60 pb-4">
+                        <div>
+                          <span className="font-mono text-[9px] uppercase tracking-widest text-primary/70 block mb-1">
+                            {event.status}
+                          </span>
+                          <h3 className="font-heading text-2xl md:text-3xl font-semibold text-foreground tracking-tight">
+                            {t(event.title)}
+                          </h3>
+                          <span className="text-xs font-mono text-muted-foreground uppercase tracking-widest block mt-0.5">
+                            {t(event.subtitle)}
+                          </span>
+                        </div>
+
+                        {/* Telemetry info */}
+                        <div className="space-y-2 font-mono text-[10px] bg-background/50 border border-border/80 p-3 shrink-0">
+                          <div className="flex items-center gap-2">
+                            <span className="text-muted-foreground">{t('durationLabel')}</span>
+                            <Badge variant="secondary" className="font-mono text-[9px] py-0 px-1.5 rounded-none">{t(event.duration)}</Badge>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <span className="text-muted-foreground">{t('targetLabel')}</span>
+                            <span className="text-primary font-semibold">{t(event.target)}</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Desc */}
+                      <p className="font-sans text-muted-foreground text-sm leading-relaxed">
+                        {t(event.desc)}
+                      </p>
+
+                      {/* Highlights */}
+                      <div className="space-y-4 border-t border-border/40 pt-4">
+                        <h4 className="font-mono text-[10px] uppercase tracking-widest text-foreground font-bold flex items-center gap-1.5">
+                          <Star className="size-3 text-primary fill-primary" /> {t('highlightsHeader')}
+                        </h4>
+                        <div className="grid md:grid-cols-2 gap-3 text-xs font-sans">
+                          {event.highlights.map((hl, hIdx) => (
+                            <div key={hIdx} className="flex items-center gap-2 text-muted-foreground bg-muted/20 border border-border p-2">
+                              <span className="text-primary font-mono select-none">&bull;</span>
+                              <span>{t(hl)}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+
+                    </div>
+                  </NeonGradientCard>
+                </div>
+              );
+            })}
+          </div>
+        </section>
+
+        {/* FAQs Section */}
+        <section className="mt-28 border-t border-border/60 pt-20">
+          <div className="max-w-3xl mx-auto">
+            <div className="text-center mb-12">
+              <h2 className="font-heading text-3xl font-semibold text-foreground tracking-tight">{t('faqTitle')}</h2>
+              <p className="text-muted-foreground mt-3 text-sm">{t('faqSubtitle')}</p>
+            </div>
+            
+            <div className="grid gap-6">
+              {faqCategories.map((category) => (
+                <div
+                  key={category.title}
+                  className="border border-border bg-card/40 p-5 backdrop-blur-sm"
+                >
+                  <div className="mb-4 flex items-center gap-2">
+                    <category.icon className="text-primary size-4" />
+                    <h3 className="font-heading text-base font-semibold text-foreground tracking-tight">{t(category.title)}</h3>
+                  </div>
+                  
+                  <Accordion
+                    type="single"
+                    collapsible
+                    className="border-none bg-transparent flex flex-col gap-2"
+                  >
+                    {category.items.map((item) => (
+                      <AccordionItem
+                        key={item.id}
+                        value={item.id}
+                        className="border border-border/40 bg-background/30 rounded-none not-last:border-b-0"
+                      >
+                        <AccordionTrigger className="cursor-pointer px-4 py-3 text-xs font-semibold hover:no-underline font-mono uppercase tracking-wider text-left text-foreground">
+                          {t(item.question)}
+                        </AccordionTrigger>
+                        <AccordionContent className="px-4 pb-4">
+                          <p className="text-muted-foreground text-xs font-sans leading-relaxed">{t(item.answer)}</p>
+                        </AccordionContent>
+                      </AccordionItem>
+                    ))}
+                  </Accordion>
+                </div>
+              ))}
+            </div>
+            
+            <p className="text-muted-foreground mt-12 text-center text-xs font-mono">
+              {t('faqContactText')}
+              <Link to="/connect" className="text-primary font-semibold hover:text-[#7DF9FF] focus:outline-none focus:ring-1 focus:ring-[#7DF9FF] hover:underline">
+                {t('faqContactLink')}
+              </Link>
+            </p>
+          </div>
+        </section>
 
       </div>
     </div>
   );
 }
 
-{/* Visual Illustration Subcomponents */}
 
-const DiscoveryIllustration = () => {
-  return (
-    <div className="relative h-full w-full flex items-center justify-center overflow-hidden">
-      <Compass className="absolute size-12 text-primary/80 animate-[spin_12s_linear_infinite]" />
-      <div className="absolute inset-0 flex items-center justify-center select-none pointer-events-none">
-        <div className="size-36 rounded-none border border-primary/25 animate-ping opacity-60"></div>
-        <div className="size-28 rounded-none border border-dashed border-primary/20"></div>
-        <div className="size-20 rounded-none border border-border/40"></div>
-      </div>
-      {/* Sweeper arm */}
-      <div className="absolute size-44 rounded-none border border-primary/10 overflow-hidden">
-        <div className="absolute top-1/2 left-1/2 w-full h-full bg-gradient-to-tr from-primary/10 to-transparent origin-top-left animate-[spin_4s_linear_infinite]" style={{ transformOrigin: '0 0' }} /* ui-ignore */></div>
-      </div>
-      <span className="absolute bottom-3 font-mono text-[8px] text-muted-foreground/60 uppercase tracking-[0.25em]">{t('discoveryScan')}</span>
-    </div>
-  );
-};
-
-const CapabilityIllustration = () => {
-  return (
-    <div className="relative h-full w-full flex flex-col justify-center items-center gap-1.5 overflow-hidden px-8">
-      <div className="flex w-full justify-between items-center gap-3 relative">
-        <div className="h-px bg-border/60 absolute inset-x-0 top-1/2 -translate-y-1/2 -z-10"></div>
-        <div className="bg-background shadow-xs border border-border rounded-none px-2.5 py-1.5 flex items-center gap-1.5 select-none hover:border-primary/50 transition-colors">
-          <div className="size-1.5 rounded-none bg-primary animate-pulse"></div>
-          <span className="font-mono text-[8px] text-muted-foreground/90">{t('communication')}</span>
-        </div>
-        <div className="bg-background shadow-xs border border-border rounded-none px-2.5 py-1.5 flex items-center gap-1.5 select-none hover:border-primary/50 transition-colors">
-          <div className="size-1.5 rounded-none bg-primary animate-pulse"></div>
-          <span className="font-mono text-[8px] text-muted-foreground/90">{t('resilience')}</span>
-        </div>
-      </div>
-      
-      <div className="w-px h-6 bg-border/60"></div>
-      <div className="flex w-full justify-center items-center select-none z-10">
-        <div className="bg-primary/5 border border-primary/20 rounded-none px-4 py-2 text-[9px] font-mono text-primary font-bold tracking-wider shadow-sm">
-          {t('humanCapabilityMatrix')}
-        </div>
-      </div>
-      <div className="w-px h-6 bg-border/60"></div>
-
-      <div className="flex w-full justify-between items-center gap-3 relative">
-        <div className="h-px bg-border/60 absolute inset-x-0 top-1/2 -translate-y-1/2 -z-10"></div>
-        <div className="bg-background shadow-xs border border-border rounded-none px-2.5 py-1.5 flex items-center gap-1.5 select-none hover:border-primary/50 transition-colors">
-          <div className="size-1.5 rounded-none bg-primary animate-pulse"></div>
-          <span className="font-mono text-[8px] text-muted-foreground/90">{t('criticalThinking')}</span>
-        </div>
-        <div className="bg-background shadow-xs border border-border rounded-none px-2.5 py-1.5 flex items-center gap-1.5 select-none hover:border-primary/50 transition-colors">
-          <div className="size-1.5 rounded-none bg-primary animate-pulse"></div>
-          <span className="font-mono text-[8px] text-muted-foreground/90">{t('adaptability')}</span>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-const MentorshipIllustration = () => {
-  return (
-    <div className="relative h-full w-full flex flex-col justify-between p-5 overflow-hidden">
-      <div className="absolute top-[28%] left-[10%] right-[10%] h-px bg-gradient-to-r from-transparent via-border/60 to-transparent"></div>
-      <div className="absolute top-[72%] left-[10%] right-[10%] h-px bg-gradient-to-r from-transparent via-border/60 to-transparent"></div>
-      <div className="absolute top-[28%] bottom-[72%] left-1/2 w-px bg-border/60"></div>
-      <div className="absolute top-[72%] bottom-[28%] left-1/2 w-px bg-border/60"></div>
-      <div className="absolute w-1 h-1 rounded-none bg-primary/70 animate-[ping_2s_infinite] top-[28%] left-[30%]"></div>
-      <div className="absolute w-1 h-1 rounded-none bg-primary/70 animate-[ping_2s_infinite] top-[72%] right-[30%]"></div>
-
-      <div className="relative flex justify-between items-center z-10">
-        <div className="bg-background/90 backdrop-blur-xs border border-border rounded-none px-2 py-0.5 text-[8px] font-mono text-muted-foreground flex items-center gap-1 hover:border-primary/50 transition-all select-none">
-          <span className="h-1 w-1 rounded-none bg-primary animate-pulse"></span>
-          ACADEMIC COUNCIL
-        </div>
-        <div className="bg-background/90 backdrop-blur-xs border border-border rounded-none px-2 py-0.5 text-[8px] font-mono text-muted-foreground flex items-center gap-1 hover:border-primary/50 transition-all select-none">
-          <span className="h-1 w-1 rounded-none bg-primary animate-pulse"></span>
-          INDUSTRY LEADERS
-        </div>
-      </div>
-
-      <div className="relative flex justify-center z-10">
-        <div className="bg-card shadow-sm border border-primary/20 relative flex h-7 items-center rounded-none px-3 select-none">
-          <span className="text-[9px] font-mono font-bold tracking-wider text-primary">{t('expertLiveConnect')}</span>
-        </div>
-      </div>
-
-      <div className="relative flex justify-between items-center z-10">
-        <div className="bg-background/90 backdrop-blur-xs border border-border rounded-none px-2 py-0.5 text-[8px] font-mono text-muted-foreground flex items-center gap-1 hover:border-primary/50 transition-all select-none">
-          <span className="h-1 w-1 rounded-none bg-primary animate-pulse"></span>
-          RESEARCH MENTORS
-        </div>
-        <div className="bg-background/90 backdrop-blur-xs border border-border rounded-none px-2 py-0.5 text-[8px] font-mono text-muted-foreground flex items-center gap-1 hover:border-primary/50 transition-all select-none">
-          <span className="h-1 w-1 rounded-none bg-primary"></span>
-          GLOBAL SCHOLARS
-        </div>
-      </div>
-    </div>
-  );
-};
-
-const PrepIllustration = () => {
-  return (
-    <div className="relative h-full w-full flex items-center justify-between px-6 overflow-hidden">
-      {/* Central Node */}
-      <div className="bg-background/90 border border-border p-2 rounded-none z-10 select-none shadow-xs flex flex-col items-center max-w-[120px]">
-        <GraduationCap className="size-4.5 text-primary mb-0.5" />
-        <span className="font-mono text-[7px] text-muted-foreground tracking-wider uppercase">{t('admissionsStudio')}</span>
-      </div>
-      {/* Connecting Paths */}
-      <div className="absolute inset-0 select-none pointer-events-none flex items-center">
-        <div className="w-[45%] h-px bg-border/60 absolute left-10"></div>
-        <svg className="w-full h-full absolute inset-0 text-border/60" viewBox="0 0 350 200" fill="none">
-          <path d="M160,100 C210,100 230,50 280,50" stroke="currentColor" strokeWidth="1" strokeDasharray="3 3" />
-          <path d="M160,100 C210,100 230,150 280,150" stroke="currentColor" strokeWidth="1" />
-        </svg>
-      </div>
-      {/* Destination Nodes */}
-      <div className="flex flex-col gap-6 z-10">
-        <div className="bg-background/90 border border-border px-2.5 py-1 rounded-none select-none shadow-xs flex items-center gap-1 hover:border-primary/50 transition-colors">
-          <div className="size-1 rounded-none bg-primary animate-pulse"></div>
-          <span className="font-mono text-[7px] text-muted-foreground/90 uppercase tracking-wide">{t('domesticPrep')}</span>
-        </div>
-        <div className="bg-background/90 border border-border px-2.5 py-1 rounded-none select-none shadow-xs flex items-center gap-1 hover:border-primary/50 transition-colors">
-          <div className="size-1 rounded-none bg-primary animate-pulse"></div>
-          <span className="font-mono text-[7px] text-muted-foreground/90 uppercase tracking-wide">{t('globalPrep')}</span>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-const PlacementIllustration = () => {
-  return (
-    <div className="relative h-full w-full flex justify-between items-end px-5 py-6 overflow-hidden">
-      {/* Background matrix bars */}
-      {Array.from({ length: 15 }).map((_, i) => {
-        const isHighlighted = i === 2 || i === 7 || i === 12;
-        return (
-          <div key={i} className="flex flex-col items-center gap-1 h-full w-px bg-foreground/10 relative">
-            {isHighlighted && (
-              <>
-                <div className="absolute inset-0 bg-primary/60 w-0.5 shadow-[0_0_8px_oklch(var(--primary))] animate-pulse"></div>
-                <div className="absolute -top-3 w-1 h-1 rounded-none bg-primary"></div>
-              </>
-            )}
-          </div>
-        );
-      })}
-      <div className="absolute inset-x-0 bottom-1 flex justify-between px-3 text-[7px] font-mono text-muted-foreground bg-background/80 py-0.5 border-t border-border/40 z-10">
-        <span>{t('resumeOptimization')}</span>
-        <span>{t('interviewFeedback')}</span>
-        <span>{t('globalPlacement')}</span>
-      </div>
-    </div>
-  );
-};
-
-const SystemicIllustration = () => {
-  return (
-    <div className="relative h-full w-full flex items-center justify-center overflow-hidden">
-      <Shield className="absolute inset-0 top-1 size-full stroke-[0.05px] opacity-10 text-primary animate-pulse" />
-      <Shield className="size-24 stroke-[0.15px] text-primary" />
-      <div className="absolute text-center space-y-1">
-        <Lightbulb className="size-4.5 text-primary mx-auto animate-bounce" />
-        <span className="block text-[9px] font-mono font-bold tracking-[0.2em] text-foreground">{t('systemicScale')}</span>
-        <span className="block text-[7px] font-mono text-muted-foreground tracking-widest">{t('pedagogyLabs')}</span>
-      </div>
-    </div>
-  );
-};
