@@ -66,14 +66,14 @@ test.describe('EduPlus E2E Smoke Tests', () => {
 
     // Verify default state shows student plans
     await expect(page.getByText('₹999', { exact: true })).toBeVisible(); // Scholar student price
-    await expect(page.getByText('₹24,999', { exact: true })).toBeHidden(); // Professional institute price
+    await expect(page.getByText('₹24,999', { exact: true })).toHaveCount(0); // Professional institute price
 
     // Toggle to Institute plan
     await instituteBtn.click();
 
     // Verify state changes to show institute plans
     await expect(page.getByText('₹24,999', { exact: true })).toBeVisible();
-    await expect(page.getByText('₹999', { exact: true })).toBeHidden();
+    await expect(page.getByText('₹999', { exact: true })).toHaveCount(0);
   });
 
   test('Connect page interaction - basic scheduler load', async ({ page }) => {
