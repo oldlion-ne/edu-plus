@@ -29,7 +29,7 @@ test.describe('EduPlus E2E Smoke Tests', () => {
 
   test('Verify navigation to public pages', async ({ page }) => {
     const routes = [
-      { path: '/about', expectedHeading: /About|Team|Advisory|Pedagogy/i },
+      { path: '/about', expectedHeading: /About|Team|Advisory|Pedagogy|Who|We Are/i },
       { path: '/programs', expectedHeading: /Program|Discipline|Course/i },
       { path: '/council', expectedHeading: /Council|Advisory/i },
       { path: '/resources', expectedHeading: /Resource|Library|Insights|Knowledge/i },
@@ -46,6 +46,10 @@ test.describe('EduPlus E2E Smoke Tests', () => {
       // Basic validation that we loaded the page and the container is visible
       const container = page.locator('#main-scroll-container');
       await expect(container).toBeVisible();
+
+      // Verify expected heading is present
+      const heading = page.locator('h1, h2, h3, h4, [role="heading"]').first();
+      await expect(heading).toContainText(route.expectedHeading);
     }
   });
 
@@ -62,14 +66,14 @@ test.describe('EduPlus E2E Smoke Tests', () => {
 
     // Verify default state shows student plans
     await expect(page.getByText('₹999', { exact: true })).toBeVisible(); // Scholar student price
-    await expect(page.getByText('₹24,999', { exact: true })).not.toBeVisible(); // Professional institute price
+    await expect(page.getByText('₹24,999', { exact: true })).toBeHidden(); // Professional institute price
 
     // Toggle to Institute plan
     await instituteBtn.click();
 
     // Verify state changes to show institute plans
     await expect(page.getByText('₹24,999', { exact: true })).toBeVisible();
-    await expect(page.getByText('₹999', { exact: true })).not.toBeVisible();
+    await expect(page.getByText('₹999', { exact: true })).toBeHidden();
   });
 
   test('Connect page interaction - basic scheduler load', async ({ page }) => {
