@@ -158,10 +158,10 @@ const INSTITUTE_PLANS: Plan[] = [
     name: "Enterprise Core",
     price: "Custom",
     period: "bespoke",
-    description: "The ultimate digital transformation, STEM labs, and custom school setups.",
+    description: "India's National Education Policy (NEP) 2020 implementation and custom school setups.",
     features: [
       { text: "Unlimited student enrollment", included: true },
-      { text: "Custom physical STEM & Robotics labs (Innovation Studio)", included: true },
+      { text: "Custom physical Robotics & Innovation labs (Innovation Studio)", included: true },
       { text: "Full Educator Academy implementation & pedagogy audits", included: true },
       { text: "White-labeled student dashboard with school branding", included: true },
       { text: "Dedicated on-site coordinators & workshop leaders", included: true },
@@ -221,7 +221,7 @@ const FAQS_DATA = [
   {
     id: "pricing-faq-3",
     question: "Is there a setup fee for the Institute plans?",
-    answer: "There are no setup fees for the Starter or Professional plans. For the Enterprise plan, which includes setting up physical STEM/Robotics labs (Innovation Studio) or custom portal integrations, a custom layout and implementation cost may apply."
+    answer: "There are no setup fees for the Starter or Professional plans. For the Enterprise plan, which includes setting up physical Robotics & Innovation labs (Innovation Studio) or custom portal integrations, a custom layout and implementation cost may apply."
   },
   {
     id: "pricing-faq-4",
