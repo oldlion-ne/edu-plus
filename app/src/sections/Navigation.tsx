@@ -10,11 +10,10 @@ import { AnimatedThemeToggler } from '@/components/ui/animated-theme-toggler';
 const NAV_LINKS = [
   { label: 'About', path: '/about' },
   { label: 'Programs', path: '/programs' },
-  { label: 'Knowledge Hub', path: '/knowledge-hub' },
-  { label: 'Events', path: '/events' },
   { label: 'Council', path: '/council' },
-  { label: 'Guidance', path: '/guidance' },
-  { label: 'News', path: '/news' },
+  { label: 'Resources', path: '/resources' },
+  { label: 'Pricing', path: '/pricing' },
+  { label: 'Connect', path: '/connect' },
 ];
 
 const translations = {
@@ -91,19 +90,6 @@ export default function Navigation() {
 
         {/* CTA & Auth Area */}
         <div className="hidden md:flex items-center gap-6">
-          {user && (
-            <NavLink /* ui-ignore */
-              to="/dashboard"
-              className={({ isActive }) =>
-                `font-mono text-xs tracking-widest uppercase transition-all duration-300 ${
-                  isActive ? 'text-primary' : 'text-foreground hover:text-primary'
-                }`
-              }
-            >
-              {t('dashboard')}
-            </NavLink>
-          )}
-
           {user ? (
             <Button
               variant="ghost"
@@ -113,20 +99,19 @@ export default function Navigation() {
               {t('logout')}
             </Button>
           ) : (
-            <Button
-              asChild
-              variant="ghost"
-              className="text-xs font-mono tracking-widest uppercase text-primary hover:text-primary hover:bg-primary/10 h-auto p-0"
+            <NavLink /* ui-ignore */
+              to="/login"
+              className={({ isActive }) =>
+                `font-mono text-xs tracking-widest uppercase transition-all duration-300 ${
+                  isActive ? 'text-primary' : 'text-foreground hover:text-primary'
+                }`
+              }
             >
-              <Link to="/login" /* ui-ignore */>{t('login')}</Link>
-            </Button>
+              {t('login')}
+            </NavLink>
           )}
 
           <AnimatedThemeToggler />
-
-          <Button asChild variant="outline" className="font-sans px-5 py-2 text-sm h-auto">
-            <Link to="/contact" /* ui-ignore */>{t('connect')}</Link>
-          </Button>
         </div>
 
         {/* Mobile Menu via Sheet */}
@@ -162,20 +147,6 @@ export default function Navigation() {
                 </NavLink>
               ))}
 
-              {user && (
-                <NavLink /* ui-ignore */
-                  to="/dashboard"
-                  onClick={() => setIsOpen(false)}
-                  className={({ isActive }) =>
-                    `text-lg font-mono tracking-wider uppercase transition-colors duration-300 ${
-                      isActive ? 'text-primary font-medium' : 'text-muted-foreground'
-                    }`
-                  }
-                >
-                  {t('dashboard')}
-                </NavLink>
-              )}
-
               {user ? (
                 <Button
                   variant="ghost"
@@ -188,22 +159,18 @@ export default function Navigation() {
                   {t('logout')}
                 </Button>
               ) : (
-                <Button
-                  asChild
-                  variant="ghost"
-                  className="justify-start p-0 h-auto text-left font-mono text-lg tracking-wider uppercase text-primary hover:text-primary hover:bg-transparent"
+                <NavLink /* ui-ignore */
+                  to="/login"
+                  onClick={() => setIsOpen(false)}
+                  className={({ isActive }) =>
+                    `text-lg font-mono tracking-wider uppercase transition-colors duration-300 ${
+                      isActive ? 'text-primary font-medium' : 'text-muted-foreground'
+                    }`
+                  }
                 >
-                  <Link to="/login" onClick={() => setIsOpen(false)} /* ui-ignore */>{t('login')}</Link>
-                </Button>
+                  {t('login')}
+                </NavLink>
               )}
-
-              <Button
-                asChild
-                variant="outline"
-                className="font-sans py-2.5 text-center text-sm w-full mt-2 h-auto"
-              >
-                <Link to="/contact" onClick={() => setIsOpen(false)} /* ui-ignore */>{t('connect')}</Link>
-              </Button>
 
               <div className="flex items-center justify-between pt-4 border-t border-border/40 mt-2">
                 <span className="text-sm text-muted-foreground font-sans">{t('themeLabel')}</span>

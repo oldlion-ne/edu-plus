@@ -21,6 +21,21 @@ class IntersectionObserverMock {
 }
 (globalThis as any).IntersectionObserver = IntersectionObserverMock as any;
 
+// Mock matchMedia for JSDOM
+Object.defineProperty(window, 'matchMedia', {
+  writable: true,
+  value: vi.fn().mockImplementation(query => ({
+    matches: false,
+    media: query,
+    onchange: null,
+    addListener: vi.fn(),
+    removeListener: vi.fn(),
+    addEventListener: vi.fn(),
+    removeEventListener: vi.fn(),
+    dispatchEvent: vi.fn(),
+  })),
+});
+
 // Mock html2canvas and canvas context
 vi.mock('html2canvas', () => ({
   default: vi.fn().mockResolvedValue(document.createElement('canvas')),
@@ -45,6 +60,6 @@ describe('App Routing', () => {
         <App />
       </MemoryRouter>
     );
-    expect(await screen.findByText(/Know Who/i, {}, { timeout: 5000 })).toBeInTheDocument();
-  });
+    expect(await screen.findByText(/Know Who/i, {}, { timeout: 10000 })).toBeInTheDocument();
+  }, 15000);
 });

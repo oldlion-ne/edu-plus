@@ -1,5 +1,6 @@
-import { BookOpen, Globe, MessageCircle, TrendingUp } from 'lucide-react'
 import DottedMap from 'dotted-map'
+import { NeonGradientCard } from '../components/ui/neon-gradient-card'
+import { CustomIcon } from '../components/ui/custom-icon'
 
 // ── Inline logo ──────────────────────────────────────────────────────────────
 const Logo = ({ className }: { className?: string }) => (
@@ -41,13 +42,15 @@ export default function TelemetryStats() {
       id="telemetry"
       className="relative w-full px-4 py-16 md:py-32 bg-background overflow-hidden"
     >
-      <div className="mx-auto grid max-w-5xl border border-border md:grid-cols-2 bg-card/10 backdrop-blur-sm">
+      <div className="mx-auto max-w-5xl">
+        <NeonGradientCard className="border border-border/50">
+          <div className="grid md:grid-cols-2 bg-card/5 backdrop-blur-sm">
 
         {/* ── Left panel: Global learner reach ── */}
         <div className="border-b border-border md:border-b-0">
           <div className="p-6 sm:p-12">
             <span className="text-muted-foreground flex items-center gap-2 text-xs font-mono uppercase tracking-wider">
-              <Globe className="size-4 text-primary" />
+              <CustomIcon name="globe" type="solid" className="size-4 text-primary" />
               Global learner reach
             </span>
 
@@ -83,7 +86,7 @@ export default function TelemetryStats() {
         <div className="overflow-hidden bg-card/5 p-6 sm:p-12 md:border-l border-border dark:bg-transparent">
           <div className="relative z-10">
             <span className="text-muted-foreground flex items-center gap-2 text-xs font-mono uppercase tracking-wider">
-              <MessageCircle className="size-4 text-primary" />
+              <CustomIcon name="comment" type="solid" className="size-4 text-primary" />
               AI mentor support
             </span>
 
@@ -132,7 +135,7 @@ export default function TelemetryStats() {
         <div className="relative col-span-full flex flex-col">
           <div className="relative z-10 px-6 pt-6 md:px-12 md:pt-12 pb-4">
             <span className="text-muted-foreground flex items-center gap-2 text-xs font-mono uppercase tracking-wider">
-              <TrendingUp className="size-4 text-primary" />
+              <CustomIcon name="arrow-trend-up" type="solid" className="size-4 text-primary" />
               Platform milestones
             </span>
 
@@ -168,10 +171,12 @@ export default function TelemetryStats() {
             aria-hidden="true"
             className="pointer-events-none absolute bottom-6 right-8 opacity-[0.04]"
           >
-            <BookOpen className="size-40 text-primary" strokeWidth={0.5} />
+            <CustomIcon name="book-open" type="solid" className="size-40 text-primary" />
           </div>
         </div>
 
+          </div>
+        </NeonGradientCard>
       </div>
     </section>
   )

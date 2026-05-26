@@ -18,6 +18,7 @@ export default defineConfig(({ mode }) => {
     plugins: [...devPlugins, react()],
     server: {
       port: 3000,
+      host: '127.0.0.1',
     },
     resolve: {
       alias: {
@@ -59,6 +60,14 @@ export default defineConfig(({ mode }) => {
     test: {
       environment: "jsdom",
       globals: true,
+      exclude: [
+        '**/node_modules/**',
+        '**/dist/**',
+        '**/cypress/**',
+        '**/.{idea,git,cache,output,temp}/**',
+        '**/{karma,rollup,webpack,vite,vitest}.config.*',
+        'e2e/**'
+      ],
     },
   };
 });

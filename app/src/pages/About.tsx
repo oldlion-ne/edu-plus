@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
 import ImmersiveHero from '../components/effects/ImmersiveHero';
-import { Card } from '../components/ui/card';
+import { NeonGradientCard } from '../components/ui/neon-gradient-card';
 import { Button } from '../components/ui/button';
-import { ChevronRight, MapPin, Globe, Sparkles, BookOpen, Shield } from 'lucide-react';
+import { CharacterReveal } from '../components/ui/character-reveal';
+import { CustomIcon } from '../components/ui/custom-icon';
 
 const translations = {
   altAbout: "About EduPlus",
@@ -102,7 +103,6 @@ export default function About() {
 
       {/* Immersive Top Hero Viewport */}
       <ImmersiveHero
-        bgImage="/images/AboutCollabVisual.png"
         category={t('aboutCategory')}
         titleNormal={t('aboutTitleNormal')}
         titleHighlighted={t('aboutTitleHighlighted')}
@@ -116,7 +116,7 @@ export default function About() {
         >
           <a href="#story" className="hover:text-primary focus:outline-none focus:ring-1 focus:ring-primary transition-colors">
             <span className="text-nowrap">{t('learnMore')}</span>
-            <ChevronRight className="opacity-50" />
+            <CustomIcon name="chevron-right" type="solid" className="opacity-50 size-4" />
           </a>
         </Button>
       </ImmersiveHero>
@@ -132,9 +132,9 @@ export default function About() {
           <h2 className="font-heading text-3xl md:text-5xl font-semibold tracking-tight text-foreground mb-6">
             {t('journeyBuiltOnPurpose')}
           </h2>
-          <p className="font-sans text-muted-foreground text-lg leading-relaxed">
+          <CharacterReveal textClassName="font-sans text-muted-foreground/30 text-lg leading-relaxed">
             {t('specializeDesc')}
-          </p>
+          </CharacterReveal>
         </div>
 
         {/* Narrative Vertical Storyline */}
@@ -158,32 +158,35 @@ export default function About() {
                     {t('chapter01Roots')}
                   </span>
                   <div className="inline-flex items-center gap-1.5 font-mono text-[9px] uppercase tracking-[0.2em] text-muted-foreground border border-border px-2 py-0.5 bg-card/50">
-                    <MapPin className="size-2.5 text-primary" /> Manipur Genesis
+                    <CustomIcon name="location-dot" type="solid" className="size-2.5 text-primary" /> Manipur Genesis
                   </div>
                 </div>
-                <Card className="border border-border/50 bg-card/30 backdrop-blur-sm shadow-sm p-6 space-y-4">
-                  <h3 className="font-heading text-2xl font-semibold tracking-tight text-foreground">
-                    {t('chapter01Title')}
-                  </h3>
-                  <p className="font-sans text-muted-foreground leading-relaxed text-sm">
-                    {t('chapter01Desc1')}
-                  </p>
-                  <p className="font-sans text-muted-foreground leading-relaxed text-sm">
-                    {t('chapter01Desc2')}
-                  </p>
-                </Card>
+                <NeonGradientCard className="border border-border/50">
+                  <div className="space-y-4">
+                    <h3 className="font-heading text-2xl font-semibold tracking-tight text-foreground">
+                      {t('chapter01Title')}
+                    </h3>
+                    <CharacterReveal textClassName="font-sans text-muted-foreground/30 text-sm leading-relaxed">
+                      {t('chapter01Desc1')}
+                    </CharacterReveal>
+                    <CharacterReveal textClassName="font-sans text-muted-foreground/30 text-sm leading-relaxed">
+                      {t('chapter01Desc2')}
+                    </CharacterReveal>
+                  </div>
+                </NeonGradientCard>
               </div>
 
-              {/* Right Side: Propagation Visualization */}
+              {/* Right Side: Manipur Root Image Card */}
               <div className="lg:col-span-5 self-stretch flex flex-col justify-center">
-                <div className="relative h-56 w-full overflow-hidden rounded-none bg-card/10 border border-border/50 flex flex-col justify-end p-6">
-                  {/* Visual Background */}
-                  <div aria-hidden className="absolute inset-0 select-none pointer-events-none">
-                    <div className="bg-primary/25 absolute inset-y-0 left-1/2 w-px"></div>
-                    <div className="absolute -inset-x-12 top-6 aspect-square rounded-none border border-border/25 animate-[pulse_4s_infinite]"></div>
-                    <div className="absolute -inset-x-4 top-16 aspect-square rounded-none border border-dashed border-primary/25"></div>
-                    <div className="absolute -inset-x-20 top-24 aspect-square rounded-none border border-border/10"></div>
-                  </div>
+                <div className="relative h-56 w-full overflow-hidden rounded-none bg-card/10 border border-border/50 flex flex-col justify-end p-6 group/image-card">
+                  {/* Image Background */}
+                  <img
+                    src="/assets/manipur_root.png"
+                    alt="Manipur Root"
+                    className="absolute inset-0 w-full h-full object-cover opacity-95 transition-transform duration-700 group-hover/image-card:scale-105"
+                  />
+                  {/* Overlay gradient to keep text highly readable */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-background/70 via-background/20 to-transparent z-[1]" />
                   {/* Focal Node */}
                   <div className="relative z-10 flex flex-col items-center justify-center h-full">
                     <div className="relative flex h-4 w-4">
@@ -215,46 +218,48 @@ export default function About() {
                     {t('chapter02HubModel')}
                   </span>
                   <div className="inline-flex items-center gap-1.5 font-mono text-[9px] uppercase tracking-[0.2em] text-muted-foreground border border-border px-2 py-0.5 bg-card/50">
-                    <Globe className="size-2.5 text-primary" /> Delhi &amp; SG Connections
+                    <CustomIcon name="globe" type="solid" className="size-2.5 text-primary" /> Delhi &amp; SG Connections
                   </div>
                 </div>
-                <Card className="border border-border/50 bg-card/30 backdrop-blur-sm shadow-sm p-6 space-y-4">
-                  <h3 className="font-heading text-2xl font-semibold tracking-tight text-foreground">
-                    {t('chapter02Title')}
-                  </h3>
-                  <p className="font-sans text-muted-foreground leading-relaxed text-sm">
-                    {t('chapter02Desc1')}
-                  </p>
-                  
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2 text-xs font-mono">
-                    <div className="p-3 border border-border/30 bg-background/40 space-y-1">
-                      <span className="text-primary block font-semibold text-[10px] tracking-wider">{t('singapore')}</span>
-                      <span className="text-muted-foreground text-[10px]">{t('speechInterventions')}</span>
-                    </div>
-                    <div className="p-3 border border-border/30 bg-background/40 space-y-1">
-                      <span className="text-primary block font-semibold text-[10px] tracking-wider">{t('delhiKolkata')}</span>
-                      <span className="text-muted-foreground text-[10px]">{t('corporateToolkits')}</span>
-                    </div>
-                    <div className="p-3 border border-border/30 bg-background/40 space-y-1">
-                      <span className="text-primary block font-semibold text-[10px] tracking-wider">{t('globalAdvisory')}</span>
-                      <span className="text-muted-foreground text-[10px]">{t('directMentorship')}</span>
+                <NeonGradientCard className="border border-border/50">
+                  <div className="space-y-4">
+                    <h3 className="font-heading text-2xl font-semibold tracking-tight text-foreground">
+                      {t('chapter02Title')}
+                    </h3>
+                    <CharacterReveal textClassName="font-sans text-muted-foreground/30 text-sm leading-relaxed">
+                      {t('chapter02Desc1')}
+                    </CharacterReveal>
+                    
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2 text-xs font-mono">
+                      <div className="p-3 border border-border/30 bg-background/40 space-y-1">
+                        <span className="text-primary block font-semibold text-[10px] tracking-wider">{t('singapore')}</span>
+                        <span className="text-muted-foreground text-[10px]">{t('speechInterventions')}</span>
+                      </div>
+                      <div className="p-3 border border-border/30 bg-background/40 space-y-1">
+                        <span className="text-primary block font-semibold text-[10px] tracking-wider">{t('delhiKolkata')}</span>
+                        <span className="text-muted-foreground text-[10px]">{t('corporateToolkits')}</span>
+                      </div>
+                      <div className="p-3 border border-border/30 bg-background/40 space-y-1">
+                        <span className="text-primary block font-semibold text-[10px] tracking-wider">{t('globalAdvisory')}</span>
+                        <span className="text-muted-foreground text-[10px]">{t('directMentorship')}</span>
+                      </div>
                     </div>
                   </div>
-                </Card>
+                </NeonGradientCard>
               </div>
 
               {/* Right Side: Connections Hub Graph */}
               <div className="lg:col-span-5 self-stretch flex flex-col justify-center">
-                <div className="relative h-56 w-full p-5 rounded-none bg-card/10 border border-border/50 flex flex-col justify-between overflow-hidden">
-                  {/* Connection Lines Layout */}
-                  <div className="absolute top-[28%] left-[10%] right-[10%] h-px bg-gradient-to-r from-transparent via-border/80 to-transparent"></div>
-                  <div className="absolute top-[72%] left-[10%] right-[10%] h-px bg-gradient-to-r from-transparent via-border/80 to-transparent"></div>
-                  <div className="absolute top-[28%] bottom-[28%] left-1/2 w-px bg-border/80"></div>
+                <div className="relative h-56 w-full p-5 rounded-none bg-card/10 border border-border/50 flex flex-col justify-between overflow-hidden group/nexus-card">
+                  {/* Image Background */}
+                  <img
+                    src="/assets/nexus-node.png"
+                    alt="Nexus Node"
+                    className="absolute inset-0 w-full h-full object-cover opacity-95 transition-transform duration-700 group-hover/nexus-card:scale-105"
+                  />
+                  {/* Overlay gradient to keep text highly readable */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-background/70 via-background/20 to-transparent z-[1]" />
                   
-                  {/* Dynamic Traversing Signals */}
-                  <div className="absolute w-1.5 h-1.5 rounded-none bg-primary/70 animate-[ping_2s_infinite] top-[28%] left-[30%]"></div>
-                  <div className="absolute w-1.5 h-1.5 rounded-none bg-primary/70 animate-[ping_2s_infinite] top-[72%] right-[30%]"></div>
-
                   <div className="relative flex justify-between items-center z-10">
                     <div className="bg-background/90 backdrop-blur-sm shadow-sm ring-1 ring-border rounded-none px-2.5 py-1 text-[9px] font-mono text-muted-foreground flex items-center gap-1.5 hover:ring-primary/40 transition-all select-none">
                       <span className="h-1 w-1 rounded-none bg-primary animate-pulse"></span>
@@ -304,98 +309,95 @@ export default function About() {
                     {t('chapter03CorePillars')}
                   </span>
                   <div className="inline-flex items-center gap-1.5 font-mono text-[9px] uppercase tracking-[0.2em] text-muted-foreground border border-border px-2 py-0.5 bg-card/50">
-                    <Sparkles className="size-2.5 text-primary" /> {t('whatWeStandFor')}
+                    <CustomIcon name="star" type="solid" className="size-2.5 text-primary" /> {t('whatWeStandFor')}
                   </div>
                 </div>
-                <Card className="border border-border/50 bg-card/30 backdrop-blur-sm shadow-sm p-6 space-y-6">
-                  <div>
-                    <h3 className="font-heading text-2xl font-semibold tracking-tight text-foreground mb-3">
-                      {t('ourValues')}
-                    </h3>
-                    <p className="font-sans text-muted-foreground leading-relaxed text-sm">
-                      {t('whatWeStandForDesc')}
-                    </p>
-                  </div>
+                <NeonGradientCard className="border border-border/50">
+                  <div className="space-y-6">
+                    <div>
+                      <h3 className="font-heading text-2xl font-semibold tracking-tight text-foreground mb-3">
+                        {t('ourValues')}
+                      </h3>
+                      <CharacterReveal textClassName="font-sans text-muted-foreground/30 text-sm leading-relaxed">
+                        {t('whatWeStandForDesc')}
+                      </CharacterReveal>
+                    </div>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    {/* Pillar 1 */}
-                    <div className="border border-border/40 p-4 bg-background/30 space-y-2">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      {/* Pillar 1 */}
+                      <div className="border border-border/40 p-4 bg-background/30 space-y-2">
+                        <div className="flex items-center gap-2">
+                          <span className="font-mono text-[10px] text-primary font-semibold border border-primary/20 px-1.5 py-0.2 bg-primary/5">{t('num01')}</span>
+                          <h4 className="font-sans font-semibold text-xs text-foreground">{t('clarityOfDirection')}</h4>
+                        </div>
+                        <p className="font-sans text-[11px] text-muted-foreground leading-relaxed">
+                          {t('clarityDesc')}
+                        </p>
+                      </div>
+
+                      {/* Pillar 2 */}
+                      <div className="border border-border/40 p-4 bg-background/30 space-y-2">
+                        <div className="flex items-center gap-2">
+                          <span className="font-mono text-[10px] text-primary font-semibold border border-primary/20 px-1.5 py-0.2 bg-primary/5">{t('num02')}</span>
+                          <h4 className="font-sans font-semibold text-xs text-foreground">{t('accessToOpportunity')}</h4>
+                        </div>
+                        <div className="space-y-1 font-sans text-[10px]">
+                          <div className="flex justify-between border-b border-border/20 pb-0.5">
+                            <span className="text-muted-foreground">{t('psychometricSelection')}</span>
+                            <span className="text-primary font-semibold">{t('successRate')}</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-muted-foreground">{t('globalMentorship')}</span>
+                            <span className="text-primary font-semibold">{t('coverageRate')}</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Pillar 3 */}
+                    <div className="border border-border/40 p-4 bg-background/30 space-y-3">
                       <div className="flex items-center gap-2">
-                        <span className="font-mono text-[10px] text-primary font-semibold border border-primary/20 px-1.5 py-0.2 bg-primary/5">{t('num01')}</span>
-                        <h4 className="font-sans font-semibold text-xs text-foreground">{t('clarityOfDirection')}</h4>
+                        <span className="font-mono text-[10px] text-primary font-semibold border border-primary/20 px-1.5 py-0.2 bg-primary/5">{t('num03')}</span>
+                        <h4 className="font-sans font-semibold text-xs text-foreground">{t('rightSkillsTitle')}</h4>
                       </div>
                       <p className="font-sans text-[11px] text-muted-foreground leading-relaxed">
-                        {t('clarityDesc')}
+                        {t('rightSkillsDesc')}
                       </p>
-                    </div>
-
-                    {/* Pillar 2 */}
-                    <div className="border border-border/40 p-4 bg-background/30 space-y-2">
-                      <div className="flex items-center gap-2">
-                        <span className="font-mono text-[10px] text-primary font-semibold border border-primary/20 px-1.5 py-0.2 bg-primary/5">{t('num02')}</span>
-                        <h4 className="font-sans font-semibold text-xs text-foreground">{t('accessToOpportunity')}</h4>
-                      </div>
-                      <div className="space-y-1 font-sans text-[10px]">
-                        <div className="flex justify-between border-b border-border/20 pb-0.5">
-                          <span className="text-muted-foreground">{t('psychometricSelection')}</span>
-                          <span className="text-primary font-semibold">{t('successRate')}</span>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 bg-background/60 p-3 border border-border/30">
+                        <div className="space-y-0.5">
+                          <span className="text-[10px] font-semibold text-primary font-sans block">{t('criticalSoftSkills')}</span>
+                          <p className="text-[9px] text-muted-foreground leading-normal">{t('criticalSoftSkillsDesc')}</p>
                         </div>
-                        <div className="flex justify-between">
-                          <span className="text-muted-foreground">{t('globalMentorship')}</span>
-                          <span className="text-primary font-semibold">{t('coverageRate')}</span>
+                        <div className="space-y-0.5">
+                          <span className="text-[10px] font-semibold text-primary font-sans block">{t('greenHydrogen')}</span>
+                          <p className="text-[9px] text-muted-foreground leading-normal">{t('greenHydrogenDesc')}</p>
+                        </div>
+                        <div className="space-y-0.5 border-t border-border/20 pt-1.5">
+                          <span className="text-[10px] font-semibold text-primary font-sans block">{t('maritimeLogistics')}</span>
+                          <p className="text-[9px] text-muted-foreground leading-normal">{t('maritimeLogisticsDesc')}</p>
+                        </div>
+                        <div className="space-y-0.5 border-t border-border/20 pt-1.5">
+                          <span className="text-[10px] font-semibold text-primary font-sans block">{t('internationalLaw')}</span>
+                          <p className="text-[9px] text-muted-foreground leading-normal">{t('internationalLawDesc')}</p>
                         </div>
                       </div>
                     </div>
                   </div>
-
-                  {/* Pillar 3 */}
-                  <div className="border border-border/40 p-4 bg-background/30 space-y-3">
-                    <div className="flex items-center gap-2">
-                      <span className="font-mono text-[10px] text-primary font-semibold border border-primary/20 px-1.5 py-0.2 bg-primary/5">{t('num03')}</span>
-                      <h4 className="font-sans font-semibold text-xs text-foreground">{t('rightSkillsTitle')}</h4>
-                    </div>
-                    <p className="font-sans text-[11px] text-muted-foreground leading-relaxed">
-                      {t('rightSkillsDesc')}
-                    </p>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 bg-background/60 p-3 border border-border/30">
-                      <div className="space-y-0.5">
-                        <span className="text-[10px] font-semibold text-primary font-sans block">{t('criticalSoftSkills')}</span>
-                        <p className="text-[9px] text-muted-foreground leading-normal">{t('criticalSoftSkillsDesc')}</p>
-                      </div>
-                      <div className="space-y-0.5">
-                        <span className="text-[10px] font-semibold text-primary font-sans block">{t('greenHydrogen')}</span>
-                        <p className="text-[9px] text-muted-foreground leading-normal">{t('greenHydrogenDesc')}</p>
-                      </div>
-                      <div className="space-y-0.5 border-t border-border/20 pt-1.5">
-                        <span className="text-[10px] font-semibold text-primary font-sans block">{t('maritimeLogistics')}</span>
-                        <p className="text-[9px] text-muted-foreground leading-normal">{t('maritimeLogisticsDesc')}</p>
-                      </div>
-                      <div className="space-y-0.5 border-t border-border/20 pt-1.5">
-                        <span className="text-[10px] font-semibold text-primary font-sans block">{t('internationalLaw')}</span>
-                        <p className="text-[9px] text-muted-foreground leading-normal">{t('internationalLawDesc')}</p>
-                      </div>
-                    </div>
-                  </div>
-                </Card>
+                </NeonGradientCard>
               </div>
 
               {/* Right Side: Milestone Matrix Graphic */}
               <div className="lg:col-span-5 self-stretch flex flex-col justify-center">
-                <div className="relative h-56 w-full px-5 py-8 rounded-none bg-card/10 border border-border/50 flex justify-between items-end overflow-hidden">
-                  {/* Grid Lines */}
-                  {Array.from({ length: 15 }).map((_, i) => {
-                    const isHighlighted = i === 2 || i === 7 || i === 12;
-                    return (
-                      <div key={i} className="flex flex-col items-center gap-1 h-full w-px bg-foreground/10 relative">
-                        {isHighlighted && (
-                          <>
-                            <div className="absolute inset-0 bg-primary/60 w-0.5 shadow-[0_0_10px_oklch(var(--primary))] animate-pulse"></div>
-                            <div className="absolute -top-3 w-1.5 h-1.5 rounded-none bg-primary"></div>
-                          </>
-                        )}
-                      </div>
-                    );
-                  })}
+                <div className="relative h-56 w-full px-5 py-8 rounded-none bg-card/10 border border-border/50 flex justify-between items-end overflow-hidden group/pillars-card">
+                  {/* Image Background */}
+                  <img
+                    src="/assets/core-pillars.png"
+                    alt="Core Pillars"
+                    className="absolute inset-0 w-full h-full object-cover opacity-95 transition-transform duration-700 group-hover/pillars-card:scale-105"
+                  />
+                  {/* Overlay gradient to keep text highly readable */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-background/70 via-background/20 to-transparent z-[1]" />
+                  
                   <div className="absolute inset-x-0 bottom-1 flex justify-between px-3 text-[8px] font-mono text-muted-foreground bg-background/80 py-1 border-t border-border/40 z-10">
                     <span>{t('clarityPipeline')}</span>
                     <span>{t('accessNode')}</span>
@@ -423,32 +425,41 @@ export default function About() {
                     {t('chapter04Foundations')}
                   </span>
                   <div className="inline-flex items-center gap-1.5 font-mono text-[9px] uppercase tracking-[0.2em] text-muted-foreground border border-border px-2 py-0.5 bg-card/50">
-                    <BookOpen className="size-2.5 text-primary" /> {t('multiDomainExpertise')}
+                    <CustomIcon name="book-open" type="solid" className="size-2.5 text-primary" /> {t('multiDomainExpertise')}
                   </div>
                 </div>
-                <Card className="border border-border/50 bg-card/30 backdrop-blur-sm shadow-sm p-6 space-y-4">
-                  <h3 className="font-heading text-2xl font-semibold tracking-tight text-foreground">
-                    {t('professionalPedigree')}
-                  </h3>
-                  <p className="font-sans text-muted-foreground leading-relaxed text-sm">
-                    {t('pedigreeDesc')}
-                  </p>
-                  <div className="flex flex-wrap gap-1.5 pt-2">
-                    {DOMAIN_KEYS.map(key => (
-                      <span key={key} className="font-mono text-[9px] uppercase tracking-wider text-muted-foreground border border-border/40 px-2 py-1 bg-background/50">
-                        {t(key)}
-                      </span>
-                    ))}
+                <NeonGradientCard className="border border-border/50">
+                  <div className="space-y-4">
+                    <h3 className="font-heading text-2xl font-semibold tracking-tight text-foreground">
+                      {t('professionalPedigree')}
+                    </h3>
+                    <CharacterReveal textClassName="font-sans text-muted-foreground/30 text-sm leading-relaxed">
+                      {t('pedigreeDesc')}
+                    </CharacterReveal>
+                    <div className="flex flex-wrap gap-1.5 pt-2">
+                      {DOMAIN_KEYS.map(key => (
+                        <span key={key} className="font-mono text-[9px] uppercase tracking-wider text-muted-foreground border border-border/40 px-2 py-1 bg-background/50">
+                          {t(key)}
+                        </span>
+                      ))}
+                    </div>
                   </div>
-                </Card>
+                </NeonGradientCard>
               </div>
 
               {/* Right Side: Enterprise Protection Shield */}
               <div className="lg:col-span-5 self-stretch flex flex-col justify-center">
-                <div className="relative h-56 w-full flex items-center justify-center rounded-none bg-card/10 border border-border/50 overflow-hidden">
-                  <Shield className="absolute inset-0 top-3 size-full stroke-[0.05px] opacity-10 text-primary animate-pulse" />
-                  <Shield className="size-36 stroke-[0.15px] text-primary" />
-                  <div className="absolute text-center space-y-1">
+                <div className="relative h-56 w-full flex items-center justify-center rounded-none bg-card/10 border border-border/50 overflow-hidden group/foundations-card">
+                  {/* Image Background */}
+                  <img
+                    src="/assets/foundations.png"
+                    alt="Foundations"
+                    className="absolute inset-0 w-full h-full object-cover opacity-95 transition-transform duration-700 group-hover/foundations-card:scale-105"
+                  />
+                  {/* Overlay gradient to keep text highly readable */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-background/70 via-background/20 to-transparent z-[1]" />
+                  
+                  <div className="relative z-10 text-center space-y-1 bg-background/80 px-4 py-2 border border-border/40 backdrop-blur-sm select-none">
                     <span className="block text-[11px] font-mono font-bold tracking-[0.25em] text-foreground">{t('governance')}</span>
                     <span className="block text-[8px] font-mono text-muted-foreground tracking-widest">{t('advisoryCouncil')}</span>
                   </div>

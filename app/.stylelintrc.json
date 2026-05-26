@@ -9,6 +9,7 @@
     ],
     "no-descending-specificity": null,
     "color-function-notation": "modern",
-    "keyframes-name-pattern": null
+    "keyframes-name-pattern": null,
+    "alpha-value-notation": null
   }
 }

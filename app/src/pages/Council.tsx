@@ -1,4 +1,6 @@
 import { useEffect, useState } from 'react';
+import FadingVideo from '../components/effects/FadingVideo';
+import { CustomIcon } from '../components/ui/custom-icon';
 import { Link } from 'react-router';
 import ImmersiveHero from '../components/effects/ImmersiveHero';
 import {
@@ -8,12 +10,18 @@ import {
   DialogTitle,
   DialogDescription,
 } from '../components/ui/dialog';
+import {
+  Accordion,
+  AccordionItem,
+  AccordionTrigger,
+  AccordionContent,
+} from '../components/ui/accordion';
 import { Badge } from '../components/ui/badge';
 import { Button } from '../components/ui/button';
-import { MagicCard } from '../components/effects/CyberVisualizations';
 import { MapPin, ChevronRight } from 'lucide-react';
 import { Avatar, AvatarImage, AvatarFallback } from '../components/ui/avatar';
 import { Card } from '../components/ui/card';
+import { OrbitingCircles } from '../components/ui/orbiting-circles';
 
 const translations = {
   heroCategory: "Leadership & Global Expert Council",
@@ -54,6 +62,11 @@ interface CouncilMember {
   seatId: string;
   status: string;
   avatar: string;
+  social?: {
+    twitter?: string;
+    linkedin?: string;
+    instagram?: string;
+  };
 }
 
 const COUNCIL_MEMBERS: CouncilMember[] = [
@@ -66,7 +79,8 @@ const COUNCIL_MEMBERS: CouncilMember[] = [
     bio: 'An education entrepreneur dedicated to cultural revival and transformative learning. With seven years of research focused on culture and education, he designs learning experiences that reinforce modern skills and local roots.',
     seatId: 'SEAT_01',
     status: 'CHAIR',
-    avatar: '/images/male_avatar.png'
+    avatar: '/images/male_avatar.png',
+    social: { linkedin: '#', twitter: '#' }
   },
   {
     name: 'Mr. Roshan Khumukcham',
@@ -77,7 +91,8 @@ const COUNCIL_MEMBERS: CouncilMember[] = [
     bio: 'Fitness and career mentor with over two decades of corporate leadership experience in the automotive industry (Hyundai, Hero Honda, LML). Focuses on discipline, professional resilience, and student mentoring.',
     seatId: 'SEAT_02',
     status: 'FOUNDER',
-    avatar: '/images/male_avatar.png'
+    avatar: '/images/male_avatar.png',
+    social: { linkedin: '#', twitter: '#' }
   },
   {
     name: 'Mr. Ronen Akoijam',
@@ -88,7 +103,8 @@ const COUNCIL_MEMBERS: CouncilMember[] = [
     bio: 'Senior Speech Therapist and language interventions expert under the Ministry of Education in Singapore. With over 20 years of experience, he steers our inclusive learning and communication strategies.',
     seatId: 'SEAT_03',
     status: 'CO-FOUNDER',
-    avatar: '/images/male_avatar.png'
+    avatar: '/images/male_avatar.png',
+    social: { linkedin: '#', twitter: '#' }
   },
   {
     name: 'Dr. Soram Bobby Singh',
@@ -99,7 +115,8 @@ const COUNCIL_MEMBERS: CouncilMember[] = [
     bio: 'Leading researcher in green hydrogen and energy materials with 15+ years of experience in materials science and water-splitting technologies. Dedicated to future-focused tech incubation.',
     seatId: 'SEAT_04',
     status: 'PRINCIPAL_SCIENTIST',
-    avatar: '/images/male_avatar.png'
+    avatar: '/images/male_avatar.png',
+    social: { linkedin: '#' }
   },
   {
     name: 'Shri Romen Ningthoujam',
@@ -110,7 +127,8 @@ const COUNCIL_MEMBERS: CouncilMember[] = [
     bio: 'Holds M.Ed., Ph.D. (Education) and Applied Psychology diploma. Over a decade of community development, education equity, and grassroots impact leadership at Goonj.',
     seatId: 'SEAT_05',
     status: 'GRASSR0OTS_DELEGATE',
-    avatar: '/images/male_avatar.png'
+    avatar: '/images/male_avatar.png',
+    social: { linkedin: '#' }
   },
   {
     name: 'Shri Khumukcham Roshaan Singh',
@@ -121,7 +139,8 @@ const COUNCIL_MEMBERS: CouncilMember[] = [
     bio: '20+ years of automotive corporate experience (Hyundai, Hero, LML). Mechanical Engineer and author of "Smart Behaviour Installation Guide", focusing on professional and behavioral readiness.',
     seatId: 'SEAT_06',
     status: 'EXECUTIVE_ADVISOR',
-    avatar: '/images/male_avatar.png'
+    avatar: '/images/male_avatar.png',
+    social: { linkedin: '#', twitter: '#' }
   },
   {
     name: 'Smt. Nutan Nongthongbam',
@@ -132,7 +151,8 @@ const COUNCIL_MEMBERS: CouncilMember[] = [
     bio: 'Certified Life Skills Trainer and recognized public health speaker at national and international levels, specializing in health communication, emotional resilience, and holistic leadership.',
     seatId: 'SEAT_07',
     status: 'TRAINING_ADVISOR',
-    avatar: '/images/female_avatar.png'
+    avatar: '/images/female_avatar.png',
+    social: { instagram: '#' }
   },
   {
     name: 'Ms. Geetarani Takhellambam, LL.M.',
@@ -143,7 +163,8 @@ const COUNCIL_MEMBERS: CouncilMember[] = [
     bio: 'Dual-qualified legal expert (India & UK) with 20+ years of corporate law practice, arbitration, and compliance leadership in the renewable energy sector.',
     seatId: 'SEAT_08',
     status: 'LEGAL_COUNSEL',
-    avatar: '/images/female_avatar.png'
+    avatar: '/images/female_avatar.png',
+    social: { linkedin: '#' }
   },
   {
     name: 'Shri Rojit Keisham',
@@ -154,7 +175,8 @@ const COUNCIL_MEMBERS: CouncilMember[] = [
     bio: '14+ years of maritime operations experience across the USA, Australia, Europe, and Asia in the Merchant Navy. Bridges global seafaring competence with academic excellence.',
     seatId: 'SEAT_09',
     status: 'MARITIME_CHAIR',
-    avatar: '/images/male_avatar.png'
+    avatar: '/images/male_avatar.png',
+    social: { linkedin: '#' }
   },
   {
     name: 'Dr. Ngangbam Shantikumar Meetei',
@@ -165,7 +187,8 @@ const COUNCIL_MEMBERS: CouncilMember[] = [
     bio: '25+ years teaching public speaking and linguistics at Hungkuo Delin University of Technology. A decorated natural bodybuilder with 12 international titles, representing physical and mental balance.',
     seatId: 'SEAT_10',
     status: 'PEDAGOGY_PROFESSOR',
-    avatar: '/images/male_avatar.png'
+    avatar: '/images/male_avatar.png',
+    social: { twitter: '#', instagram: '#' }
   },
   {
     name: 'Shri Ronendrojit Akoijam',
@@ -176,7 +199,8 @@ const COUNCIL_MEMBERS: CouncilMember[] = [
     bio: '20+ years designing speech and language intervention programs for children. Leading clinical expertise in student-centered support, language development, and speech therapy.',
     seatId: 'SEAT_11',
     status: 'THERAPY_ADVISOR',
-    avatar: '/images/male_avatar.png'
+    avatar: '/images/male_avatar.png',
+    social: { linkedin: '#' }
   },
   {
     name: 'Smt. Purnimashi Moirangthem',
@@ -187,7 +211,8 @@ const COUNCIL_MEMBERS: CouncilMember[] = [
     bio: 'Delhi University graduate, early childhood manager, and certified CDA. Combines 17 years of IT/finance corporate experience (HCL, IBM, NIIT) with early cognitive development expertise.',
     seatId: 'SEAT_12',
     status: 'COGNITIVE_LEAD',
-    avatar: '/images/female_avatar.png'
+    avatar: '/images/female_avatar.png',
+    social: { linkedin: '#' }
   },
   {
     name: 'Dr. Tomba Singh Thokchom',
@@ -198,7 +223,8 @@ const COUNCIL_MEMBERS: CouncilMember[] = [
     bio: 'Academic leader in teacher education and modern pedagogical innovation. Contributes extensively to curriculum design, educator training, and learning quality development.',
     seatId: 'SEAT_13',
     status: 'PEDAGOGICAL_COACH',
-    avatar: '/images/male_avatar.png'
+    avatar: '/images/male_avatar.png',
+    social: { linkedin: '#' }
   },
   {
     name: 'Dr. Usham Rojio',
@@ -209,7 +235,8 @@ const COUNCIL_MEMBERS: CouncilMember[] = [
     bio: 'Academic, poet, and experimental theatre practitioner. Explores literature, performing arts, and social expression, collaborating on grassroots cultural and community-led theatre.',
     seatId: 'SEAT_14',
     status: 'CULTURAL_ADVISOR',
-    avatar: '/images/male_avatar.png'
+    avatar: '/images/male_avatar.png',
+    social: { instagram: '#' }
   }
 ];
 
@@ -258,14 +285,12 @@ const TESTIMONIALS: Testimonial[] = [
 export default function Council() {
   const [mounted, setMounted] = useState(false);
   const [selectedMember, setSelectedMember] = useState<CouncilMember | null>(null);
-  const [activeSeat, setActiveSeat] = useState<string | null>(null);
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
   const handleSeatClick = (member: CouncilMember) => {
-    setActiveSeat(member.seatId);
     setSelectedMember(member);
   };
 
@@ -273,7 +298,6 @@ export default function Council() {
     <div className="min-h-screen bg-background text-foreground pb-32 relative overflow-hidden">
       {/* Immersive Top Hero Viewport */}
       <ImmersiveHero
-        bgImage="/images/CouncilVisual.png"
         category={t('heroCategory')}
         titleNormal={t('heroTitleNormal')}
         titleHighlighted={t('heroTitleHighlighted')}
@@ -284,190 +308,116 @@ export default function Council() {
 
       <div className={`max-w-[1200px] mx-auto px-6 md:px-12 relative z-10 mt-20 transition-all duration-1000 delay-300 transform ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
         
-        {/* Page Explanation */}
-        <div className="max-w-3xl mb-16">
-          <span className="text-xs font-mono font-medium tracking-[0.3em] uppercase text-primary block mb-2">
+        {/* Council Structure Section with Video Banner */}
+        <div className="mb-16">
+          {/* Kicker label */}
+          <span className="text-xs font-mono font-medium tracking-[0.3em] uppercase text-primary block mb-4">
             {t('councilStructureForum')}
           </span>
-          <h2 className="font-heading text-3xl md:text-5xl font-semibold tracking-tight text-foreground mb-4">
-            {t('innovativeCouncil')}
-          </h2>
-          <p className="font-sans text-muted-foreground text-base leading-relaxed">
-            {t('councilDescription')}
-          </p>
-        </div>
 
-        {/* Boardroom Interactive Table Seating Grid */}
-        <div className="border border-border bg-card/30 p-8 backdrop-blur-md mb-20">
-          <div className="text-center mb-6">
-            <span className="font-mono text-[9px] uppercase tracking-[0.3em] text-primary/70 block">
-              {t('seatingChart')}
-            </span>
-          </div>
+          {/* Cinematic video banner with overlaid text */}
+          <div className="relative w-full overflow-hidden border border-border/60" style={{ height: '440px' }}>
+            {/* Background video */}
+            <FadingVideo
+              src="/assets/about-us-bg-new.mp4"
+              className="absolute inset-0 w-full h-full object-cover" /* ui-ignore */
+              targetOpacity={0.38}
+            />
 
-          {/* Assembly Table Seating Map */}
-          <div className="flex flex-col items-center gap-6 max-w-4xl mx-auto py-6 border-y border-border/60">
-            {/* Row 1: Seats 1-7 */}
-            <div className="flex justify-center gap-4 flex-wrap">
-              {COUNCIL_MEMBERS.slice(0, 7).map(member => {
-                const isActive = activeSeat === member.seatId;
-                const initials = member.name.split(' ').filter(n => !n.includes('.') && n !== 'LL.M.').map(n => n[0]).join('').slice(0, 2);
+            {/* Left-to-right gradient overlay so text stays legible */}
+            <div className="absolute inset-0 bg-gradient-to-r from-background/95 via-background/70 to-background/20 pointer-events-none" />
+            {/* Bottom gradient for depth */}
+            <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent pointer-events-none" />
 
-                return (
-                  <button /* ui-ignore */
-                    key={member.name}
-                    onClick={() => handleSeatClick(member)}
-                    className={`relative p-0.5 rounded-none border transition-all duration-300 focus:outline-none focus:ring-1 focus:ring-primary ${
-                      isActive
-                        ? 'border-primary ring-2 ring-primary/40 scale-110 z-10 shadow-lg shadow-primary/20'
-                        : 'border-border hover:border-primary/60 hover:scale-105'
-                    }`}
-                    title={`${member.name} - ${member.role}`}
-                  >
-                    <Avatar className="size-12 rounded-none border border-background">
-                      <AvatarImage src={member.avatar} alt={member.name} className="rounded-none object-cover" />
-                      <AvatarFallback className="text-[10px] font-bold font-mono bg-muted text-muted-foreground uppercase">{initials}</AvatarFallback>
-                    </Avatar>
-                    <span className="absolute -bottom-1 -right-1 bg-background text-[7px] border border-border px-1 py-0.2 font-mono text-foreground font-semibold scale-90 rounded-none">
-                      {member.seatId.replace('SEAT_', '')}
-                    </span>
-                    {isActive && (
-                      <span className="absolute inset-0 border border-primary rounded-none animate-ping pointer-events-none" />
-                    )}
-                  </button>
-                );
-              })}
+            {/* CRT scan-line texture for cyberpunk feel */}
+            <div
+              className="absolute inset-0 pointer-events-none opacity-[0.025]"
+              style={{ background: 'repeating-linear-gradient(0deg, transparent, transparent 2px, #000 2px, #000 4px)' }} /* ui-ignore */
+            />
+
+            {/* Telemetry tag top-right */}
+            <div className="absolute top-4 right-4 font-mono text-[9px] text-primary/50 tracking-widest select-none">
+              COUNCIL_STRUCTURE // LIVE_FEED
             </div>
-            
-            {/* Row 2: Seats 8-14 */}
-            <div className="flex justify-center gap-4 flex-wrap">
-              {COUNCIL_MEMBERS.slice(7, 14).map(member => {
-                const isActive = activeSeat === member.seatId;
-                const initials = member.name.split(' ').filter(n => !n.includes('.') && n !== 'LL.M.').map(n => n[0]).join('').slice(0, 2);
 
-                return (
-                  <button /* ui-ignore */
-                    key={member.name}
-                    onClick={() => handleSeatClick(member)}
-                    className={`relative p-0.5 rounded-none border transition-all duration-300 focus:outline-none focus:ring-1 focus:ring-primary ${
-                      isActive
-                        ? 'border-primary ring-2 ring-primary/40 scale-110 z-10 shadow-lg shadow-primary/20'
-                        : 'border-border hover:border-primary/60 hover:scale-105'
-                    }`}
-                    title={`${member.name} - ${member.role}`}
-                  >
-                    <Avatar className="size-12 rounded-none border border-background">
-                      <AvatarImage src={member.avatar} alt={member.name} className="rounded-none object-cover" />
-                      <AvatarFallback className="text-[10px] font-bold font-mono bg-muted text-muted-foreground uppercase">{initials}</AvatarFallback>
-                    </Avatar>
-                    <span className="absolute -bottom-1 -right-1 bg-background text-[7px] border border-border px-1 py-0.2 font-mono text-foreground font-semibold scale-90 rounded-none">
-                      {member.seatId.replace('SEAT_', '')}
-                    </span>
-                    {isActive && (
-                      <span className="absolute inset-0 border border-primary rounded-none animate-ping pointer-events-none" />
-                    )}
-                  </button>
-                );
-              })}
+            {/* Overlaid content — anchored bottom-left */}
+            <div className="relative z-10 h-full flex flex-col justify-end p-8 md:p-12 max-w-3xl">
+              <h2 className="font-heading text-3xl md:text-5xl font-semibold tracking-tight text-foreground mb-4 drop-shadow-lg">
+                {t('innovativeCouncil')}
+              </h2>
+              <p className="font-sans text-muted-foreground text-sm md:text-base leading-relaxed max-w-2xl">
+                {t('councilDescription')}
+              </p>
             </div>
-          </div>
 
-          <div className="text-center mt-4">
-            <span className="font-mono text-[8px] tracking-widest text-muted-foreground">
-              {t('selectChairSeat')}
-            </span>
+            {/* Neon accent left edge */}
+            <div className="absolute left-0 inset-y-0 w-[2px] bg-gradient-to-b from-transparent via-primary/60 to-transparent pointer-events-none" />
           </div>
         </div>
 
-        {/* Panels / Committees Directory */}
-        <div className="space-y-20">
-          {PANELS.map(panelName => {
-            const members = COUNCIL_MEMBERS.filter(m => m.panel === panelName);
-            
-            return (
-              <div key={panelName} className="space-y-6">
-                {/* Panel Title */}
-                <div className="flex items-center gap-3 border-b border-border pb-4">
-                  <div className="w-2.5 h-2.5 bg-primary rounded-none" />
-                  <h3 className="font-heading text-xl md:text-2xl font-semibold tracking-tight text-foreground">
-                    {panelName}
-                  </h3>
-                  <span className="font-mono text-[9px] uppercase tracking-widest text-muted-foreground ml-auto bg-muted/40 border border-border px-2 py-0.5">
-                    {t('panelSeatCount')}{members.length}
-                  </span>
-                </div>
-
-                {/* Panel Members Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {members.map(member => {
-                    const initials = member.name.split(' ').filter(n => !n.includes('.') && n !== 'LL.M.').map(n => n[0]).join('').slice(0, 2);
-                    return (
-                      <MagicCard
-                        key={member.name}
-                        heightClass="h-[310px] md:h-[330px]"
-                      >
-                        <div className="flex flex-col justify-between h-full space-y-4">
-                          
-                          {/* Header */}
-                          <div className="space-y-3">
-                            <div className="flex items-center justify-between font-mono text-[8px] tracking-widest text-primary/70">
-                              <span>{member.seatId} // {member.status}</span>
-                              <span className="flex items-center gap-1">
-                                <MapPin className="size-2 text-primary" /> {member.location}
+        {/* Unified Collapsible Accordion Council */}
+        <div className="max-w-4xl mx-auto mb-20">
+          <Accordion type="single" collapsible defaultValue="panel-0" className="w-full space-y-4">
+            {PANELS.map((panelName, panelIndex) => {
+              const members = COUNCIL_MEMBERS.filter(m => m.panel === panelName);
+              return (
+                <AccordionItem key={panelName} value={`panel-${panelIndex}`} className="border border-border/80 bg-card/10 px-6 py-2 rounded-none">
+                  <AccordionTrigger className="hover:text-primary focus:text-primary focus:outline-none transition-colors text-sm font-semibold tracking-tight uppercase no-underline hover:no-underline">
+                    <div className="flex items-center justify-between w-full pr-4">
+                      <span>{panelName}</span>
+                      <span className="font-mono text-[9px] text-muted-foreground/60 tracking-widest">[ SEATS: {members.length} ]</span>
+                    </div>
+                  </AccordionTrigger>
+                  <AccordionContent className="pt-6 pb-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                      {members.map((member) => (
+                        <button key={member.seatId} onClick={() => handleSeatClick(member)} className="group flex flex-col items-start gap-3 p-3 border border-border/40 bg-card/30 hover:border-primary/50 hover:bg-muted/5 focus:border-primary/50 focus:bg-muted/5 focus:outline-none transition-all duration-300 rounded-none text-left w-full" title={`${member.name} - ${member.role}`}>
+                          <div className="w-full aspect-square border border-border/40 overflow-hidden shrink-0">
+                            <img
+                              src={member.avatar}
+                              alt={member.name}
+                              className="w-full h-full object-cover transition-all duration-300 grayscale brightness-[0.65] group-hover:grayscale-0 group-hover:brightness-100 group-focus:grayscale-0 group-focus:brightness-100"
+                            />
+                          </div>
+                          <div className="w-full space-y-1">
+                            <h4 className="text-xs font-semibold text-foreground group-hover:text-primary group-focus:text-primary transition-colors leading-tight">
+                              {member.name}
+                            </h4>
+                            <p className="text-[10px] text-muted-foreground leading-normal truncate">
+                              {member.role}
+                            </p>
+                            <div className="flex items-center justify-between w-full pt-1.5 border-t border-border/20">
+                              <span className="text-[8px] font-mono text-muted-foreground/50 uppercase">
+                                {member.location}
                               </span>
-                            </div>
-                            
-                            <div className="flex items-start gap-3">
-                              <Avatar className="size-12 border border-border shrink-0">
-                                <AvatarImage src={member.avatar} alt={member.name} className="object-cover" />
-                                <AvatarFallback className="text-xs font-bold font-mono bg-muted text-muted-foreground uppercase">{initials}</AvatarFallback>
-                              </Avatar>
-                              <div className="space-y-0.5 min-w-0">
-                                <h4 className="font-heading text-lg font-semibold text-foreground tracking-tight leading-tight truncate" title={member.name}>
-                                  {member.name}
-                                </h4>
-                                <p className="font-sans text-[11px] text-muted-foreground leading-snug line-clamp-2" title={member.role}>
-                                  {member.role}
-                                </p>
+                              {/* Social links */}
+                              <div className="flex items-center gap-1.5 opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity duration-200">
+                                {member.social?.linkedin && (
+                                  <a href={member.social.linkedin} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()} className="p-0.5 text-muted-foreground hover:text-primary focus:text-primary focus:outline-none transition-colors" title="LinkedIn">
+                                    <CustomIcon type="brands" name="linkedin-in" className="size-2.5" />
+                                  </a>
+                                )}
+                                {member.social?.twitter && (
+                                  <a href={member.social.twitter} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()} className="p-0.5 text-muted-foreground hover:text-primary focus:text-primary focus:outline-none transition-colors" title="X / Twitter">
+                                    <CustomIcon type="brands" name="x-twitter" className="size-2.5" />
+                                  </a>
+                                )}
+                                {member.social?.instagram && (
+                                  <a href={member.social.instagram} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()} className="p-0.5 text-muted-foreground hover:text-primary focus:text-primary focus:outline-none transition-colors" title="Instagram">
+                                    <CustomIcon type="brands" name="instagram" className="size-2.5" />
+                                  </a>
+                                )}
                               </div>
                             </div>
                           </div>
-
-                          {/* Summary & Tag */}
-                          <div className="space-y-4 flex-1">
-                            <p className="font-sans text-[11px] text-muted-foreground leading-relaxed line-clamp-3">
-                              {member.bio}
-                            </p>
-                          </div>
-
-                          {/* Footer details */}
-                          <div className="border-t border-border pt-4 flex items-center justify-between">
-                            <div className="flex flex-wrap gap-1">
-                              {member.categories.map(cat => (
-                                <Badge key={cat} variant="secondary" className="text-[8px] uppercase tracking-widest font-mono rounded-none py-0 px-1 bg-muted/40">
-                                  {cat.slice(0, 8)}
-                                </Badge>
-                              ))}
-                            </div>
-                            
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              onClick={() => setSelectedMember(member)}
-                              className="font-mono text-[8px] tracking-wider uppercase h-7 px-2 py-0 hover:border-primary/50"
-                            >
-                              {t('dossierLabel')}
-                            </Button>
-                          </div>
-
-                        </div>
-                      </MagicCard>
-                    );
-                  })}
-                </div>
-              </div>
-            );
-          })}
+                        </button>
+                      ))}
+                    </div>
+                  </AccordionContent>
+                </AccordionItem>
+              );
+            })}
+          </Accordion>
         </div>
 
         {/* Testimonials Section */}
@@ -613,48 +563,41 @@ const PartnerNode = ({ name, title }: { name: string; title: string }) => {
 
 const PartnerNetworkIllustration = () => {
   return (
-    <div
-      aria-hidden
-      className="mx-auto flex h-48 max-w-lg flex-col justify-between relative mt-8 select-none"
-    >
-      {/* Connector lines behind */}
-      <div className="absolute inset-0 flex flex-col justify-between py-5 pointer-events-none">
-        <div className="relative h-px w-full bg-border" />
-        <div className="relative h-px w-full">
-          <div className="absolute inset-0 bg-border" />
-          <div className="absolute inset-y-0 left-0 w-1/2 bg-gradient-to-r from-primary/30 to-transparent h-px" />
-          <div className="absolute inset-y-0 right-0 w-1/2 bg-gradient-to-l from-primary/30 to-transparent h-px" />
-        </div>
-        <div className="relative h-px w-full bg-border" />
-      </div>
-
-      {/* Row 1 */}
-      <div className="relative flex h-10 items-center justify-between px-6 md:px-12 z-10">
-        <PartnerNode name="SG MOE" title="Ministry of Education, Singapore // Speech Interventions" />
-        <PartnerNode name="KR LAB" title="Green Hydrogen & Energy Lab, South Korea // STEM Internships" />
-      </div>
-
-      {/* Row 2 (Center EduPlus Node) */}
-      <div className="relative flex h-10 items-center justify-between px-2 md:px-6 z-10">
-        <PartnerNode name="US ECE" title="Early Childhood Education Center, Dallas, USA // Cognitive Pedagogy" />
-        
-        <div className="border border-primary/20 bg-background rounded-none p-1 shadow-md shadow-primary/5 ring-1 ring-primary/10">
-          <div className="bg-card border border-primary/40 flex h-8 items-center rounded-none px-4 shadow-sm">
-            <div className="flex items-center gap-0">
-              <span className="font-heading font-bold text-xs text-foreground tracking-tight">{t('eduLabel')}</span>
-              <span className="text-primary font-light text-xs">+</span>
-            </div>
+    <div className="relative flex h-[480px] w-full flex-col items-center justify-center overflow-hidden bg-background select-none mt-8 border border-border/40">
+      {/* Center Node */}
+      <div className="z-20 border border-primary/20 bg-background rounded-none p-1 shadow-md shadow-primary/5 ring-1 ring-primary/10">
+        <div className="bg-card border border-primary/40 flex h-10 items-center rounded-none px-5 shadow-sm">
+          <div className="flex items-center gap-0">
+            <span className="font-heading font-bold text-sm text-foreground tracking-tight">{t('eduLabel')}</span>
+            <span className="text-primary font-light text-sm">+</span>
           </div>
         </div>
-
-        <PartnerNode name="MARITIME" title="Indian Maritime University / Global Seafaring Competence" />
       </div>
 
-      {/* Row 3 */}
-      <div className="relative flex h-10 items-center justify-between px-6 md:px-12 z-10">
+      {/* Inner Orbit (Radius: 100, Speed/Duration: 24, Clockwise) */}
+      <OrbitingCircles
+        className="animate-orbit-pause z-10"
+        radius={100}
+        duration={24}
+        path={true}
+      >
+        <PartnerNode name="SG MOE" title="Ministry of Education, Singapore // Speech Interventions" />
+        <PartnerNode name="US ECE" title="Early Childhood Education Center, Dallas, USA // Cognitive Pedagogy" />
         <PartnerNode name="GOONJ NE" title="Grassroots Community Development, North East India // Education Equity" />
+      </OrbitingCircles>
+
+      {/* Outer Orbit (Radius: 180, Speed/Duration: 36, Counter-Clockwise) */}
+      <OrbitingCircles
+        className="animate-orbit-pause z-10"
+        radius={180}
+        duration={36}
+        reverse
+        path={true}
+      >
+        <PartnerNode name="KR LAB" title="Green Hydrogen & Energy Lab, South Korea // STEM Internships" />
+        <PartnerNode name="MARITIME" title="Indian Maritime University / Global Seafaring Competence" />
         <PartnerNode name="POWERICA" title="Corporate Legal & Renewable Energy Advisory // Profile Mentorship" />
-      </div>
+      </OrbitingCircles>
     </div>
   );
 };

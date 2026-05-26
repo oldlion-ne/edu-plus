@@ -114,6 +114,68 @@
     animation: glow 3s infinite;
   }
 
+  .liquid-glass {
+    background: rgb(255 255 255 / 0.01);
+    background-blend-mode: luminosity;
+    backdrop-filter: blur(4px);
+    /* stylelint-disable-next-line property-no-vendor-prefix */
+    -webkit-backdrop-filter: blur(4px);
+    border: none;
+    box-shadow: inset 0 1px 1px rgb(255 255 255 / 0.1);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .liquid-glass::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1.4px;
+    background: linear-gradient(180deg,
+      rgb(255 255 255 / 0.45) 0%, rgb(255 255 255 / 0.15) 20%,
+      rgb(255 255 255 / 0) 40%, rgb(255 255 255 / 0) 60%,
+      rgb(255 255 255 / 0.15) 80%, rgb(255 255 255 / 0.45) 100%);
+    /* stylelint-disable-next-line property-no-vendor-prefix */
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    /* stylelint-disable-next-line property-no-vendor-prefix */
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+  }
+
+  .liquid-glass-strong {
+    background: rgb(255 255 255 / 0.02);
+    background-blend-mode: luminosity;
+    backdrop-filter: blur(50px);
+    /* stylelint-disable-next-line property-no-vendor-prefix */
+    -webkit-backdrop-filter: blur(50px);
+    border: none;
+    box-shadow: 4px 4px 4px rgb(0 0 0 / 0.05), inset 0 1px 1px rgb(255 255 255 / 0.15);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .liquid-glass-strong::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1.4px;
+    background: linear-gradient(180deg,
+      rgb(255 255 255 / 0.5) 0%, rgb(255 255 255 / 0.2) 20%,
+      rgb(255 255 255 / 0) 40%, rgb(255 255 255 / 0) 60%,
+      rgb(255 255 255 / 0.2) 80%, rgb(255 255 255 / 0.5) 100%);
+    /* stylelint-disable-next-line property-no-vendor-prefix */
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    /* stylelint-disable-next-line property-no-vendor-prefix */
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+  }
+
   @keyframes fadeIn {
     from {
       opacity: 0;
@@ -154,4 +216,25 @@
 /* Scoped to AnimatedThemeToggler - the toggler sets the data-attribute and the variable only during a theme toggle. */
 html[data-magicui-theme-vt="active"]::view-transition-group(root) {
   animation-duration: var(--magicui-theme-toggle-vt-duration);
+}
+
+@keyframes orbit {
+  0% {
+    transform: rotate(calc(var(--angle) * 1deg))
+      translateY(calc(var(--radius) * 1px)) rotate(calc(var(--angle) * -1deg));
+  }
+
+  100% {
+    transform: rotate(calc(var(--angle) * 1deg + 360deg))
+      translateY(calc(var(--radius) * 1px))
+      rotate(calc((var(--angle) * -1deg) - 360deg));
+  }
+}
+
+.animate-orbit {
+  animation: orbit calc(var(--duration) * 1s) linear infinite;
+}
+
+.animate-orbit-pause:hover {
+  animation-play-state: paused !important;
 }

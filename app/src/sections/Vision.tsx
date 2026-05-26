@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { TextReveal } from '@/components/ui/text-reveal';
+import { CharacterReveal } from '@/components/ui/character-reveal';
 
 export default function Vision() {
   const [visible, setVisible] = useState(false);
@@ -78,17 +79,11 @@ export default function Vision() {
               To become a leading skills development platform that reimagines how people learn, grow, and work - creating measurable impact on the global workforce and the communities we serve. We aim to make world-class skill development accessible, practical, and outcomes-driven for every learner, irrespective of geography or background.
             </TextReveal>
 
-            {/* Vision - static reveal with animation */}
-            <div
-              className={`border-l-2 border-primary/20 pl-8 transition-all duration-1000 delay-500 ${
-                visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
-              }`}
-            >
-              <p className="font-heading text-xl md:text-2xl font-light text-muted-foreground leading-relaxed">
-                To empower individuals to acquire future-ready, in-demand skills; to close the gap between education and industry; and to cultivate a global community of lifelong learners who are{' '}
-                <span className="text-foreground">confident, employable, and resilient</span>{' '}
-                in the face of change.
-              </p>
+            {/* Vision - Character scroll reveal */}
+            <div className="border-l-2 border-primary/20 pl-8">
+              <CharacterReveal>
+                To empower individuals to acquire future-ready, in-demand skills; to close the gap between education and industry; and to cultivate a global community of lifelong learners who are confident, employable, and resilient in the face of change.
+              </CharacterReveal>
             </div>
 
           </div>

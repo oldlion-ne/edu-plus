@@ -1,7 +1,11 @@
-import { useEffect, useState } from 'react';
+import { useRef } from 'react';
+import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
+import { RetroGrid } from '../ui/retro-grid';
 
 interface ImmersiveHeroProps {
-  bgImage: string;
+  bgImage?: string;
+  bgVideo?: string;
+  bgPosition?: string;
   category: string;
   titleNormal: string;
   titleHighlighted: string;
@@ -12,7 +16,6 @@ interface ImmersiveHeroProps {
 }
 
 export default function ImmersiveHero({
-  bgImage,
   category,
   titleNormal,
   titleHighlighted,
@@ -21,31 +24,36 @@ export default function ImmersiveHero({
   telemetryRight,
   children
 }: ImmersiveHeroProps) {
-  const [scrollY, setScrollY] = useState(0);
+  const containerRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    const handleScroll = () => {
-      setScrollY(window.scrollY);
-    };
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start start", "end start"]
+  });
+
+  const y = useTransform(scrollYProgress, [0, 1], ["0%", "30%"]);
+  const ySmooth = useSpring(y, { stiffness: 100, damping: 30, restDelta: 0.001 });
 
   return (
-    <div className="relative w-full h-[55vh] min-h-[420px] md:h-[60vh] overflow-hidden bg-background border-b border-border select-none group flex flex-col justify-between py-12 md:py-16">
+    <div 
+      ref={containerRef}
+      className="relative w-full h-[55vh] min-h-[420px] md:h-[60vh] overflow-hidden bg-background border-b border-border select-none group flex flex-col justify-between py-12 md:py-16"
+    >
       {/* Parallax Background Layer */}
-      <div
-        className="absolute inset-0 w-full h-full z-0 pointer-events-none transition-transform duration-1200 ease-out group-hover:scale-[1.03]"
+      <motion.div
+        className="absolute inset-0 w-full h-full z-0 pointer-events-none transition-transform duration-[1.6s] cubic-bezier(0.16, 1, 0.3, 1) group-hover:scale-[1.03]"
         style={{
-          transform: `translateY(${scrollY * 0.3}px)`,
+          y: ySmooth,
         }}
       >
-        <img
-          src={bgImage}
-          alt="Section background illustration"
-          className="w-full h-full object-cover opacity-55"
+        <RetroGrid
+          angle={65}
+          cellSize={50}
+          opacity={0.3}
+          lightLineColor="#8B949E"
+          darkLineColor="#7DF9FF"
         />
-      </div>
+      </motion.div>
 
       {/* ── Dark overlays ── */}
       <div
