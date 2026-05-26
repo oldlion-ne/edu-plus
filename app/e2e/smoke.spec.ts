@@ -7,6 +7,10 @@ test.describe('EduPlus E2E Smoke Tests', () => {
     pageErrors.length = 0;
     // Catch uncaught exceptions on the page
     page.on('pageerror', (exception) => {
+      // Ignore WebKit cancelled/aborted fetch/CORS errors during navigation/unload
+      if (exception.message && exception.message.includes('Fetch API cannot load') && exception.message.includes('due to access control checks')) {
+        return;
+      }
       pageErrors.push(exception);
     });
   });

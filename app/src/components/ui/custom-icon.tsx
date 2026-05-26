@@ -21,7 +21,9 @@ export function CustomIcon({ name, type = 'solid', className }: CustomIconProps)
     }
 
     let isMounted = true;
-    fetch(`/svgs-icons/${type}/${name}.svg`)
+    const controller = new AbortController();
+
+    fetch(`/svgs-icons/${type}/${name}.svg`, { signal: controller.signal })
       .then((res) => {
         if (!res.ok) {
           throw new Error(`Icon "${name}" not found in folder "${type}"`);
@@ -42,11 +44,14 @@ export function CustomIcon({ name, type = 'solid', className }: CustomIconProps)
         }
       })
       .catch((err) => {
-        console.warn(err.message);
+        if (err.name !== 'AbortError') {
+          console.warn(err.message);
+        }
       });
 
     return () => {
       isMounted = false;
+      controller.abort();
     };
   }, [name, type]);
 
