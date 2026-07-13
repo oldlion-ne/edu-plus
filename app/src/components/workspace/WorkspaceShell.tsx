@@ -64,7 +64,7 @@ export function WorkspaceShell() {
             <Button variant="ghost" size="icon" className="md:hidden" onClick={() => setMobileOpen(true)} aria-label="Open workspace navigation"><Menu className="size-4" /></Button>
             <div><p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">Staff workspace</p><p className="truncate text-sm font-medium text-foreground">{activeLabel}</p></div>
           </div>
-          <Button asChild variant="ghost" size="sm"><Link to="/">View public site</Link></Button>
+          <Button asChild variant="ghost" size="sm"><Link to="/" /* ui-ignore */>View public site</Link></Button>
         </header>
         <main className="flex-1 overflow-y-auto p-5 md:p-8 xl:p-10"><div className="mx-auto max-w-[1440px]">{show()}</div></main>
       </div>

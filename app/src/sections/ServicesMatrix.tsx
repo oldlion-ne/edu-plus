@@ -33,7 +33,7 @@ function ProgramCard({
   return (
     <div
       className={cn(
-      'relative flex items-center gap-3 border border-border bg-card/80 px-4 py-3 backdrop-blur-sm transition-all duration-300 hover:border-primary/40 hover:bg-card shrink-0 rounded-none',
+      'relative flex items-center gap-3 border border-border bg-card/80 px-4 py-3  transition-all duration-300 hover:border-primary/40 hover:bg-card shrink-0 rounded-none',
         className,
       )}
     >
@@ -129,7 +129,7 @@ export default function ServicesMatrix() {
 
             {/* Centre logo node */}
             <div className="absolute inset-0 m-auto flex size-fit items-center justify-center z-20">
-        <div className="flex px-4 py-2 items-center justify-center rounded-none border border-border bg-card/90 shadow-xl shadow-black/10 backdrop-blur-md">
+        <div className="flex px-4 py-2 items-center justify-center rounded-none border border-border bg-card/90 shadow-xl shadow-black/10 ">
                 <EduPlusLogo className="text-lg" />
               </div>
             </div>

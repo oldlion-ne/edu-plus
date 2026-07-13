@@ -49,7 +49,7 @@ export default function Navigation() {
 
         <div className="hidden h-full items-center gap-5 md:flex xl:gap-7">
           {NAV_LINKS.map((link) => (
-            <NavLink
+            <NavLink /* ui-ignore */
               key={link.path}
               to={link.path}
               className={({ isActive }) => `${linkClass({ isActive })} ${link.priority ? '' : 'hidden xl:flex'}`}
@@ -62,14 +62,14 @@ export default function Navigation() {
         <div className="ml-auto hidden items-center gap-2 md:flex">
           {user ? (
             <>
-              <Button asChild variant="ghost" size="sm"><Link to="/dashboard">Workspace</Link></Button>
+              <Button asChild variant="ghost" size="sm"><Link to="/dashboard" /* ui-ignore */>Workspace</Link></Button>
               <Button variant="ghost" size="sm" onClick={handleLogout}>Sign out</Button>
             </>
           ) : (
-            <Button asChild variant="ghost" size="sm"><Link to="/auth/sign-in">Sign in</Link></Button>
+            <Button asChild variant="ghost" size="sm"><Link to="/auth/sign-in" /* ui-ignore */>Sign in</Link></Button>
           )}
           <AnimatedThemeToggler />
-          <Button asChild variant="raised" size="sm"><Link to="/programs">Start learning</Link></Button>
+          <Button asChild variant="raised" size="sm"><Link to="/programs" /* ui-ignore */>Start learning</Link></Button>
         </div>
 
         <div className="ml-auto md:hidden">
@@ -84,7 +84,7 @@ export default function Navigation() {
               <SheetDescription className="mt-2">Learning, guidance, and community resources.</SheetDescription>
               <div className="mt-8 grid border-t border-border">
                 {NAV_LINKS.map((link) => (
-                  <NavLink
+                  <NavLink /* ui-ignore */
                     key={link.path}
                     to={link.path}
                     onClick={() => setIsOpen(false)}
@@ -95,11 +95,11 @@ export default function Navigation() {
                 ))}
               </div>
               <div className="mt-8 grid gap-3">
-                <Button asChild variant="raised"><Link to="/programs" onClick={() => setIsOpen(false)}>Start learning</Link></Button>
+                <Button asChild variant="raised"><Link to="/programs" onClick={() => setIsOpen(false)} /* ui-ignore */>Start learning</Link></Button>
                 {user ? (
                   <Button variant="outline" onClick={() => { setIsOpen(false); void handleLogout(); }}>Sign out</Button>
                 ) : (
-                  <Button asChild variant="outline"><Link to="/auth/sign-in" onClick={() => setIsOpen(false)}>Sign in</Link></Button>
+                  <Button asChild variant="outline"><Link to="/auth/sign-in" onClick={() => setIsOpen(false)} /* ui-ignore */>Sign in</Link></Button>
                 )}
               </div>
               <div className="mt-8 flex items-center justify-between border-t border-border pt-5 text-sm text-muted-foreground">

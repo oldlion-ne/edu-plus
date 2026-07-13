@@ -129,8 +129,9 @@ function checkFile(filePath) {
     // 4. Check for interactive tags missing hover, focus, active attributes (Warning)
     const hasInteractiveTag = INTERACTIVE_TAG_REGEX.test(line);
     if (hasInteractiveTag && !filePath.endsWith('.css')) {
-      const hasHover = line.includes('hover:');
-      const hasFocus = line.includes('focus:');
+      const elementSource = lines.slice(index, index + 6).join(' ');
+      const hasHover = elementSource.includes('hover:');
+      const hasFocus = elementSource.includes('focus:') || elementSource.includes('focus-visible:');
       if (!hasHover || !hasFocus) {
         console.log(`${colors.yellow('⚠️ WARNING')} Interactive element missing states (hover: ${hasHover ? '✓' : '✗'}, focus: ${hasFocus ? '✓' : '✗'}) in ${colors.cyan(relativePath)}:${colors.yellow(lineNumber)}`);
         console.log(colors.gray(`   Line ${lineNumber}: ${line.trim()}`));

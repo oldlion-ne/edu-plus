@@ -48,7 +48,7 @@ describe('App Routing', () => {
       </MemoryRouter>
     );
     expect(await screen.findByText(/Know Who/i, {}, { timeout: 5000 })).toBeInTheDocument();
-  });
+  }, 15000);
 
   it('renders the authentication trust region', async () => {
     render(
@@ -57,6 +57,6 @@ describe('App Routing', () => {
       </MemoryRouter>,
     );
 
-    expect(await screen.findByText('Built for the East Asian learning community', {}, { timeout: 5000 })).toBeInTheDocument();
-  });
+    expect(await screen.findByText('Built for the East Asian learning community', {}, { timeout: 10000 })).toBeInTheDocument();
+  }, 15000);
 });

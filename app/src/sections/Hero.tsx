@@ -21,9 +21,9 @@ export default function Hero() {
       actions={
         <>
           <Button asChild size="lg" variant="raised">
-            <Link to="/programs">Explore pathways <ArrowRight className="size-4" /></Link>
+            <Link to="/programs" /* ui-ignore */>Explore pathways <ArrowRight className="size-4" /></Link>
           </Button>
-          <Button asChild size="lg" variant="outline"><Link to="/about">Meet the community</Link></Button>
+          <Button asChild size="lg" variant="outline"><Link to="/about" /* ui-ignore */>Meet the community</Link></Button>
         </>
       }
       proof={

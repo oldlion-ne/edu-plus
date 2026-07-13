@@ -135,7 +135,7 @@ export default function AIChatAgent() {
         });
         return (
           <div key={lineIndex} className="ml-4 mb-1.5 text-left flex gap-1.5 leading-relaxed">
-            <span className="font-mono text-primary font-semibold">{num}.</span>
+            <span className="font-sans text-primary font-semibold">{num}.</span>
             <span className="flex-1">{formattedLine}</span>
           </div>
         );
@@ -176,18 +176,9 @@ export default function AIChatAgent() {
             className="group flex flex-col items-center justify-center h-14 w-14 bg-background border border-primary/30 text-foreground hover:border-primary/80 transition-colors duration-300 cursor-pointer relative shadow-md rounded-none"
             aria-label="Open AI chat support"
           >
-            <span className="font-mono text-xs font-bold tracking-widest text-primary group-hover:scale-105 transition-transform duration-200">
-              [AI]
+            <span className="font-sans text-xs font-bold tracking-wide text-primary group-hover:scale-105 transition-transform duration-200">
+              Ask
             </span>
-            <div className="flex items-center gap-1 mt-1">
-              <span className="relative flex h-1.5 w-1.5">
-                <span className="relative inline-flex h-1.5 w-1.5 bg-primary"></span>
-              </span>
-              <span className="text-[9px] tracking-wider text-primary uppercase font-semibold">{t('statusOnline')}</span>
-            </div>
-            <svg className="absolute inset-0 w-full h-full text-primary/10 group-hover:text-primary/30 transition-colors duration-300 group-hover:animate-spin [animation-duration:6s] pointer-events-none" viewBox="0 0 100 100">
-              <rect x="4" y="4" width="92" height="92" stroke="currentColor" strokeWidth="1" strokeDasharray="4 4" fill="none" />
-            </svg>
           </button>
         </div>
       )}
@@ -197,7 +188,7 @@ export default function AIChatAgent() {
         <>
           {/* Backdrop — tap outside panel to close */}
           <div
-            className="fixed inset-0 z-[9998] bg-black/60 backdrop-blur-sm"
+            className="fixed inset-0 z-[9998] bg-black/60"
             onClick={() => setIsOpen(false)}
             aria-hidden="true"
           />
@@ -210,7 +201,7 @@ export default function AIChatAgent() {
                 <span className="relative flex h-2 w-2">
               <span className="relative inline-flex h-2 w-2 bg-primary"></span>
                 </span>
-                <span className="font-mono text-xs font-bold tracking-widest text-primary uppercase">{t('advisorTitle')}</span>
+                <span className="font-sans text-xs font-bold tracking-widest text-primary uppercase">{t('advisorTitle')}</span>
               </div>
               {/* Close button */}
               <button /* ui-ignore */
@@ -232,10 +223,10 @@ export default function AIChatAgent() {
                     msg.role === 'user' ? 'ml-auto items-end' : 'mr-auto'
                   }`}
                 >
-                  <span className={`font-mono text-[9px] tracking-widest ${
+                  <span className={`font-sans text-[9px] tracking-widest ${
                     msg.role === 'user' ? 'text-muted-foreground' : 'text-primary'
                   }`}>
-                    {msg.role === 'user' ? '[YOU]' : '[ADVISOR]'}
+                    {msg.role === 'user' ? 'You' : 'EduPlus advisor'}
                   </span>
                   <div className={`p-3.5 text-xs leading-relaxed border ${
                     msg.role === 'user'
@@ -249,7 +240,7 @@ export default function AIChatAgent() {
 
               {isLoading && (
                 <div className="flex flex-col gap-1 mr-auto max-w-[90%]">
-                  <span className="font-mono text-[9px] tracking-widest text-primary">[ADVISOR]</span>
+                  <span className="font-sans text-[9px] tracking-widest text-primary">EduPlus advisor</span>
                   <div className="p-3.5 text-xs bg-primary/5 border border-primary/10 text-primary rounded-none">
                     {t('thinking')}
                   </div>
@@ -263,15 +254,15 @@ export default function AIChatAgent() {
               <div className="px-5 py-3 border-t border-border/60 flex flex-wrap gap-2 bg-muted/20 flex-shrink-0">
                 <button /* ui-ignore */
                   onClick={() => handleSendMessage('Explore EduPlus Programs')}
-                  className="px-3 py-1.5 text-[9px] font-mono border border-primary/20 bg-primary/5 text-primary hover:bg-primary/20 hover:border-primary transition-all duration-200 cursor-pointer rounded-none uppercase tracking-wider"
+                  className="px-3 py-1.5 text-[9px] font-sans border border-primary/20 bg-primary/5 text-primary hover:bg-primary/20 hover:border-primary transition-all duration-200 cursor-pointer rounded-none uppercase tracking-wider"
                 >
-                  [ {t('btnPrograms')} ]
+                  {t('btnPrograms')}
                 </button>
                 <button /* ui-ignore */
                   onClick={() => handleSendMessage('I need career counseling')}
-                  className="px-3 py-1.5 text-[9px] font-mono border border-primary/20 bg-primary/5 text-primary hover:bg-primary/20 hover:border-primary transition-all duration-200 cursor-pointer rounded-none uppercase tracking-wider"
+                  className="px-3 py-1.5 text-[9px] font-sans border border-primary/20 bg-primary/5 text-primary hover:bg-primary/20 hover:border-primary transition-all duration-200 cursor-pointer rounded-none uppercase tracking-wider"
                 >
-                  [ {t('btnCareerCounseling')} ]
+                  {t('btnCareerCounseling')}
                 </button>
               </div>
             )}
@@ -291,12 +282,12 @@ export default function AIChatAgent() {
                 onChange={(e) => setInputValue(e.target.value)}
                 placeholder="Ask a question…"
                 disabled={isLoading}
-                className="flex-1 bg-background border border-input text-foreground text-xs px-3 py-2 outline-none focus:border-primary focus:ring-1 focus:ring-primary/25 disabled:opacity-50 font-mono transition-all rounded-none placeholder:text-muted-foreground/45"
+                className="flex-1 bg-background border border-input text-foreground text-xs px-3 py-2 outline-none focus:border-primary focus:ring-1 focus:ring-primary/25 disabled:opacity-50 font-sans transition-all rounded-none placeholder:text-muted-foreground/45"
               />
               <button /* ui-ignore */
                 type="submit"
                 disabled={isLoading || !inputValue.trim()}
-                className="px-4 py-2 bg-primary hover:bg-primary/95 disabled:opacity-40 text-primary-foreground font-mono text-[10px] font-bold tracking-widest transition-all duration-300 cursor-pointer rounded-none border border-transparent hover:border-primary/20"
+                className="px-4 py-2 bg-primary hover:bg-primary/95 disabled:opacity-40 text-primary-foreground font-sans text-[10px] font-bold tracking-widest transition-all duration-300 cursor-pointer rounded-none border border-transparent hover:border-primary/20"
               >
                 {t('btnSend')}
               </button>

@@ -1,83 +1,70 @@
-# Edu+
+# EduPlus
 
-[![CodeRabbit Pull Request Reviews](https://img.shields.io/coderabbit/prs/github/oldlion-ne/edu-plus?utm_source=oss&utm_medium=github&utm_campaign=oldlion-ne%2Fedu-plus&labelColor=171717&color=FF570A&link=https%3A%2F%2Fcoderabbit.ai&label=CodeRabbit+Reviews)](https://coderabbit.ai)
-[![Built with React](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=white&labelColor=171717)](https://react.dev)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?logo=typescript&logoColor=white&labelColor=171717)](https://www.typescriptlang.org)
-[![Powered by Vite](https://img.shields.io/badge/Vite-7-646CFF?logo=vite&logoColor=white&labelColor=171717)](https://vite.dev)
-[![Supabase](https://img.shields.io/badge/Supabase-Backend-3ECF8E?logo=supabase&logoColor=white&labelColor=171717)](https://supabase.com)
+EduPlus is a secure East Asian learning-community platform built with React, TypeScript, Vite, Tailwind CSS, Radix/shadcn primitives, and Supabase. It combines public learning pathways, knowledge and events with a role-aware staff workspace and a server-proxied AI guidance experience.
 
-> A modern educational platform built for the Edu+ ecosystem — featuring a role-based admin dashboard, AI chat advisor, knowledge hub, and dynamic telemetry analytics.
+## Design system
 
----
+The interface follows **Integrated Nordic Optics**: EduPlus's Nordic Lagom identity enriched with stronger typography, structured composition, semantic states, and restrained material depth.
 
-## Tech Stack
+- Public routes use editorial density: large responsive type, asymmetric layouts, intentional whitespace, and route-specific hero composition.
+- Authenticated routes use product density: compact navigation, clear workflow state, accessible metrics, and task-led surfaces.
+- Geometry is square. Rounded cards, squircle controls, decorative curved paths, glassmorphism, neon glow, pulse, and HUD styling are prohibited.
+- Amber is the brand accent over warm charcoal and warm off-white semantic surfaces.
+- Inter Variable is the primary interface typeface. Monospace is reserved for genuinely technical data.
+- Human illustrations depict East Asian people only and use non-realistic, minimalist flat-vector rendering.
+
+Optics is a design reference, not an installed primitive stack. Components remain project-owned and Radix based.
+
+## Technology
 
 | Layer | Technology |
 |---|---|
-| Frontend | React 19 + TypeScript |
-| Styling | Tailwind CSS v4 |
+| Frontend | React 19 and TypeScript |
+| Styling | Tailwind CSS 3 and project-owned design tokens |
 | Build | Vite 7 |
-| Backend | Supabase (Auth + Postgres) |
-| Charts | Recharts |
-| AI Advisor | OpenRouter API |
-| Routing | React Router v7 |
+| Backend | Supabase Auth, Postgres, Storage, RLS, RPC, and Edge Functions |
+| Routing | React Router 7 |
+| Charts | Recharts with linear interpolation |
+| Package manager | pnpm only |
 
----
-
-## Features
-
-- 🔐 **Role-based authentication** — Admin, Educator, and Resource Person roles via Supabase
-- 📊 **Live telemetry dashboard** — Interactive area charts with filterable time ranges
-- 📚 **Knowledge Hub** — Upload and manage tutorials, podcasts, webinars, and study materials
-- 🤖 **AI Chat Advisor** — Powered by OpenRouter with custom knowledge injection
-- 📩 **Contact inquiry terminal** — Real-time inbound message monitoring
-- 🎨 **HUD-style UI** — Dark glassmorphism design with monospace typography
-
----
-
-## Getting Started
+## Local development
 
 ```bash
-# Install dependencies
 pnpm install
-
-# Start development server
 pnpm run dev
+```
 
-# Production build
-pnpm run build
+Create `.env.local` from `.env.example` and provide the public Supabase URL and anonymous key. Provider secrets such as the OpenRouter key belong in Supabase Edge Function secrets and must never use a `VITE_` prefix.
 
-# Run UI compliance checks
+## Verification
+
+Run all required gates before release:
+
+```bash
+pnpm run test:run
+pnpm tsc -b
+pnpm run lint
 pnpm run ui-check
+pnpm run build
 ```
 
----
+The UI compliance scanner enforces straight geometry, semantic colors, quiet motion, non-HUD copy, and normal interface typography.
 
-## Environment Variables
+## Structure
 
-Create a `.env.local` file in the project root:
-
-```env
-VITE_SUPABASE_URL=your_supabase_project_url
-VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
-VITE_OPENROUTER_API_KEY=your_openrouter_api_key
-```
-
----
-
-## Project Structure
-
-```
+```text
 src/
-├── components/       # Reusable UI components
-├── lib/              # Supabase client, AuthContext, utilities
-├── pages/            # Route-level page components
-├── sections/         # Layout sections (Navigation, Footer, Hero)
-└── index.css         # Global design tokens and styles
+├── components/layout/     Editorial and workspace composition primitives
+├── components/ui/         Project-owned Radix/shadcn primitives
+├── components/workspace/  Role-aware staff workflows
+├── lib/                   Authentication, permissions, content, AI, and Supabase clients
+├── pages/                 Public and authentication routes
+├── sections/              Shared public-page sections
+└── index.css              Semantic tokens, material levels, typography, and motion
 ```
 
----
+Illustration audit results are recorded in `docs/illustration-audit.md`. Architecture decisions and implementation plans are stored in the repository-level `docs/superpowers` directory.
 
 ## License
 
-Private — © Edu+ / oldlion-ne. All rights reserved.
+Private — © EduPlus. All rights reserved.

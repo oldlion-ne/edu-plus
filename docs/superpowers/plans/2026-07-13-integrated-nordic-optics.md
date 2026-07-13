@@ -17,7 +17,7 @@
 - Modify: `app/scripts/check-ui-compliance.js`
 - Test: `app/src/design-system-compliance.test.ts`
 
-- [ ] **Step 1: Write the failing token contract test**
+- [x] **Step 1: Write the failing token contract test**
 
 ```ts
 import { readFileSync } from 'node:fs';
@@ -39,27 +39,27 @@ describe('Integrated Nordic Optics foundation', () => {
 });
 ```
 
-- [ ] **Step 2: Run the contract test and verify RED**
+- [x] **Step 2: Run the contract test and verify RED**
 
 Run: `pnpm vitest run src/design-system-compliance.test.ts`
 
 Expected: FAIL because the new semantic tokens are absent.
 
-- [ ] **Step 3: Add the foundation tokens and utilities**
+- [x] **Step 3: Add the foundation tokens and utilities**
 
 Define the named surface, edge, status, shadow, layout, and motion variables in both light and dark themes. Add `editorial-container`, `editorial-grid`, `surface-base`, `surface-raised`, `surface-sunken`, `eyebrow`, `display-title`, and `section-title` utilities. Replace the global fade animation with the shared motion tokens and disable nonessential transitions under reduced motion.
 
-- [ ] **Step 4: Extend the UI compliance scanner**
+- [x] **Step 4: Extend the UI compliance scanner**
 
 Add checks that flag `font-mono` in public pages and workspace copy unless the line contains `ui-ignore`, and flag legacy telemetry/HUD terms including `SYSTEM_`, `UTC_COORD`, `NODE`, `NEXUS`, `MATRIX`, `STREAM`, and `SCAN` in rendered copy.
 
-- [ ] **Step 5: Run foundation verification**
+- [x] **Step 5: Run foundation verification**
 
 Run: `pnpm vitest run src/design-system-compliance.test.ts && pnpm run ui-check`
 
 Expected: token tests pass; the scanner reports the current legacy violations that later tasks remove.
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add app/src/index.css app/scripts/check-ui-compliance.js app/src/design-system-compliance.test.ts
@@ -74,7 +74,7 @@ git commit -m "feat: establish integrated Nordic design tokens"
 - Modify: `app/src/components/ui/badge.tsx`
 - Create: `app/src/components/ui/premium-primitives.test.tsx`
 
-- [ ] **Step 1: Write failing primitive behavior tests**
+- [x] **Step 1: Write failing primitive behavior tests**
 
 ```tsx
 import { render, screen } from '@testing-library/react';
@@ -102,23 +102,23 @@ describe('premium primitive variants', () => {
 });
 ```
 
-- [ ] **Step 2: Run tests and verify RED**
+- [x] **Step 2: Run tests and verify RED**
 
 Run: `pnpm vitest run src/components/ui/premium-primitives.test.tsx`
 
 Expected: FAIL because `raised`, `success`, `warning`, and `CardEyebrow` are not implemented.
 
-- [ ] **Step 3: Implement square semantic variants**
+- [x] **Step 3: Implement square semantic variants**
 
 Remove all `rounded-lg` classes from the three primitives. Add Button variants `raised`, `muted`, `info`, `success`, and `warning`; Card variants `base`, `raised`, `sunken`, and `outline`; Badge variants `info`, `success`, and `warning`. Use only semantic CSS tokens and preserve existing exports and default behavior.
 
-- [ ] **Step 4: Run primitive and existing tests**
+- [x] **Step 4: Run primitive and existing tests**
 
 Run: `pnpm vitest run src/components/ui/premium-primitives.test.tsx src/App.test.tsx`
 
 Expected: PASS.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add app/src/components/ui/button.tsx app/src/components/ui/card.tsx app/src/components/ui/badge.tsx app/src/components/ui/premium-primitives.test.tsx
@@ -135,7 +135,7 @@ git commit -m "feat: add premium semantic component variants"
 - Create: `app/src/components/layout/layout-components.test.tsx`
 - Delete: `app/src/components/effects/ImmersiveHero.tsx`
 
-- [ ] **Step 1: Write failing composition tests**
+- [x] **Step 1: Write failing composition tests**
 
 ```tsx
 import { render, screen } from '@testing-library/react';
@@ -158,23 +158,23 @@ describe('composition components', () => {
 });
 ```
 
-- [ ] **Step 2: Run tests and verify RED**
+- [x] **Step 2: Run tests and verify RED**
 
 Run: `pnpm vitest run src/components/layout/layout-components.test.tsx`
 
 Expected: FAIL because the layout modules do not exist.
 
-- [ ] **Step 3: Implement composition contracts**
+- [x] **Step 3: Implement composition contracts**
 
 `EditorialHero` accepts `eyebrow`, `title`, `description`, `image`, `imageAlt`, `layout: 'split' | 'offset' | 'poster'`, optional `actions`, and optional `proof`. It uses a semantic `<header>`, a single `<h1>`, responsive image sizing, no parallax, no telemetry, and no hover scaling. `SectionHeader`, `WorkspaceHeader`, and `MetricPanel` use the shared typography and surface utilities.
 
-- [ ] **Step 4: Run layout tests**
+- [x] **Step 4: Run layout tests**
 
 Run: `pnpm vitest run src/components/layout/layout-components.test.tsx`
 
 Expected: PASS.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add app/src/components/layout app/src/components/effects/ImmersiveHero.tsx
@@ -189,31 +189,31 @@ git commit -m "feat: add premium editorial composition system"
 - Modify: `app/src/pages/auth/AuthLayout.tsx`
 - Modify: `app/src/App.test.tsx`
 
-- [ ] **Step 1: Add failing shell assertions**
+- [x] **Step 1: Add failing shell assertions**
 
 Add tests that render the app and assert an accessible `Main navigation` label, a `Current` indicator on the active link, a `Start learning` primary action, and an authentication trust region labelled `Built for the East Asian learning community`.
 
-- [ ] **Step 2: Run shell tests and verify RED**
+- [x] **Step 2: Run shell tests and verify RED**
 
 Run: `pnpm vitest run src/App.test.tsx`
 
 Expected: FAIL on the new accessible labels and copy.
 
-- [ ] **Step 3: Rebuild navigation and footer composition**
+- [x] **Step 3: Rebuild navigation and footer composition**
 
 Use a 72px square-edged navigation bar, a compact destination set, an overflow `Explore` menu for secondary routes, visible active state, theme control, and one primary action. Rebuild the footer into brand statement, learning, community, and support columns with a concise legal row. Preserve authentication controls and mobile Sheet keyboard behavior.
 
-- [ ] **Step 4: Rebuild the authentication shell**
+- [x] **Step 4: Rebuild the authentication shell**
 
 Use a two-region layout at `lg`, with trust copy and `/images/HomeHeroVisual.webp` on the editorial side and a bounded Level 1 form surface on the other. Collapse to a single form column below `lg`. Keep existing form contents and route behavior unchanged.
 
-- [ ] **Step 5: Run shell tests**
+- [x] **Step 5: Run shell tests**
 
 Run: `pnpm vitest run src/App.test.tsx src/pages/auth/authSchemas.test.ts`
 
 Expected: PASS.
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add app/src/sections/Navigation.tsx app/src/sections/Footer.tsx app/src/pages/auth/AuthLayout.tsx app/src/App.test.tsx
@@ -237,7 +237,7 @@ git commit -m "feat: redesign public and authentication shells"
 - Modify: `app/src/sections/TelemetryStats.tsx`
 - Create: `app/src/public-route-design.test.tsx`
 
-- [ ] **Step 1: Write the failing route-source contract**
+- [x] **Step 1: Write the failing route-source contract**
 
 ```ts
 import { readFileSync } from 'node:fs';
@@ -254,27 +254,27 @@ describe('public route design migration', () => {
 });
 ```
 
-- [ ] **Step 2: Run the source contract and verify RED**
+- [x] **Step 2: Run the source contract and verify RED**
 
 Run: `pnpm vitest run src/public-route-design.test.tsx`
 
 Expected: FAIL for every route still using the old hero and legacy styling.
 
-- [ ] **Step 3: Migrate route heroes with distinct layouts**
+- [x] **Step 3: Migrate route heroes with distinct layouts**
 
 Use this exact mapping: About `poster`, Programs `offset`, Knowledge Hub `split`, News `poster`, Events `offset`, Council `split`, Guidance `poster`, Contact `split`. Provide route-specific informative alt text and retain existing images.
 
-- [ ] **Step 4: Normalize public typography and materials**
+- [x] **Step 4: Normalize public typography and materials**
 
 Replace public `font-mono` labels with `eyebrow` or normal sans text. Remove blurred decorative glow nodes and general `backdrop-blur` cards. Convert major content wrappers to `editorial-container`, headings to `SectionHeader` where appropriate, and feature cards to `base` or `raised` material variants. Rename Telemetry Stats rendered language to Community Outcomes and remove technical labels.
 
-- [ ] **Step 5: Run public route and existing behavior tests**
+- [x] **Step 5: Run public route and existing behavior tests**
 
 Run: `pnpm vitest run src/public-route-design.test.tsx src/sections src/App.test.tsx`
 
 Expected: PASS.
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add app/src/pages app/src/sections app/src/public-route-design.test.tsx
@@ -292,31 +292,31 @@ git commit -m "feat: migrate public routes to editorial composition"
 - Modify: `app/src/components/workspace/PeopleModule.tsx`
 - Create: `app/src/components/workspace/workspace-design.test.tsx`
 
-- [ ] **Step 1: Write failing workspace design tests**
+- [x] **Step 1: Write failing workspace design tests**
 
 Test that `OverviewModule` renders the shared `WorkspaceHeader`, five labelled metric regions, and no `Live operations` telemetry copy. Add a source contract asserting the five workspace modules contain no `font-mono` class.
 
-- [ ] **Step 2: Run workspace tests and verify RED**
+- [x] **Step 2: Run workspace tests and verify RED**
 
 Run: `pnpm vitest run src/components/workspace/workspace-design.test.tsx`
 
 Expected: FAIL because the shared header and accessible metric regions are absent.
 
-- [ ] **Step 3: Rebuild the shell and overview**
+- [x] **Step 3: Rebuild the shell and overview**
 
 Use a 272px Level 1 sidebar, clearer active navigation rail, labelled mobile menu, role badge, and a compact top context bar. Replace overview cards with `MetricPanel` and add a responsive recent-work region without fabricated values.
 
-- [ ] **Step 4: Normalize workflow modules**
+- [x] **Step 4: Normalize workflow modules**
 
 Adopt `WorkspaceHeader` in Content, Inbox, Knowledge, and People. Use Item rows, semantic Badges, raised detail surfaces, consistent empty states, and 44px interactive hit areas. Preserve all Supabase queries and authorization behavior.
 
-- [ ] **Step 5: Run workspace and permission tests**
+- [x] **Step 5: Run workspace and permission tests**
 
 Run: `pnpm vitest run src/components/workspace src/lib/auth/permissions.test.ts src/components/ProtectedRoute.test.tsx`
 
 Expected: PASS.
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add app/src/components/workspace
@@ -337,23 +337,23 @@ git commit -m "feat: elevate workspace information architecture"
 - Replace if audit fails: `app/public/images/ContactVisual.webp`
 - Create: `app/docs/illustration-audit.md`
 
-- [ ] **Step 1: Inventory dimensions, format, and route references**
+- [x] **Step 1: Inventory dimensions, format, and route references**
 
 Run a read-only inventory that records each file's pixel dimensions, file size, and referencing route. Confirm every route uses WebP and an explicit alt description.
 
-- [ ] **Step 2: Visually audit every image**
+- [x] **Step 2: Visually audit every image**
 
 Inspect all nine images at original resolution for East Asian representation, flat/non-realistic rendering, angular geometry, matte shading, text/watermarks, malformed anatomy, and crop safety at desktop and mobile ratios.
 
-- [ ] **Step 3: Regenerate only failed scenes**
+- [x] **Step 3: Regenerate only failed scenes**
 
 Use this fixed art direction for any failed scene: “Ultra-clean minimalist modern flat vector illustration; East Asian people only; angular simplified anatomy; straight-edged environmental geometry; matte gradient cel shading; warm candlelight amber side rim light; cool charcoal volumetric shadows; uncluttered solid background; no harsh outline; no photo texture; no realism; no text; no logo; no watermark.” Add route-specific scene content without changing the style contract.
 
-- [ ] **Step 4: Re-inspect replacements and write the audit record**
+- [x] **Step 4: Re-inspect replacements and write the audit record**
 
 Record a pass/fail row for each image with representation, style, artifacts, and crop checks. Do not integrate a failed replacement.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add app/public/images app/docs/illustration-audit.md
@@ -370,21 +370,21 @@ git commit -m "art: align route illustrations with Nordic vector system"
 - Modify: `app/README.md`
 - Modify: `docs/superpowers/plans/2026-07-13-integrated-nordic-optics.md`
 
-- [ ] **Step 1: Locate superseded code and forbidden language**
+- [x] **Step 1: Locate superseded code and forbidden language**
 
 Run: `rg -n "ImmersiveHero|SurfaceCard|TypeScramble|RandomizedTextEffect|SYSTEM_|UTC_COORD|font-mono|backdrop-blur|rounded-(sm|md|lg|xl|2xl|full)" src`
 
 Expected: no public/workspace violations; remaining monospace or rounded usage must be an explicitly approved technical or third-party primitive case.
 
-- [ ] **Step 2: Remove dead components and imports**
+- [x] **Step 2: Remove dead components and imports**
 
 Delete only modules with zero imports. Retain technical code presentation components and third-party accessibility internals where removal would break behavior.
 
-- [ ] **Step 3: Update project documentation**
+- [x] **Step 3: Update project documentation**
 
 Document Integrated Nordic Optics, the two density modes, semantic material variants, illustration rules, pnpm-only workflow, and the five required verification commands.
 
-- [ ] **Step 4: Run the complete automated gate**
+- [x] **Step 4: Run the complete automated gate**
 
 Run: `pnpm run test:run`
 
@@ -406,11 +406,11 @@ Run: `pnpm run build`
 
 Expected: production build exits 0.
 
-- [ ] **Step 5: Run browser verification**
+- [x] **Step 5: Run browser verification**
 
 At 1440×1000 and 390×844, verify `/`, `/about`, `/programs`, `/knowledge-hub`, `/events`, `/council`, `/guidance`, `/news`, `/contact`, `/auth/sign-in`, and the authenticated workspace modules. Check navigation, headings, overflow, focus, image crop, console errors, empty/loading states, and reduced-motion behavior.
 
-- [ ] **Step 6: Mark this plan complete and commit**
+- [x] **Step 6: Mark this plan complete and commit**
 
 ```bash
 git add app/README.md docs/superpowers/plans/2026-07-13-integrated-nordic-optics.md
