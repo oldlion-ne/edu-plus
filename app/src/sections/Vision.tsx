@@ -38,7 +38,7 @@ export default function Vision() {
                   visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
                 }`}
               >
-                <span className="text-xs font-mono font-medium tracking-[0.3em] uppercase text-primary block mb-2">
+                <span className="text-xs font-sans font-medium tracking-[0.3em] uppercase text-primary block mb-2">
                   Our Mission
                 </span>
                 <div className="h-px w-8 bg-primary/40" />
@@ -50,7 +50,7 @@ export default function Vision() {
                   visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
                 }`}
               >
-                <span className="text-xs font-mono font-medium tracking-[0.3em] uppercase text-muted-foreground block mb-2">
+                <span className="text-xs font-sans font-medium tracking-[0.3em] uppercase text-muted-foreground block mb-2">
                   Our Vision
                 </span>
                 <div className="h-px w-8 bg-border" />
@@ -62,7 +62,7 @@ export default function Vision() {
                   visible ? 'opacity-100' : 'opacity-0'
                 }`}
               >
-                <span className="inline-flex items-center gap-1.5 font-mono text-[8px] uppercase tracking-[0.3em] text-primary/50 border border-border px-2.5 py-1">
+                <span className="inline-flex items-center gap-1.5 font-sans text-[8px] uppercase tracking-[0.3em] text-primary/50 border border-border px-2.5 py-1">
                   <span className="w-1 h-1 bg-primary/50 inline-block rounded-none" />
                   PURPOSE_NODE // ACTIVE
                 </span>

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import ImmersiveHero from '../components/effects/ImmersiveHero';
+import { EditorialHero } from '../components/layout/EditorialHero';
 import { SurfaceCard } from '../components/effects/SurfaceCard';
 import { Badge } from '../components/ui/badge';
 import { Globe, BookOpen, Briefcase } from 'lucide-react';
@@ -105,21 +105,19 @@ export default function News() {
 
   return (
     <div className="min-h-screen bg-background text-foreground pb-32 relative overflow-hidden">
-      {/* Immersive Top Hero Viewport */}
-      <ImmersiveHero
-        bgImage="/images/NewsVisual.webp"
-        category={t('heroCategory')}
-        titleNormal={t('heroTitleNormal')}
-        titleHighlighted={t('heroTitleHighlighted')}
+      <EditorialHero
+        image="/images/NewsVisual.webp"
+        imageAlt="East Asian educators and learners exchanging community news"
+        eyebrow={t('heroCategory')}
+        title={<>{t('heroTitleNormal')} <span className="text-primary">{t('heroTitleHighlighted')}</span></>}
         description={t('heroDesc')}
-        telemetryLeft="BROADCAST_NODE // STABLE"
-        telemetryRight="UTC_COORD_NEWS_STREAM"
+        layout="poster"
       />
 
       <div className="max-w-[1200px] mx-auto px-6 md:px-12 relative z-10 mt-16">
         {/* Editorial Focus Columns Section */}
         <section className={`mb-20 transition-all duration-1000 transform ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-          <div className="border border-border bg-card/30 p-8 backdrop-blur-sm">
+          <div className="border border-border bg-card/30 p-8 ">
             <div className="space-y-3 mb-10 max-w-xl">
               <h2 className="font-heading text-2xl md:text-3xl font-semibold text-foreground tracking-tight">
                 {t('editorialHeader')}
@@ -179,8 +177,8 @@ export default function News() {
             >
               <div className="flex flex-col justify-between h-full space-y-4 p-2">
                 <div>
-                  <div className="flex items-center justify-between text-[10px] font-mono text-muted-foreground border-b border-border/50 pb-2 mb-4">
-                    <Badge variant="secondary" className="font-mono text-[9px] py-0.5 px-1.5 rounded-none">
+                  <div className="flex items-center justify-between text-[10px] font-sans text-muted-foreground border-b border-border/50 pb-2 mb-4">
+                    <Badge variant="secondary" className="font-sans text-[9px] py-0.5 px-1.5 rounded-none">
                       {category}
                     </Badge>
                     <span>{date}</span>
@@ -195,7 +193,7 @@ export default function News() {
                   </p>
                 </div>
 
-                <div className="flex items-center justify-between text-[10px] font-mono pt-4 border-t border-border/60 text-muted-foreground">
+                <div className="flex items-center justify-between text-[10px] font-sans pt-4 border-t border-border/60 text-muted-foreground">
                   <span>{readTime}</span>
                   <button /* ui-ignore */
                     type="button"

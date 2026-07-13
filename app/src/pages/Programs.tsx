@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import ImmersiveHero from '../components/effects/ImmersiveHero';
+import { EditorialHero } from '../components/layout/EditorialHero';
 import { Button } from '../components/ui/button';
 import { SurfaceCard } from '../components/effects/SurfaceCard';
 import { ArrowRight, Compass, Layers, Users, GraduationCap, Rocket, Lightbulb, Star, Shield } from 'lucide-react';
@@ -11,8 +11,6 @@ const translations = {
   heroTitleNormal: "Future-Ready",
   heroTitleHighlighted: "Programs",
   heroDesc: "At EduPlus Skills, our programs are designed as interconnected modules that support learners at every milestone-from discovering their strengths to launching global careers.",
-  telemetryLeft: "EXPLORATION_STUDIO // VR_ACTIVE",
-  telemetryRight: "FUTURE_PATHWAYS // SYS_ADMIS",
   skillRoadmaps: "Skill Roadmaps // Interactive Pathways",
   skillEnhancementJourney: "The Skill Enhancement Journey",
   selectPhase: "Select a phase on the interactive pipeline below to inspect curriculum details, outcomes, and routing.",
@@ -23,7 +21,7 @@ const translations = {
   discoveryScan: "Aptitude Scan // Discovery_Active",
   communication: "COMMUNICATION",
   resilience: "RESILIENCE",
-  humanCapabilityMatrix: "HUMAN CAPABILITY MATRIX",
+  humanCapabilityMatrix: "HUMAN CAPABILITIES",
   criticalThinking: "CRITICAL THINKING",
   adaptability: "ADAPTABILITY",
   expertLiveConnect: "EXPERT LIVE CONNECT",
@@ -120,22 +118,20 @@ export default function Programs() {
 
   return (
     <div className="min-h-screen bg-background text-foreground pb-32 relative overflow-hidden">
-      {/* Immersive Top Hero Viewport */}
-      <ImmersiveHero
-        bgImage="/images/CurriculumVisual.webp"
-        category={t('heroCategory')}
-        titleNormal={t('heroTitleNormal')}
-        titleHighlighted={t('heroTitleHighlighted')}
+      <EditorialHero
+        image="/images/CurriculumVisual.webp"
+        imageAlt="East Asian learners exploring practical education pathways"
+        eyebrow={t('heroCategory')}
+        title={<>{t('heroTitleNormal')} <span className="text-primary">{t('heroTitleHighlighted')}</span></>}
         description={t('heroDesc')}
-        telemetryLeft={t('telemetryLeft')}
-        telemetryRight={t('telemetryRight')}
+        layout="offset"
       />
 
       <div className="max-w-[1200px] mx-auto px-6 md:px-12 relative z-10 mt-20">
         
         {/* Pathway intro */}
         <div className={`max-w-3xl mb-16 transition-all duration-1000 transform ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-          <span className="text-xs font-mono font-medium tracking-[0.3em] uppercase text-primary block mb-2">
+          <span className="text-xs font-sans font-medium tracking-[0.3em] uppercase text-primary block mb-2">
             {t('skillRoadmaps')}
           </span>
           <h2 className="font-heading text-3xl md:text-5xl font-semibold tracking-tight text-foreground mb-4">
@@ -168,7 +164,7 @@ export default function Programs() {
                 >
                   {/* Step status dot indicator */}
                   <div className="relative z-10 mt-1 shrink-0">
-                    <div className="w-6 h-6 rounded-none flex items-center justify-center font-mono text-[10px] border transition-all duration-300 bg-background text-muted-foreground border-border group-data-[selected=true]/btn:bg-primary group-data-[selected=true]/btn:text-background group-data-[selected=true]/btn:border-primary">
+                    <div className="w-6 h-6 rounded-none flex items-center justify-center font-sans text-[10px] border transition-all duration-300 bg-background text-muted-foreground border-border group-data-[selected=true]/btn:bg-primary group-data-[selected=true]/btn:text-background group-data-[selected=true]/btn:border-primary">
                       0{index + 1}
                     </div>
                     {isActive && (
@@ -178,7 +174,7 @@ export default function Programs() {
 
                   {/* Step name / summary */}
                   <div className="space-y-1">
-                    <span className="font-mono text-[9px] uppercase tracking-wider text-primary block">
+                    <span className="font-sans text-[9px] uppercase tracking-wider text-primary block">
                       {prog.phaseCode.split(' // ')[0]}
                     </span>
                     <h3 className="font-sans font-semibold text-sm transition-colors duration-300 text-muted-foreground group-data-[selected=true]/btn:text-foreground group-hover/btn:text-foreground">
@@ -238,10 +234,10 @@ export default function Programs() {
                   {/* Header */}
                   <div className="space-y-4">
                     <div className="flex items-center justify-between border-b border-border pb-4">
-                      <span className="font-mono text-[10px] tracking-widest text-primary font-bold uppercase">
+                      <span className="font-sans text-[10px] tracking-widest text-primary font-bold uppercase">
                         {activeProgram.phaseCode}
                       </span>
-                      <div className="flex items-center gap-1.5 font-mono text-[8px] tracking-[0.2em] text-muted-foreground border border-border px-2 py-0.5 bg-background/60">
+                      <div className="flex items-center gap-1.5 font-sans text-[8px] tracking-[0.2em] text-muted-foreground border border-border px-2 py-0.5 bg-background/60">
                         <span className="w-1.5 h-1.5 bg-primary rounded-none" />
                         {t('activeNode')}
                       </div>
@@ -252,7 +248,7 @@ export default function Programs() {
                         <ActiveIcon className="size-6 text-primary" />
                       </div>
                       <div>
-                        <span className="text-xs font-mono tracking-widest text-muted-foreground block uppercase">
+                        <span className="text-xs font-sans tracking-widest text-muted-foreground block uppercase">
                           {activeProgram.tagline}
                         </span>
                         <h2 className="font-heading text-2xl md:text-3xl font-semibold tracking-tight text-foreground">
@@ -271,13 +267,13 @@ export default function Programs() {
 
                   {/* Focus areas & outcome pills */}
                   <div className="space-y-4 border-t border-border pt-6">
-                    <h4 className="font-mono text-[10px] uppercase tracking-widest text-foreground font-semibold flex items-center gap-1.5">
+                    <h4 className="font-sans text-[10px] uppercase tracking-widest text-foreground font-semibold flex items-center gap-1.5">
                       <Star className="size-3 text-primary fill-primary" /> {t('coreProgramOutcomes')}
                     </h4>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
                       {activeProgram.outcomes.map((outcome, idx) => (
                         <div key={idx} className="flex items-start gap-2 text-muted-foreground font-sans bg-muted/20 border border-border p-2">
-                          <span className="text-primary font-mono select-none mt-0.5">&bull;</span>
+                          <span className="text-primary font-sans select-none mt-0.5">&bull;</span>
                           <span>{outcome}</span>
                         </div>
                       ))}
@@ -286,10 +282,10 @@ export default function Programs() {
 
                   {/* Action Link Footer */}
                   <div className="border-t border-border pt-6 flex flex-col sm:flex-row items-center justify-between gap-4">
-                    <span className="font-mono text-[9px] text-muted-foreground uppercase">
+                    <span className="font-sans text-[9px] text-muted-foreground uppercase">
                       {t('refRoute')}{activeIdx + 1}
                     </span>
-                    <Button asChild size="sm" className="w-full sm:w-auto font-mono text-[10px] uppercase tracking-wider">
+                    <Button asChild size="sm" className="w-full sm:w-auto font-sans text-[10px] uppercase tracking-wider">
                       <Link to="/guidance" /* ui-ignore */>
                         {t('requestAdvisoryConsult')}
                         <ArrowRight className="size-3.5 ml-1" />
@@ -323,7 +319,7 @@ const DiscoveryIllustration = () => {
       <div className="absolute size-44 rounded-none border border-primary/10 overflow-hidden">
         <div className="absolute top-1/2 left-1/2 w-full h-full bg-gradient-to-tr from-primary/10 to-transparent origin-top-left animate-[spin_4s_linear_infinite]" style={{ transformOrigin: '0 0' }} /* ui-ignore */></div>
       </div>
-      <span className="absolute bottom-3 font-mono text-[8px] text-muted-foreground/60 uppercase tracking-[0.25em]">{t('discoveryScan')}</span>
+      <span className="absolute bottom-3 font-sans text-[8px] text-muted-foreground/60 uppercase tracking-[0.25em]">{t('discoveryScan')}</span>
     </div>
   );
 };
@@ -335,17 +331,17 @@ const CapabilityIllustration = () => {
         <div className="h-px bg-border/60 absolute inset-x-0 top-1/2 -translate-y-1/2 -z-10"></div>
         <div className="bg-background shadow-xs border border-border rounded-none px-2.5 py-1.5 flex items-center gap-1.5 select-none hover:border-primary/50 transition-colors">
           <div className="size-1.5 rounded-none bg-primary"></div>
-          <span className="font-mono text-[8px] text-muted-foreground/90">{t('communication')}</span>
+          <span className="font-sans text-[8px] text-muted-foreground/90">{t('communication')}</span>
         </div>
         <div className="bg-background shadow-xs border border-border rounded-none px-2.5 py-1.5 flex items-center gap-1.5 select-none hover:border-primary/50 transition-colors">
           <div className="size-1.5 rounded-none bg-primary"></div>
-          <span className="font-mono text-[8px] text-muted-foreground/90">{t('resilience')}</span>
+          <span className="font-sans text-[8px] text-muted-foreground/90">{t('resilience')}</span>
         </div>
       </div>
       
       <div className="w-px h-6 bg-border/60"></div>
       <div className="flex w-full justify-center items-center select-none z-10">
-        <div className="bg-primary/5 border border-primary/20 rounded-none px-4 py-2 text-[9px] font-mono text-primary font-bold tracking-wider shadow-sm">
+        <div className="bg-primary/5 border border-primary/20 rounded-none px-4 py-2 text-[9px] font-sans text-primary font-bold tracking-wider shadow-sm">
           {t('humanCapabilityMatrix')}
         </div>
       </div>
@@ -355,11 +351,11 @@ const CapabilityIllustration = () => {
         <div className="h-px bg-border/60 absolute inset-x-0 top-1/2 -translate-y-1/2 -z-10"></div>
         <div className="bg-background shadow-xs border border-border rounded-none px-2.5 py-1.5 flex items-center gap-1.5 select-none hover:border-primary/50 transition-colors">
           <div className="size-1.5 rounded-none bg-primary"></div>
-          <span className="font-mono text-[8px] text-muted-foreground/90">{t('criticalThinking')}</span>
+          <span className="font-sans text-[8px] text-muted-foreground/90">{t('criticalThinking')}</span>
         </div>
         <div className="bg-background shadow-xs border border-border rounded-none px-2.5 py-1.5 flex items-center gap-1.5 select-none hover:border-primary/50 transition-colors">
           <div className="size-1.5 rounded-none bg-primary"></div>
-          <span className="font-mono text-[8px] text-muted-foreground/90">{t('adaptability')}</span>
+          <span className="font-sans text-[8px] text-muted-foreground/90">{t('adaptability')}</span>
         </div>
       </div>
     </div>
@@ -377,11 +373,11 @@ const MentorshipIllustration = () => {
       <div className="absolute w-1 h-1 rounded-none bg-primary/70 animate-[ping_2s_infinite] top-[72%] right-[30%]"></div>
 
       <div className="relative flex justify-between items-center z-10">
-        <div className="bg-background/90 backdrop-blur-xs border border-border rounded-none px-2 py-0.5 text-[8px] font-mono text-muted-foreground flex items-center gap-1 hover:border-primary/50 transition-all select-none">
+        <div className="bg-background/90  border border-border rounded-none px-2 py-0.5 text-[8px] font-sans text-muted-foreground flex items-center gap-1 hover:border-primary/50 transition-all select-none">
           <span className="h-1 w-1 rounded-none bg-primary"></span>
           ACADEMIC COUNCIL
         </div>
-        <div className="bg-background/90 backdrop-blur-xs border border-border rounded-none px-2 py-0.5 text-[8px] font-mono text-muted-foreground flex items-center gap-1 hover:border-primary/50 transition-all select-none">
+        <div className="bg-background/90  border border-border rounded-none px-2 py-0.5 text-[8px] font-sans text-muted-foreground flex items-center gap-1 hover:border-primary/50 transition-all select-none">
           <span className="h-1 w-1 rounded-none bg-primary"></span>
           INDUSTRY LEADERS
         </div>
@@ -389,16 +385,16 @@ const MentorshipIllustration = () => {
 
       <div className="relative flex justify-center z-10">
         <div className="bg-card shadow-sm border border-primary/20 relative flex h-7 items-center rounded-none px-3 select-none">
-          <span className="text-[9px] font-mono font-bold tracking-wider text-primary">{t('expertLiveConnect')}</span>
+          <span className="text-[9px] font-sans font-bold tracking-wider text-primary">{t('expertLiveConnect')}</span>
         </div>
       </div>
 
       <div className="relative flex justify-between items-center z-10">
-        <div className="bg-background/90 backdrop-blur-xs border border-border rounded-none px-2 py-0.5 text-[8px] font-mono text-muted-foreground flex items-center gap-1 hover:border-primary/50 transition-all select-none">
+        <div className="bg-background/90  border border-border rounded-none px-2 py-0.5 text-[8px] font-sans text-muted-foreground flex items-center gap-1 hover:border-primary/50 transition-all select-none">
           <span className="h-1 w-1 rounded-none bg-primary"></span>
           RESEARCH MENTORS
         </div>
-        <div className="bg-background/90 backdrop-blur-xs border border-border rounded-none px-2 py-0.5 text-[8px] font-mono text-muted-foreground flex items-center gap-1 hover:border-primary/50 transition-all select-none">
+        <div className="bg-background/90  border border-border rounded-none px-2 py-0.5 text-[8px] font-sans text-muted-foreground flex items-center gap-1 hover:border-primary/50 transition-all select-none">
           <span className="h-1 w-1 rounded-none bg-primary"></span>
           GLOBAL SCHOLARS
         </div>
@@ -413,7 +409,7 @@ const PrepIllustration = () => {
       {/* Central Node */}
       <div className="bg-background/90 border border-border p-2 rounded-none z-10 select-none shadow-xs flex flex-col items-center max-w-[120px]">
         <GraduationCap className="size-4.5 text-primary mb-0.5" />
-        <span className="font-mono text-[7px] text-muted-foreground tracking-wider uppercase">{t('admissionsStudio')}</span>
+        <span className="font-sans text-[7px] text-muted-foreground tracking-wider uppercase">{t('admissionsStudio')}</span>
       </div>
       {/* Connecting Paths */}
       <div className="absolute inset-0 select-none pointer-events-none flex items-center">
@@ -427,11 +423,11 @@ const PrepIllustration = () => {
       <div className="flex flex-col gap-6 z-10">
         <div className="bg-background/90 border border-border px-2.5 py-1 rounded-none select-none shadow-xs flex items-center gap-1 hover:border-primary/50 transition-colors">
           <div className="size-1 rounded-none bg-primary"></div>
-          <span className="font-mono text-[7px] text-muted-foreground/90 uppercase tracking-wide">{t('domesticPrep')}</span>
+          <span className="font-sans text-[7px] text-muted-foreground/90 uppercase tracking-wide">{t('domesticPrep')}</span>
         </div>
         <div className="bg-background/90 border border-border px-2.5 py-1 rounded-none select-none shadow-xs flex items-center gap-1 hover:border-primary/50 transition-colors">
           <div className="size-1 rounded-none bg-primary"></div>
-          <span className="font-mono text-[7px] text-muted-foreground/90 uppercase tracking-wide">{t('globalPrep')}</span>
+          <span className="font-sans text-[7px] text-muted-foreground/90 uppercase tracking-wide">{t('globalPrep')}</span>
         </div>
       </div>
     </div>
@@ -455,7 +451,7 @@ const PlacementIllustration = () => {
           </div>
         );
       })}
-      <div className="absolute inset-x-0 bottom-1 flex justify-between px-3 text-[7px] font-mono text-muted-foreground bg-background/80 py-0.5 border-t border-border/40 z-10">
+      <div className="absolute inset-x-0 bottom-1 flex justify-between px-3 text-[7px] font-sans text-muted-foreground bg-background/80 py-0.5 border-t border-border/40 z-10">
         <span>{t('resumeOptimization')}</span>
         <span>{t('interviewFeedback')}</span>
         <span>{t('globalPlacement')}</span>
@@ -471,8 +467,8 @@ const SystemicIllustration = () => {
       <Shield className="size-24 stroke-[0.15px] text-primary" />
       <div className="absolute text-center space-y-1">
         <Lightbulb className="size-4.5 text-primary mx-auto" />
-        <span className="block text-[9px] font-mono font-bold tracking-[0.2em] text-foreground">{t('systemicScale')}</span>
-        <span className="block text-[7px] font-mono text-muted-foreground tracking-widest">{t('pedagogyLabs')}</span>
+        <span className="block text-[9px] font-sans font-bold tracking-[0.2em] text-foreground">{t('systemicScale')}</span>
+        <span className="block text-[7px] font-sans text-muted-foreground tracking-widest">{t('pedagogyLabs')}</span>
       </div>
     </div>
   );

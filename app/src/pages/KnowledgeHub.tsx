@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { loadPublishedResources, type PublishedResource } from '../lib/content/public-content';
-import ImmersiveHero from '../components/effects/ImmersiveHero';
+import { EditorialHero } from '../components/layout/EditorialHero';
 import { Button } from '../components/ui/button';
 import { SurfaceCard } from '../components/effects/SurfaceCard';
 import { Input } from '../components/ui/input';
@@ -75,18 +75,17 @@ export default function KnowledgeHub() {
 
   return (
     <div className="min-h-screen bg-background text-foreground pb-32 relative overflow-hidden font-sans">
-      <ImmersiveHero
-        bgImage="/images/HubVisual.webp"
-        category={t('heroCategory')}
-        titleNormal={t('heroTitleNormal')}
-        titleHighlighted={t('heroTitleHighlighted')}
+      <EditorialHero
+        image="/images/HubVisual.webp"
+        imageAlt="East Asian community members sharing learning resources"
+        eyebrow={t('heroCategory')}
+        title={<>{t('heroTitleNormal')} <span className="text-primary">{t('heroTitleHighlighted')}</span></>}
         description={t('heroDesc')}
-        telemetryLeft="RESOURCES_DATABASE // ONLINE"
-        telemetryRight="COORD_LEARNING_MATRIX"
+        layout="split"
       />
 
       <div className="max-w-[1200px] mx-auto px-6 md:px-12 relative z-10 mt-12">
-        {/* Controls Matrix */}
+        {/* Resource controls */}
         <div className="flex flex-col md:flex-row gap-6 justify-between items-center mb-10 border-b border-border pb-8">
           <div className="flex flex-wrap gap-2">
             {TABS.map(tab => (
@@ -95,7 +94,7 @@ export default function KnowledgeHub() {
                 variant={activeTab === tab ? 'default' : 'outline'}
                 size="sm"
                 onClick={() => setActiveTab(tab)}
-                className="uppercase tracking-wider font-mono text-xs"
+                className="uppercase tracking-wider font-sans text-xs"
               >
                 {tab.replace('_', ' ')}
               </Button>
@@ -108,7 +107,7 @@ export default function KnowledgeHub() {
               placeholder={t('searchPlaceholder')}
               value={searchQuery}
               onChange={e => setSearchQuery(e.target.value)}
-              className="font-mono tracking-wider text-xs"
+              className="font-sans tracking-wider text-xs"
             />
           </div>
         </div>
@@ -119,7 +118,7 @@ export default function KnowledgeHub() {
             {t('loadingResources')}
           </div>
         ) : filteredItems.length === 0 ? (
-          <div className="text-center py-20 font-mono text-muted-foreground text-sm tracking-widest border border-border bg-muted/20">
+          <div className="text-center py-20 font-sans text-muted-foreground text-sm tracking-widest border border-border bg-muted/20">
             {t('noResources')}
           </div>
         ) : (
@@ -134,7 +133,7 @@ export default function KnowledgeHub() {
                 >
                   <div className="flex flex-col justify-between h-full space-y-4">
                     <div>
-                      <div className="flex justify-between items-center text-[8px] font-mono text-primary tracking-widest uppercase border-b border-border/50 pb-2 mb-3">
+                      <div className="flex justify-between items-center text-[8px] font-sans text-primary tracking-widest uppercase border-b border-border/50 pb-2 mb-3">
                         <span>{t('srcPrefix')}{item.media_type.replace('_', ' ')}</span>
                         <span>{item.category.replace('_', ' ')}</span>
                       </div>
@@ -148,7 +147,7 @@ export default function KnowledgeHub() {
                     </div>
 
                     <div className="pt-4 border-t border-border flex items-center justify-between">
-                      <span className="text-[9px] font-mono text-muted-foreground uppercase">
+                      <span className="text-[9px] font-sans text-muted-foreground uppercase">
                         {t('nodePrefix')}EDUPLUS
                       </span>
                       {isYoutube ? (
@@ -156,7 +155,7 @@ export default function KnowledgeHub() {
                           size="sm"
                           variant="secondary"
                           onClick={() => setSelectedVideo(resourceUrl)}
-                          className="font-mono text-[9px] tracking-wider uppercase h-8"
+                          className="font-sans text-[9px] tracking-wider uppercase h-8"
                         >
                           {t('launchPlayback')}
                         </Button>
@@ -167,11 +166,11 @@ export default function KnowledgeHub() {
                           asChild
                           className="h-8"
                         >
-                          <a href={resourceUrl} target="_blank" rel="noopener noreferrer" className="font-mono text-[9px] tracking-wider uppercase" /* ui-ignore */>
+                          <a href={resourceUrl} target="_blank" rel="noopener noreferrer" className="font-sans text-[9px] tracking-wider uppercase" /* ui-ignore */>
                             {t('openLink')}
                           </a>
                         </Button>
-                      ) : <span className="font-mono text-[9px] uppercase text-muted-foreground">File available to members</span>}
+                      ) : <span className="font-sans text-[9px] uppercase text-muted-foreground">File available to members</span>}
                     </div>
                   </div>
                 </SurfaceCard>
@@ -183,10 +182,10 @@ export default function KnowledgeHub() {
 
       {/* Video Overlay */}
       {selectedVideo && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-background/90 backdrop-blur-sm animate-fade-in">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-background/90  animate-fade-in">
           <div className="w-full max-w-4xl bg-card border border-border shadow-2xl relative">
             <div className="flex items-center justify-between p-3 border-b border-border bg-muted">
-              <span className="font-mono text-[10px] font-bold tracking-widest text-primary">{t('videoPlayback')}</span>
+              <span className="font-sans text-[10px] font-bold tracking-widest text-primary">{t('videoPlayback')}</span>
               <Button
                 variant="ghost"
                 size="icon"

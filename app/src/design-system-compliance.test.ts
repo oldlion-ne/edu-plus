@@ -1,8 +1,5 @@
-import { readFileSync } from 'node:fs';
-import { join } from 'node:path';
 import { describe, expect, test } from 'vitest';
-
-const css = readFileSync(join(process.cwd(), 'src/index.css'), 'utf8');
+import css from './index.css?raw';
 
 describe('Integrated Nordic Optics foundation', () => {
   test('defines semantic surfaces, edges, status colors, and motion', () => {

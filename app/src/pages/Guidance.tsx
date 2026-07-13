@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router';
-import ImmersiveHero from '../components/effects/ImmersiveHero';
+import { EditorialHero } from '../components/layout/EditorialHero';
 import { Button } from '../components/ui/button';
 import { Card } from '../components/ui/card';
 import { SurfaceCard } from '../components/effects/SurfaceCard';
@@ -163,7 +163,7 @@ export default function Guidance() {
       ['students', [
         '[GUEST@EDU-PLUS:~]$ ./futurepath-navigator.sh --assess',
         '>> INITIALIZING PSYCHOMETRIC TEST ENGINE...',
-        '>> CAPTURING STRENGTHS MATRIX [COGNITIVE & CREATIVE]...',
+        'Reviewing cognitive and creative strengths...',
         '>> COMPILING APTITUDE FEEDBACK NODES...',
         '>> RESULT:',
         '   - STEM APTITUDE: 94.2%',
@@ -185,7 +185,7 @@ export default function Guidance() {
       ['seekers', [
         '[GUEST@EDU-PLUS:~]$ ./career-launchpad.sh --region "singapore"',
         '>> RUNNING SKILLS CAPABILITY GAP ANALYSIS...',
-        '>> SCANNING RESUME FOR DIGITAL AND ANALYTICAL TOOLS...',
+        'Reviewing digital and analytical experience...',
         '>> MATCHING PLACEMENT PORTALS IN SE ASIA...',
         '>> COMPILING METRICS:',
         '   - TOOL COMPATIBILITY: 91%',
@@ -233,15 +233,13 @@ export default function Guidance() {
 
   return (
     <div className="min-h-screen bg-background text-foreground pb-32 relative overflow-hidden">
-      {/* Immersive Top Hero Viewport */}
-      <ImmersiveHero
-        bgImage="/images/MentorshipVisual.webp"
-        category={t('heroCategory')}
-        titleNormal={t('heroTitleNormal')}
-        titleHighlighted={t('heroTitleHighlighted')}
+      <EditorialHero
+        image="/images/MentorshipVisual.webp"
+        imageAlt="East Asian mentor guiding a learner through a thoughtful decision"
+        eyebrow={t('heroCategory')}
+        title={<>{t('heroTitleNormal')} <span className="text-primary">{t('heroTitleHighlighted')}</span></>}
         description={t('heroDesc')}
-        telemetryLeft="MENTORSHIP_STREAM // ACTIVE"
-        telemetryRight="UTC_COORD_GUIDANCE"
+        layout="poster"
       />
 
       <div className="max-w-[1200px] mx-auto px-6 md:px-12 relative z-10 mt-16">
@@ -267,8 +265,8 @@ export default function Guidance() {
             </div>
 
             {/* Retro Terminal Log */}
-            <div className="border border-border bg-card/60 backdrop-blur-sm p-1">
-                <div className="bg-card p-4 font-mono text-[10px] leading-relaxed text-primary h-[220px] overflow-hidden select-none flex flex-col justify-start relative">
+            <div className="border border-border bg-card/60  p-1">
+                <div className="bg-card p-4 font-sans text-[10px] leading-relaxed text-primary h-[220px] overflow-hidden select-none flex flex-col justify-start relative">
                 {/* Console header */}
                 <div className="flex justify-between items-center text-[8px] text-primary/60 border-b border-border pb-2 mb-3">
                   <span>{t('logPort')}</span>
@@ -279,7 +277,7 @@ export default function Guidance() {
                 </div>
 
                 {/* Log outputs stream */}
-                <div className="space-y-1 overflow-y-auto flex-1 font-mono pr-2">
+                <div className="space-y-1 overflow-y-auto flex-1 font-sans pr-2">
                   {terminalLogs.map((log, idx) => {
                     const isCmd = log.startsWith('[GUEST');
                     return (
@@ -298,7 +296,7 @@ export default function Guidance() {
             <SurfaceCard heightClass="min-h-[460px]">
               <div className="flex flex-col justify-between h-full space-y-6 p-2">
                 <div className="space-y-6">
-                  <span className="text-xs font-mono text-primary tracking-wider uppercase block opacity-60">
+                  <span className="text-xs font-sans text-primary tracking-wider uppercase block opacity-60">
                     {t('tailoredRoadmap')}
                   </span>
                   <h2 className="font-heading text-2xl md:text-3xl font-semibold text-foreground tracking-tight">
@@ -310,7 +308,7 @@ export default function Guidance() {
 
                   {/* Milestones list */}
                   <div className="pt-6">
-                    <h4 className="font-mono text-xs text-foreground uppercase tracking-wider mb-4">
+                    <h4 className="font-sans text-xs text-foreground uppercase tracking-wider mb-4">
                       {t('milestonesStrategy')}
                     </h4>
                     <div className="grid sm:grid-cols-2 gap-4">
@@ -341,7 +339,7 @@ export default function Guidance() {
         <section className="mt-28 border-t border-border/60 pt-20">
           <div className="max-w-3xl mx-auto">
             <Card
-              className="bg-card/40 border border-border grid md:grid-cols-2 gap-8 p-6 md:p-8 backdrop-blur-sm rounded-none"
+              className="bg-card/40 border border-border grid md:grid-cols-2 gap-8 p-6 md:p-8  rounded-none"
             >
               <div>
                 <h3 className="font-heading text-2xl md:text-3xl font-semibold text-foreground tracking-tight">
@@ -369,14 +367,14 @@ export default function Guidance() {
               </div>
               
               <div className="bg-muted/30 flex flex-col justify-center rounded-none border border-border/60 p-6">
-                <p className="text-muted-foreground text-xs font-mono uppercase tracking-wider">{t('ctaStartingAt')}</p>
+                <p className="text-muted-foreground text-xs font-sans uppercase tracking-wider">{t('ctaStartingAt')}</p>
                 <p className="mt-1 font-heading text-4xl font-bold text-foreground">
                   $0<span className="text-muted-foreground text-lg font-normal">/month</span>
                 </p>
                 <p className="text-muted-foreground mt-2 text-xs font-sans">{t('ctaFreeSubText')}</p>
                 <Button
                   asChild
-                  className="mt-6 gap-2 rounded-none font-mono text-xs uppercase tracking-wider h-10 w-full"
+                  className="mt-6 gap-2 rounded-none font-sans text-xs uppercase tracking-wider h-10 w-full"
                 >
                   <Link to="/contact" /* ui-ignore */>
                     {t('ctaButtonText')}

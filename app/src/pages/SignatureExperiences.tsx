@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router';
-import ImmersiveHero from '../components/effects/ImmersiveHero';
+import { EditorialHero } from '../components/layout/EditorialHero';
 import { SurfaceCard } from '../components/effects/SurfaceCard';
 import { Badge } from '../components/ui/badge';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '../components/ui/accordion';
@@ -174,19 +174,13 @@ export default function SignatureExperiences() {
 
   return (
     <div className="min-h-screen bg-background text-foreground pb-32 relative overflow-hidden">
-      {/* Decorative Glows */}
-      <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-primary/5 rounded-none blur-[120px] pointer-events-none" />
-      <div className="absolute bottom-1/4 right-1/4 w-[600px] h-[600px] bg-primary/3 rounded-none blur-[150px] pointer-events-none" />
-
-      {/* Immersive Top Hero Viewport */}
-      <ImmersiveHero
-        bgImage="/images/EventsVisual.webp"
-        category={t('heroCategory')}
-        titleNormal={t('heroTitleNormal')}
-        titleHighlighted={t('heroTitleHighlighted')}
+      <EditorialHero
+        image="/images/EventsVisual.webp"
+        imageAlt="East Asian learners gathering for a community workshop"
+        eyebrow={t('heroCategory')}
+        title={<>{t('heroTitleNormal')} <span className="text-primary">{t('heroTitleHighlighted')}</span></>}
         description={t('heroDesc')}
-        telemetryLeft="EVENT_COORDINATOR // ACTIVE"
-        telemetryRight="UTC_COORD_EXPERIENCES"
+        layout="offset"
       />
 
       <div className="max-w-[1200px] mx-auto px-6 md:px-12 relative z-10 mt-20">
@@ -194,7 +188,7 @@ export default function SignatureExperiences() {
         
         {/* Intro */}
         <div className={`max-w-3xl mb-16 transition-all duration-1000 transform ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-          <span className="text-xs font-mono font-medium tracking-[0.3em] uppercase text-primary block mb-2">
+          <span className="text-xs font-sans font-medium tracking-[0.3em] uppercase text-primary block mb-2">
             {t('timelineHeader')}
           </span>
           <h2 className="font-heading text-3xl md:text-5xl font-semibold tracking-tight text-foreground mb-4">
@@ -231,22 +225,22 @@ export default function SignatureExperiences() {
                     {/* Header */}
                     <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-border/60 pb-4">
                       <div>
-                        <span className="font-mono text-[9px] uppercase tracking-widest text-primary/70 block mb-1">
+                        <span className="font-sans text-[9px] uppercase tracking-widest text-primary/70 block mb-1">
                           {event.status}
                         </span>
                         <h3 className="font-heading text-2xl md:text-3xl font-semibold text-foreground tracking-tight">
                           {t(event.title)}
                         </h3>
-                        <span className="text-xs font-mono text-muted-foreground uppercase tracking-widest block mt-0.5">
+                        <span className="text-xs font-sans text-muted-foreground uppercase tracking-widest block mt-0.5">
                           {t(event.subtitle)}
                         </span>
                       </div>
 
                       {/* Telemetry info */}
-                      <div className="space-y-2 font-mono text-[10px] bg-background/50 border border-border/80 p-3 shrink-0">
+                      <div className="space-y-2 font-sans text-[10px] bg-background/50 border border-border/80 p-3 shrink-0">
                         <div className="flex items-center gap-2">
                           <span className="text-muted-foreground">{t('durationLabel')}</span>
-                          <Badge variant="secondary" className="font-mono text-[9px] py-0 px-1.5 rounded-none">{t(event.duration)}</Badge>
+                          <Badge variant="secondary" className="font-sans text-[9px] py-0 px-1.5 rounded-none">{t(event.duration)}</Badge>
                         </div>
                         <div className="flex items-center gap-2">
                           <span className="text-muted-foreground">{t('targetLabel')}</span>
@@ -262,13 +256,13 @@ export default function SignatureExperiences() {
 
                     {/* Highlights */}
                     <div className="space-y-4 border-t border-border/40 pt-4">
-                      <h4 className="font-mono text-[10px] uppercase tracking-widest text-foreground font-bold flex items-center gap-1.5">
+                      <h4 className="font-sans text-[10px] uppercase tracking-widest text-foreground font-bold flex items-center gap-1.5">
                         <Star className="size-3 text-primary fill-primary" /> {t('highlightsHeader')}
                       </h4>
                       <div className="grid md:grid-cols-2 gap-3 text-xs font-sans">
                         {event.highlights.map((hl, hIdx) => (
                           <div key={hIdx} className="flex items-center gap-2 text-muted-foreground bg-muted/20 border border-border p-2">
-                            <span className="text-primary font-mono select-none">&bull;</span>
+                            <span className="text-primary font-sans select-none">&bull;</span>
                             <span>{t(hl)}</span>
                           </div>
                         ))}
@@ -295,7 +289,7 @@ export default function SignatureExperiences() {
               {faqCategories.map((category) => (
                 <div
                   key={category.title}
-                  className="border border-border bg-card/40 p-5 backdrop-blur-sm"
+                  className="border border-border bg-card/40 p-5 "
                 >
                   <div className="mb-4 flex items-center gap-2">
                     <category.icon className="text-primary size-4" />
@@ -313,7 +307,7 @@ export default function SignatureExperiences() {
                         value={item.id}
                         className="border border-border/40 bg-background/30 rounded-none not-last:border-b-0"
                       >
-                        <AccordionTrigger className="cursor-pointer px-4 py-3 text-xs font-semibold hover:no-underline font-mono uppercase tracking-wider text-left text-foreground">
+                        <AccordionTrigger className="cursor-pointer px-4 py-3 text-xs font-semibold hover:no-underline font-sans uppercase tracking-wider text-left text-foreground">
                           {t(item.question)}
                         </AccordionTrigger>
                         <AccordionContent className="px-4 pb-4">
@@ -326,7 +320,7 @@ export default function SignatureExperiences() {
               ))}
             </div>
             
-            <p className="text-muted-foreground mt-12 text-center text-xs font-mono">
+            <p className="text-muted-foreground mt-12 text-center text-xs font-sans">
               {t('faqContactText')}
           <Link to="/contact" className="text-primary font-semibold hover:text-foreground focus:outline-none focus:ring-1 focus:ring-primary hover:underline">
                 {t('faqContactLink')}

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import ImmersiveHero from '../components/effects/ImmersiveHero';
+import { EditorialHero } from '../components/layout/EditorialHero';
 import { Input } from '../components/ui/input';
 import { Textarea } from '../components/ui/textarea';
 import { Button } from '../components/ui/button';
@@ -116,19 +116,13 @@ export default function Contact() {
 
   return (
     <div className="min-h-screen bg-background text-foreground pb-32 relative overflow-hidden">
-      {/* Decorative Glows */}
-      <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-primary/5 rounded-none blur-[130px] pointer-events-none" />
-      <div className="absolute bottom-1/4 right-1/4 w-[500px] h-[500px] bg-primary/3 rounded-none blur-[130px] pointer-events-none" />
-
-      {/* Immersive Top Hero Viewport */}
-      <ImmersiveHero
-        bgImage="/images/ContactVisual.webp"
-        category={t('heroCategory')}
-        titleNormal={t('heroTitleNormal')}
-        titleHighlighted={t('heroTitleHighlighted')}
+      <EditorialHero
+        image="/images/ContactVisual.webp"
+        imageAlt="East Asian support team welcoming a community conversation"
+        eyebrow={t('heroCategory')}
+        title={<>{t('heroTitleNormal')} <span className="text-primary">{t('heroTitleHighlighted')}</span></>}
         description={t('heroDesc')}
-        telemetryLeft="COMMUNICATION_CHANNELS // ACTIVE"
-        telemetryRight="UTC_COORD_CONTACT"
+        layout="split"
       />
 
       <div className="max-w-[1200px] mx-auto px-6 md:px-12 relative z-10 mt-16 pb-20">
@@ -137,10 +131,10 @@ export default function Contact() {
 
           {/* Left Column: Office & Details */}
           <div className="lg:col-span-5 space-y-6">
-            <Card className="p-6 bg-card/40 backdrop-blur-sm rounded-none border border-border flex flex-col justify-between min-h-[360px]">
+            <Card className="p-6 bg-card/40  rounded-none border border-border flex flex-col justify-between min-h-[360px]">
               <div className="space-y-6">
                 <div>
-                  <span className="text-[10px] font-mono tracking-widest text-primary uppercase block mb-3 font-semibold">
+                  <span className="text-[10px] font-sans tracking-widest text-primary uppercase block mb-3 font-semibold">
                     {t('officeTitle')}
                   </span>
                   <div className="flex items-start gap-3">
@@ -159,10 +153,10 @@ export default function Contact() {
                 <div className="pt-6 border-t border-border flex items-start gap-3">
                   <Phone className="text-primary size-5 shrink-0 mt-0.5" />
                   <div>
-                    <span className="text-[9px] font-mono text-muted-foreground uppercase tracking-widest block mb-1">
+                    <span className="text-[9px] font-sans text-muted-foreground uppercase tracking-widest block mb-1">
                       {t('hotlineLabel')}
                     </span>
-                    <a href="tel:+919856456703" className="text-sm font-semibold font-mono text-foreground hover:text-primary hover:underline focus:outline-none focus:ring-1 focus:ring-primary">
+                    <a href="tel:+919856456703" className="text-sm font-semibold font-sans text-foreground hover:text-primary hover:underline focus:outline-none focus:ring-1 focus:ring-primary">
                       {t('hotlinePhone')}
                     </a>
                   </div>
@@ -171,10 +165,10 @@ export default function Contact() {
                 <div className="pt-6 border-t border-border flex items-start gap-3">
                   <Mail className="text-primary size-5 shrink-0 mt-0.5" />
                   <div>
-                    <span className="text-[9px] font-mono text-muted-foreground uppercase tracking-widest block mb-1">
+                    <span className="text-[9px] font-sans text-muted-foreground uppercase tracking-widest block mb-1">
                       {t('inquiriesLabel')}
                     </span>
-                    <a href={`mailto:${t('inquiriesEmail')}`} className="text-sm font-semibold font-mono text-foreground hover:text-primary hover:underline focus:outline-none focus:ring-1 focus:ring-primary">
+                    <a href={`mailto:${t('inquiriesEmail')}`} className="text-sm font-semibold font-sans text-foreground hover:text-primary hover:underline focus:outline-none focus:ring-1 focus:ring-primary">
                       {t('inquiriesEmail')}
                     </a>
                   </div>
@@ -185,20 +179,20 @@ export default function Contact() {
 
           {/* Right Column: Interaction Form */}
           <div className="lg:col-span-7 space-y-6">
-            <Card className="p-6 bg-card/40 backdrop-blur-sm rounded-none border border-border">
+            <Card className="p-6 bg-card/40  rounded-none border border-border">
               <h3 className="font-heading text-xl font-semibold tracking-tight text-foreground mb-6">
                 {t('formTitle')}
               </h3>
 
               {submitted ? (
-                <div className="bg-primary/10 border border-primary/30 p-6 text-primary text-xs font-mono">
+                <div className="bg-primary/10 border border-primary/30 p-6 text-primary text-xs font-sans">
                   {t('successMessage')}
                 </div>
               ) : (
                 <form onSubmit={handleSubmit} className="space-y-5">
                   <div className="grid md:grid-cols-2 gap-5">
                     <div className="space-y-2">
-                      <Label htmlFor="contact-name" className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground">
+                      <Label htmlFor="contact-name" className="text-[10px] font-sans uppercase tracking-wider text-muted-foreground">
                         {t('labelName')}
                       </Label>
                       <Input
@@ -208,11 +202,11 @@ export default function Contact() {
                         value={formData.name}
                         onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
                         placeholder={t('placeholderName')}
-                        className="font-mono text-xs rounded-none border-border focus:border-primary focus:ring-1 focus:ring-primary/20 bg-background/50 h-10 px-3"
+                        className="font-sans text-xs rounded-none border-border focus:border-primary focus:ring-1 focus:ring-primary/20 bg-background/50 h-10 px-3"
                       />
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="contact-email" className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground">
+                      <Label htmlFor="contact-email" className="text-[10px] font-sans uppercase tracking-wider text-muted-foreground">
                         {t('labelEmail')}
                       </Label>
                       <Input
@@ -222,23 +216,23 @@ export default function Contact() {
                         value={formData.email}
                         onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
                         placeholder={t('placeholderEmailInput')}
-                        className="font-mono text-xs rounded-none border-border focus:border-primary focus:ring-1 focus:ring-primary/20 bg-background/50 h-10 px-3"
+                        className="font-sans text-xs rounded-none border-border focus:border-primary focus:ring-1 focus:ring-primary/20 bg-background/50 h-10 px-3"
                       />
                     </div>
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="contact-profile" className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground block">
+                    <Label htmlFor="contact-profile" className="text-[10px] font-sans uppercase tracking-wider text-muted-foreground block">
                       {t('labelProfile')}
                     </Label>
                     <Select
                       value={formData.profile}
                       onValueChange={(val) => setFormData(prev => ({ ...prev, profile: val }))}
                     >
-                      <SelectTrigger id="contact-profile" className="w-full font-mono text-xs rounded-none bg-background/50 border-border h-10 px-3">
+                      <SelectTrigger id="contact-profile" className="w-full font-sans text-xs rounded-none bg-background/50 border-border h-10 px-3">
                         <SelectValue placeholder={t('placeholderProfile')} />
                       </SelectTrigger>
-                      <SelectContent className="rounded-none font-mono text-xs border border-border bg-card">
+                      <SelectContent className="rounded-none font-sans text-xs border border-border bg-card">
                         <SelectItem value="student">{t('optStudent')}</SelectItem>
                         <SelectItem value="parent">{t('optParent')}</SelectItem>
                         <SelectItem value="educator">{t('optEducator')}</SelectItem>
@@ -249,7 +243,7 @@ export default function Contact() {
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="contact-message" className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground">
+                    <Label htmlFor="contact-message" className="text-[10px] font-sans uppercase tracking-wider text-muted-foreground">
                       {t('labelMessage')}
                     </Label>
                     <Textarea
@@ -258,12 +252,12 @@ export default function Contact() {
                       value={formData.message}
                       onChange={(e) => setFormData(prev => ({ ...prev, message: e.target.value }))}
                       placeholder={t('placeholderMessage')}
-                      className="font-mono text-xs min-h-[120px] rounded-none border-border focus:border-primary focus:ring-1 focus:ring-primary/20 bg-background/50 p-3"
+                      className="font-sans text-xs min-h-[120px] rounded-none border-border focus:border-primary focus:ring-1 focus:ring-primary/20 bg-background/50 p-3"
                     />
                   </div>
 
                   {formError && <p role="alert" className="border border-destructive/40 bg-destructive/10 p-3 text-xs text-destructive">{formError}</p>}
-                  <Button disabled={submitting} type="submit" className="w-full rounded-none font-mono text-xs uppercase tracking-wider h-10">
+                  <Button disabled={submitting} type="submit" className="w-full rounded-none font-sans text-xs uppercase tracking-wider h-10">
                     {submitting ? 'Sending...' : t('submitButton')}
                   </Button>
                 </form>
@@ -271,7 +265,7 @@ export default function Contact() {
             </Card>
 
             {/* Newsletter Subscription */}
-            <Card className="p-6 bg-card/40 backdrop-blur-sm rounded-none border border-border">
+            <Card className="p-6 bg-card/40  rounded-none border border-border">
               <div className="space-y-4">
                 <div>
                   <h3 className="font-heading text-lg font-semibold tracking-tight text-foreground">
@@ -283,7 +277,7 @@ export default function Contact() {
                 </div>
 
                 {subscribed ? (
-                  <p className="text-xs text-primary font-mono bg-primary/10 border border-primary/25 p-3">
+                  <p className="text-xs text-primary font-sans bg-primary/10 border border-primary/25 p-3">
                     {t('newsletterSuccess')}
                   </p>
                 ) : (
@@ -293,10 +287,10 @@ export default function Contact() {
                       required
                       value={newsletterEmail}
                       onChange={(e) => setNewsletterEmail(e.target.value)}
-                      className="flex-grow font-mono text-xs rounded-none bg-background/50 border-border h-10 px-3"
+                      className="flex-grow font-sans text-xs rounded-none bg-background/50 border-border h-10 px-3"
                       placeholder={t('placeholderEmail')}
                     />
-                    <Button type="submit" variant="outline" className="rounded-none font-mono text-xs uppercase tracking-wider h-10 px-6">
+                    <Button type="submit" variant="outline" className="rounded-none font-sans text-xs uppercase tracking-wider h-10 px-6">
                       {t('subscribeButton')}
                     </Button>
                   </form>
