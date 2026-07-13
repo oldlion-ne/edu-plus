@@ -21,15 +21,15 @@ export const ClippedAreaChart: React.FC<ClippedAreaChartProps> = ({ data: chartD
         <AreaChart data={chartData} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
           <defs>
             <linearGradient id="colorValue" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="5%" stopColor="oklch(0.841 0.238 128.85)" stopOpacity={0.3}/>
-              <stop offset="95%" stopColor="oklch(0.841 0.238 128.85)" stopOpacity={0}/>
+              <stop offset="5%" stopColor="oklch(var(--primary))" stopOpacity={0.3}/>
+              <stop offset="95%" stopColor="oklch(var(--primary))" stopOpacity={0}/>
             </linearGradient>
           </defs>
-          <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="oklch(0.922 0.005 34.3)" />
-          <XAxis dataKey="name" stroke="oklch(0.547 0.021 43.1)" fontSize={12} tickLine={false} axisLine={false} />
-          <YAxis stroke="oklch(0.547 0.021 43.1)" fontSize={12} tickLine={false} axisLine={false} />
+          <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="oklch(var(--border))" />
+          <XAxis dataKey="name" stroke="oklch(var(--muted-foreground))" fontSize={12} tickLine={false} axisLine={false} />
+          <YAxis stroke="oklch(var(--muted-foreground))" fontSize={12} tickLine={false} axisLine={false} />
           <Tooltip />
-          <Area type="monotone" dataKey="value" stroke="oklch(0.841 0.238 128.85)" fillOpacity={1} fill="url(#colorValue)" />
+          <Area type="linear" dataKey="value" stroke="oklch(var(--primary))" fillOpacity={1} fill="url(#colorValue)" />
         </AreaChart>
       </ResponsiveContainer>
     </div>

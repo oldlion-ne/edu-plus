@@ -129,7 +129,7 @@ export default function ServicesMatrix() {
 
             {/* Centre logo node */}
             <div className="absolute inset-0 m-auto flex size-fit items-center justify-center z-20">
-              <div className="flex px-4 py-2 items-center justify-center rounded-full border border-border bg-card/90 shadow-xl shadow-black/10 backdrop-blur-md">
+              <div className="flex px-4 py-2 items-center justify-center rounded-lg border border-border bg-card/90 shadow-xl shadow-black/10 backdrop-blur-md">
                 <EduPlusLogo className="text-lg" />
               </div>
             </div>
