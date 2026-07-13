@@ -38,6 +38,8 @@ const INTERACTIVE_TAG_REGEX = /<(button|a|Link|NavLink)\b/;
 const INLINE_STYLE_REGEX = /style=\{\{\s*[^}]+\s*\}\}/g;
 const PROHIBITED_MOTION_REGEX = /\banimate-(?:pulse|ping|bounce|chat-glow)\b/g;
 const PROHIBITED_GLOW_REGEX = /\b(?:drop-)?shadow-\[0_0_(?!0_1px)[^\]]+\]/g;
+const PROHIBITED_INTERFACE_MONO_REGEX = /\bfont-mono\b/g;
+const PROHIBITED_HUD_COPY_REGEX = /\b(?:SYSTEM_|UTC_COORD|NEXUS|MATRIX|STREAM|SCAN)[A-Z0-9_]*/g;
 
 let totalErrors = 0;
 let totalWarnings = 0;
@@ -156,6 +158,22 @@ function checkFile(filePath) {
     for (const match of line.matchAll(PROHIBITED_GLOW_REGEX)) {
       console.log(`${colors.red('❌ ERROR')} Prohibited glow shadow "${colors.bold(match[0])}" found in ${colors.cyan(relativePath)}:${colors.yellow(lineNumber)}`);
       totalErrors++;
+    }
+
+    // 8. Monospace is reserved for genuinely technical data, not interface copy.
+    if (/src[\\/](?:pages|components[\\/]workspace)/.test(filePath)) {
+      for (const match of line.matchAll(PROHIBITED_INTERFACE_MONO_REGEX)) {
+        console.log(`${colors.red('ERROR')} General-purpose monospace class "${colors.bold(match[0])}" found in ${colors.cyan(relativePath)}:${colors.yellow(lineNumber)}`);
+        totalErrors++;
+      }
+    }
+
+    // 9. Reject legacy HUD terminology in page and workspace source.
+    if (/src[\\/](?:pages|sections|components[\\/]workspace)/.test(filePath)) {
+      for (const match of line.matchAll(PROHIBITED_HUD_COPY_REGEX)) {
+        console.log(`${colors.red('ERROR')} Legacy HUD term "${colors.bold(match[0])}" found in ${colors.cyan(relativePath)}:${colors.yellow(lineNumber)}`);
+        totalErrors++;
+      }
     }
   });
 }

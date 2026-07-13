@@ -1,7 +1,6 @@
 @import url("tw-animate-css");
 @import url("shadcn/tailwind.css");
 @import url("@fontsource-variable/outfit");
-@import url("@fontsource-variable/merriweather");
 @import url("@fontsource-variable/inter");
 
 @tailwind base;
@@ -46,6 +45,23 @@
     --sidebar-accent-foreground: 30% 0.015 60deg;
     --sidebar-border: 90% 0.008 80deg;
     --sidebar-ring: 75% 0.12 70deg;
+    --surface-base: 97% 0.004 80deg;
+    --surface-raised: 99% 0.003 80deg;
+    --surface-sunken: 94% 0.008 80deg;
+    --surface-overlay: 98% 0.004 80deg;
+    --edge-subtle: 90% 0.008 80deg;
+    --edge-strong: 72% 0.016 70deg;
+    --edge-accent: 75% 0.12 70deg;
+    --status-info: 58% 0.095 245deg;
+    --status-success: 56% 0.11 145deg;
+    --status-warning: 70% 0.13 75deg;
+    --status-danger: 55% 0.2 25deg;
+    --shadow-raised: 0 18px 45px oklch(22% 0.01 60deg / 0.1);
+    --shadow-overlay: 0 28px 70px oklch(18% 0.012 60deg / 0.18);
+    --motion-fast: 140ms;
+    --motion-standard: 220ms;
+    --motion-slow: 320ms;
+    --ease-standard: cubic-bezier(0.2, 0.8, 0.2, 1);
   }
 
   html, body {
@@ -102,6 +118,19 @@
     --sidebar-accent-foreground: 93% 0.006 80deg;
     --sidebar-border: 100% 0 0deg / 0.08;
     --sidebar-ring: 65% 0.012 60deg;
+    --surface-base: 22% 0.012 60deg;
+    --surface-raised: 25% 0.014 60deg;
+    --surface-sunken: 16% 0.01 60deg;
+    --surface-overlay: 24% 0.013 60deg;
+    --edge-subtle: 100% 0 0deg / 0.08;
+    --edge-strong: 100% 0 0deg / 0.2;
+    --edge-accent: 78% 0.13 70deg;
+    --status-info: 72% 0.09 245deg;
+    --status-success: 72% 0.11 145deg;
+    --status-warning: 78% 0.13 75deg;
+    --status-danger: 65% 0.18 25deg;
+    --shadow-raised: 0 20px 48px oklch(5% 0.01 60deg / 0.28);
+    --shadow-overlay: 0 30px 76px oklch(5% 0.01 60deg / 0.42);
   }
 
   * {
@@ -125,7 +154,76 @@
   }
 
   .animate-fade-in {
-    animation: fadeIn 0.4s ease-out forwards;
+    animation: fadeIn var(--motion-slow) var(--ease-standard) forwards;
+  }
+
+  .editorial-container {
+    width: min(100% - 2rem, 80rem);
+    margin-inline: auto;
+  }
+
+  .editorial-grid {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    gap: clamp(1rem, 2vw, 2rem);
+  }
+
+  .surface-base {
+    background: oklch(var(--surface-base));
+    border: 1px solid oklch(var(--edge-subtle));
+    box-shadow: inset 0 1px oklch(100% 0 0deg / 0.06);
+  }
+
+  .surface-raised {
+    background: linear-gradient(145deg, oklch(var(--surface-raised)), oklch(var(--surface-base)));
+    border: 1px solid oklch(var(--edge-strong));
+    box-shadow: inset 0 1px oklch(100% 0 0deg / 0.08), var(--shadow-raised);
+  }
+
+  .surface-sunken {
+    background: oklch(var(--surface-sunken));
+    border: 1px solid oklch(var(--edge-subtle));
+    box-shadow: inset 0 1px 3px oklch(10% 0.01 60deg / 0.12);
+  }
+
+  .eyebrow {
+    color: oklch(var(--primary));
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    line-height: 1.3;
+    text-transform: uppercase;
+  }
+
+  .display-title {
+    font-size: clamp(2.75rem, 7vw, 6.5rem);
+    font-weight: 650;
+    letter-spacing: -0.065em;
+    line-height: 0.92;
+  }
+
+  .section-title {
+    font-size: clamp(2rem, 4vw, 3.75rem);
+    font-weight: 620;
+    letter-spacing: -0.045em;
+    line-height: 1;
+  }
+}
+
+@media (min-width: 768px) {
+  .editorial-container {
+    width: min(100% - 4rem, 80rem);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
 }
 
