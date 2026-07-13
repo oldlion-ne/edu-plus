@@ -235,7 +235,7 @@ export default function Guidance() {
     <div className="min-h-screen bg-background text-foreground pb-32 relative overflow-hidden">
       {/* Immersive Top Hero Viewport */}
       <ImmersiveHero
-        bgImage="/images/MentorshipVisual.png"
+        bgImage="/images/MentorshipVisual.webp"
         category={t('heroCategory')}
         titleNormal={t('heroTitleNormal')}
         titleHighlighted={t('heroTitleHighlighted')}

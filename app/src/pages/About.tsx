@@ -102,7 +102,7 @@ export default function About() {
 
       {/* Immersive Top Hero Viewport */}
       <ImmersiveHero
-        bgImage="/images/AboutCollabVisual.png"
+        bgImage="/images/AboutCollabVisual.webp"
         category={t('aboutCategory')}
         titleNormal={t('aboutTitleNormal')}
         titleHighlighted={t('aboutTitleHighlighted')}

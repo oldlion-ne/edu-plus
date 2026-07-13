@@ -91,7 +91,7 @@ export default function KnowledgeHub() {
   return (
     <div className="min-h-screen bg-background text-foreground pb-32 relative overflow-hidden font-sans">
       <ImmersiveHero
-        bgImage="/images/HubVisual.png"
+        bgImage="/images/HubVisual.webp"
         category={t('heroCategory')}
         titleNormal={t('heroTitleNormal')}
         titleHighlighted={t('heroTitleHighlighted')}

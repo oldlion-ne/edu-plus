@@ -179,7 +179,7 @@ export default function SignatureExperiences() {
 
       {/* Immersive Top Hero Viewport */}
       <ImmersiveHero
-        bgImage="/images/EventsVisual.png"
+        bgImage="/images/EventsVisual.webp"
         category={t('heroCategory')}
         titleNormal={t('heroTitleNormal')}
         titleHighlighted={t('heroTitleHighlighted')}

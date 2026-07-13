@@ -122,7 +122,7 @@ export default function Programs() {
     <div className="min-h-screen bg-background text-foreground pb-32 relative overflow-hidden">
       {/* Immersive Top Hero Viewport */}
       <ImmersiveHero
-        bgImage="/images/CurriculumVisual.png"
+        bgImage="/images/CurriculumVisual.webp"
         category={t('heroCategory')}
         titleNormal={t('heroTitleNormal')}
         titleHighlighted={t('heroTitleHighlighted')}

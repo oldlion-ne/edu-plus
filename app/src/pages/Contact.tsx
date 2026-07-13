@@ -107,7 +107,7 @@ export default function Contact() {
 
       {/* Immersive Top Hero Viewport */}
       <ImmersiveHero
-        bgImage="/images/ContactVisual.png"
+        bgImage="/images/ContactVisual.webp"
         category={t('heroCategory')}
         titleNormal={t('heroTitleNormal')}
         titleHighlighted={t('heroTitleHighlighted')}

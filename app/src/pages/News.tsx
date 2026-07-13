@@ -100,7 +100,7 @@ export default function News() {
     <div className="min-h-screen bg-background text-foreground pb-32 relative overflow-hidden">
       {/* Immersive Top Hero Viewport */}
       <ImmersiveHero
-        bgImage="/images/NewsVisual.png"
+        bgImage="/images/NewsVisual.webp"
         category={t('heroCategory')}
         titleNormal={t('heroTitleNormal')}
         titleHighlighted={t('heroTitleHighlighted')}

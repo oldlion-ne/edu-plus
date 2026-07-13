@@ -38,13 +38,11 @@ export default function Hero() {
       className="relative w-full min-h-screen flex flex-col justify-center overflow-hidden"
     >
       {/* ── Background video ── */}
-      <video
-        autoPlay
-        loop
-        muted
-        playsInline
-        className="absolute inset-0 w-full h-full object-cover z-0 opacity-10 transition-all duration-700"
-        src="/assets/bg-hero-new.mp4"
+      <img
+        src="/images/HomeHeroVisual.webp"
+        alt="East Asian learners and mentors collaborating in a calm modern learning space"
+        className="absolute inset-0 z-0 size-full object-cover opacity-30 transition-opacity duration-700"
+        fetchPriority="high"
       />
 
       {/* ── Dark overlays ── */}

@@ -12,7 +12,7 @@ import { Badge } from '../components/ui/badge';
 import { Button } from '../components/ui/button';
 import { MagicCard } from '../components/effects/CyberVisualizations';
 import { MapPin, ChevronRight } from 'lucide-react';
-import { Avatar, AvatarImage, AvatarFallback } from '../components/ui/avatar';
+import { Avatar, AvatarFallback } from '../components/ui/avatar';
 import { Card } from '../components/ui/card';
 
 const translations = {
@@ -53,7 +53,6 @@ interface CouncilMember {
   bio: string;
   seatId: string;
   status: string;
-  avatar: string;
 }
 
 const COUNCIL_MEMBERS: CouncilMember[] = [
@@ -65,8 +64,7 @@ const COUNCIL_MEMBERS: CouncilMember[] = [
     panel: 'Steering Committee & Founders',
     bio: 'An education entrepreneur dedicated to cultural revival and transformative learning. With seven years of research focused on culture and education, he designs learning experiences that reinforce modern skills and local roots.',
     seatId: 'SEAT_01',
-    status: 'CHAIR',
-    avatar: '/images/male_avatar.png'
+    status: 'CHAIR'
   },
   {
     name: 'Mr. Roshan Khumukcham',
@@ -76,8 +74,7 @@ const COUNCIL_MEMBERS: CouncilMember[] = [
     panel: 'Steering Committee & Founders',
     bio: 'Fitness and career mentor with over two decades of corporate leadership experience in the automotive industry (Hyundai, Hero Honda, LML). Focuses on discipline, professional resilience, and student mentoring.',
     seatId: 'SEAT_02',
-    status: 'FOUNDER',
-    avatar: '/images/male_avatar.png'
+    status: 'FOUNDER'
   },
   {
     name: 'Mr. Ronen Akoijam',
@@ -87,8 +84,7 @@ const COUNCIL_MEMBERS: CouncilMember[] = [
     panel: 'Steering Committee & Founders',
     bio: 'Senior Speech Therapist and language interventions expert under the Ministry of Education in Singapore. With over 20 years of experience, he steers our inclusive learning and communication strategies.',
     seatId: 'SEAT_03',
-    status: 'CO-FOUNDER',
-    avatar: '/images/male_avatar.png'
+    status: 'CO-FOUNDER'
   },
   {
     name: 'Dr. Soram Bobby Singh',
@@ -98,8 +94,7 @@ const COUNCIL_MEMBERS: CouncilMember[] = [
     panel: 'Scientific Research & Technology',
     bio: 'Leading researcher in green hydrogen and energy materials with 15+ years of experience in materials science and water-splitting technologies. Dedicated to future-focused tech incubation.',
     seatId: 'SEAT_04',
-    status: 'PRINCIPAL_SCIENTIST',
-    avatar: '/images/male_avatar.png'
+    status: 'PRINCIPAL_SCIENTIST'
   },
   {
     name: 'Shri Romen Ningthoujam',
@@ -109,8 +104,7 @@ const COUNCIL_MEMBERS: CouncilMember[] = [
     panel: 'Grassroots Impact & Cultural Pedagogy',
     bio: 'Holds M.Ed., Ph.D. (Education) and Applied Psychology diploma. Over a decade of community development, education equity, and grassroots impact leadership at Goonj.',
     seatId: 'SEAT_05',
-    status: 'GRASSR0OTS_DELEGATE',
-    avatar: '/images/male_avatar.png'
+    status: 'GRASSR0OTS_DELEGATE'
   },
   {
     name: 'Shri Khumukcham Roshaan Singh',
@@ -120,8 +114,7 @@ const COUNCIL_MEMBERS: CouncilMember[] = [
     panel: 'Corporate & Legal Advisory',
     bio: '20+ years of automotive corporate experience (Hyundai, Hero, LML). Mechanical Engineer and author of "Smart Behaviour Installation Guide", focusing on professional and behavioral readiness.',
     seatId: 'SEAT_06',
-    status: 'EXECUTIVE_ADVISOR',
-    avatar: '/images/male_avatar.png'
+    status: 'EXECUTIVE_ADVISOR'
   },
   {
     name: 'Smt. Nutan Nongthongbam',
@@ -131,8 +124,7 @@ const COUNCIL_MEMBERS: CouncilMember[] = [
     panel: 'Grassroots Impact & Cultural Pedagogy',
     bio: 'Certified Life Skills Trainer and recognized public health speaker at national and international levels, specializing in health communication, emotional resilience, and holistic leadership.',
     seatId: 'SEAT_07',
-    status: 'TRAINING_ADVISOR',
-    avatar: '/images/female_avatar.png'
+    status: 'TRAINING_ADVISOR'
   },
   {
     name: 'Ms. Geetarani Takhellambam, LL.M.',
@@ -142,8 +134,7 @@ const COUNCIL_MEMBERS: CouncilMember[] = [
     panel: 'Corporate & Legal Advisory',
     bio: 'Dual-qualified legal expert (India & UK) with 20+ years of corporate law practice, arbitration, and compliance leadership in the renewable energy sector.',
     seatId: 'SEAT_08',
-    status: 'LEGAL_COUNSEL',
-    avatar: '/images/female_avatar.png'
+    status: 'LEGAL_COUNSEL'
   },
   {
     name: 'Shri Rojit Keisham',
@@ -153,8 +144,7 @@ const COUNCIL_MEMBERS: CouncilMember[] = [
     panel: 'Scientific Research & Technology',
     bio: '14+ years of maritime operations experience across the USA, Australia, Europe, and Asia in the Merchant Navy. Bridges global seafaring competence with academic excellence.',
     seatId: 'SEAT_09',
-    status: 'MARITIME_CHAIR',
-    avatar: '/images/male_avatar.png'
+    status: 'MARITIME_CHAIR'
   },
   {
     name: 'Dr. Ngangbam Shantikumar Meetei',
@@ -164,8 +154,7 @@ const COUNCIL_MEMBERS: CouncilMember[] = [
     panel: 'Global Pedagogy & Early Childhood',
     bio: '25+ years teaching public speaking and linguistics at Hungkuo Delin University of Technology. A decorated natural bodybuilder with 12 international titles, representing physical and mental balance.',
     seatId: 'SEAT_10',
-    status: 'PEDAGOGY_PROFESSOR',
-    avatar: '/images/male_avatar.png'
+    status: 'PEDAGOGY_PROFESSOR'
   },
   {
     name: 'Shri Ronendrojit Akoijam',
@@ -175,8 +164,7 @@ const COUNCIL_MEMBERS: CouncilMember[] = [
     panel: 'Global Pedagogy & Early Childhood',
     bio: '20+ years designing speech and language intervention programs for children. Leading clinical expertise in student-centered support, language development, and speech therapy.',
     seatId: 'SEAT_11',
-    status: 'THERAPY_ADVISOR',
-    avatar: '/images/male_avatar.png'
+    status: 'THERAPY_ADVISOR'
   },
   {
     name: 'Smt. Purnimashi Moirangthem',
@@ -186,8 +174,7 @@ const COUNCIL_MEMBERS: CouncilMember[] = [
     panel: 'Global Pedagogy & Early Childhood',
     bio: 'Delhi University graduate, early childhood manager, and certified CDA. Combines 17 years of IT/finance corporate experience (HCL, IBM, NIIT) with early cognitive development expertise.',
     seatId: 'SEAT_12',
-    status: 'COGNITIVE_LEAD',
-    avatar: '/images/female_avatar.png'
+    status: 'COGNITIVE_LEAD'
   },
   {
     name: 'Dr. Tomba Singh Thokchom',
@@ -197,8 +184,7 @@ const COUNCIL_MEMBERS: CouncilMember[] = [
     panel: 'Global Pedagogy & Early Childhood',
     bio: 'Academic leader in teacher education and modern pedagogical innovation. Contributes extensively to curriculum design, educator training, and learning quality development.',
     seatId: 'SEAT_13',
-    status: 'PEDAGOGICAL_COACH',
-    avatar: '/images/male_avatar.png'
+    status: 'PEDAGOGICAL_COACH'
   },
   {
     name: 'Dr. Usham Rojio',
@@ -208,8 +194,7 @@ const COUNCIL_MEMBERS: CouncilMember[] = [
     panel: 'Grassroots Impact & Cultural Pedagogy',
     bio: 'Academic, poet, and experimental theatre practitioner. Explores literature, performing arts, and social expression, collaborating on grassroots cultural and community-led theatre.',
     seatId: 'SEAT_14',
-    status: 'CULTURAL_ADVISOR',
-    avatar: '/images/male_avatar.png'
+    status: 'CULTURAL_ADVISOR'
   }
 ];
 
@@ -222,7 +207,6 @@ const PANELS = [
 ] as const;
 
 interface Testimonial {
-  avatar: string;
   name: string;
   role: string;
   quote: string;
@@ -230,25 +214,21 @@ interface Testimonial {
 
 const TESTIMONIALS: Testimonial[] = [
   {
-    avatar: '/images/male_avatar.png',
     name: 'Khumukcham Premkumar Singh',
     role: 'Software Trainee, Imphal',
     quote: 'EduPlus Skills has been a game-changer for my career path. It bridged the gap between my local training in Imphal and global tech opportunities.',
   },
   {
-    avatar: '/images/female_avatar.png',
     name: 'Laishram Tombisana Devi',
     role: 'Vocational Student, Imphal',
     quote: 'The community-centric pedagogy at EduPlus allowed me to build vocational skills while preserving my family\'s heritage.',
   },
   {
-    avatar: '/images/male_avatar.png',
     name: 'Thokchom Ibomcha Singh',
     role: 'Grassroots Educator, Manipur',
     quote: 'As an educator, EduPlus provided the tools to redesign classroom learning in Manipur, making education highly collaborative and interactive.',
   },
   {
-    avatar: '/images/female_avatar.png',
     name: 'Ningthoujam Shanti Devi',
     role: 'Primary School Teacher, Imphal West',
     quote: 'EduPlus Skills transformed how we teach early cognitive concepts to children, integrating localized play-based methodologies.',
@@ -273,7 +253,7 @@ export default function Council() {
     <div className="min-h-screen bg-background text-foreground pb-32 relative overflow-hidden">
       {/* Immersive Top Hero Viewport */}
       <ImmersiveHero
-        bgImage="/images/CouncilVisual.png"
+        bgImage="/images/CouncilVisual.webp"
         category={t('heroCategory')}
         titleNormal={t('heroTitleNormal')}
         titleHighlighted={t('heroTitleHighlighted')}
@@ -325,7 +305,6 @@ export default function Council() {
                     title={`${member.name} - ${member.role}`}
                   >
                     <Avatar className="size-12 rounded-none border border-background">
-                      <AvatarImage src={member.avatar} alt={member.name} className="rounded-none object-cover" />
                       <AvatarFallback className="text-[10px] font-bold font-mono bg-muted text-muted-foreground uppercase">{initials}</AvatarFallback>
                     </Avatar>
                     <span className="absolute -bottom-1 -right-1 bg-background text-[7px] border border-border px-1 py-0.2 font-mono text-foreground font-semibold scale-90 rounded-none">
@@ -354,7 +333,6 @@ export default function Council() {
                     title={`${member.name} - ${member.role}`}
                   >
                     <Avatar className="size-12 rounded-none border border-background">
-                      <AvatarImage src={member.avatar} alt={member.name} className="rounded-none object-cover" />
                       <AvatarFallback className="text-[10px] font-bold font-mono bg-muted text-muted-foreground uppercase">{initials}</AvatarFallback>
                     </Avatar>
                     <span className="absolute -bottom-1 -right-1 bg-background text-[7px] border border-border px-1 py-0.2 font-mono text-foreground font-semibold scale-90 rounded-none">
@@ -413,7 +391,6 @@ export default function Council() {
                             
                             <div className="flex items-start gap-3">
                               <Avatar className="size-12 border border-border shrink-0">
-                                <AvatarImage src={member.avatar} alt={member.name} className="object-cover" />
                                 <AvatarFallback className="text-xs font-bold font-mono bg-muted text-muted-foreground uppercase">{initials}</AvatarFallback>
                               </Avatar>
                               <div className="space-y-0.5 min-w-0">
@@ -486,11 +463,12 @@ export default function Council() {
                   variant="outline"
                   className="text-foreground flex flex-col sm:flex-row items-start sm:items-end gap-4 p-6 border border-border bg-card/30 backdrop-blur-sm hover:border-primary/45 transition-all duration-300"
                 >
-                  <img
-                    src={testimonial.avatar}
-                    alt={testimonial.name}
-                    className="size-10 rounded-none object-cover border border-border shrink-0 shadow-sm"
-                  />
+                  <div
+                    aria-hidden
+                    className="flex size-10 shrink-0 items-center justify-center border border-border bg-muted font-mono text-xs font-semibold text-primary"
+                  >
+                    {testimonial.name.split(' ').map((part) => part[0]).join('').slice(0, 2)}
+                  </div>
                   <div className="space-y-4 flex-grow min-w-0 w-full">
                     <p className="text-foreground text-[13px] italic font-sans leading-relaxed">
                       "{testimonial.quote}"
@@ -550,7 +528,6 @@ export default function Council() {
               
               <div className="flex items-center gap-4 border-b border-border pb-3">
                 <Avatar className="size-16 border border-border shrink-0 shadow-sm">
-                  <AvatarImage src={selectedMember.avatar} alt={selectedMember.name} className="object-cover" />
                   <AvatarFallback className="text-base font-bold font-mono bg-muted text-muted-foreground uppercase">
                     {selectedMember.name.split(' ').filter(n => !n.includes('.') && n !== 'LL.M.').map(n => n[0]).join('').slice(0, 2)}
                   </AvatarFallback>
