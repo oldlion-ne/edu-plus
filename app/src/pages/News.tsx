@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react';
 import ImmersiveHero from '../components/effects/ImmersiveHero';
-import { MagicCard } from '../components/effects/CyberVisualizations';
+import { SurfaceCard } from '../components/effects/SurfaceCard';
 import { Badge } from '../components/ui/badge';
 import { Globe, BookOpen, Briefcase } from 'lucide-react';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '../components/ui/dialog';
+import { loadPublishedNews, type PublishedNewsPost } from '../lib/content/public-content';
 
 const translations = {
   heroCategory: "Updates & Publications",
@@ -91,9 +93,14 @@ const ARTICLES_KEYS: ArticleKeys[] = [
 
 export default function News() {
   const [mounted, setMounted] = useState(false);
+  const [posts, setPosts] = useState<PublishedNewsPost[]>([]);
+  const [selectedPost, setSelectedPost] = useState<PublishedNewsPost | null>(null);
 
   useEffect(() => {
     setMounted(true);
+    loadPublishedNews().then(setPosts).catch((error) => {
+      console.error('Unable to load published news:', error);
+    });
   }, []);
 
   return (
@@ -152,40 +159,72 @@ export default function News() {
 
         {/* Articles Grid */}
         <div className={`grid md:grid-cols-2 gap-8 transition-all duration-1000 delay-300 transform ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-          {ARTICLES_KEYS.map((article, idx) => (
-            <MagicCard
-              key={idx}
+          {(posts.length > 0 ? posts : ARTICLES_KEYS).map((article, idx) => {
+            const isPublishedPost = 'id' in article;
+            const title = isPublishedPost ? article.title : t(article.titleKey);
+            const category = isPublishedPost ? article.category : t(article.categoryKey);
+            const date = isPublishedPost
+              ? article.published_at
+                ? new Intl.DateTimeFormat('en', { dateStyle: 'medium' }).format(new Date(article.published_at))
+                : 'Recently published'
+              : t(article.dateKey);
+            const excerpt = isPublishedPost ? article.excerpt : t(article.excerptKey);
+            const readTime = isPublishedPost
+              ? `${Math.max(1, Math.ceil(article.body.split(/\s+/).length / 220))} min read`
+              : t(article.readTimeKey);
+            return (
+            <SurfaceCard
+              key={isPublishedPost ? article.id : idx}
               heightClass="h-[300px] md:h-[320px]"
             >
               <div className="flex flex-col justify-between h-full space-y-4 p-2">
                 <div>
                   <div className="flex items-center justify-between text-[10px] font-mono text-muted-foreground border-b border-border/50 pb-2 mb-4">
                     <Badge variant="secondary" className="font-mono text-[9px] py-0.5 px-1.5 rounded-none">
-                      {t(article.categoryKey)}
+                      {category}
                     </Badge>
-                    <span>{t(article.dateKey)}</span>
+                    <span>{date}</span>
                   </div>
                   
                   <h3 className="font-heading text-xl font-semibold text-foreground tracking-tight hover:text-primary transition-colors duration-300 mb-3 leading-snug">
-                    {t(article.titleKey)}
+                    {title}
                   </h3>
                   
                   <p className="font-sans text-xs text-muted-foreground leading-relaxed line-clamp-3">
-                    {t(article.excerptKey)}
+                    {excerpt}
                   </p>
                 </div>
 
                 <div className="flex items-center justify-between text-[10px] font-mono pt-4 border-t border-border/60 text-muted-foreground">
-                  <span>{t(article.readTimeKey)}</span>
-                  <span className="text-primary hover:translate-x-1 transition-transform duration-300 cursor-pointer">
+                  <span>{readTime}</span>
+                  <button /* ui-ignore */
+                    type="button"
+                    disabled={!isPublishedPost}
+                    onClick={() => isPublishedPost && setSelectedPost(article)}
+                    className="text-primary transition-transform duration-300 hover:translate-x-1 disabled:cursor-default"
+                  >
                     {t('readArticleLabel')}
-                  </span>
+                  </button>
                 </div>
               </div>
-            </MagicCard>
-          ))}
+            </SurfaceCard>
+            );
+          })}
         </div>
       </div>
+
+      <Dialog open={selectedPost !== null} onOpenChange={(open) => !open && setSelectedPost(null)}>
+        {selectedPost && (
+          <DialogContent className="max-h-[85vh] max-w-2xl overflow-y-auto border border-border bg-card p-8">
+            <DialogHeader className="space-y-3 border-b border-border pb-5">
+              <Badge variant="secondary" className="w-fit rounded-none">{selectedPost.category}</Badge>
+              <DialogTitle className="font-heading text-2xl leading-tight">{selectedPost.title}</DialogTitle>
+              <DialogDescription>{selectedPost.excerpt}</DialogDescription>
+            </DialogHeader>
+            <div className="whitespace-pre-wrap pt-5 text-sm leading-7 text-muted-foreground">{selectedPost.body}</div>
+          </DialogContent>
+        )}
+      </Dialog>
     </div>
   );
 }

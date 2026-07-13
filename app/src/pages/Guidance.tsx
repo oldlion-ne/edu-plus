@@ -3,7 +3,7 @@ import { Link } from 'react-router';
 import ImmersiveHero from '../components/effects/ImmersiveHero';
 import { Button } from '../components/ui/button';
 import { Card } from '../components/ui/card';
-import { MagicCard } from '../components/effects/CyberVisualizations';
+import { SurfaceCard } from '../components/effects/SurfaceCard';
 import { ArrowRight, Check } from 'lucide-react';
 
 const translations = {
@@ -295,7 +295,7 @@ export default function Guidance() {
 
           {/* Right Active Details Panel */}
           <div className="lg:w-2/3 flex flex-col gap-6">
-            <MagicCard heightClass="min-h-[460px]">
+            <SurfaceCard heightClass="min-h-[460px]">
               <div className="flex flex-col justify-between h-full space-y-6 p-2">
                 <div className="space-y-6">
                   <span className="text-xs font-mono text-primary tracking-wider uppercase block opacity-60">
@@ -332,7 +332,7 @@ export default function Guidance() {
                   </Button>
                 </div>
               </div>
-            </MagicCard>
+            </SurfaceCard>
           </div>
 
         </div>

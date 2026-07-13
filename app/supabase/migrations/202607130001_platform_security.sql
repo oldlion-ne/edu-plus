@@ -97,6 +97,7 @@ create table if not exists public.news_posts (
   title text not null,
   excerpt text not null default '',
   body text not null default '',
+  category text not null default 'general',
   status public.content_status not null default 'draft',
   cover_asset_id uuid,
   author_id uuid not null references auth.users(id) on delete restrict,
@@ -116,6 +117,7 @@ create table if not exists public.events (
   ends_at timestamptz not null,
   registration_opens_at timestamptz,
   registration_closes_at timestamptz,
+  registration_open boolean not null default true,
   capacity integer check (capacity is null or capacity > 0),
   status public.content_status not null default 'draft',
   author_id uuid not null references auth.users(id) on delete restrict,
@@ -230,6 +232,7 @@ begin
   if auth.uid() is null then raise exception 'authentication_required'; end if;
   select * into target from public.events where id = target_event_id for update;
   if target.id is null or target.status <> 'published' then raise exception 'event_unavailable'; end if;
+  if not target.registration_open then raise exception 'registration_closed'; end if;
   if target.registration_opens_at is not null and now() < target.registration_opens_at then raise exception 'registration_not_open'; end if;
   if target.registration_closes_at is not null and now() > target.registration_closes_at then raise exception 'registration_closed'; end if;
   select count(*) into confirmed_count from public.event_registrations where event_id = target_event_id and status = 'confirmed';

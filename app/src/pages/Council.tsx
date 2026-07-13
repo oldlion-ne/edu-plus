@@ -10,7 +10,7 @@ import {
 } from '../components/ui/dialog';
 import { Badge } from '../components/ui/badge';
 import { Button } from '../components/ui/button';
-import { MagicCard } from '../components/effects/CyberVisualizations';
+import { SurfaceCard } from '../components/effects/SurfaceCard';
 import { MapPin, ChevronRight } from 'lucide-react';
 import { Avatar, AvatarFallback } from '../components/ui/avatar';
 import { Card } from '../components/ui/card';
@@ -374,7 +374,7 @@ export default function Council() {
                   {members.map(member => {
                     const initials = member.name.split(' ').filter(n => !n.includes('.') && n !== 'LL.M.').map(n => n[0]).join('').slice(0, 2);
                     return (
-                      <MagicCard
+                      <SurfaceCard
                         key={member.name}
                         heightClass="h-[310px] md:h-[330px]"
                       >
@@ -432,7 +432,7 @@ export default function Council() {
                           </div>
 
                         </div>
-                      </MagicCard>
+                      </SurfaceCard>
                     );
                   })}
                 </div>

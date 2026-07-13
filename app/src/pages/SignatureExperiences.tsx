@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router';
 import ImmersiveHero from '../components/effects/ImmersiveHero';
-import { MagicCard } from '../components/effects/CyberVisualizations';
+import { SurfaceCard } from '../components/effects/SurfaceCard';
 import { Badge } from '../components/ui/badge';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '../components/ui/accordion';
 import { Star, ClipboardList, Shield, HelpCircle } from 'lucide-react';
+import { UpcomingEvents } from '../components/events/UpcomingEvents';
 
 const translations = {
   heroCategory: "Flagship Events",
@@ -189,6 +190,7 @@ export default function SignatureExperiences() {
       />
 
       <div className="max-w-[1200px] mx-auto px-6 md:px-12 relative z-10 mt-20">
+        <UpcomingEvents />
         
         {/* Intro */}
         <div className={`max-w-3xl mb-16 transition-all duration-1000 transform ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
@@ -224,7 +226,7 @@ export default function SignatureExperiences() {
                 </div>
 
                 {/* Event details card */}
-                <MagicCard heightClass="h-auto">
+                <SurfaceCard heightClass="h-auto">
                   <div className="p-2 space-y-6">
                     {/* Header */}
                     <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-border/60 pb-4">
@@ -274,7 +276,7 @@ export default function SignatureExperiences() {
                     </div>
 
                   </div>
-                </MagicCard>
+                </SurfaceCard>
               </div>
             );
           })}

@@ -1,23 +1,6 @@
 import { useEffect, useState, useRef } from 'react';
-import { supabase } from '../lib/supabaseClient';
-import { sendChatMessage, type ChatMessage } from '../lib/openRouter';
+import { sendChatMessage, type ChatMessage } from '../lib/ai/chat-service';
 import { X } from 'lucide-react';
-
-const SYSTEM_PROMPT = `You are the Edu+ AI Cognitive Advisor, a highly smart, professional, and helpful site guide & academic counselor.
-Your goal is to guide visitors through Edu+ services and help students explore career/academic options.
-
-Edu+ Services/Programs:
-1. FuturePath Navigator: Decodes strengths, psychometrics, DMIT assessments for subject/stream selection. Includes 1-on-1 counseling.
-2. LifeSkills Lab: Teaches soft skills, communication, emotional resilience, financial literacy.
-3. Expert Connect Live: Connects students to industry experts, academics, researchers for mentorship.
-4. Global Admissions Studio: End-to-end guidance for domestic competitive prep (JEE, NEET, CUET) and international admissions (SAT, GRE, IELTS, Statement of Purpose essays, visas).
-5. Career Launchpad: Resume/LinkedIn building, mock interviews, global placements.
-6. Innovation Studio & Educator Academy: Sets up STEM/robotics spaces in schools; provides modern pedagogical growth training for teachers.
-
-Style Guidelines:
-- Sound professional, encouraging, and supportive.
-- Keep answers structured with bullet points where appropriate.
-- Encourage the user to explore the website pages (Programs, About, Council, Contact). If they express a strong interest in registering, guide them to use the Connect page (/contact).`;
 
 const translations = {
   advisorTitle: "EDU+ AI ADVISOR",
@@ -64,7 +47,7 @@ export default function AIChatAgent() {
   useEffect(() => {
     if (!isOpen || conversationId) return;
 
-    const initSession = async () => {
+    const initSession = () => {
       try {
         let session = localStorage.getItem('edu_plus_chat_session_id');
         if (!session) {
@@ -78,44 +61,11 @@ export default function AIChatAgent() {
 
         setConversationId(session);
 
-        try {
-          const { error: ensureErr } = await supabase
-            .rpc('ensure_conversation', { p_conversation_id: session });
-
-          if (ensureErr) {
-            console.error('Error ensuring chat session in Supabase:', ensureErr);
-          }
-
-          const { data: history, error: historyErr } = await supabase
-            .rpc('get_conversation_messages', { p_conversation_id: session! });
-
-          if (historyErr) {
-            throw historyErr;
-          }
-
-          if (history && history.length > 0) {
-            setMessages(history.map((h: any) => ({ role: h.role as any, content: h.content })));
-            return;
-          }
-        } catch (dbErr) {
-          console.error('Database connection / query failed, using offline fallback:', dbErr);
-        }
-
         const welcomeMsg: ChatMessage = {
           role: 'assistant',
           content: 'Welcome to Edu+ AI Advisor. I am your academic guidance assistant. Are you looking for career counseling, program exploration, or academic advisory?'
         };
         setMessages([welcomeMsg]);
-
-        try {
-          await supabase.from('messages').insert({
-            conversation_id: session,
-            role: 'assistant',
-            content: welcomeMsg.content
-          });
-        } catch (insertErr) {
-          console.error('Could not save fallback welcome message to DB:', insertErr);
-        }
       } catch (err) {
         console.error('Fatal error in initSession:', err);
         setMessages([{
@@ -142,53 +92,11 @@ export default function AIChatAgent() {
     setInputValue('');
     setIsLoading(true);
 
-    const { error: saveErr } = await supabase.from('messages').insert({
-      conversation_id: conversationId,
-      role: 'user',
-      content: text
-    });
-
-    if (saveErr) {
-      console.error('Error saving user message to Supabase:', saveErr);
-    }
-
     try {
-      let dynamicContext = '';
-      try {
-        const { data: kbDocs } = await supabase
-          .from('kb_documents')
-          .select('question, answer')
-          .eq('is_active', true);
-
-        if (kbDocs && kbDocs.length > 0) {
-          dynamicContext = '\n\n[DYNAMIC KNOWLEDGE]\n' +
-            kbDocs.map((doc: any, idx: number) => `${idx + 1}. Topic: ${doc.question} -> Fact: ${doc.answer}`).join('\n');
-        }
-      } catch (dbErr) {
-        console.error('Error fetching dynamic AI context:', dbErr);
-      }
-
-      const compiledSystemPrompt = SYSTEM_PROMPT + dynamicContext;
-
-      const fullPayload: ChatMessage[] = [
-        { role: 'system', content: compiledSystemPrompt },
-        ...updatedMessages
-      ];
-
-      const responseContent = await sendChatMessage(fullPayload);
+      const responseContent = await sendChatMessage(updatedMessages.slice(-10), conversationId);
 
       const agentMsg: ChatMessage = { role: 'assistant', content: responseContent };
       setMessages(prev => [...prev, agentMsg]);
-
-      const { error: saveAgentErr } = await supabase.from('messages').insert({
-        conversation_id: conversationId,
-        role: 'assistant',
-        content: responseContent
-      });
-
-      if (saveAgentErr) {
-        console.error('Error saving agent response to Supabase:', saveAgentErr);
-      }
     } catch (err: any) {
       console.error('Chat error:', err);
       const errMsg: ChatMessage = {

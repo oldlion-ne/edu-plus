@@ -27,6 +27,7 @@ const translations = {
   hotlineLabel: "Direct Advisory Hotline",
   formTitle: "Send an Inquiry",
   successMessage: "Thank you! Your message has been received. Our team will contact you within 24 hours.",
+  errorMessage: "We could not send your message. Please try again or use the email address shown here.",
   labelName: "Your Name",
   labelEmail: "Email Address",
   labelProfile: "Stakeholder Profile",
@@ -42,6 +43,7 @@ const translations = {
   newsletterTitle: "Subscribe to Insights",
   newsletterDesc: "Receive curated updates on new future-ready programs, camps, and college scholarship opportunities. Free of spam.",
   newsletterSuccess: "Successfully subscribed! Welcome to our learning ecosystem.",
+  newsletterError: "We could not complete the subscription. You may already be subscribed.",
   subscribeButton: "Subscribe",
   placeholderEmail: "Enter your email",
   
@@ -60,6 +62,9 @@ export default function Contact() {
   const [mounted, setMounted] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [subscribed, setSubscribed] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [formError, setFormError] = useState('');
+  const [newsletterError, setNewsletterError] = useState('');
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -74,6 +79,8 @@ export default function Contact() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setSubmitting(true);
+    setFormError('');
     try {
       const { error } = await supabase.from('contact_messages').insert({
         name: formData.name,
@@ -83,17 +90,25 @@ export default function Contact() {
         status: 'unread'
       });
       if (error) throw error;
-    } catch (err) {
-      console.error('Error sending message to Supabase database:', err);
-    } finally {
       setSubmitted(true);
       setFormData({ name: '', email: '', profile: 'student', message: '' });
       setTimeout(() => setSubmitted(false), 5000);
+    } catch (err) {
+      console.error('Error sending message to Supabase database:', err);
+      setFormError(t('errorMessage'));
+    } finally {
+      setSubmitting(false);
     }
   };
 
-  const handleSubscribe = (e: React.FormEvent) => {
+  const handleSubscribe = async (e: React.FormEvent) => {
     e.preventDefault();
+    setNewsletterError('');
+    const { error } = await supabase.from('newsletter_subscribers').insert({ email: newsletterEmail.trim().toLowerCase() });
+    if (error) {
+      setNewsletterError(t('newsletterError'));
+      return;
+    }
     setSubscribed(true);
     setNewsletterEmail('');
     setTimeout(() => setSubscribed(false), 5000);
@@ -247,8 +262,9 @@ export default function Contact() {
                     />
                   </div>
 
-                  <Button type="submit" className="w-full rounded-none font-mono text-xs uppercase tracking-wider h-10">
-                    {t('submitButton')}
+                  {formError && <p role="alert" className="border border-destructive/40 bg-destructive/10 p-3 text-xs text-destructive">{formError}</p>}
+                  <Button disabled={submitting} type="submit" className="w-full rounded-none font-mono text-xs uppercase tracking-wider h-10">
+                    {submitting ? 'Sending...' : t('submitButton')}
                   </Button>
                 </form>
               )}
@@ -285,6 +301,7 @@ export default function Contact() {
                     </Button>
                   </form>
                 )}
+                {newsletterError && <p role="alert" className="text-xs text-destructive">{newsletterError}</p>}
               </div>
             </Card>
           </div>

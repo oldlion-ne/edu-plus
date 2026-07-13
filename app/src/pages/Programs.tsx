@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import ImmersiveHero from '../components/effects/ImmersiveHero';
 import { Button } from '../components/ui/button';
-import { MagicCard } from '../components/effects/CyberVisualizations';
+import { SurfaceCard } from '../components/effects/SurfaceCard';
 import { ArrowRight, Compass, Layers, Users, GraduationCap, Rocket, Lightbulb, Star, Shield } from 'lucide-react';
 import { Link } from 'react-router';
 import { cn } from '../lib/utils';
@@ -201,7 +201,7 @@ export default function Programs() {
           {/* Right Column: Detailed Phase Dossier Viewer using MagicCard */}
           <div className="lg:col-span-7">
             <div className="sticky top-28">
-              <MagicCard heightClass="h-auto min-h-[640px]">
+              <SurfaceCard heightClass="h-auto min-h-[640px]">
                 <div className="flex flex-col justify-between h-full space-y-6">
                   
                   {/* Visual Top Header Box (Dynamic Background & SVGs) */}
@@ -297,7 +297,7 @@ export default function Programs() {
                     </Button>
                   </div>
                 </div>
-              </MagicCard>
+              </SurfaceCard>
             </div>
           </div>
 

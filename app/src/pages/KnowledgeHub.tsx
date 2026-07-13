@@ -1,21 +1,10 @@
 import { useEffect, useState } from 'react';
-import { supabase } from '../lib/supabaseClient';
+import { loadPublishedResources, type PublishedResource } from '../lib/content/public-content';
 import ImmersiveHero from '../components/effects/ImmersiveHero';
 import { Button } from '../components/ui/button';
-import { MagicCard } from '../components/effects/CyberVisualizations';
+import { SurfaceCard } from '../components/effects/SurfaceCard';
 import { Input } from '../components/ui/input';
 import { X } from 'lucide-react';
-
-interface KnowledgeItem {
-  id: string;
-  title: string;
-  description: string;
-  category: 'tutorial' | 'podcast' | 'webinar' | 'study_material';
-  media_type: 'video_embed' | 'document_url' | 'external_link';
-  url: string;
-  author_name: string;
-  created_at: string;
-}
 
 const TABS = ['all', 'tutorial', 'podcast', 'webinar', 'study_material'];
 
@@ -39,8 +28,8 @@ const translationMap = new Map<string, string>(Object.entries(translations));
 const t = (key: keyof typeof translations) => translationMap.get(key) || '';
 
 export default function KnowledgeHub() {
-  const [items, setItems] = useState<KnowledgeItem[]>([]);
-  const [filteredItems, setFilteredItems] = useState<KnowledgeItem[]>([]);
+  const [items, setItems] = useState<PublishedResource[]>([]);
+  const [filteredItems, setFilteredItems] = useState<PublishedResource[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [activeTab, setActiveTab] = useState<string>('all');
   const [loading, setLoading] = useState(true);
@@ -49,13 +38,9 @@ export default function KnowledgeHub() {
   useEffect(() => {
     async function fetchItems() {
       try {
-        const { data, error } = await supabase
-          .from('knowledge_hub')
-          .select('*')
-          .order('created_at', { ascending: false });
-        if (error) throw error;
-        setItems(data || []);
-        setFilteredItems(data || []);
+        const data = await loadPublishedResources();
+        setItems(data);
+        setFilteredItems(data);
       } catch (err) {
         console.error('Error fetching hub content:', err);
       } finally {
@@ -76,7 +61,7 @@ export default function KnowledgeHub() {
         item =>
           item.title.toLowerCase().includes(query) ||
           item.description.toLowerCase().includes(query) ||
-          item.author_name.toLowerCase().includes(query)
+          item.category.toLowerCase().includes(query)
       );
     }
     setFilteredItems(filtered);
@@ -140,9 +125,10 @@ export default function KnowledgeHub() {
         ) : (
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredItems.map(item => {
-              const isYoutube = item.media_type === 'video_embed' && getYoutubeId(item.url);
+              const resourceUrl = item.external_url;
+              const isYoutube = resourceUrl && item.media_type === 'video_embed' && getYoutubeId(resourceUrl);
               return (
-                <MagicCard
+                <SurfaceCard
                   key={item.id}
                   heightClass="h-[300px] md:h-[320px]"
                 >
@@ -163,32 +149,32 @@ export default function KnowledgeHub() {
 
                     <div className="pt-4 border-t border-border flex items-center justify-between">
                       <span className="text-[9px] font-mono text-muted-foreground uppercase">
-                        {t('nodePrefix')}{item.author_name}
+                        {t('nodePrefix')}EDUPLUS
                       </span>
                       {isYoutube ? (
                         <Button
                           size="sm"
                           variant="secondary"
-                          onClick={() => setSelectedVideo(item.url)}
+                          onClick={() => setSelectedVideo(resourceUrl)}
                           className="font-mono text-[9px] tracking-wider uppercase h-8"
                         >
                           {t('launchPlayback')}
                         </Button>
-                      ) : (
+                      ) : resourceUrl ? (
                         <Button
                           size="sm"
                           variant="outline"
                           asChild
                           className="h-8"
                         >
-                          <a href={item.url} target="_blank" rel="noopener noreferrer" className="font-mono text-[9px] tracking-wider uppercase" /* ui-ignore */>
+                          <a href={resourceUrl} target="_blank" rel="noopener noreferrer" className="font-mono text-[9px] tracking-wider uppercase" /* ui-ignore */>
                             {t('openLink')}
                           </a>
                         </Button>
-                      )}
+                      ) : <span className="font-mono text-[9px] uppercase text-muted-foreground">File available to members</span>}
                     </div>
                   </div>
-                </MagicCard>
+                </SurfaceCard>
               );
             })}
           </div>
