@@ -383,7 +383,7 @@ export default function AIChatAgent() {
                 type="text"
                 value={inputValue}
                 onChange={(e) => setInputValue(e.target.value)}
-                placeholder="ENTER COGNITIVE INQUIRY..."
+                placeholder="Ask a question…"
                 disabled={isLoading}
                 className="flex-1 bg-background border border-input text-foreground text-xs px-3 py-2 outline-none focus:border-primary focus:ring-1 focus:ring-primary/25 disabled:opacity-50 font-mono transition-all rounded-none placeholder:text-muted-foreground/45"
               />

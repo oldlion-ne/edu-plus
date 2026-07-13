@@ -2,6 +2,15 @@ import { useEffect, useState, useRef } from 'react';
 import { useLocation } from 'react-router';
 import { useScrollContainer } from '../lib/ScrollContext';
 
+export function scrollElementToTop(
+  element: HTMLElement | null,
+  behavior: ScrollBehavior = 'auto',
+) {
+  if (element && typeof element.scrollTo === 'function') {
+    element.scrollTo({ top: 0, behavior });
+  }
+}
+
 export default function ScrollToTop() {
   const { pathname } = useLocation();
   const [showButton, setShowButton] = useState(false);
@@ -10,9 +19,7 @@ export default function ScrollToTop() {
 
   // Scroll to top on navigation/page change
   useEffect(() => {
-    if (scrollContext?.scrollContainerRef.current) {
-      scrollContext.scrollContainerRef.current.scrollTo(0, 0);
-    }
+    scrollElementToTop(scrollContext?.scrollContainerRef.current ?? null);
   }, [pathname, scrollContext?.scrollContainerRef]);
 
   // Handle auto-fadeout on idle state (inactive for 2.5 seconds)
@@ -61,12 +68,7 @@ export default function ScrollToTop() {
   }, [scrollContext?.scrollContainerRef]);
 
   const scrollToTop = () => {
-    if (scrollContext?.scrollContainerRef.current) {
-      scrollContext.scrollContainerRef.current.scrollTo({
-        top: 0,
-        behavior: 'smooth'
-      });
-    }
+    scrollElementToTop(scrollContext?.scrollContainerRef.current ?? null, 'smooth');
   };
 
   return (
