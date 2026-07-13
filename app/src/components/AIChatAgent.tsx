@@ -265,7 +265,7 @@ export default function AIChatAgent() {
         <div className="fixed bottom-6 right-6 z-50 font-sans">
           <button /* ui-ignore */
             onClick={() => setIsOpen(true)}
-            className="group flex flex-col items-center justify-center h-14 w-14 bg-background border border-primary/30 text-foreground hover:border-primary/80 transition-all duration-300 cursor-pointer relative shadow-[0_0_15px_rgba(0,0,0,0.2)] animate-chat-glow rounded-none"
+            className="group flex flex-col items-center justify-center h-14 w-14 bg-background border border-primary/30 text-foreground hover:border-primary/80 transition-colors duration-300 cursor-pointer relative shadow-md rounded-none"
             aria-label="Open AI chat support"
           >
             <span className="font-mono text-xs font-bold tracking-widest text-primary group-hover:scale-105 transition-transform duration-200">
@@ -273,10 +273,9 @@ export default function AIChatAgent() {
             </span>
             <div className="flex items-center gap-1 mt-1">
               <span className="relative flex h-1.5 w-1.5">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded bg-emerald-500 opacity-75"></span>
-                <span className="relative inline-flex rounded h-1.5 w-1.5 bg-emerald-500"></span>
+                <span className="relative inline-flex h-1.5 w-1.5 bg-primary"></span>
               </span>
-              <span className="font-mono text-[6px] tracking-widest text-emerald-500 uppercase font-bold">{t('statusOnline')}</span>
+              <span className="text-[9px] tracking-wider text-primary uppercase font-semibold">{t('statusOnline')}</span>
             </div>
             <svg className="absolute inset-0 w-full h-full text-primary/10 group-hover:text-primary/30 transition-colors duration-300 group-hover:animate-spin [animation-duration:6s] pointer-events-none" viewBox="0 0 100 100">
               <rect x="4" y="4" width="92" height="92" stroke="currentColor" strokeWidth="1" strokeDasharray="4 4" fill="none" />
@@ -301,8 +300,7 @@ export default function AIChatAgent() {
             <div className="flex items-center justify-between px-5 py-4 bg-muted/50 border-b border-border/80 flex-shrink-0">
               <div className="flex items-center gap-2">
                 <span className="relative flex h-2 w-2">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded bg-primary opacity-75"></span>
-                  <span className="relative inline-flex rounded h-2 w-2 bg-primary"></span>
+              <span className="relative inline-flex h-2 w-2 bg-primary"></span>
                 </span>
                 <span className="font-mono text-xs font-bold tracking-widest text-primary uppercase">{t('advisorTitle')}</span>
               </div>
@@ -334,7 +332,7 @@ export default function AIChatAgent() {
                   <div className={`p-3.5 text-xs leading-relaxed border ${
                     msg.role === 'user'
                       ? 'bg-muted/80 border-border text-foreground rounded-none'
-                      : 'bg-primary/5 border-primary/10 text-foreground rounded-none shadow-[0_0_10px_rgba(0,0,0,0.02)]'
+                      : 'bg-primary/5 border-primary/10 text-foreground rounded-none'
                   }`}>
                     {formatMessageContent(msg.content)}
                   </div>
@@ -344,7 +342,7 @@ export default function AIChatAgent() {
               {isLoading && (
                 <div className="flex flex-col gap-1 mr-auto max-w-[90%]">
                   <span className="font-mono text-[9px] tracking-widest text-primary">[ADVISOR]</span>
-                  <div className="p-3.5 text-xs bg-primary/5 border border-primary/10 text-primary font-mono animate-pulse rounded-none">
+                  <div className="p-3.5 text-xs bg-primary/5 border border-primary/10 text-primary rounded-none">
                     {t('thinking')}
                   </div>
                 </div>

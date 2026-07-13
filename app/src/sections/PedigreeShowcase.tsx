@@ -119,28 +119,28 @@ export default function PedigreeShowcase() {
               >
                 <div className="relative flex h-10 items-center gap-12 px-6">
                   <div className="bg-border absolute inset-0 my-auto h-px" />
-                  <div className="bg-card shadow-black/10 ring-border relative flex h-9 items-center rounded-lg px-3.5 shadow-md ring transition-transform duration-200 group-hover:scale-105">
+                <div className="bg-card shadow-black/10 ring-border relative flex h-9 items-center rounded-none px-3.5 shadow-md ring transition-transform duration-200 group-hover:scale-105">
                     <Vercel className="size-3.5" />
                   </div>
-                  <div className="bg-card shadow-black/10 ring-border relative flex h-9 items-center rounded-lg px-3.5 shadow-md ring transition-transform duration-200 group-hover:scale-105">
+                <div className="bg-card shadow-black/10 ring-border relative flex h-9 items-center rounded-none px-3.5 shadow-md ring transition-transform duration-200 group-hover:scale-105">
                     <Slack className="size-3.5" />
                   </div>
                 </div>
                 <div className="pl-16 relative flex h-10 items-center justify-between gap-12 pr-6">
                   <div className="bg-border absolute inset-0 my-auto h-px" />
-                  <div className="bg-card shadow-black/10 ring-border relative flex h-9 items-center rounded-lg px-3.5 shadow-md ring transition-transform duration-200 group-hover:scale-105">
+                <div className="bg-card shadow-black/10 ring-border relative flex h-9 items-center rounded-none px-3.5 shadow-md ring transition-transform duration-200 group-hover:scale-105">
                     <Clerk className="size-3.5" />
                   </div>
-                  <div className="bg-card shadow-black/10 ring-border relative flex h-9 items-center rounded-lg px-3.5 shadow-md ring transition-transform duration-200 group-hover:scale-105">
+                <div className="bg-card shadow-black/10 ring-border relative flex h-9 items-center rounded-none px-3.5 shadow-md ring transition-transform duration-200 group-hover:scale-105">
                     <Linear className="size-3.5" />
                   </div>
                 </div>
                 <div className="relative flex h-10 items-center gap-20 px-8">
                   <div className="bg-border absolute inset-0 my-auto h-px" />
-                  <div className="bg-card shadow-black/10 ring-border relative flex h-9 items-center rounded-lg px-3.5 shadow-md ring transition-transform duration-200 group-hover:scale-105">
+                <div className="bg-card shadow-black/10 ring-border relative flex h-9 items-center rounded-none px-3.5 shadow-md ring transition-transform duration-200 group-hover:scale-105">
                     <Supabase className="size-3.5" />
                   </div>
-                  <div className="bg-card shadow-black/10 ring-border relative flex h-9 items-center rounded-lg px-3.5 shadow-md ring transition-transform duration-200 group-hover:scale-105">
+                <div className="bg-card shadow-black/10 ring-border relative flex h-9 items-center rounded-none px-3.5 shadow-md ring transition-transform duration-200 group-hover:scale-105">
                     <Firebase className="size-3.5" />
                   </div>
                 </div>

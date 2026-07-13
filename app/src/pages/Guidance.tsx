@@ -268,12 +268,12 @@ export default function Guidance() {
 
             {/* Retro Terminal Log */}
             <div className="border border-border bg-card/60 backdrop-blur-sm p-1">
-              <div className="bg-card p-4 font-mono text-[10px] leading-relaxed text-[#22C55E] dark:text-[#4ADE80] h-[220px] overflow-hidden select-none flex flex-col justify-start relative">
+                <div className="bg-card p-4 font-mono text-[10px] leading-relaxed text-primary h-[220px] overflow-hidden select-none flex flex-col justify-start relative">
                 {/* Console header */}
                 <div className="flex justify-between items-center text-[8px] text-primary/60 border-b border-border pb-2 mb-3">
                   <span>{t('logPort')}</span>
                   <span className="flex items-center gap-1.5">
-                    <span className={`w-1.5 h-1.5 bg-[#22C55E] ${isRunning ? 'animate-ping' : ''}`} />
+                    <span className="w-1.5 h-1.5 bg-primary" />
                     {isRunning ? t('terminalExecSh') : t('terminalReadyPrmpt')}
                   </span>
                 </div>
@@ -283,7 +283,7 @@ export default function Guidance() {
                   {terminalLogs.map((log, idx) => {
                     const isCmd = log.startsWith('[GUEST');
                     return (
-                      <div key={idx} className={isCmd ? 'text-primary' : 'text-[#22C55E] dark:text-[#4ADE80]'}>
+                      <div key={idx} className={isCmd ? 'text-primary' : 'text-muted-foreground'}>
                         {log}
                       </div>
                     );

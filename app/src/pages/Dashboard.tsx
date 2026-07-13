@@ -50,7 +50,7 @@ import {
   X
 } from 'lucide-react';
 
-type UserRole = 'admin' | 'educator' | 'resource_person' | 'none';
+type UserRole = 'admin' | 'resource_person' | 'member' | 'none';
 
 const chartData = [
   { date: "2024-04-01", desktop: 222, mobile: 150 },
@@ -162,7 +162,7 @@ const chartConfig = {
 
 export default function Dashboard() {
   const { t } = useTranslation();
-  const { user, role: selectedRole, isSimulated, signOut, signInSimulated } = useAuth();
+  const { user, role: selectedRole, signOut } = useAuth();
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<'overview' | 'uploader' | 'ai-matrix' | 'messages'>('overview');
   const [showTour, setShowTour] = useState(false);
@@ -191,41 +191,19 @@ export default function Dashboard() {
   const handleUpdateProfile = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      if (isSimulated) {
-        // Update simulated localStorage cache
-        const cachedSim = localStorage.getItem('edu_plus_sim_session');
-        if (cachedSim) {
-          const parsed = JSON.parse(cachedSim);
-          parsed.user.user_metadata = {
-            ...parsed.user.user_metadata,
-            full_name: profileName,
-            avatar_url: profileAvatar,
-            bio: profileBio
-          };
-          localStorage.setItem('edu_plus_sim_session', JSON.stringify(parsed));
-          toast.success('[SIMULATED COGNITIVE OVERRIDE SUCCESS]', {
-            description: 'Local simulated session profile nodes re-aligned successfully.',
-            style: { background: 'oklch(var(--card))', border: '1px solid oklch(var(--primary)/0.3)', color: 'oklch(var(--foreground))', borderRadius: '0px' }
-          });
-          window.location.reload();
+      const { error } = await supabase.auth.updateUser({
+        data: {
+          full_name: profileName,
+          avatar_url: profileAvatar,
+          bio: profileBio
         }
-      } else {
-        // Real Supabase User update
-        const { error } = await supabase.auth.updateUser({
-          data: {
-            full_name: profileName,
-            avatar_url: profileAvatar,
-            bio: profileBio
-          }
-        });
+      });
 
-        if (error) throw error;
+      if (error) throw error;
 
-        toast.success('[DATABASE SYNC COMPLETE]', {
-          description: 'Your profile credentials have been updated securely.',
-          style: { background: 'oklch(var(--card))', border: '1px solid oklch(var(--primary)/0.3)', color: 'oklch(var(--foreground))', borderRadius: '0px' }
-        });
-      }
+      toast.success('Profile updated', {
+        description: 'Your workspace profile has been saved.',
+      });
       setIsSettingsOpen(false);
     } catch (err: any) {
       toast.error('COMPILATION_ERROR', {
@@ -517,7 +495,7 @@ export default function Dashboard() {
         <Dialog open={isSettingsOpen} onOpenChange={setIsSettingsOpen}>
           <DialogTrigger asChild>
             <button className="w-full flex items-center gap-3 p-3 border border-border hover:border-primary/30 bg-card hover:bg-primary/5 focus:outline-none focus:ring-1 focus:ring-primary/70 focus:border-primary/30 transition-all duration-300 text-left cursor-pointer rounded-none group">
-              <Avatar className="border border-primary/20 group-hover:border-primary shadow-[0_0_8px_oklch(var(--primary)/0.05)] rounded-none shrink-0">
+              <Avatar className="border border-primary/20 group-hover:border-primary shadow-sm rounded-none shrink-0">
                 <AvatarImage src={user?.user_metadata?.avatar_url} className="rounded-none object-cover" />
                 <AvatarFallback className="bg-background text-primary font-mono font-bold text-xs rounded-none flex items-center justify-center">
                   {profileName.substring(0, 2).toUpperCase() || 'AD'}
@@ -533,8 +511,6 @@ export default function Dashboard() {
                 <span className={`inline-block mt-1 px-1.5 py-0.5 text-[7px] font-mono rounded-none uppercase border font-bold tracking-widest ${
                   selectedRole === 'admin'
                     ? 'border-destructive/50 bg-destructive/10 text-destructive'
-                    : selectedRole === 'educator'
-                    ? 'border-[#22C55E]/50 bg-[#22C55E]/10 text-[#4ADE80]'
                     : 'border-primary/50 bg-primary/10 text-primary'
                 }`}>
                   {selectedRole ? selectedRole.replace('_', ' ') : 'NONE'}
@@ -554,7 +530,7 @@ export default function Dashboard() {
             {/* Form and Settings section */}
             <form onSubmit={handleUpdateProfile} className="space-y-4 pt-3 font-sans">
               <div className="flex justify-center mb-4">
-                <Avatar className="size-16 border-2 border-primary rounded-none shadow-md animate-pulse">
+                <Avatar className="size-16 border-2 border-primary rounded-none shadow-md">
                   <AvatarImage src={profileAvatar} className="rounded-none object-cover" />
                   <AvatarFallback className="bg-background text-primary font-sans font-bold text-lg rounded-none flex items-center justify-center">
                     {profileName.substring(0, 2).toUpperCase() || 'AD'}
@@ -593,21 +569,6 @@ export default function Dashboard() {
                   className="w-full bg-background border border-border text-xs px-4 py-2 outline-none focus:border-primary rounded-none text-foreground font-sans resize-none min-h-20"
                 />
               </div>
-
-              {/* Quick simulated bypass swapper (only for dev simulated user sessions) */}
-              {isSimulated && (
-                <div className="border border-primary/20 bg-primary/5 p-3 rounded-none mt-2 text-left space-y-2">
-                  <span className="font-mono text-[9px] text-primary tracking-wider uppercase block font-bold">// DEV BYPASS ACCESS PANEL</span>
-                  <span className="font-mono text-[8px] text-muted-foreground block">{t('dashboard.profile.swapRoles')}</span>
-                  <div className="grid grid-cols-3 gap-1.5">
-                    {(['admin', 'educator', 'resource_person'] as const).map(role => (
-                      <Button key={role} type="button" variant="outline" onClick={() => { signInSimulated(role); toast.success(`[ROLE_OVERRIDE: ${role.toUpperCase()}]`, { description: `Simulated identity shifted successfully.`, style: { background: 'oklch(var(--card))', border: '1px solid oklch(var(--primary))', color: 'oklch(var(--foreground))', borderRadius: '0px' } }); setIsSettingsOpen(false); }} className={`py-1 text-center font-mono text-[8px] uppercase tracking-wider border cursor-pointer transition-all rounded-none focus:outline-none focus:ring-1 focus:ring-primary/70 ${selectedRole === role ? 'border-primary bg-primary/10 text-primary' : 'border-transparent text-muted-foreground hover:text-foreground hover:border-border'}`}>
-                        {role.replace('_', ' ')}
-                      </Button>
-                    ))}
-                  </div>
-                </div>
-              )}
 
               {/* Controls panel */}
               <div className="flex gap-2 pt-2 border-t border-border">
@@ -669,7 +630,7 @@ export default function Dashboard() {
           <div className="flex items-center gap-3">
             <div className="flex items-center gap-2 px-2.5 py-1 bg-primary/10 border border-primary/20 text-primary font-mono text-[9px] uppercase tracking-wider select-none">
               <span>{t('dashboard.header.linkActive')}</span>
-              <span className="w-1.5 h-1.5 bg-primary rounded-none animate-pulse"></span>
+              <span className="w-1.5 h-1.5 bg-primary rounded-none"></span>
             </div>
             
             <span className="text-muted-foreground/20 font-mono text-[10px] hidden sm:inline">|</span>
@@ -693,7 +654,7 @@ export default function Dashboard() {
               >
                 <Bell className="size-4" />
                 {unreadMessagesCount > 0 && (
-                  <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-primary rounded-none animate-ping"></span>
+                  <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-primary rounded-none"></span>
                 )}
               </Button>
 
@@ -834,7 +795,7 @@ export default function Dashboard() {
                                 })
                               }}
                               indicator="dot"
-                              className="rounded-lg border border-border bg-card text-foreground shadow-lg"
+                          className="rounded-none border border-border bg-card text-foreground shadow-lg"
                             />
                           }
                         />
@@ -860,11 +821,11 @@ export default function Dashboard() {
                     {/* Manual legend - rendered outside SVG so it's never clipped */}
                     <div className="flex items-center justify-center gap-6 pt-3 pb-1">
                       <div className="flex items-center gap-2">
-                        <div className="h-[2px] w-5 rounded" style={{ backgroundColor: chartConfig.desktop.color }} />
+                        <div className="h-[2px] w-5 bg-primary" />
                         <span className="font-sans font-medium text-[10px] text-muted-foreground uppercase tracking-wider">{t('dashboard.overview.desktop')}</span>
                       </div>
                       <div className="flex items-center gap-2">
-                        <div className="h-[2px] w-5 rounded" style={{ backgroundColor: chartConfig.mobile.color }} />
+                        <div className="h-[2px] w-5 bg-primary/50" />
                         <span className="font-sans font-medium text-[10px] text-muted-foreground uppercase tracking-wider">{t('dashboard.overview.mobile')}</span>
                       </div>
                     </div>
@@ -872,7 +833,7 @@ export default function Dashboard() {
                 </Card>
 
                 {/* Content Category Distribution */}
-                <Card className="border border-border p-6 bg-card rounded-lg text-left flex flex-col gap-0 py-6">
+                  <Card className="border border-border p-6 bg-card rounded-none text-left flex flex-col gap-0 py-6">
                   <h3 className="font-sans text-[10px] font-bold text-primary tracking-wider mb-4 uppercase">{t('dashboard.overview.contentCategoryDistribution')}</h3>
                   <div className="space-y-4">
                     {['tutorial', 'podcast', 'webinar', 'study_material'].map(cat => {
@@ -887,7 +848,7 @@ export default function Dashboard() {
                           <div className="w-full bg-background h-2 border border-border rounded-none">
                             <div
                               style={{ width: `${percent}%` }}
-                              className="h-full bg-primary shadow-[0_0_8px_oklch(var(--primary))] rounded-none"
+                              className="h-full bg-primary rounded-none"
                             ></div>
                           </div>
                         </div>
@@ -906,7 +867,7 @@ export default function Dashboard() {
                   <p className="font-mono text-xs text-muted-foreground mt-1">{t('dashboard.uploader.subheading')}</p>
                 </div>
 
-                {hasPermission(['admin', 'educator', 'resource_person']) ? (
+                {hasPermission(['admin', 'resource_person']) ? (
                   <form onSubmit={handleCreateHubItem} className="space-y-5">
                     <div className="grid md:grid-cols-2 gap-5">
                       <div className="space-y-2">
@@ -1012,7 +973,7 @@ export default function Dashboard() {
                   <p className="font-mono text-xs text-muted-foreground mt-1">{t('dashboard.aiMatrix.subheading')}</p>
                 </div>
 
-                {hasPermission(['admin', 'educator']) ? (
+                {hasPermission(['admin', 'resource_person']) ? (
                   <div className="space-y-8">
                     <form onSubmit={handleCreateKbDoc} className="space-y-4 border border-border p-5 bg-card rounded-none">
                       <h3 className="font-mono text-[10px] font-bold text-primary tracking-wider uppercase mb-2">{t('dashboard.aiMatrix.newFactualGuideline')}</h3>
@@ -1057,7 +1018,7 @@ export default function Dashboard() {
                                 onClick={() => handleToggleKbActive(doc.id, doc.is_active)}
                                 className={`px-2 py-1 text-[8px] font-mono rounded-none uppercase transition-all duration-300 cursor-pointer h-6 border ${
                                   doc.is_active
-                                    ? 'bg-[#22C55E]/10 border-[#22C55E]/40 text-[#4ADE80] hover:bg-[#22C55E]/20'
+                                    ? 'bg-primary/10 border-primary/40 text-primary hover:bg-primary/20'
                                     : 'bg-destructive/10 border-destructive/40 text-destructive hover:bg-destructive/20'
                                 }`}
                               >
@@ -1085,7 +1046,7 @@ export default function Dashboard() {
                   <p className="font-mono text-xs text-muted-foreground mt-1">{t('dashboard.messages.subheading')}</p>
                 </div>
 
-                {hasPermission(['admin', 'educator']) ? (
+                {hasPermission(['admin', 'resource_person']) ? (
                   <div className="space-y-4">
                     {contactMessages.length === 0 ? (
                       <p className="text-center py-10 font-mono text-muted-foreground/40 text-xs uppercase">{t('dashboard.messages.noInquiries')}</p>
@@ -1096,7 +1057,7 @@ export default function Dashboard() {
                             key={msg.id}
                             className={`p-5 border text-left transition-colors duration-300 rounded-none flex flex-col gap-0 py-5 ${
                               msg.status === 'unread'
-                                ? 'border-primary/40 bg-primary/5 shadow-[0_0_8px_oklch(var(--primary)/0.05)]'
+                                ? 'border-primary/40 bg-primary/5 shadow-sm'
                                 : 'border-border bg-card/30'
                             }`}
                           >

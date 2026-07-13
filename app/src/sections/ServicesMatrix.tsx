@@ -33,7 +33,7 @@ function ProgramCard({
   return (
     <div
       className={cn(
-        'relative flex items-center gap-3 border border-border bg-card/80 px-4 py-3 backdrop-blur-sm transition-all duration-300 hover:border-primary/40 hover:bg-card shrink-0 rounded-lg',
+      'relative flex items-center gap-3 border border-border bg-card/80 px-4 py-3 backdrop-blur-sm transition-all duration-300 hover:border-primary/40 hover:bg-card shrink-0 rounded-none',
         className,
       )}
     >
@@ -42,7 +42,7 @@ function ProgramCard({
         {name}
       </span>
       {/* Tag chip */}
-      <span className="ml-1 font-sans text-[9px] uppercase tracking-wider text-muted-foreground border border-border px-1.5 py-0.5 bg-background/60 rounded whitespace-nowrap">
+      <span className="ml-1 font-sans text-[9px] uppercase tracking-wider text-muted-foreground border border-border px-1.5 py-0.5 bg-background/60 rounded-none whitespace-nowrap">
         {tag}
       </span>
     </div>
@@ -129,7 +129,7 @@ export default function ServicesMatrix() {
 
             {/* Centre logo node */}
             <div className="absolute inset-0 m-auto flex size-fit items-center justify-center z-20">
-              <div className="flex px-4 py-2 items-center justify-center rounded-lg border border-border bg-card/90 shadow-xl shadow-black/10 backdrop-blur-md">
+        <div className="flex px-4 py-2 items-center justify-center rounded-none border border-border bg-card/90 shadow-xl shadow-black/10 backdrop-blur-md">
                 <EduPlusLogo className="text-lg" />
               </div>
             </div>
@@ -159,7 +159,7 @@ export default function ServicesMatrix() {
             asChild
             variant="outline"
             size="sm"
-            className="group inline-flex items-center gap-2 font-sans font-medium text-xs tracking-wider uppercase rounded-lg"
+          className="group inline-flex items-center gap-2 font-sans font-medium text-xs tracking-wider uppercase rounded-none"
           >
             <Link to="/programs" /* ui-ignore */>
               Explore All Programs

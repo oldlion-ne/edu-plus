@@ -25,7 +25,7 @@ const Login = lazy(() => import('./pages/Login'));
 // Minimal inline fallback — renders instantly, no layout shift
 const PageLoader = () => (
   <div className="min-h-screen bg-background flex items-center justify-center">
-    <div className="w-8 h-1 bg-primary animate-pulse" />
+    <div className="w-8 h-1 bg-primary" />
   </div>
 );
 
@@ -55,7 +55,7 @@ function App() {
               <Route
                 path="/dashboard"
                 element={
-                  <ProtectedRoute>
+                  <ProtectedRoute allowedRoles={['admin', 'resource_person']}>
                     <Dashboard />
                   </ProtectedRoute>
                 }

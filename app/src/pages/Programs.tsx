@@ -172,7 +172,7 @@ export default function Programs() {
                       0{index + 1}
                     </div>
                     {isActive && (
-                      <span className="absolute -inset-1 rounded-none border border-primary/40 animate-ping -z-10" />
+                      <span className="absolute -inset-1 rounded-none border border-primary/40 -z-10" />
                     )}
                   </div>
 
@@ -242,7 +242,7 @@ export default function Programs() {
                         {activeProgram.phaseCode}
                       </span>
                       <div className="flex items-center gap-1.5 font-mono text-[8px] tracking-[0.2em] text-muted-foreground border border-border px-2 py-0.5 bg-background/60">
-                        <span className="w-1.5 h-1.5 bg-primary rounded-none animate-pulse" />
+                        <span className="w-1.5 h-1.5 bg-primary rounded-none" />
                         {t('activeNode')}
                       </div>
                     </div>
@@ -315,7 +315,7 @@ const DiscoveryIllustration = () => {
     <div className="relative h-full w-full flex items-center justify-center overflow-hidden">
       <Compass className="absolute size-12 text-primary/80 animate-[spin_12s_linear_infinite]" />
       <div className="absolute inset-0 flex items-center justify-center select-none pointer-events-none">
-        <div className="size-36 rounded-none border border-primary/25 animate-ping opacity-60"></div>
+        <div className="size-36 rounded-none border border-primary/25 opacity-60"></div>
         <div className="size-28 rounded-none border border-dashed border-primary/20"></div>
         <div className="size-20 rounded-none border border-border/40"></div>
       </div>
@@ -334,11 +334,11 @@ const CapabilityIllustration = () => {
       <div className="flex w-full justify-between items-center gap-3 relative">
         <div className="h-px bg-border/60 absolute inset-x-0 top-1/2 -translate-y-1/2 -z-10"></div>
         <div className="bg-background shadow-xs border border-border rounded-none px-2.5 py-1.5 flex items-center gap-1.5 select-none hover:border-primary/50 transition-colors">
-          <div className="size-1.5 rounded-none bg-primary animate-pulse"></div>
+          <div className="size-1.5 rounded-none bg-primary"></div>
           <span className="font-mono text-[8px] text-muted-foreground/90">{t('communication')}</span>
         </div>
         <div className="bg-background shadow-xs border border-border rounded-none px-2.5 py-1.5 flex items-center gap-1.5 select-none hover:border-primary/50 transition-colors">
-          <div className="size-1.5 rounded-none bg-primary animate-pulse"></div>
+          <div className="size-1.5 rounded-none bg-primary"></div>
           <span className="font-mono text-[8px] text-muted-foreground/90">{t('resilience')}</span>
         </div>
       </div>
@@ -354,11 +354,11 @@ const CapabilityIllustration = () => {
       <div className="flex w-full justify-between items-center gap-3 relative">
         <div className="h-px bg-border/60 absolute inset-x-0 top-1/2 -translate-y-1/2 -z-10"></div>
         <div className="bg-background shadow-xs border border-border rounded-none px-2.5 py-1.5 flex items-center gap-1.5 select-none hover:border-primary/50 transition-colors">
-          <div className="size-1.5 rounded-none bg-primary animate-pulse"></div>
+          <div className="size-1.5 rounded-none bg-primary"></div>
           <span className="font-mono text-[8px] text-muted-foreground/90">{t('criticalThinking')}</span>
         </div>
         <div className="bg-background shadow-xs border border-border rounded-none px-2.5 py-1.5 flex items-center gap-1.5 select-none hover:border-primary/50 transition-colors">
-          <div className="size-1.5 rounded-none bg-primary animate-pulse"></div>
+          <div className="size-1.5 rounded-none bg-primary"></div>
           <span className="font-mono text-[8px] text-muted-foreground/90">{t('adaptability')}</span>
         </div>
       </div>
@@ -378,11 +378,11 @@ const MentorshipIllustration = () => {
 
       <div className="relative flex justify-between items-center z-10">
         <div className="bg-background/90 backdrop-blur-xs border border-border rounded-none px-2 py-0.5 text-[8px] font-mono text-muted-foreground flex items-center gap-1 hover:border-primary/50 transition-all select-none">
-          <span className="h-1 w-1 rounded-none bg-primary animate-pulse"></span>
+          <span className="h-1 w-1 rounded-none bg-primary"></span>
           ACADEMIC COUNCIL
         </div>
         <div className="bg-background/90 backdrop-blur-xs border border-border rounded-none px-2 py-0.5 text-[8px] font-mono text-muted-foreground flex items-center gap-1 hover:border-primary/50 transition-all select-none">
-          <span className="h-1 w-1 rounded-none bg-primary animate-pulse"></span>
+          <span className="h-1 w-1 rounded-none bg-primary"></span>
           INDUSTRY LEADERS
         </div>
       </div>
@@ -395,7 +395,7 @@ const MentorshipIllustration = () => {
 
       <div className="relative flex justify-between items-center z-10">
         <div className="bg-background/90 backdrop-blur-xs border border-border rounded-none px-2 py-0.5 text-[8px] font-mono text-muted-foreground flex items-center gap-1 hover:border-primary/50 transition-all select-none">
-          <span className="h-1 w-1 rounded-none bg-primary animate-pulse"></span>
+          <span className="h-1 w-1 rounded-none bg-primary"></span>
           RESEARCH MENTORS
         </div>
         <div className="bg-background/90 backdrop-blur-xs border border-border rounded-none px-2 py-0.5 text-[8px] font-mono text-muted-foreground flex items-center gap-1 hover:border-primary/50 transition-all select-none">
@@ -426,11 +426,11 @@ const PrepIllustration = () => {
       {/* Destination Nodes */}
       <div className="flex flex-col gap-6 z-10">
         <div className="bg-background/90 border border-border px-2.5 py-1 rounded-none select-none shadow-xs flex items-center gap-1 hover:border-primary/50 transition-colors">
-          <div className="size-1 rounded-none bg-primary animate-pulse"></div>
+          <div className="size-1 rounded-none bg-primary"></div>
           <span className="font-mono text-[7px] text-muted-foreground/90 uppercase tracking-wide">{t('domesticPrep')}</span>
         </div>
         <div className="bg-background/90 border border-border px-2.5 py-1 rounded-none select-none shadow-xs flex items-center gap-1 hover:border-primary/50 transition-colors">
-          <div className="size-1 rounded-none bg-primary animate-pulse"></div>
+          <div className="size-1 rounded-none bg-primary"></div>
           <span className="font-mono text-[7px] text-muted-foreground/90 uppercase tracking-wide">{t('globalPrep')}</span>
         </div>
       </div>
@@ -448,7 +448,7 @@ const PlacementIllustration = () => {
           <div key={i} className="flex flex-col items-center gap-1 h-full w-px bg-foreground/10 relative">
             {isHighlighted && (
               <>
-                <div className="absolute inset-0 bg-primary/60 w-0.5 shadow-[0_0_8px_oklch(var(--primary))] animate-pulse"></div>
+                <div className="absolute inset-0 bg-primary/60 w-0.5"></div>
                 <div className="absolute -top-3 w-1 h-1 rounded-none bg-primary"></div>
               </>
             )}
@@ -467,10 +467,10 @@ const PlacementIllustration = () => {
 const SystemicIllustration = () => {
   return (
     <div className="relative h-full w-full flex items-center justify-center overflow-hidden">
-      <Shield className="absolute inset-0 top-1 size-full stroke-[0.05px] opacity-10 text-primary animate-pulse" />
+      <Shield className="absolute inset-0 top-1 size-full stroke-[0.05px] opacity-10 text-primary" />
       <Shield className="size-24 stroke-[0.15px] text-primary" />
       <div className="absolute text-center space-y-1">
-        <Lightbulb className="size-4.5 text-primary mx-auto animate-bounce" />
+        <Lightbulb className="size-4.5 text-primary mx-auto" />
         <span className="block text-[9px] font-mono font-bold tracking-[0.2em] text-foreground">{t('systemicScale')}</span>
         <span className="block text-[7px] font-mono text-muted-foreground tracking-widest">{t('pedagogyLabs')}</span>
       </div>

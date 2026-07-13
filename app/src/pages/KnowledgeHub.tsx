@@ -130,7 +130,7 @@ export default function KnowledgeHub() {
 
         {/* Grid display */}
         {loading ? (
-          <div className="text-center py-20 font-mono text-primary text-sm tracking-widest animate-pulse">
+          <div className="text-center py-20 text-primary text-sm tracking-wider">
             {t('loadingResources')}
           </div>
         ) : filteredItems.length === 0 ? (

@@ -66,7 +66,7 @@ export default function TelemetryStats() {
               <div className="rounded-none bg-background relative flex size-fit w-fit items-center gap-2 border border-border px-3 py-1.5 text-[10px] font-mono tracking-wider uppercase shadow-md shadow-zinc-950/5">
                 <span className="text-sm">🇸🇬</span> Latest enrolment from Singapore
               </div>
-              <div className="rounded-none bg-background absolute inset-2 -bottom-2 mx-auto border border-border px-3 py-4 text-xs shadow-md shadow-zinc-950/5 dark:bg-[#0B0F14] -z-10" />
+          <div className="rounded-none bg-background absolute inset-2 -bottom-2 mx-auto border border-border px-3 py-4 text-xs shadow-md shadow-zinc-950/5 dark:bg-card -z-10" />
             </div>
 
             {/* Dotted map */}

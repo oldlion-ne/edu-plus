@@ -145,7 +145,6 @@ export default function About() {
             {/* Timeline Node */}
             <div className="absolute -left-[41px] md:-left-[73px] top-4 flex items-center justify-center">
               <span className="relative flex h-5 w-5">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-none bg-primary/20 opacity-75"></span>
                 <span className="relative inline-flex rounded-none h-5 w-5 bg-primary border-4 border-background"></span>
               </span>
             </div>
@@ -187,7 +186,6 @@ export default function About() {
                   {/* Focal Node */}
                   <div className="relative z-10 flex flex-col items-center justify-center h-full">
                     <div className="relative flex h-4 w-4">
-                      <span className="animate-ping absolute inline-flex h-full w-full rounded-none bg-primary opacity-75"></span>
                       <span className="relative inline-flex rounded-none h-4 w-4 bg-primary border-2 border-background"></span>
                     </div>
                     <span className="mt-3 text-[10px] font-mono tracking-[0.3em] text-primary font-bold">{t('manipurRoot')}</span>
@@ -257,11 +255,11 @@ export default function About() {
 
                   <div className="relative flex justify-between items-center z-10">
                     <div className="bg-background/90 backdrop-blur-sm shadow-sm ring-1 ring-border rounded-none px-2.5 py-1 text-[9px] font-mono text-muted-foreground flex items-center gap-1.5 hover:ring-primary/40 transition-all select-none">
-                      <span className="h-1 w-1 rounded-none bg-primary animate-pulse"></span>
+                      <span className="h-1 w-1 rounded-none bg-primary"></span>
                       SINGAPORE
                     </div>
                     <div className="bg-background/90 backdrop-blur-sm shadow-sm ring-1 ring-border rounded-none px-2.5 py-1 text-[9px] font-mono text-muted-foreground flex items-center gap-1.5 hover:ring-primary/40 transition-all select-none">
-                      <span className="h-1 w-1 rounded-none bg-primary animate-pulse"></span>
+                      <span className="h-1 w-1 rounded-none bg-primary"></span>
                       DELHI
                     </div>
                   </div>
@@ -274,7 +272,7 @@ export default function About() {
 
                   <div className="relative flex justify-between items-center z-10">
                     <div className="bg-background/90 backdrop-blur-sm shadow-sm ring-1 ring-border rounded-none px-2.5 py-1 text-[9px] font-mono text-muted-foreground flex items-center gap-1.5 hover:ring-primary/40 transition-all select-none">
-                      <span className="h-1 w-1 rounded-none bg-primary animate-pulse"></span>
+                      <span className="h-1 w-1 rounded-none bg-primary"></span>
                       KOLKATA
                     </div>
                     <div className="bg-background/90 backdrop-blur-sm shadow-sm ring-1 ring-border rounded-none px-2.5 py-1 text-[9px] font-mono text-muted-foreground flex items-center gap-1.5 hover:ring-primary/40 transition-all select-none">
@@ -389,7 +387,7 @@ export default function About() {
                       <div key={i} className="flex flex-col items-center gap-1 h-full w-px bg-foreground/10 relative">
                         {isHighlighted && (
                           <>
-                            <div className="absolute inset-0 bg-primary/60 w-0.5 shadow-[0_0_10px_oklch(var(--primary))] animate-pulse"></div>
+                            <div className="absolute inset-0 bg-primary/60 w-0.5"></div>
                             <div className="absolute -top-3 w-1.5 h-1.5 rounded-none bg-primary"></div>
                           </>
                         )}
@@ -446,7 +444,7 @@ export default function About() {
               {/* Right Side: Enterprise Protection Shield */}
               <div className="lg:col-span-5 self-stretch flex flex-col justify-center">
                 <div className="relative h-56 w-full flex items-center justify-center rounded-none bg-card/10 border border-border/50 overflow-hidden">
-                  <Shield className="absolute inset-0 top-3 size-full stroke-[0.05px] opacity-10 text-primary animate-pulse" />
+                  <Shield className="absolute inset-0 top-3 size-full stroke-[0.05px] opacity-10 text-primary" />
                   <Shield className="size-36 stroke-[0.15px] text-primary" />
                   <div className="absolute text-center space-y-1">
                     <span className="block text-[11px] font-mono font-bold tracking-[0.25em] text-foreground">{t('governance')}</span>

@@ -1,155 +1,129 @@
 import React, { createContext, useContext, useEffect, useRef, useState } from 'react';
-import { supabase } from './supabaseClient';
+import type { User } from '@supabase/supabase-js';
 
-interface AuthContextType {
-  user: any | null;
-  role: 'admin' | 'educator' | 'resource_person' | null;
-  loading: boolean;
-  isSimulated: boolean;
-  signIn: (email: string, password: string) => Promise<{ error: any }>;
-  signUp: (email: string, password: string, role: string) => Promise<{ error: any }>;
-  signOut: () => Promise<void>;
-  signInSimulated: (role: 'admin' | 'educator' | 'resource_person') => void;
+import type { AppRole, AuthContextValue } from '@/types/auth';
+import { isSupabaseConfigured, supabase } from './supabaseClient';
+
+const AuthContext = createContext<AuthContextValue | undefined>(undefined);
+const validRoles = new Set<AppRole>(['admin', 'resource_person', 'member']);
+
+function asAppRole(value: unknown): AppRole | null {
+  return typeof value === 'string' && validRoles.has(value as AppRole)
+    ? (value as AppRole)
+    : null;
 }
 
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
-
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [user, setUser] = useState<any | null>(null);
-  const [role, setRole] = useState<'admin' | 'educator' | 'resource_person' | null>(null);
+  const [user, setUser] = useState<User | null>(null);
+  const [role, setRole] = useState<AppRole | null>(null);
   const [loading, setLoading] = useState(true);
-  const [isSimulated, setIsSimulated] = useState(false);
-
-  // Track which user ID has already had its role fetched to prevent
-  // the onAuthStateChange listener from firing a redundant DB call
-  // immediately after getSession resolves (eliminating 4→2 network calls).
   const roleFetchedForRef = useRef<string | null>(null);
 
-  async function fetchUserRole(userId: string): Promise<boolean> {
+  async function fetchUserRole(userId: string): Promise<AppRole | null> {
     try {
       const { data, error } = await supabase
-        .from('user_roles')
+        .from('profiles')
         .select('role')
         .eq('id', userId)
-        .single();
+        .maybeSingle();
 
-      if (data && !error) {
-        setRole(data.role as any);
-        return true;
-      } else {
-        setRole('resource_person');
-        return false;
-      }
-    } catch (err) {
-      setRole('resource_person');
-      return false;
+      if (error) return null;
+      return asAppRole(data?.role);
+    } catch {
+      return null;
+    }
+  }
+
+  async function applyUser(nextUser: User | null) {
+    setUser(nextUser);
+    if (!nextUser) {
+      setRole(null);
+      roleFetchedForRef.current = null;
+      return;
+    }
+
+    if (roleFetchedForRef.current !== nextUser.id) {
+      const nextRole = await fetchUserRole(nextUser.id);
+      setRole(nextRole);
+      roleFetchedForRef.current = nextUser.id;
     }
   }
 
   useEffect(() => {
-    // 1. Check simulated session in localStorage — resolves instantly, no network
-    const cachedSim = localStorage.getItem('edu_plus_sim_session');
-    if (cachedSim) {
-      const parsed = JSON.parse(cachedSim);
-      setUser(parsed.user);
-      setRole(parsed.role);
-      setIsSimulated(true);
+    let active = true;
+
+    if (!isSupabaseConfigured) {
       setLoading(false);
       return;
     }
 
-    // 2. Fetch Supabase session — resolves from localStorage with persistSession: true
     const initializeAuth = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (session?.user) {
-        setUser(session.user);
-        // Only fetch role if we haven't already for this user
-        if (roleFetchedForRef.current !== session.user.id) {
-          const resolved = await fetchUserRole(session.user.id);
-          if (resolved) {
-            roleFetchedForRef.current = session.user.id;
-          }
-        }
-      } else {
-        setUser(null);
-        setRole(null);
+      try {
+        const { data } = await supabase.auth.getSession();
+        if (active) await applyUser(data.session?.user ?? null);
+      } finally {
+        if (active) setLoading(false);
       }
-      setLoading(false);
     };
 
-    initializeAuth();
+    void initializeAuth();
 
-    // 3. Listen to auth changes — skip redundant role fetch if already fetched
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
-      if (localStorage.getItem('edu_plus_sim_session')) return;
-
-      if (session?.user) {
-        setUser(session.user);
-        // Deduplicate: skip fetchUserRole if initializeAuth already fetched it
-        if (roleFetchedForRef.current !== session.user.id) {
-          const resolved = await fetchUserRole(session.user.id);
-          if (resolved) {
-            roleFetchedForRef.current = session.user.id;
-          }
-        }
-      } else {
-        setUser(null);
-        setRole(null);
-        setIsSimulated(false);
-        roleFetchedForRef.current = null;
-      }
-      setLoading(false);
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      void applyUser(session?.user ?? null).finally(() => {
+        if (active) setLoading(false);
+      });
     });
 
-    return () => subscription.unsubscribe();
+    return () => {
+      active = false;
+      subscription.unsubscribe();
+    };
   }, []);
 
   const signIn = async (email: string, password: string) => {
-    localStorage.removeItem('edu_plus_sim_session');
-    roleFetchedForRef.current = null; // Reset so next auth event fetches fresh role
+    roleFetchedForRef.current = null;
     const { error } = await supabase.auth.signInWithPassword({ email, password });
     return { error };
   };
 
-  const signUp = async (email: string, password: string, selectedRole: string) => {
-    localStorage.removeItem('edu_plus_sim_session');
+  const signUp = async (email: string, password: string) => {
     roleFetchedForRef.current = null;
-    const { data, error } = await supabase.auth.signUp({ email, password });
+    const { error } = await supabase.auth.signUp({ email, password });
+    return { error };
+  };
 
-    if (data?.user && !error) {
-      await supabase.from('user_roles').insert({
-        id: data.user.id,
-        role: selectedRole
-      });
-    }
+  const requestPasswordReset = async (email: string) => {
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: `${window.location.origin}/auth/reset-password`,
+    });
+    return { error };
+  };
+
+  const updatePassword = async (password: string) => {
+    const { error } = await supabase.auth.updateUser({ password });
     return { error };
   };
 
   const signOut = async () => {
-    localStorage.removeItem('edu_plus_sim_session');
     roleFetchedForRef.current = null;
-    setIsSimulated(false);
     setUser(null);
     setRole(null);
     await supabase.auth.signOut();
   };
 
-  const signInSimulated = (selectedRole: 'admin' | 'educator' | 'resource_person') => {
-    const mockUser = {
-      id: '00000000-0000-0000-0000-000000000000',
-      email: `simulated_${selectedRole}@eduplus.dev`,
-      user_metadata: { full_name: `Simulated ${selectedRole.toUpperCase()}` }
-    };
-    const session = { user: mockUser, role: selectedRole };
-    localStorage.setItem('edu_plus_sim_session', JSON.stringify(session));
-    setUser(mockUser);
-    setRole(selectedRole);
-    setIsSimulated(true);
-    setLoading(false);
-  };
-
   return (
-    <AuthContext.Provider value={{ user, role, loading, isSimulated, signIn, signUp, signOut, signInSimulated }}>
+    <AuthContext.Provider
+      value={{
+        user,
+        role,
+        loading,
+        signIn,
+        signUp,
+        requestPasswordReset,
+        updatePassword,
+        signOut,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );
@@ -160,4 +134,3 @@ export const useAuth = () => {
   if (!context) throw new Error('useAuth must be used within AuthProvider');
   return context;
 };
-

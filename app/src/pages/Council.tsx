@@ -331,9 +331,6 @@ export default function Council() {
                     <span className="absolute -bottom-1 -right-1 bg-background text-[7px] border border-border px-1 py-0.2 font-mono text-foreground font-semibold scale-90 rounded-none">
                       {member.seatId.replace('SEAT_', '')}
                     </span>
-                    {isActive && (
-                      <span className="absolute inset-0 border border-primary rounded-none animate-ping pointer-events-none" />
-                    )}
                   </button>
                 );
               })}
@@ -363,9 +360,6 @@ export default function Council() {
                     <span className="absolute -bottom-1 -right-1 bg-background text-[7px] border border-border px-1 py-0.2 font-mono text-foreground font-semibold scale-90 rounded-none">
                       {member.seatId.replace('SEAT_', '')}
                     </span>
-                    {isActive && (
-                      <span className="absolute inset-0 border border-primary rounded-none animate-ping pointer-events-none" />
-                    )}
                   </button>
                 );
               })}

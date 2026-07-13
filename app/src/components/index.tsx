@@ -57,7 +57,7 @@ export const AdvancedStats: React.FC = () => {
               <TimelineAnimation
                 animationNum={2}
                 timelineRef={timelineRef}
-                className="p-6 rounded-none h-full bg-[#0B0F14] text-foreground flex flex-col justify-between shadow-lg"
+      className="p-6 rounded-none h-full bg-card text-foreground flex flex-col justify-between shadow-lg"
               >
                 <div>
                   <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground mb-2">
@@ -76,8 +76,8 @@ export const AdvancedStats: React.FC = () => {
                       {t('targetLabel')}
                     </span>
                   </div>
-                  <div className="w-full h-1.5 bg-[#1A202A] rounded-none overflow-hidden">
-                    <div className="h-full bg-[#7DF9FF] w-[82%] rounded-none" />
+          <div className="w-full h-1.5 bg-muted rounded-none overflow-hidden">
+            <div className="h-full bg-primary w-[82%] rounded-none" />
                   </div>
                 </div>
               </TimelineAnimation>
@@ -112,7 +112,7 @@ export const AdvancedStats: React.FC = () => {
                 </div>
                 <p className="text-sm text-muted-foreground">
                   {t('organicAcquisitionUp')}{' '}
-                  <span className="text-[#7DF9FF] font-semibold">24%</span>{' '}
+        <span className="text-primary font-semibold">24%</span>{' '}
                   {t('comparedToQuarter')}
                 </p>
               </TimelineAnimation>
@@ -130,8 +130,8 @@ export const AdvancedStats: React.FC = () => {
               className={cn(
                 'p-6 rounded-none border bg-card border-border transition-colors',
                 kpi.status === 'up'
-                  ? 'hover:border-[#22C55E] hover:bg-[#22C55E]/10'
-                  : 'hover:border-[#EF4444] hover:bg-[#EF4444]/10'
+              ? 'hover:border-primary hover:bg-primary/10'
+              : 'hover:border-destructive hover:bg-destructive/10'
               )}
             >
               <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest mb-2">
@@ -145,8 +145,8 @@ export const AdvancedStats: React.FC = () => {
                   className={cn(
                     'text-xs font-bold px-1.5 py-0.5 rounded-none',
                     kpi.status === 'up'
-                      ? 'text-[#22C55E] bg-[#22C55E]/10'
-                      : 'text-[#EF4444] bg-[#EF4444]/10'
+                ? 'text-primary bg-primary/10'
+                : 'text-destructive bg-destructive/10'
                   )}
                 >
                   {kpi.change}

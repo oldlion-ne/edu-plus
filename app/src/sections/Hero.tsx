@@ -70,7 +70,7 @@ export default function Hero() {
           timelineRef={sectionRef}
           className="mb-8"
         >
-          <div className="inline-flex items-center gap-2 border border-border bg-card/50 backdrop-blur-md px-4 py-2 rounded-lg">
+        <div className="inline-flex items-center gap-2 border border-border bg-card/50 backdrop-blur-md px-4 py-2 rounded-none">
             <span className="text-[10px] font-sans font-medium tracking-[0.2em] uppercase text-muted-foreground">
               {t('investing')}
             </span>
@@ -116,13 +116,13 @@ export default function Hero() {
           timelineRef={sectionRef}
           className="flex flex-col sm:flex-row items-center gap-3 mb-12"
         >
-          <Button asChild size="lg" className="rounded-lg">
+              <Button asChild size="lg" className="rounded-none">
             <Link to="/contact" className="inline-flex items-center gap-2" /* ui-ignore */>
               {t('startPathway')}
               <ArrowRight size={14} />
             </Link>
           </Button>
-          <Button asChild variant="outline" size="lg" className="rounded-lg">
+              <Button asChild variant="outline" size="lg" className="rounded-none">
             <Link to="/about" /* ui-ignore */>
               {t('exploreNetwork')}
             </Link>
@@ -135,7 +135,7 @@ export default function Hero() {
           as="div"
           animationNum={5}
           timelineRef={sectionRef}
-          className="flex items-center gap-0 border border-border bg-card/50 backdrop-blur-sm rounded-lg"
+                className="flex items-center gap-0 border border-border bg-card/50 backdrop-blur-sm rounded-none"
         >
           {STATS.map((s, i) => (
             <div

@@ -18,25 +18,8 @@ const IGNORE_PATHS = [
 
 ];
 
-// Approved colors to prevent warning/error on hex values
-const APPROVED_HEX = [
-  '#7DF9FF', // Neon Cyan
-  '#0B0F14', // Base Slate Background
-  '#E6EDF3', // Off-white foreground
-  '#8B949E', // Muted/secondary text slate-gray
-  '#161B22', // Card dark background
-  '#0E131A', // Dropdowns and dialogs slate background
-  '#090D12', // Terminal dashboard dark background
-  '#4AF626', // Terminal text green
-  '#1A202A', // Footer background slate
-  // Feedback Colors
-  '#EF4444', // Red-500 (Danger)
-  '#F87171', // Red-400 (Light Danger)
-  '#22C55E', // Green-500 (Success)
-  '#4ADE80', // Green-400 (Light Success)
-  '#F59E0B', // Yellow-500 (Warning)
-  '#FBBF24', // Yellow-400 (Light Warning)
-];
+// Nordic Lagom colors must come from semantic theme tokens.
+const APPROVED_HEX = [];
 
 // Prohibited rounded corners pattern
 // Matches any word starting with rounded (e.g. rounded, rounded-md, rounded-t-lg)
@@ -53,6 +36,8 @@ const INTERACTIVE_TAG_REGEX = /<(button|a|Link|NavLink)\b/;
 
 // Style attributes checker
 const INLINE_STYLE_REGEX = /style=\{\{\s*[^}]+\s*\}\}/g;
+const PROHIBITED_MOTION_REGEX = /\banimate-(?:pulse|ping|bounce|chat-glow)\b/g;
+const PROHIBITED_GLOW_REGEX = /\b(?:drop-)?shadow-\[0_0_(?!0_1px)[^\]]+\]/g;
 
 let totalErrors = 0;
 let totalWarnings = 0;
@@ -159,6 +144,18 @@ function checkFile(filePath) {
       console.log(colors.gray(`   Line ${lineNumber}: ${line.trim()}`));
       console.log(colors.gray(`   Fix: Prefer styling through Tailwind utility classes or index.css classes.\n`));
       totalWarnings++;
+    }
+
+    // 6. Reject pulsing or aggressive status motion.
+    for (const match of line.matchAll(PROHIBITED_MOTION_REGEX)) {
+      console.log(`${colors.red('❌ ERROR')} Prohibited motion class "${colors.bold(match[0])}" found in ${colors.cyan(relativePath)}:${colors.yellow(lineNumber)}`);
+      totalErrors++;
+    }
+
+    // 7. Reject glow-style shadows. Conventional elevation shadows remain allowed.
+    for (const match of line.matchAll(PROHIBITED_GLOW_REGEX)) {
+      console.log(`${colors.red('❌ ERROR')} Prohibited glow shadow "${colors.bold(match[0])}" found in ${colors.cyan(relativePath)}:${colors.yellow(lineNumber)}`);
+      totalErrors++;
     }
   });
 }

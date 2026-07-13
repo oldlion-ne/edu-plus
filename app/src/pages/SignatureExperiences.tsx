@@ -217,9 +217,6 @@ export default function SignatureExperiences() {
                 {/* Timeline node */}
                 <div className="absolute -left-[41px] md:-left-[73px] top-4 flex items-center justify-center">
                   <span className="relative flex h-5 w-5">
-                    {hasPing && (
-                      <span className="animate-ping absolute inline-flex h-full w-full rounded-none bg-primary/20 opacity-75"></span>
-                    )}
                     <span className={`relative inline-flex rounded-none h-5 w-5 border-4 border-background ${
                       hasPing ? 'bg-primary' : 'bg-muted'
                     }`}></span>
@@ -329,7 +326,7 @@ export default function SignatureExperiences() {
             
             <p className="text-muted-foreground mt-12 text-center text-xs font-mono">
               {t('faqContactText')}
-              <Link to="/contact" className="text-primary font-semibold hover:text-[#7DF9FF] focus:outline-none focus:ring-1 focus:ring-[#7DF9FF] hover:underline">
+          <Link to="/contact" className="text-primary font-semibold hover:text-foreground focus:outline-none focus:ring-1 focus:ring-primary hover:underline">
                 {t('faqContactLink')}
               </Link>
             </p>
