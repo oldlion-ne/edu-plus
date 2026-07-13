@@ -248,7 +248,7 @@ export default function Guidance() {
           {/* Left Navigation and Terminal Block */}
           <div className="lg:w-1/3 flex flex-col gap-6">
             {/* Tab Selectors */}
-            <div className="flex flex-row lg:flex-col gap-1 overflow-x-auto lg:overflow-x-visible pb-4 lg:pb-0 border-b lg:border-b-0 lg:border-r border-border lg:pr-4 whitespace-nowrap bg-muted/40 p-2">
+            <div className="grid grid-cols-2 gap-1 border-b border-border bg-muted/40 p-2 sm:grid-cols-4 lg:flex lg:flex-col lg:border-b-0 lg:border-r lg:pr-4">
               {STAKEHOLDERS.map(stakeholder => (
                 <button /* ui-ignore */
                   key={stakeholder.id}
@@ -266,9 +266,9 @@ export default function Guidance() {
 
             {/* Retro Terminal Log */}
             <div className="border border-border bg-card/60  p-1">
-                <div className="bg-card p-4 font-sans text-[10px] leading-relaxed text-primary h-[220px] overflow-hidden select-none flex flex-col justify-start relative">
+                <div className="relative flex min-h-48 max-h-64 select-none flex-col justify-start overflow-hidden bg-card p-4 font-sans text-xs leading-relaxed text-primary">
                 {/* Console header */}
-                <div className="flex justify-between items-center text-[8px] text-primary/60 border-b border-border pb-2 mb-3">
+                <div className="mb-3 flex items-center justify-between border-b border-border pb-2 text-xs text-primary/60">
                   <span>{t('logPort')}</span>
                   <span className="flex items-center gap-1.5">
                     <span className="w-1.5 h-1.5 bg-primary" />

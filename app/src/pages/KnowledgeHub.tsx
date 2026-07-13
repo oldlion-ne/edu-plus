@@ -129,11 +129,11 @@ export default function KnowledgeHub() {
               return (
                 <SurfaceCard
                   key={item.id}
-                  heightClass="h-[300px] md:h-[320px]"
+                  heightClass="min-h-[19rem]"
                 >
                   <div className="flex flex-col justify-between h-full space-y-4">
                     <div>
-                      <div className="flex justify-between items-center text-[8px] font-sans text-primary tracking-widest uppercase border-b border-border/50 pb-2 mb-3">
+                      <div className="flex justify-between items-center text-xs font-sans text-primary tracking-widest uppercase border-b border-border/50 pb-2 mb-3">
                         <span>{t('srcPrefix')}{item.media_type.replace('_', ' ')}</span>
                         <span>{item.category.replace('_', ' ')}</span>
                       </div>
@@ -147,7 +147,7 @@ export default function KnowledgeHub() {
                     </div>
 
                     <div className="pt-4 border-t border-border flex items-center justify-between">
-                      <span className="text-[9px] font-sans text-muted-foreground uppercase">
+                      <span className="text-xs font-sans text-muted-foreground uppercase">
                         {t('nodePrefix')}EDUPLUS
                       </span>
                       {isYoutube ? (
@@ -155,7 +155,7 @@ export default function KnowledgeHub() {
                           size="sm"
                           variant="secondary"
                           onClick={() => setSelectedVideo(resourceUrl)}
-                          className="font-sans text-[9px] tracking-wider uppercase h-8"
+                          className="font-sans text-xs tracking-wider uppercase h-8"
                         >
                           {t('launchPlayback')}
                         </Button>
@@ -166,11 +166,11 @@ export default function KnowledgeHub() {
                           asChild
                           className="h-8"
                         >
-                          <a href={resourceUrl} target="_blank" rel="noopener noreferrer" className="font-sans text-[9px] tracking-wider uppercase" /* ui-ignore */>
+                          <a href={resourceUrl} target="_blank" rel="noopener noreferrer" className="font-sans text-xs tracking-wider uppercase" /* ui-ignore */>
                             {t('openLink')}
                           </a>
                         </Button>
-                      ) : <span className="font-sans text-[9px] uppercase text-muted-foreground">File available to members</span>}
+                      ) : <span className="font-sans text-xs uppercase text-muted-foreground">File available to members</span>}
                     </div>
                   </div>
                 </SurfaceCard>
@@ -185,7 +185,7 @@ export default function KnowledgeHub() {
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-background/90  animate-fade-in">
           <div className="w-full max-w-4xl bg-card border border-border shadow-2xl relative">
             <div className="flex items-center justify-between p-3 border-b border-border bg-muted">
-              <span className="font-sans text-[10px] font-bold tracking-widest text-primary">{t('videoPlayback')}</span>
+              <span className="font-sans text-xs font-bold tracking-widest text-primary">{t('videoPlayback')}</span>
               <Button
                 variant="ghost"
                 size="icon"

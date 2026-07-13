@@ -42,7 +42,7 @@ function ProgramCard({
         {name}
       </span>
       {/* Tag chip */}
-      <span className="ml-1 font-sans text-[9px] uppercase tracking-wider text-muted-foreground border border-border px-1.5 py-0.5 bg-background/60 rounded-none whitespace-nowrap">
+      <span className="ml-1 font-sans text-xs uppercase tracking-wider text-muted-foreground border border-border px-1.5 py-0.5 bg-background/60 rounded-none whitespace-nowrap">
         {tag}
       </span>
     </div>
@@ -86,7 +86,7 @@ export default function ServicesMatrix() {
     <section
       ref={sectionRef}
       id="building"
-      className="relative w-full py-24 md:py-32 bg-background overflow-hidden"
+      className="relative w-full overflow-hidden bg-background py-16 md:py-24"
     >
       <div className="max-w-[1440px] mx-auto px-6 md:px-12">
 

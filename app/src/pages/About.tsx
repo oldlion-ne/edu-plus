@@ -145,14 +145,14 @@ export default function About() {
               </span>
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+            <div className="grid grid-cols-1 items-start gap-8 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)]">
               {/* Left Side: Narrative Card */}
-              <div className="lg:col-span-7 space-y-4">
+              <div className="min-w-0 space-y-4">
                 <div className="space-y-2">
                   <span className="font-sans text-xs uppercase tracking-widest text-primary/70 block">
                     {t('chapter01Roots')}
                   </span>
-                  <div className="inline-flex items-center gap-1.5 font-sans text-[9px] uppercase tracking-[0.2em] text-muted-foreground border border-border px-2 py-0.5 bg-card/50">
+                  <div className="inline-flex items-center gap-1.5 font-sans text-xs uppercase tracking-[0.2em] text-muted-foreground border border-border px-2 py-0.5 bg-card/50">
                     <MapPin className="size-2.5 text-primary" /> Manipur Genesis
                   </div>
                 </div>
@@ -170,7 +170,7 @@ export default function About() {
               </div>
 
               {/* Right Side: Propagation Visualization */}
-              <div className="lg:col-span-5 self-stretch flex flex-col justify-center">
+              <div className="flex min-w-0 self-stretch flex-col justify-center">
                 <div className="relative h-56 w-full overflow-hidden rounded-none bg-card/10 border border-border/50 flex flex-col justify-end p-6">
                   {/* Visual Background */}
                   <div aria-hidden className="absolute inset-0 select-none pointer-events-none">
@@ -184,8 +184,8 @@ export default function About() {
                     <div className="relative flex h-4 w-4">
                       <span className="relative inline-flex rounded-none h-4 w-4 bg-primary border-2 border-background"></span>
                     </div>
-                    <span className="mt-3 text-[10px] font-sans tracking-[0.3em] text-primary font-bold">{t('manipurRoot')}</span>
-                    <span className="mt-1 text-[8px] font-sans text-muted-foreground uppercase">{t('epicenterOpportunity')}</span>
+                    <span className="mt-3 text-xs font-sans tracking-[0.3em] text-primary font-bold">{t('manipurRoot')}</span>
+                    <span className="mt-1 text-xs font-sans text-muted-foreground uppercase">{t('epicenterOpportunity')}</span>
                   </div>
                 </div>
               </div>
@@ -201,14 +201,14 @@ export default function About() {
               </span>
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+            <div className="grid grid-cols-1 items-start gap-8 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)]">
               {/* Left Side: Narrative Card */}
-              <div className="lg:col-span-7 space-y-4">
+              <div className="min-w-0 space-y-4">
                 <div className="space-y-2">
                   <span className="font-sans text-xs uppercase tracking-widest text-primary/70 block">
                     {t('chapter02HubModel')}
                   </span>
-                  <div className="inline-flex items-center gap-1.5 font-sans text-[9px] uppercase tracking-[0.2em] text-muted-foreground border border-border px-2 py-0.5 bg-card/50">
+                  <div className="inline-flex items-center gap-1.5 font-sans text-xs uppercase tracking-[0.2em] text-muted-foreground border border-border px-2 py-0.5 bg-card/50">
                     <Globe className="size-2.5 text-primary" /> Delhi &amp; SG Connections
                   </div>
                 </div>
@@ -222,23 +222,23 @@ export default function About() {
                   
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2 text-xs font-sans">
                     <div className="p-3 border border-border/30 bg-background/40 space-y-1">
-                      <span className="text-primary block font-semibold text-[10px] tracking-wider">{t('singapore')}</span>
-                      <span className="text-muted-foreground text-[10px]">{t('speechInterventions')}</span>
+                      <span className="text-primary block font-semibold text-xs tracking-wider">{t('singapore')}</span>
+                      <span className="text-muted-foreground text-xs">{t('speechInterventions')}</span>
                     </div>
                     <div className="p-3 border border-border/30 bg-background/40 space-y-1">
-                      <span className="text-primary block font-semibold text-[10px] tracking-wider">{t('delhiKolkata')}</span>
-                      <span className="text-muted-foreground text-[10px]">{t('corporateToolkits')}</span>
+                      <span className="text-primary block font-semibold text-xs tracking-wider">{t('delhiKolkata')}</span>
+                      <span className="text-muted-foreground text-xs">{t('corporateToolkits')}</span>
                     </div>
                     <div className="p-3 border border-border/30 bg-background/40 space-y-1">
-                      <span className="text-primary block font-semibold text-[10px] tracking-wider">{t('globalAdvisory')}</span>
-                      <span className="text-muted-foreground text-[10px]">{t('directMentorship')}</span>
+                      <span className="text-primary block font-semibold text-xs tracking-wider">{t('globalAdvisory')}</span>
+                      <span className="text-muted-foreground text-xs">{t('directMentorship')}</span>
                     </div>
                   </div>
                 </Card>
               </div>
 
               {/* Right Side: Connections Hub Graph */}
-              <div className="lg:col-span-5 self-stretch flex flex-col justify-center">
+              <div className="flex min-w-0 self-stretch flex-col justify-center">
                 <div className="relative h-56 w-full p-5 rounded-none bg-card/10 border border-border/50 flex flex-col justify-between overflow-hidden">
                   {/* Connection Lines Layout */}
                   <div className="absolute top-[28%] left-[10%] right-[10%] h-px bg-gradient-to-r from-transparent via-border/80 to-transparent"></div>
@@ -250,11 +250,11 @@ export default function About() {
                   <div className="absolute w-1.5 h-1.5 rounded-none bg-primary/70 animate-[ping_2s_infinite] top-[72%] right-[30%]"></div>
 
                   <div className="relative flex justify-between items-center z-10">
-                    <div className="bg-background/90  shadow-sm ring-1 ring-border rounded-none px-2.5 py-1 text-[9px] font-sans text-muted-foreground flex items-center gap-1.5 hover:ring-primary/40 transition-all select-none">
+                    <div className="bg-background/90  shadow-sm ring-1 ring-border rounded-none px-2.5 py-1 text-xs font-sans text-muted-foreground flex items-center gap-1.5 hover:ring-primary/40 transition-all select-none">
                       <span className="h-1 w-1 rounded-none bg-primary"></span>
                       SINGAPORE
                     </div>
-                    <div className="bg-background/90  shadow-sm ring-1 ring-border rounded-none px-2.5 py-1 text-[9px] font-sans text-muted-foreground flex items-center gap-1.5 hover:ring-primary/40 transition-all select-none">
+                    <div className="bg-background/90  shadow-sm ring-1 ring-border rounded-none px-2.5 py-1 text-xs font-sans text-muted-foreground flex items-center gap-1.5 hover:ring-primary/40 transition-all select-none">
                       <span className="h-1 w-1 rounded-none bg-primary"></span>
                       DELHI
                     </div>
@@ -262,16 +262,16 @@ export default function About() {
 
                   <div className="relative flex justify-center z-10">
                     <div className="bg-card shadow-black/10 ring-1 ring-primary/30 relative flex h-9 items-center rounded-none px-4 shadow-sm select-none">
-                      <span className="text-[10px] font-sans font-bold tracking-wider text-primary">{t('nexusNode')}</span>
+                      <span className="text-xs font-sans font-bold tracking-wider text-primary">{t('nexusNode')}</span>
                     </div>
                   </div>
 
                   <div className="relative flex justify-between items-center z-10">
-                    <div className="bg-background/90  shadow-sm ring-1 ring-border rounded-none px-2.5 py-1 text-[9px] font-sans text-muted-foreground flex items-center gap-1.5 hover:ring-primary/40 transition-all select-none">
+                    <div className="bg-background/90  shadow-sm ring-1 ring-border rounded-none px-2.5 py-1 text-xs font-sans text-muted-foreground flex items-center gap-1.5 hover:ring-primary/40 transition-all select-none">
                       <span className="h-1 w-1 rounded-none bg-primary"></span>
                       KOLKATA
                     </div>
-                    <div className="bg-background/90  shadow-sm ring-1 ring-border rounded-none px-2.5 py-1 text-[9px] font-sans text-muted-foreground flex items-center gap-1.5 hover:ring-primary/40 transition-all select-none">
+                    <div className="bg-background/90  shadow-sm ring-1 ring-border rounded-none px-2.5 py-1 text-xs font-sans text-muted-foreground flex items-center gap-1.5 hover:ring-primary/40 transition-all select-none">
                       <span className="h-1 w-1 rounded-none bg-primary"></span>
                       GLOBAL ADVISORY
                     </div>
@@ -290,14 +290,14 @@ export default function About() {
               </span>
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+            <div className="grid grid-cols-1 items-start gap-8 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)]">
               {/* Left Side: Narrative Card with Bento Pillars */}
-              <div className="lg:col-span-7 space-y-4">
+              <div className="min-w-0 space-y-4">
                 <div className="space-y-2">
                   <span className="font-sans text-xs uppercase tracking-widest text-primary/70 block">
                     {t('chapter03CorePillars')}
                   </span>
-                  <div className="inline-flex items-center gap-1.5 font-sans text-[9px] uppercase tracking-[0.2em] text-muted-foreground border border-border px-2 py-0.5 bg-card/50">
+                  <div className="inline-flex items-center gap-1.5 font-sans text-xs uppercase tracking-[0.2em] text-muted-foreground border border-border px-2 py-0.5 bg-card/50">
                     <Sparkles className="size-2.5 text-primary" /> {t('whatWeStandFor')}
                   </div>
                 </div>
@@ -315,10 +315,10 @@ export default function About() {
                     {/* Pillar 1 */}
                     <div className="border border-border/40 p-4 bg-background/30 space-y-2">
                       <div className="flex items-center gap-2">
-                        <span className="font-sans text-[10px] text-primary font-semibold border border-primary/20 px-1.5 py-0.2 bg-primary/5">{t('num01')}</span>
+                        <span className="font-sans text-xs text-primary font-semibold border border-primary/20 px-1.5 py-0.2 bg-primary/5">{t('num01')}</span>
                         <h4 className="font-sans font-semibold text-xs text-foreground">{t('clarityOfDirection')}</h4>
                       </div>
-                      <p className="font-sans text-[11px] text-muted-foreground leading-relaxed">
+                      <p className="font-sans text-sm text-muted-foreground leading-relaxed">
                         {t('clarityDesc')}
                       </p>
                     </div>
@@ -326,10 +326,10 @@ export default function About() {
                     {/* Pillar 2 */}
                     <div className="border border-border/40 p-4 bg-background/30 space-y-2">
                       <div className="flex items-center gap-2">
-                        <span className="font-sans text-[10px] text-primary font-semibold border border-primary/20 px-1.5 py-0.2 bg-primary/5">{t('num02')}</span>
+                        <span className="font-sans text-xs text-primary font-semibold border border-primary/20 px-1.5 py-0.2 bg-primary/5">{t('num02')}</span>
                         <h4 className="font-sans font-semibold text-xs text-foreground">{t('accessToOpportunity')}</h4>
                       </div>
-                      <div className="space-y-1 font-sans text-[10px]">
+                      <div className="space-y-1 font-sans text-xs">
                         <div className="flex justify-between border-b border-border/20 pb-0.5">
                           <span className="text-muted-foreground">{t('psychometricSelection')}</span>
                           <span className="text-primary font-semibold">{t('successRate')}</span>
@@ -345,28 +345,28 @@ export default function About() {
                   {/* Pillar 3 */}
                   <div className="border border-border/40 p-4 bg-background/30 space-y-3">
                     <div className="flex items-center gap-2">
-                      <span className="font-sans text-[10px] text-primary font-semibold border border-primary/20 px-1.5 py-0.2 bg-primary/5">{t('num03')}</span>
+                      <span className="font-sans text-xs text-primary font-semibold border border-primary/20 px-1.5 py-0.2 bg-primary/5">{t('num03')}</span>
                       <h4 className="font-sans font-semibold text-xs text-foreground">{t('rightSkillsTitle')}</h4>
                     </div>
-                    <p className="font-sans text-[11px] text-muted-foreground leading-relaxed">
+                    <p className="font-sans text-sm text-muted-foreground leading-relaxed">
                       {t('rightSkillsDesc')}
                     </p>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 bg-background/60 p-3 border border-border/30">
                       <div className="space-y-0.5">
-                        <span className="text-[10px] font-semibold text-primary font-sans block">{t('criticalSoftSkills')}</span>
-                        <p className="text-[9px] text-muted-foreground leading-normal">{t('criticalSoftSkillsDesc')}</p>
+                        <span className="text-xs font-semibold text-primary font-sans block">{t('criticalSoftSkills')}</span>
+                        <p className="text-xs text-muted-foreground leading-normal">{t('criticalSoftSkillsDesc')}</p>
                       </div>
                       <div className="space-y-0.5">
-                        <span className="text-[10px] font-semibold text-primary font-sans block">{t('greenHydrogen')}</span>
-                        <p className="text-[9px] text-muted-foreground leading-normal">{t('greenHydrogenDesc')}</p>
+                        <span className="text-xs font-semibold text-primary font-sans block">{t('greenHydrogen')}</span>
+                        <p className="text-xs text-muted-foreground leading-normal">{t('greenHydrogenDesc')}</p>
                       </div>
                       <div className="space-y-0.5 border-t border-border/20 pt-1.5">
-                        <span className="text-[10px] font-semibold text-primary font-sans block">{t('maritimeLogistics')}</span>
-                        <p className="text-[9px] text-muted-foreground leading-normal">{t('maritimeLogisticsDesc')}</p>
+                        <span className="text-xs font-semibold text-primary font-sans block">{t('maritimeLogistics')}</span>
+                        <p className="text-xs text-muted-foreground leading-normal">{t('maritimeLogisticsDesc')}</p>
                       </div>
                       <div className="space-y-0.5 border-t border-border/20 pt-1.5">
-                        <span className="text-[10px] font-semibold text-primary font-sans block">{t('internationalLaw')}</span>
-                        <p className="text-[9px] text-muted-foreground leading-normal">{t('internationalLawDesc')}</p>
+                        <span className="text-xs font-semibold text-primary font-sans block">{t('internationalLaw')}</span>
+                        <p className="text-xs text-muted-foreground leading-normal">{t('internationalLawDesc')}</p>
                       </div>
                     </div>
                   </div>
@@ -374,7 +374,7 @@ export default function About() {
               </div>
 
               {/* Right Side: Milestone Matrix Graphic */}
-              <div className="lg:col-span-5 self-stretch flex flex-col justify-center">
+              <div className="flex min-w-0 self-stretch flex-col justify-center">
                 <div className="relative h-56 w-full px-5 py-8 rounded-none bg-card/10 border border-border/50 flex justify-between items-end overflow-hidden">
                   {/* Grid Lines */}
                   {Array.from({ length: 15 }).map((_, i) => {
@@ -390,7 +390,7 @@ export default function About() {
                       </div>
                     );
                   })}
-                  <div className="absolute inset-x-0 bottom-1 flex justify-between px-3 text-[8px] font-sans text-muted-foreground bg-background/80 py-1 border-t border-border/40 z-10">
+                  <div className="absolute inset-x-0 bottom-1 flex justify-between px-3 text-xs font-sans text-muted-foreground bg-background/80 py-1 border-t border-border/40 z-10">
                     <span>{t('clarityPipeline')}</span>
                     <span>{t('accessNode')}</span>
                     <span>{t('skillsReady')}</span>
@@ -409,14 +409,14 @@ export default function About() {
               </span>
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+            <div className="grid grid-cols-1 items-start gap-8 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)]">
               {/* Left Side: Narrative Card */}
-              <div className="lg:col-span-7 space-y-4">
+              <div className="min-w-0 space-y-4">
                 <div className="space-y-2">
                   <span className="font-sans text-xs uppercase tracking-widest text-primary/70 block">
                     {t('chapter04Foundations')}
                   </span>
-                  <div className="inline-flex items-center gap-1.5 font-sans text-[9px] uppercase tracking-[0.2em] text-muted-foreground border border-border px-2 py-0.5 bg-card/50">
+                  <div className="inline-flex items-center gap-1.5 font-sans text-xs uppercase tracking-[0.2em] text-muted-foreground border border-border px-2 py-0.5 bg-card/50">
                     <BookOpen className="size-2.5 text-primary" /> {t('multiDomainExpertise')}
                   </div>
                 </div>
@@ -429,7 +429,7 @@ export default function About() {
                   </p>
                   <div className="flex flex-wrap gap-1.5 pt-2">
                     {DOMAIN_KEYS.map(key => (
-                      <span key={key} className="font-sans text-[9px] uppercase tracking-wider text-muted-foreground border border-border/40 px-2 py-1 bg-background/50">
+                      <span key={key} className="font-sans text-xs uppercase tracking-wider text-muted-foreground border border-border/40 px-2 py-1 bg-background/50">
                         {t(key)}
                       </span>
                     ))}
@@ -438,13 +438,13 @@ export default function About() {
               </div>
 
               {/* Right Side: Enterprise Protection Shield */}
-              <div className="lg:col-span-5 self-stretch flex flex-col justify-center">
+              <div className="flex min-w-0 self-stretch flex-col justify-center">
                 <div className="relative h-56 w-full flex items-center justify-center rounded-none bg-card/10 border border-border/50 overflow-hidden">
                   <Shield className="absolute inset-0 top-3 size-full stroke-[0.05px] opacity-10 text-primary" />
                   <Shield className="size-36 stroke-[0.15px] text-primary" />
                   <div className="absolute text-center space-y-1">
-                    <span className="block text-[11px] font-sans font-bold tracking-[0.25em] text-foreground">{t('governance')}</span>
-                    <span className="block text-[8px] font-sans text-muted-foreground tracking-widest">{t('advisoryCouncil')}</span>
+                    <span className="block text-sm font-sans font-bold tracking-[0.25em] text-foreground">{t('governance')}</span>
+                    <span className="block text-xs font-sans text-muted-foreground tracking-widest">{t('advisoryCouncil')}</span>
                   </div>
                 </div>
               </div>

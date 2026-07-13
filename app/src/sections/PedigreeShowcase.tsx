@@ -35,7 +35,7 @@ export default function PedigreeShowcase() {
     <section
       ref={sectionRef}
       id="advisory"
-      className="relative w-full bg-background overflow-hidden py-24 md:py-32"
+      className="relative w-full overflow-hidden bg-background py-16 md:py-24"
     >
       {/* Subtle background accent */}
       <div
@@ -101,7 +101,7 @@ export default function PedigreeShowcase() {
 
               <div className="relative z-10 space-y-2">
                 {/* Card label */}
-                <span className="text-[10px] font-sans font-medium tracking-wider uppercase text-primary/70 mb-3 block">
+                <span className="text-xs font-sans font-medium tracking-wider uppercase text-primary/70 mb-3 block">
                   01 - Integrations
                 </span>
                 <h3 className="text-foreground font-medium text-lg">
@@ -162,7 +162,7 @@ export default function PedigreeShowcase() {
               />
 
               <div className="relative z-10 space-y-2">
-                <span className="text-[10px] font-sans font-medium tracking-wider uppercase text-primary/70 mb-3 block">
+                <span className="text-xs font-sans font-medium tracking-wider uppercase text-primary/70 mb-3 block">
                   02 - Guidance
                 </span>
                 <h3 className="text-foreground font-medium text-lg">
@@ -219,7 +219,7 @@ export default function PedigreeShowcase() {
               />
 
               <div className="relative z-10 space-y-2">
-                <span className="text-[10px] font-sans font-medium tracking-wider uppercase text-primary/70 mb-3 block">
+                <span className="text-xs font-sans font-medium tracking-wider uppercase text-primary/70 mb-3 block">
                   03 - Standards
                 </span>
                 <h3 className="text-foreground font-medium text-lg">
@@ -266,7 +266,7 @@ export default function PedigreeShowcase() {
               />
 
               <div className="relative z-10 space-y-2">
-                <span className="text-[10px] font-sans font-medium tracking-wider uppercase text-primary/70 mb-3 block">
+                <span className="text-xs font-sans font-medium tracking-wider uppercase text-primary/70 mb-3 block">
                   04 - Scale
                 </span>
                 <h3 className="font-medium text-lg text-foreground">

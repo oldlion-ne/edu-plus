@@ -127,14 +127,14 @@ export default function Contact() {
 
       <div className="max-w-[1200px] mx-auto px-6 md:px-12 relative z-10 mt-16 pb-20">
         {/* Info & Form Split Layout */}
-        <div className={`grid lg:grid-cols-12 gap-12 transition-all duration-1000 delay-300 transform ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+        <div className={`grid gap-10 transition-all duration-1000 delay-300 transform lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-12 ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
 
           {/* Left Column: Office & Details */}
-          <div className="lg:col-span-5 space-y-6">
+          <div className="min-w-0 space-y-6">
             <Card className="p-6 bg-card/40  rounded-none border border-border flex flex-col justify-between min-h-[360px]">
               <div className="space-y-6">
                 <div>
-                  <span className="text-[10px] font-sans tracking-widest text-primary uppercase block mb-3 font-semibold">
+                  <span className="text-xs font-sans tracking-widest text-primary uppercase block mb-3 font-semibold">
                     {t('officeTitle')}
                   </span>
                   <div className="flex items-start gap-3">
@@ -153,7 +153,7 @@ export default function Contact() {
                 <div className="pt-6 border-t border-border flex items-start gap-3">
                   <Phone className="text-primary size-5 shrink-0 mt-0.5" />
                   <div>
-                    <span className="text-[9px] font-sans text-muted-foreground uppercase tracking-widest block mb-1">
+                    <span className="text-xs font-sans text-muted-foreground uppercase tracking-widest block mb-1">
                       {t('hotlineLabel')}
                     </span>
                     <a href="tel:+919856456703" className="text-sm font-semibold font-sans text-foreground hover:text-primary hover:underline focus:outline-none focus:ring-1 focus:ring-primary">
@@ -165,7 +165,7 @@ export default function Contact() {
                 <div className="pt-6 border-t border-border flex items-start gap-3">
                   <Mail className="text-primary size-5 shrink-0 mt-0.5" />
                   <div>
-                    <span className="text-[9px] font-sans text-muted-foreground uppercase tracking-widest block mb-1">
+                    <span className="text-xs font-sans text-muted-foreground uppercase tracking-widest block mb-1">
                       {t('inquiriesLabel')}
                     </span>
                     <a href={`mailto:${t('inquiriesEmail')}`} className="text-sm font-semibold font-sans text-foreground hover:text-primary hover:underline focus:outline-none focus:ring-1 focus:ring-primary">
@@ -178,7 +178,7 @@ export default function Contact() {
           </div>
 
           {/* Right Column: Interaction Form */}
-          <div className="lg:col-span-7 space-y-6">
+          <div className="min-w-0 space-y-6">
             <Card className="p-6 bg-card/40  rounded-none border border-border">
               <h3 className="font-heading text-xl font-semibold tracking-tight text-foreground mb-6">
                 {t('formTitle')}
@@ -192,7 +192,7 @@ export default function Contact() {
                 <form onSubmit={handleSubmit} className="space-y-5">
                   <div className="grid md:grid-cols-2 gap-5">
                     <div className="space-y-2">
-                      <Label htmlFor="contact-name" className="text-[10px] font-sans uppercase tracking-wider text-muted-foreground">
+                      <Label htmlFor="contact-name" className="text-xs font-sans uppercase tracking-wider text-muted-foreground">
                         {t('labelName')}
                       </Label>
                       <Input
@@ -206,7 +206,7 @@ export default function Contact() {
                       />
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="contact-email" className="text-[10px] font-sans uppercase tracking-wider text-muted-foreground">
+                      <Label htmlFor="contact-email" className="text-xs font-sans uppercase tracking-wider text-muted-foreground">
                         {t('labelEmail')}
                       </Label>
                       <Input
@@ -222,7 +222,7 @@ export default function Contact() {
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="contact-profile" className="text-[10px] font-sans uppercase tracking-wider text-muted-foreground block">
+                    <Label htmlFor="contact-profile" className="text-xs font-sans uppercase tracking-wider text-muted-foreground block">
                       {t('labelProfile')}
                     </Label>
                     <Select
@@ -243,7 +243,7 @@ export default function Contact() {
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="contact-message" className="text-[10px] font-sans uppercase tracking-wider text-muted-foreground">
+                    <Label htmlFor="contact-message" className="text-xs font-sans uppercase tracking-wider text-muted-foreground">
                       {t('labelMessage')}
                     </Label>
                     <Textarea

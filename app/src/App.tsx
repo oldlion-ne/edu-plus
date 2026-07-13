@@ -52,7 +52,7 @@ function App() {
   if (isDashboard) {
     return (
       <AuthProvider>
-        <div className="relative h-[100dvh] w-full bg-background overflow-hidden [touch-action:none]">
+        <div className="relative h-[100dvh] w-full overflow-hidden bg-background">
           <Suspense fallback={<PageLoader />}>
             <Routes>
               <Route
@@ -73,15 +73,15 @@ function App() {
   return (
     <AuthProvider>
       <ScrollContext.Provider value={{ scrollContainerRef }}>
-        <div className="relative h-[100dvh] w-full bg-background flex flex-col overflow-hidden [touch-action:none]">
+        <div className="relative flex h-[100dvh] w-full min-w-0 flex-col overflow-hidden bg-background">
           {showPublicNav && <Navigation />}
           {showChatAgent && <AIChatAgent />}
           <div 
             ref={handleScrollRef}
             id="main-scroll-container"
-            className="flex-1 overflow-y-auto flex flex-col justify-between min-h-0 [touch-action:pan-y_manipulation]"
+            className="flex min-h-0 min-w-0 flex-1 flex-col justify-between overflow-x-clip overflow-y-auto overscroll-y-contain [touch-action:pan-y]"
           >
-            <main className="flex-grow">
+            <main className="min-w-0 flex-grow">
               <Suspense fallback={<PageLoader />}>
                 <ScrollToTop />
                 {scrollEl && (

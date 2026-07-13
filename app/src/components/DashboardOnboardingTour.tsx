@@ -189,10 +189,10 @@ export default function DashboardOnboardingTour({
             className="w-1.5 h-1.5 bg-primary shrink-0"
             style={{ boxShadow: '0 0 6px oklch(76.8% 0.233 130.85 / 0.8)' }} /* ui-ignore */
           />
-          <span className="font-sans text-[9px] font-bold tracking-widest text-primary leading-none">
+          <span className="font-sans text-xs font-bold tracking-widest text-primary leading-none">
             {currentStep.title}
           </span>
-          <span className="ml-auto font-sans text-[9px] text-muted-foreground shrink-0">
+          <span className="ml-auto font-sans text-xs text-muted-foreground shrink-0">
             {stepIndex + 1} / {TOUR_STEPS.length}
           </span>
         </div>
@@ -222,7 +222,7 @@ export default function DashboardOnboardingTour({
           <button /* ui-ignore */
             type="button"
             onClick={handleSkip}
-            className="text-[9px] font-sans text-muted-foreground hover:text-foreground transition-colors uppercase tracking-widest cursor-pointer"
+            className="text-xs font-sans text-muted-foreground hover:text-foreground transition-colors uppercase tracking-widest cursor-pointer"
           >
             [ SKIP TOUR ]
           </button>
@@ -231,7 +231,7 @@ export default function DashboardOnboardingTour({
               <button /* ui-ignore */
                 type="button"
                 onClick={handleBack}
-                className="px-3 py-1.5 border border-border hover:border-foreground hover:text-foreground transition-all text-[9px] font-sans cursor-pointer"
+                className="px-3 py-1.5 border border-border hover:border-foreground hover:text-foreground transition-all text-xs font-sans cursor-pointer"
               >
                 PREV
               </button>
@@ -239,7 +239,7 @@ export default function DashboardOnboardingTour({
             <button /* ui-ignore */
               type="button"
               onClick={handleNext}
-              className="px-3 py-1.5 bg-primary hover:bg-primary/90 text-primary-foreground font-bold transition-all text-[9px] font-sans cursor-pointer"
+              className="px-3 py-1.5 bg-primary hover:bg-primary/90 text-primary-foreground font-bold transition-all text-xs font-sans cursor-pointer"
             >
               {stepIndex === TOUR_STEPS.length - 1 ? 'COMPLETE' : 'NEXT'}
             </button>

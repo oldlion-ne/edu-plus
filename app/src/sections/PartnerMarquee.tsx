@@ -72,7 +72,7 @@ export default function PartnerMarquee() {
                 <span className="text-xs md:text-sm font-sans font-medium text-card-foreground group-hover:text-foreground transition-colors">
                   {partner.name}
                 </span>
-                <span className="text-[9px] md:text-[10px] font-sans text-muted-foreground mt-0.5">
+                <span className="text-xs md:text-xs font-sans text-muted-foreground mt-0.5">
                   {partner.category}
                 </span>
               </div>

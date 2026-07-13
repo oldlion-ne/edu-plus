@@ -278,7 +278,7 @@ export default function Council() {
         {/* Boardroom Interactive Table Seating Grid */}
         <div className="border border-border bg-card/30 p-8  mb-20">
           <div className="text-center mb-6">
-            <span className="font-sans text-[9px] uppercase tracking-[0.3em] text-primary/70 block">
+            <span className="font-sans text-xs uppercase tracking-[0.3em] text-primary/70 block">
               {t('seatingChart')}
             </span>
           </div>
@@ -303,9 +303,9 @@ export default function Council() {
                     title={`${member.name} - ${member.role}`}
                   >
                     <Avatar className="size-12 rounded-none border border-background">
-                      <AvatarFallback className="text-[10px] font-bold font-sans bg-muted text-muted-foreground uppercase">{initials}</AvatarFallback>
+                      <AvatarFallback className="text-xs font-bold font-sans bg-muted text-muted-foreground uppercase">{initials}</AvatarFallback>
                     </Avatar>
-                    <span className="absolute -bottom-1 -right-1 bg-background text-[7px] border border-border px-1 py-0.2 font-sans text-foreground font-semibold scale-90 rounded-none">
+                    <span className="absolute -bottom-1 -right-1 bg-background text-xs border border-border px-1 py-0.2 font-sans text-foreground font-semibold scale-90 rounded-none">
                       {member.seatId.replace('SEAT_', '')}
                     </span>
                   </button>
@@ -331,9 +331,9 @@ export default function Council() {
                     title={`${member.name} - ${member.role}`}
                   >
                     <Avatar className="size-12 rounded-none border border-background">
-                      <AvatarFallback className="text-[10px] font-bold font-sans bg-muted text-muted-foreground uppercase">{initials}</AvatarFallback>
+                      <AvatarFallback className="text-xs font-bold font-sans bg-muted text-muted-foreground uppercase">{initials}</AvatarFallback>
                     </Avatar>
-                    <span className="absolute -bottom-1 -right-1 bg-background text-[7px] border border-border px-1 py-0.2 font-sans text-foreground font-semibold scale-90 rounded-none">
+                    <span className="absolute -bottom-1 -right-1 bg-background text-xs border border-border px-1 py-0.2 font-sans text-foreground font-semibold scale-90 rounded-none">
                       {member.seatId.replace('SEAT_', '')}
                     </span>
                   </button>
@@ -343,7 +343,7 @@ export default function Council() {
           </div>
 
           <div className="text-center mt-4">
-            <span className="font-sans text-[8px] tracking-widest text-muted-foreground">
+            <span className="font-sans text-xs tracking-widest text-muted-foreground">
               {t('selectChairSeat')}
             </span>
           </div>
@@ -362,7 +362,7 @@ export default function Council() {
                   <h3 className="font-heading text-xl md:text-2xl font-semibold tracking-tight text-foreground">
                     {panelName}
                   </h3>
-                  <span className="font-sans text-[9px] uppercase tracking-widest text-muted-foreground ml-auto bg-muted/40 border border-border px-2 py-0.5">
+                  <span className="font-sans text-xs uppercase tracking-widest text-muted-foreground ml-auto bg-muted/40 border border-border px-2 py-0.5">
                     {t('panelSeatCount')}{members.length}
                   </span>
                 </div>
@@ -374,13 +374,13 @@ export default function Council() {
                     return (
                       <SurfaceCard
                         key={member.name}
-                        heightClass="h-[310px] md:h-[330px]"
+                        heightClass="min-h-[20rem]"
                       >
                         <div className="flex flex-col justify-between h-full space-y-4">
                           
                           {/* Header */}
                           <div className="space-y-3">
-                            <div className="flex items-center justify-between font-sans text-[8px] tracking-widest text-primary/70">
+                            <div className="flex items-center justify-between font-sans text-xs tracking-widest text-primary/70">
                               <span>{member.seatId} // {member.status}</span>
                               <span className="flex items-center gap-1">
                                 <MapPin className="size-2 text-primary" /> {member.location}
@@ -392,10 +392,10 @@ export default function Council() {
                                 <AvatarFallback className="text-xs font-bold font-sans bg-muted text-muted-foreground uppercase">{initials}</AvatarFallback>
                               </Avatar>
                               <div className="space-y-0.5 min-w-0">
-                                <h4 className="font-heading text-lg font-semibold text-foreground tracking-tight leading-tight truncate" title={member.name}>
+                                <h4 className="break-words font-heading text-lg font-semibold leading-tight tracking-tight text-foreground" title={member.name}>
                                   {member.name}
                                 </h4>
-                                <p className="font-sans text-[11px] text-muted-foreground leading-snug line-clamp-2" title={member.role}>
+                                <p className="font-sans text-sm text-muted-foreground leading-snug line-clamp-2" title={member.role}>
                                   {member.role}
                                 </p>
                               </div>
@@ -404,7 +404,7 @@ export default function Council() {
 
                           {/* Summary & Tag */}
                           <div className="space-y-4 flex-1">
-                            <p className="font-sans text-[11px] text-muted-foreground leading-relaxed line-clamp-3">
+                            <p className="font-sans text-sm text-muted-foreground leading-relaxed line-clamp-3">
                               {member.bio}
                             </p>
                           </div>
@@ -413,7 +413,7 @@ export default function Council() {
                           <div className="border-t border-border pt-4 flex items-center justify-between">
                             <div className="flex flex-wrap gap-1">
                               {member.categories.map(cat => (
-                                <Badge key={cat} variant="secondary" className="text-[8px] uppercase tracking-widest font-sans rounded-none py-0 px-1 bg-muted/40">
+                                <Badge key={cat} variant="secondary" className="text-xs uppercase tracking-widest font-sans rounded-none py-0 px-1 bg-muted/40">
                                   {cat.slice(0, 8)}
                                 </Badge>
                               ))}
@@ -423,7 +423,7 @@ export default function Council() {
                               variant="outline"
                               size="sm"
                               onClick={() => setSelectedMember(member)}
-                              className="font-sans text-[8px] tracking-wider uppercase h-7 px-2 py-0 hover:border-primary/50"
+                              className="font-sans text-xs tracking-wider uppercase h-7 px-2 py-0 hover:border-primary/50"
                             >
                               {t('dossierLabel')}
                             </Button>
@@ -474,7 +474,7 @@ export default function Council() {
 
                     <div className="space-y-0.5 border-t border-border/30 pt-3">
                       <p className="text-foreground text-xs font-sans tracking-wider uppercase font-semibold">{testimonial.name}</p>
-                      <p className="text-muted-foreground text-[10px] uppercase font-sans tracking-wider">{testimonial.role}</p>
+                      <p className="text-muted-foreground text-xs uppercase font-sans tracking-wider">{testimonial.role}</p>
                     </div>
                   </div>
                 </Card>
@@ -499,7 +499,7 @@ export default function Council() {
                 variant="outline"
                 size="sm"
                 asChild
-                className="mt-8 gap-2 font-sans text-[9px] uppercase tracking-wider h-9 px-4 hover:border-primary/50"
+                className="mt-8 gap-2 font-sans text-xs uppercase tracking-wider h-9 px-4 hover:border-primary/50"
               >
                 <Link to="/contact" /* ui-ignore */>
                   {t('networkCtaText')}
@@ -517,7 +517,7 @@ export default function Council() {
         {selectedMember && (
           <DialogContent className="max-w-lg p-8 rounded-none border border-border bg-card/95 ">
             <DialogHeader className="space-y-4">
-              <div className="flex items-center justify-between font-sans text-[9px] tracking-[0.2em] text-primary">
+              <div className="flex items-center justify-between font-sans text-xs tracking-[0.2em] text-primary">
                 <span>{selectedMember.seatId} // {selectedMember.status}</span>
                 <span className="flex items-center gap-1.5 border border-border px-2.5 py-0.5 bg-background/50">
                   <MapPin className="size-2.5 text-primary" /> {selectedMember.location}
@@ -547,15 +547,15 @@ export default function Council() {
               </DialogDescription>
 
               <div className="space-y-2 pt-4 border-t border-border">
-                <span className="font-sans text-[9px] uppercase tracking-widest text-foreground block font-bold">
+                <span className="font-sans text-xs uppercase tracking-widest text-foreground block font-bold">
                   {t('panelAffiliations')}
                 </span>
                 <div className="flex flex-wrap gap-1.5">
-                  <Badge variant="outline" className="text-[9px] uppercase tracking-widest font-sans rounded-none py-0.5 px-2 bg-muted/40">
+                  <Badge variant="outline" className="text-xs uppercase tracking-widest font-sans rounded-none py-0.5 px-2 bg-muted/40">
                     {selectedMember.panel}
                   </Badge>
                   {selectedMember.categories.map(cat => (
-                    <Badge key={cat} variant="secondary" className="text-[9px] uppercase tracking-widest font-sans rounded-none py-0.5 px-2">
+                    <Badge key={cat} variant="secondary" className="text-xs uppercase tracking-widest font-sans rounded-none py-0.5 px-2">
                       {cat}
                     </Badge>
                   ))}
@@ -575,7 +575,7 @@ const PartnerNode = ({ name, title }: { name: string; title: string }) => {
       className="bg-card border border-border flex items-center justify-center rounded-none px-3 py-1.5 shadow-sm hover:border-primary/55 hover:bg-muted/10 transition-all duration-300 group relative cursor-help"
       title={title}
     >
-      <span className="font-sans text-[9px] font-bold text-foreground tracking-wider uppercase">{name}</span>
+      <span className="font-sans text-xs font-bold text-foreground tracking-wider uppercase">{name}</span>
     </div>
   );
 };

@@ -70,7 +70,7 @@ export function ContentModule() {
           </form>
         </Card>
         <div className="space-y-3">
-          {rows.map((row) => <Card key={row.id} className="border border-border bg-card/30 p-4"><div className="flex items-start justify-between gap-3"><div><h3 className="font-medium">{row.title}</h3><p className="mt-1 text-[10px] text-muted-foreground">{formatTimestamp(row.published_at ?? row.starts_at ?? row.created_at)}</p></div><Badge variant="secondary" className="rounded-none">{row.status}</Badge></div></Card>)}
+          {rows.map((row) => <Card key={row.id} className="border border-border bg-card/30 p-4"><div className="flex items-start justify-between gap-3"><div><h3 className="font-medium">{row.title}</h3><p className="mt-1 text-xs text-muted-foreground">{formatTimestamp(row.published_at ?? row.starts_at ?? row.created_at)}</p></div><Badge variant="secondary" className="rounded-none">{row.status}</Badge></div></Card>)}
           {rows.length === 0 && <p className="border border-border p-6 text-sm text-muted-foreground">No {kind} entries yet.</p>}
         </div>
       </div>

@@ -72,7 +72,7 @@ export default function PathwaySimulator() {
   return (
     <section
       id="simulator"
-      className="relative w-full bg-background border-t border-border overflow-hidden py-24 md:py-32"
+      className="relative w-full overflow-hidden border-t border-border bg-background py-16 md:py-24"
     >
       <div className="mx-auto flex flex-col px-6 md:grid md:max-w-[1440px] md:grid-cols-2 md:gap-16 md:px-12">
 

@@ -23,13 +23,13 @@ export default function Vision() {
     <section
       ref={sectionRef}
       id="investing"
-      className="relative w-full py-40 md:py-52 bg-background"
+      className="relative w-full bg-background py-20 md:py-28"
     >
       <div className="max-w-[1440px] mx-auto px-6 md:px-12">
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-16 md:gap-24">
+        <div className="grid grid-cols-1 gap-12 md:grid-cols-[minmax(0,1fr)_minmax(0,2fr)] md:gap-16">
 
           {/* Left column: sticky dual-label */}
-          <div className="md:col-span-4">
+          <div className="min-w-0">
             <div className="md:sticky md:top-40 space-y-8">
 
               {/* Mission label */}
@@ -62,7 +62,7 @@ export default function Vision() {
                   visible ? 'opacity-100' : 'opacity-0'
                 }`}
               >
-                <span className="inline-flex items-center gap-1.5 font-sans text-[8px] uppercase tracking-[0.3em] text-primary/50 border border-border px-2.5 py-1">
+                <span className="inline-flex items-center gap-1.5 font-sans text-xs uppercase tracking-[0.3em] text-primary/50 border border-border px-2.5 py-1">
                   <span className="w-1 h-1 bg-primary/50 inline-block rounded-none" />
                   PURPOSE_NODE // ACTIVE
                 </span>
@@ -71,7 +71,7 @@ export default function Vision() {
           </div>
 
           {/* Right column: Mission + Vision text reveals */}
-          <div className="md:col-span-8 space-y-20">
+          <div className="min-w-0 space-y-16 md:space-y-20">
 
             {/* Mission - TextReveal */}
             <TextReveal>

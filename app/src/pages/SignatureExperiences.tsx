@@ -225,7 +225,7 @@ export default function SignatureExperiences() {
                     {/* Header */}
                     <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-border/60 pb-4">
                       <div>
-                        <span className="font-sans text-[9px] uppercase tracking-widest text-primary/70 block mb-1">
+                        <span className="font-sans text-xs uppercase tracking-widest text-primary/70 block mb-1">
                           {event.status}
                         </span>
                         <h3 className="font-heading text-2xl md:text-3xl font-semibold text-foreground tracking-tight">
@@ -237,10 +237,10 @@ export default function SignatureExperiences() {
                       </div>
 
                       {/* Telemetry info */}
-                      <div className="space-y-2 font-sans text-[10px] bg-background/50 border border-border/80 p-3 shrink-0">
+                      <div className="space-y-2 font-sans text-xs bg-background/50 border border-border/80 p-3 shrink-0">
                         <div className="flex items-center gap-2">
                           <span className="text-muted-foreground">{t('durationLabel')}</span>
-                          <Badge variant="secondary" className="font-sans text-[9px] py-0 px-1.5 rounded-none">{t(event.duration)}</Badge>
+                          <Badge variant="secondary" className="font-sans text-xs py-0 px-1.5 rounded-none">{t(event.duration)}</Badge>
                         </div>
                         <div className="flex items-center gap-2">
                           <span className="text-muted-foreground">{t('targetLabel')}</span>
@@ -256,7 +256,7 @@ export default function SignatureExperiences() {
 
                     {/* Highlights */}
                     <div className="space-y-4 border-t border-border/40 pt-4">
-                      <h4 className="font-sans text-[10px] uppercase tracking-widest text-foreground font-bold flex items-center gap-1.5">
+                      <h4 className="font-sans text-xs uppercase tracking-widest text-foreground font-bold flex items-center gap-1.5">
                         <Star className="size-3 text-primary fill-primary" /> {t('highlightsHeader')}
                       </h4>
                       <div className="grid md:grid-cols-2 gap-3 text-xs font-sans">

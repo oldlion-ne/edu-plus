@@ -31,7 +31,7 @@ export function WorkspaceShell() {
   const logout = async () => { await signOut(); navigate('/', { replace: true }); };
 
   return (
-    <div className="flex h-[100dvh] bg-background text-foreground">
+    <div className="flex h-[100dvh] w-full min-w-0 overflow-hidden bg-background text-foreground">
       <aside className={`${mobileOpen ? 'flex' : 'hidden'} fixed inset-0 z-50 w-full flex-col border-r border-border bg-card md:static md:flex md:w-[272px]`}>
         <div className="flex h-[72px] items-center justify-between border-b border-border px-5">
           <Link to="/" className="font-heading text-2xl font-bold tracking-[-0.05em] text-foreground transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">Edu<span className="font-light text-primary">+</span></Link>
@@ -48,7 +48,7 @@ export function WorkspaceShell() {
             >
               <item.icon className="row-span-2 size-4" />
               <span className="text-sm font-semibold">{item.label}</span>
-              <span className="text-[11px] text-muted-foreground">{item.description}</span>
+              <span className="text-sm text-muted-foreground">{item.description}</span>
             </button>
           ))}
         </nav>
@@ -62,11 +62,11 @@ export function WorkspaceShell() {
         <header className="flex h-[72px] shrink-0 items-center justify-between border-b border-border px-4 md:px-8">
           <div className="flex min-w-0 items-center gap-3">
             <Button variant="ghost" size="icon" className="md:hidden" onClick={() => setMobileOpen(true)} aria-label="Open workspace navigation"><Menu className="size-4" /></Button>
-            <div><p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">Staff workspace</p><p className="truncate text-sm font-medium text-foreground">{activeLabel}</p></div>
+            <div className="min-w-0"><p className="text-sm font-semibold uppercase tracking-[0.12em] text-muted-foreground">Staff workspace</p><p className="truncate text-sm font-medium text-foreground">{activeLabel}</p></div>
           </div>
-          <Button asChild variant="ghost" size="sm"><Link to="/" /* ui-ignore */>View public site</Link></Button>
+          <Button asChild variant="ghost" size="sm" className="shrink-0"><Link to="/" /* ui-ignore */>View public site</Link></Button>
         </header>
-        <main className="flex-1 overflow-y-auto p-5 md:p-8 xl:p-10"><div className="mx-auto max-w-[1440px]">{show()}</div></main>
+        <main className="min-w-0 flex-1 overflow-x-hidden overflow-y-auto p-5 md:p-8 xl:p-10"><div className="mx-auto w-full min-w-0 max-w-[1440px]">{show()}</div></main>
       </div>
     </div>
   );

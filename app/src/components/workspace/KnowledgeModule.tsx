@@ -74,7 +74,7 @@ export function KnowledgeModule() {
           <div className="my-6 border-t border-border" />
           <Label htmlFor="kb-file">Upload document or image (25 MB max)</Label><Input id="kb-file" type="file" disabled={busy} accept={acceptedTypes.join(',')} className="mt-2" onChange={(e) => upload(e.target.files?.[0] ?? null)} />
         </Card>
-        <div className="space-y-3">{sources.map((source) => <Card key={source.id} className="flex items-center justify-between gap-4 border border-border bg-card/30 p-4"><div><h3 className="font-medium">{source.title}</h3><p className="mt-1 font-sans text-[9px] uppercase text-muted-foreground">{source.status}</p></div>{role === 'admin' && source.status !== 'published' && <Button size="sm" variant="outline" onClick={() => approve(source.id)}>Approve</Button>}</Card>)}{sources.length === 0 && <p className="border border-border p-6 text-sm text-muted-foreground">No knowledge sources yet.</p>}</div>
+        <div className="space-y-3">{sources.map((source) => <Card key={source.id} className="flex items-center justify-between gap-4 border border-border bg-card/30 p-4"><div><h3 className="font-medium">{source.title}</h3><p className="mt-1 font-sans text-xs uppercase text-muted-foreground">{source.status}</p></div>{role === 'admin' && source.status !== 'published' && <Button size="sm" variant="outline" onClick={() => approve(source.id)}>Approve</Button>}</Card>)}{sources.length === 0 && <p className="border border-border p-6 text-sm text-muted-foreground">No knowledge sources yet.</p>}</div>
       </div>
     </section>
   );

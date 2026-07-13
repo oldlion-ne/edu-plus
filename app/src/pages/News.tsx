@@ -173,12 +173,12 @@ export default function News() {
             return (
             <SurfaceCard
               key={isPublishedPost ? article.id : idx}
-              heightClass="h-[300px] md:h-[320px]"
+              heightClass="min-h-[19rem]"
             >
               <div className="flex flex-col justify-between h-full space-y-4 p-2">
                 <div>
-                  <div className="flex items-center justify-between text-[10px] font-sans text-muted-foreground border-b border-border/50 pb-2 mb-4">
-                    <Badge variant="secondary" className="font-sans text-[9px] py-0.5 px-1.5 rounded-none">
+                  <div className="flex items-center justify-between text-xs font-sans text-muted-foreground border-b border-border/50 pb-2 mb-4">
+                    <Badge variant="secondary" className="font-sans text-xs py-0.5 px-1.5 rounded-none">
                       {category}
                     </Badge>
                     <span>{date}</span>
@@ -193,7 +193,7 @@ export default function News() {
                   </p>
                 </div>
 
-                <div className="flex items-center justify-between text-[10px] font-sans pt-4 border-t border-border/60 text-muted-foreground">
+                <div className="flex items-center justify-between text-xs font-sans pt-4 border-t border-border/60 text-muted-foreground">
                   <span>{readTime}</span>
                   <button /* ui-ignore */
                     type="button"

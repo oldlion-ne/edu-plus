@@ -4,7 +4,7 @@ import DottedMap from 'dotted-map'
 // ── Inline logo ──────────────────────────────────────────────────────────────
 const Logo = ({ className }: { className?: string }) => (
   <span
-    className={`font-sans font-bold text-[8px] text-foreground flex items-center justify-center leading-none ${className}`}
+    className={`font-sans font-bold text-xs text-foreground flex items-center justify-center leading-none ${className}`}
   >
     E<span className="text-primary font-light">+</span>
   </span>
@@ -39,7 +39,7 @@ export default function TelemetryStats() {
   return (
     <section
       id="community-outcomes"
-      className="relative w-full px-4 py-16 md:py-32 bg-background overflow-hidden"
+      className="relative w-full overflow-hidden bg-background px-4 py-16 md:py-24"
     >
       <div className="mx-auto grid max-w-5xl border border-border md:grid-cols-2 bg-card/10 ">
 
@@ -63,7 +63,7 @@ export default function TelemetryStats() {
           >
             {/* Location pill */}
             <div className="absolute inset-0 z-10 m-auto size-fit flex flex-col items-center justify-center">
-              <div className="rounded-none bg-background relative flex size-fit w-fit items-center gap-2 border border-border px-3 py-1.5 text-[10px] font-sans tracking-wider uppercase shadow-md shadow-zinc-950/5">
+              <div className="rounded-none bg-background relative flex size-fit w-fit items-center gap-2 border border-border px-3 py-1.5 text-xs font-sans tracking-wider uppercase shadow-md shadow-zinc-950/5">
                 <span className="text-sm">🇸🇬</span> Latest enrolment from Singapore
               </div>
           <div className="rounded-none bg-background absolute inset-2 -bottom-2 mx-auto border border-border px-3 py-4 text-xs shadow-md shadow-zinc-950/5 dark:bg-card -z-10" />
@@ -100,7 +100,7 @@ export default function TelemetryStats() {
                 <span className="flex size-5 rounded-none border border-border items-center justify-center bg-card">
                   <Logo className="m-auto size-3" />
                 </span>
-                <span className="text-muted-foreground font-sans text-[10px] uppercase tracking-wider">
+                <span className="text-muted-foreground font-sans text-xs uppercase tracking-wider">
                   Mon 19 May
                 </span>
               </div>
@@ -114,7 +114,7 @@ export default function TelemetryStats() {
               <div className="rounded-none mb-1 ml-auto w-4/5 bg-primary p-3 text-xs text-primary-foreground font-sans leading-relaxed">
                 Based on your profile, the Product Design Pathway aligns best. Start with the Foundations module - it maps directly to your goals.
               </div>
-              <span className="text-muted-foreground block text-right font-sans text-[9px] uppercase tracking-widest mt-1">
+              <span className="text-muted-foreground block text-right font-sans text-xs uppercase tracking-widest mt-1">
                 Now
               </span>
             </div>
@@ -156,7 +156,7 @@ export default function TelemetryStats() {
                 <span className="text-3xl md:text-4xl font-light text-primary font-sans tracking-tight">
                   {m.value}
                 </span>
-                <span className="text-[10px] font-sans uppercase tracking-[0.2em] text-muted-foreground text-center leading-tight">
+                <span className="text-xs font-sans uppercase tracking-[0.2em] text-muted-foreground text-center leading-tight">
                   {m.label}
                 </span>
               </div>

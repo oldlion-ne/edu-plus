@@ -223,7 +223,7 @@ export default function AIChatAgent() {
                     msg.role === 'user' ? 'ml-auto items-end' : 'mr-auto'
                   }`}
                 >
-                  <span className={`font-sans text-[9px] tracking-widest ${
+                  <span className={`font-sans text-xs tracking-widest ${
                     msg.role === 'user' ? 'text-muted-foreground' : 'text-primary'
                   }`}>
                     {msg.role === 'user' ? 'You' : 'EduPlus advisor'}
@@ -240,7 +240,7 @@ export default function AIChatAgent() {
 
               {isLoading && (
                 <div className="flex flex-col gap-1 mr-auto max-w-[90%]">
-                  <span className="font-sans text-[9px] tracking-widest text-primary">EduPlus advisor</span>
+                  <span className="font-sans text-xs tracking-widest text-primary">EduPlus advisor</span>
                   <div className="p-3.5 text-xs bg-primary/5 border border-primary/10 text-primary rounded-none">
                     {t('thinking')}
                   </div>
@@ -254,13 +254,13 @@ export default function AIChatAgent() {
               <div className="px-5 py-3 border-t border-border/60 flex flex-wrap gap-2 bg-muted/20 flex-shrink-0">
                 <button /* ui-ignore */
                   onClick={() => handleSendMessage('Explore EduPlus Programs')}
-                  className="px-3 py-1.5 text-[9px] font-sans border border-primary/20 bg-primary/5 text-primary hover:bg-primary/20 hover:border-primary transition-all duration-200 cursor-pointer rounded-none uppercase tracking-wider"
+                  className="px-3 py-1.5 text-xs font-sans border border-primary/20 bg-primary/5 text-primary hover:bg-primary/20 hover:border-primary transition-all duration-200 cursor-pointer rounded-none uppercase tracking-wider"
                 >
                   {t('btnPrograms')}
                 </button>
                 <button /* ui-ignore */
                   onClick={() => handleSendMessage('I need career counseling')}
-                  className="px-3 py-1.5 text-[9px] font-sans border border-primary/20 bg-primary/5 text-primary hover:bg-primary/20 hover:border-primary transition-all duration-200 cursor-pointer rounded-none uppercase tracking-wider"
+                  className="px-3 py-1.5 text-xs font-sans border border-primary/20 bg-primary/5 text-primary hover:bg-primary/20 hover:border-primary transition-all duration-200 cursor-pointer rounded-none uppercase tracking-wider"
                 >
                   {t('btnCareerCounseling')}
                 </button>
@@ -287,7 +287,7 @@ export default function AIChatAgent() {
               <button /* ui-ignore */
                 type="submit"
                 disabled={isLoading || !inputValue.trim()}
-                className="px-4 py-2 bg-primary hover:bg-primary/95 disabled:opacity-40 text-primary-foreground font-sans text-[10px] font-bold tracking-widest transition-all duration-300 cursor-pointer rounded-none border border-transparent hover:border-primary/20"
+                className="px-4 py-2 bg-primary hover:bg-primary/95 disabled:opacity-40 text-primary-foreground font-sans text-xs font-bold tracking-widest transition-all duration-300 cursor-pointer rounded-none border border-transparent hover:border-primary/20"
               >
                 {t('btnSend')}
               </button>
