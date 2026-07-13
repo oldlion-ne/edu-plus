@@ -37,6 +37,8 @@ describe('App Routing', () => {
     );
     // Home renders the main application structure
     expect(screen.getByRole('main')).toBeInTheDocument();
+    expect(screen.getByRole('navigation', { name: 'Main navigation' })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'Start learning' })).toBeInTheDocument();
   });
 
   it('renders About page title on /about', async () => {
@@ -46,5 +48,15 @@ describe('App Routing', () => {
       </MemoryRouter>
     );
     expect(await screen.findByText(/Know Who/i, {}, { timeout: 5000 })).toBeInTheDocument();
+  });
+
+  it('renders the authentication trust region', async () => {
+    render(
+      <MemoryRouter initialEntries={['/auth/sign-in']}>
+        <App />
+      </MemoryRouter>,
+    );
+
+    expect(await screen.findByText('Built for the East Asian learning community', {}, { timeout: 5000 })).toBeInTheDocument();
   });
 });
