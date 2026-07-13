@@ -179,9 +179,9 @@ export default function PedigreeShowcase() {
                 className="relative z-10 h-48 translate-y-6"
               >
                 <div className="bg-foreground/15 absolute inset-0 mx-auto w-px" />
-                <div className="absolute -inset-x-16 top-6 aspect-square rounded-full border border-border/60" />
+                <div className="absolute -inset-x-16 top-6 aspect-square rounded-none border border-border/60" />
                 <div
-                  className="absolute -inset-x-16 top-6 aspect-square rounded-full border border-primary transition-opacity duration-500 opacity-60 group-hover:opacity-100"
+                  className="absolute -inset-x-16 top-6 aspect-square rounded-none border border-primary transition-opacity duration-500 opacity-60 group-hover:opacity-100"
                   style={{
                     maskImage:
                       'linear-gradient(to right, transparent, white 50%, transparent)',
@@ -189,9 +189,9 @@ export default function PedigreeShowcase() {
                       'linear-gradient(to right, transparent, white 50%, transparent)',
                   }}
                 />
-                <div className="absolute -inset-x-8 top-24 aspect-square rounded-full border border-border/60" />
+                <div className="absolute -inset-x-8 top-24 aspect-square rounded-none border border-border/60" />
                 <div
-                  className="absolute -inset-x-8 top-24 aspect-square rounded-full border border-primary transition-opacity duration-500 opacity-60 group-hover:opacity-100"
+                  className="absolute -inset-x-8 top-24 aspect-square rounded-none border border-primary transition-opacity duration-500 opacity-60 group-hover:opacity-100"
                   style={{
                     maskImage:
                       'linear-gradient(to right, transparent, white 50%, transparent)',
@@ -200,7 +200,7 @@ export default function PedigreeShowcase() {
                   }}
                 />
                 {/* Center dot */}
-                <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 size-2.5 rounded-full bg-primary transition-all duration-300 group-hover:scale-125" />
+                <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 size-2.5 rounded-none bg-primary transition-all duration-300 group-hover:scale-125" />
               </div>
             </Card>
 

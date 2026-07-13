@@ -840,7 +840,7 @@ export default function Dashboard() {
                         />
                         <Area
                           dataKey="mobile"
-                          type="natural"
+                          type="linear"
                           fill="url(#fillMobile)"
                           fillOpacity={1}
                           stroke={chartConfig.mobile.color}
@@ -848,7 +848,7 @@ export default function Dashboard() {
                         />
                         <Area
                           dataKey="desktop"
-                          type="natural"
+                          type="linear"
                           fill="url(#fillDesktop)"
                           fillOpacity={1}
                           stroke={chartConfig.desktop.color}
