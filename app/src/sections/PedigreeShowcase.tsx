@@ -8,7 +8,6 @@ import { Linear } from '../components/ui/svgs/linear';
 import { Slack } from '../components/ui/svgs/slack';
 import { Firebase } from '../components/ui/svgs/firebase';
 import { ClerkIconDark as Clerk } from '../components/ui/svgs/clerk';
-import Magnet from '../components/effects/Magnet';
 
 export default function PedigreeShowcase() {
   const [visible, setVisible] = useState(false);
@@ -102,7 +101,7 @@ export default function PedigreeShowcase() {
 
               <div className="relative z-10 space-y-2">
                 {/* Card label */}
-                <span className="text-[9px] font-mono font-semibold tracking-[0.25em] uppercase text-primary/70 mb-3 block">
+                <span className="text-[10px] font-sans font-medium tracking-wider uppercase text-primary/70 mb-3 block">
                   01 - Integrations
                 </span>
                 <h3 className="text-foreground font-medium text-lg">
@@ -120,42 +119,30 @@ export default function PedigreeShowcase() {
               >
                 <div className="relative flex h-10 items-center gap-12 px-6">
                   <div className="bg-border absolute inset-0 my-auto h-px" />
-                  <Magnet range={40} strength={0.4}>
-                    <div className="bg-card shadow-black/10 ring-border relative flex h-9 items-center rounded-none px-3.5 shadow-md ring transition-transform duration-200 hover:border-primary/30">
-                      <Vercel className="size-3.5" />
-                    </div>
-                  </Magnet>
-                  <Magnet range={40} strength={0.4}>
-                    <div className="bg-card shadow-black/10 ring-border relative flex h-9 items-center rounded-none px-3.5 shadow-md ring transition-transform duration-200 hover:border-primary/30">
-                      <Slack className="size-3.5" />
-                    </div>
-                  </Magnet>
+                  <div className="bg-card shadow-black/10 ring-border relative flex h-9 items-center rounded-lg px-3.5 shadow-md ring transition-transform duration-200 group-hover:scale-105">
+                    <Vercel className="size-3.5" />
+                  </div>
+                  <div className="bg-card shadow-black/10 ring-border relative flex h-9 items-center rounded-lg px-3.5 shadow-md ring transition-transform duration-200 group-hover:scale-105">
+                    <Slack className="size-3.5" />
+                  </div>
                 </div>
                 <div className="pl-16 relative flex h-10 items-center justify-between gap-12 pr-6">
                   <div className="bg-border absolute inset-0 my-auto h-px" />
-                  <Magnet range={40} strength={0.4}>
-                    <div className="bg-card shadow-black/10 ring-border relative flex h-9 items-center rounded-none px-3.5 shadow-md ring transition-transform duration-200 hover:border-primary/30">
-                      <Clerk className="size-3.5" />
-                    </div>
-                  </Magnet>
-                  <Magnet range={40} strength={0.4}>
-                    <div className="bg-card shadow-black/10 ring-border relative flex h-9 items-center rounded-none px-3.5 shadow-md ring transition-transform duration-200 hover:border-primary/30">
-                      <Linear className="size-3.5" />
-                    </div>
-                  </Magnet>
+                  <div className="bg-card shadow-black/10 ring-border relative flex h-9 items-center rounded-lg px-3.5 shadow-md ring transition-transform duration-200 group-hover:scale-105">
+                    <Clerk className="size-3.5" />
+                  </div>
+                  <div className="bg-card shadow-black/10 ring-border relative flex h-9 items-center rounded-lg px-3.5 shadow-md ring transition-transform duration-200 group-hover:scale-105">
+                    <Linear className="size-3.5" />
+                  </div>
                 </div>
                 <div className="relative flex h-10 items-center gap-20 px-8">
                   <div className="bg-border absolute inset-0 my-auto h-px" />
-                  <Magnet range={40} strength={0.4}>
-                    <div className="bg-card shadow-black/10 ring-border relative flex h-9 items-center rounded-none px-3.5 shadow-md ring transition-transform duration-200 hover:border-primary/30">
-                      <Supabase className="size-3.5" />
-                    </div>
-                  </Magnet>
-                  <Magnet range={40} strength={0.4}>
-                    <div className="bg-card shadow-black/10 ring-border relative flex h-9 items-center rounded-none px-3.5 shadow-md ring transition-transform duration-200 hover:border-primary/30">
-                      <Firebase className="size-3.5" />
-                    </div>
-                  </Magnet>
+                  <div className="bg-card shadow-black/10 ring-border relative flex h-9 items-center rounded-lg px-3.5 shadow-md ring transition-transform duration-200 group-hover:scale-105">
+                    <Supabase className="size-3.5" />
+                  </div>
+                  <div className="bg-card shadow-black/10 ring-border relative flex h-9 items-center rounded-lg px-3.5 shadow-md ring transition-transform duration-200 group-hover:scale-105">
+                    <Firebase className="size-3.5" />
+                  </div>
                 </div>
               </div>
             </Card>
@@ -175,7 +162,7 @@ export default function PedigreeShowcase() {
               />
 
               <div className="relative z-10 space-y-2">
-                <span className="text-[9px] font-mono font-semibold tracking-[0.25em] uppercase text-primary/70 mb-3 block">
+                <span className="text-[10px] font-sans font-medium tracking-wider uppercase text-primary/70 mb-3 block">
                   02 - Guidance
                 </span>
                 <h3 className="text-foreground font-medium text-lg">
@@ -192,9 +179,9 @@ export default function PedigreeShowcase() {
                 className="relative z-10 h-48 translate-y-6"
               >
                 <div className="bg-foreground/15 absolute inset-0 mx-auto w-px" />
-                <div className="absolute -inset-x-16 top-6 aspect-square rounded-none border border-border/60" />
+                <div className="absolute -inset-x-16 top-6 aspect-square rounded-full border border-border/60" />
                 <div
-                  className="absolute -inset-x-16 top-6 aspect-square rounded-none border border-primary transition-opacity duration-500 opacity-60 group-hover:opacity-100"
+                  className="absolute -inset-x-16 top-6 aspect-square rounded-full border border-primary transition-opacity duration-500 opacity-60 group-hover:opacity-100"
                   style={{
                     maskImage:
                       'linear-gradient(to right, transparent, white 50%, transparent)',
@@ -202,9 +189,9 @@ export default function PedigreeShowcase() {
                       'linear-gradient(to right, transparent, white 50%, transparent)',
                   }}
                 />
-                <div className="absolute -inset-x-8 top-24 aspect-square rounded-none border border-border/60" />
+                <div className="absolute -inset-x-8 top-24 aspect-square rounded-full border border-border/60" />
                 <div
-                  className="absolute -inset-x-8 top-24 aspect-square rounded-none border border-primary transition-opacity duration-500 opacity-60 group-hover:opacity-100"
+                  className="absolute -inset-x-8 top-24 aspect-square rounded-full border border-primary transition-opacity duration-500 opacity-60 group-hover:opacity-100"
                   style={{
                     maskImage:
                       'linear-gradient(to right, transparent, white 50%, transparent)',
@@ -213,7 +200,7 @@ export default function PedigreeShowcase() {
                   }}
                 />
                 {/* Center dot */}
-                <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 size-2 rounded-none bg-primary shadow-[0_0_8px_2px_oklch(var(--primary)/0.4)] transition-all duration-300 group-hover:shadow-[0_0_14px_4px_oklch(var(--primary)/0.5)]" />
+                <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 size-2.5 rounded-full bg-primary transition-all duration-300 group-hover:scale-125" />
               </div>
             </Card>
 
@@ -232,7 +219,7 @@ export default function PedigreeShowcase() {
               />
 
               <div className="relative z-10 space-y-2">
-                <span className="text-[9px] font-mono font-semibold tracking-[0.25em] uppercase text-primary/70 mb-3 block">
+                <span className="text-[10px] font-sans font-medium tracking-wider uppercase text-primary/70 mb-3 block">
                   03 - Standards
                 </span>
                 <h3 className="text-foreground font-medium text-lg">
@@ -279,7 +266,7 @@ export default function PedigreeShowcase() {
               />
 
               <div className="relative z-10 space-y-2">
-                <span className="text-[9px] font-mono font-semibold tracking-[0.25em] uppercase text-primary/70 mb-3 block">
+                <span className="text-[10px] font-sans font-medium tracking-wider uppercase text-primary/70 mb-3 block">
                   04 - Scale
                 </span>
                 <h3 className="font-medium text-lg text-foreground">
@@ -299,12 +286,10 @@ export default function PedigreeShowcase() {
                   icon={Shield01Icon}
                   className="absolute inset-0 top-2.5 size-full stroke-[0.1px] opacity-10 text-primary transition-opacity duration-300 group-hover:opacity-20"
                 />
-                <Magnet range={80} strength={0.3}>
-                  <HugeiconsIcon
-                    icon={Shield01Icon}
-                    className="size-32 stroke-[0.1px] text-primary transition-all duration-300 group-hover:drop-shadow-[0_0_12px_oklch(var(--primary)/0.4)] cursor-pointer"
-                  />
-                </Magnet>
+                <HugeiconsIcon
+                  icon={Shield01Icon}
+                  className="size-32 stroke-[0.1px] text-primary transition-all duration-300"
+                />
               </div>
             </Card>
 

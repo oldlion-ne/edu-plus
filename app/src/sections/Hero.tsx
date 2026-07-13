@@ -1,10 +1,9 @@
 import { useRef } from 'react';
-import { useNavigate } from 'react-router';
+import { Link } from 'react-router';
 import { ArrowRight } from 'lucide-react';
 import { TimelineAnimation } from '../components/timeline-animation';
-import { RippleButton } from '../components/ui/ripple-button';
-import FadingVideo from '../components/effects/FadingVideo';
-import WordsPullUp from '../components/effects/WordsPullUp';
+import { Button } from '../components/ui/button';
+import { KineticText } from '@/components/ui/kinetic-text';
 
 const STATS = [
   { value: '4,200+', labelKey: 'learners' as const },
@@ -31,7 +30,6 @@ const t = (key: keyof typeof translations) => translationMap.get(key) || '';
 
 export default function Hero() {
   const sectionRef = useRef<HTMLElement>(null);
-  const navigate = useNavigate();
 
   return (
     <section
@@ -40,10 +38,13 @@ export default function Hero() {
       className="relative w-full min-h-screen flex flex-col justify-center overflow-hidden"
     >
       {/* ── Background video ── */}
-      <FadingVideo
+      <video
+        autoPlay
+        loop
+        muted
+        playsInline
+        className="absolute inset-0 w-full h-full object-cover z-0 opacity-10 transition-all duration-700"
         src="/assets/bg-hero-new.mp4"
-        targetOpacity={0.55}
-        className="absolute inset-0 w-full h-full object-cover z-0"
       />
 
       {/* ── Dark overlays ── */}
@@ -52,30 +53,9 @@ export default function Hero() {
         className="absolute inset-0 z-[1] pointer-events-none"
         style={{
           background: [
-            'radial-gradient(ellipse 80% 60% at 50% 40%, oklch(var(--background) / 0.25) 0%, oklch(var(--background) / 0.7) 100%)',
-            'linear-gradient(to bottom, oklch(var(--background) / 0.35) 0%, transparent 40%, oklch(var(--background) / 0.85) 100%)',
+            'radial-gradient(ellipse 80% 60% at 50% 40%, oklch(var(--background) / 0.15) 0%, oklch(var(--background) / 0.6) 100%)',
+            'linear-gradient(to bottom, oklch(var(--background) / 0.25) 0%, transparent 40%, oklch(var(--background) / 0.75) 100%)',
           ].join(', '),
-        }}
-      />
-
-      {/* ── Subtle neon top glow ── */}
-      <div
-        aria-hidden
-        className="absolute top-0 left-0 right-0 z-[2] pointer-events-none h-[40%]"
-        style={{
-          background:
-            'radial-gradient(ellipse 60% 40% at 50% 0%, oklch(var(--primary) / 0.06) 0%, transparent 80%)',
-        }}
-      />
-
-      {/* ── Grid dot overlay ── */}
-      <div
-        aria-hidden
-        className="absolute inset-0 z-[2] pointer-events-none opacity-[0.025]"
-        style={{
-          backgroundImage:
-            'linear-gradient(oklch(var(--primary)) 1px, transparent 1px), linear-gradient(90deg, oklch(var(--primary)) 1px, transparent 1px)',
-          backgroundSize: '48px 48px',
         }}
       />
 
@@ -90,20 +70,16 @@ export default function Hero() {
           timelineRef={sectionRef}
           className="mb-8"
         >
-          <div className="inline-flex items-center gap-2 border border-border bg-card/70 backdrop-blur-md px-4 py-2">
-            <span className="relative flex h-1.5 w-1.5">
-              <span className="animate-ping absolute inline-flex h-full w-full bg-primary opacity-75" />
-              <span className="relative inline-flex h-1.5 w-1.5 bg-primary" />
-            </span>
-            <span className="text-[10px] font-mono font-bold tracking-[0.25em] uppercase text-muted-foreground">
+          <div className="inline-flex items-center gap-2 border border-border bg-card/50 backdrop-blur-md px-4 py-2 rounded-full">
+            <span className="text-[10px] font-sans font-medium tracking-[0.2em] uppercase text-muted-foreground">
               {t('investing')}
             </span>
-            <span className="text-primary/40 text-[10px] font-mono">·</span>
-            <span className="text-[10px] font-mono font-bold tracking-[0.25em] uppercase text-muted-foreground">
+            <span className="text-primary/40 text-[10px] font-sans">·</span>
+            <span className="text-[10px] font-sans font-medium tracking-[0.2em] uppercase text-muted-foreground">
               {t('building')}
             </span>
-            <span className="text-primary/40 text-[10px] font-mono">·</span>
-            <span className="text-[10px] font-mono font-bold tracking-[0.25em] uppercase text-muted-foreground">
+            <span className="text-primary/40 text-[10px] font-sans">·</span>
+            <span className="text-[10px] font-sans font-medium tracking-[0.2em] uppercase text-muted-foreground">
               {t('advisory')}
             </span>
           </div>
@@ -117,11 +93,8 @@ export default function Hero() {
           timelineRef={sectionRef}
           className="text-4xl sm:text-5xl md:text-[3.5rem] lg:text-6xl font-semibold tracking-tight leading-[1.1] text-foreground mb-5 flex flex-wrap justify-center"
         >
-          <WordsPullUp 
-            text={`${t('elevate')} ${t('tomorrow')}`} 
-            showAsterisk 
-            highlightLastWord 
-          />
+          <KineticText text={t('elevate')} as="span" className="mr-[0.25em]" />
+          <KineticText text={t('tomorrow')} as="span" className="text-primary" />
         </TimelineAnimation>
 
         {/* Subtext */}
@@ -143,23 +116,17 @@ export default function Hero() {
           timelineRef={sectionRef}
           className="flex flex-col sm:flex-row items-center gap-3 mb-12"
         >
-          <RippleButton
-            rippleColor="oklch(var(--primary))"
-            duration="700ms"
-            onClick={() => navigate('/contact')}
-          >
-            <span className="inline-flex items-center gap-2">
+          <Button asChild size="lg" className="rounded-full">
+            <Link to="/contact" className="inline-flex items-center gap-2" /* ui-ignore */>
               {t('startPathway')}
               <ArrowRight size={14} />
-            </span>
-          </RippleButton>
-          <RippleButton
-            rippleColor="oklch(var(--foreground))"
-            duration="700ms"
-            onClick={() => navigate('/about')}
-          >
-            {t('exploreNetwork')}
-          </RippleButton>
+            </Link>
+          </Button>
+          <Button asChild variant="outline" size="lg" className="rounded-full">
+            <Link to="/about" /* ui-ignore */>
+              {t('exploreNetwork')}
+            </Link>
+          </Button>
         </TimelineAnimation>
 
         {/* Stats strip */}
@@ -168,17 +135,17 @@ export default function Hero() {
           as="div"
           animationNum={5}
           timelineRef={sectionRef}
-          className="flex items-center gap-0 border border-border bg-card/70 backdrop-blur-sm"
+          className="flex items-center gap-0 border border-border bg-card/50 backdrop-blur-sm rounded-lg"
         >
           {STATS.map((s, i) => (
             <div
               key={s.labelKey}
               className={`flex flex-col items-center px-7 py-4 ${i < STATS.length - 1 ? 'border-r border-border' : ''}`}
             >
-              <span className="text-xl font-bold text-primary font-mono">
+              <span className="text-xl font-bold text-primary font-sans">
                 {s.value}
               </span>
-              <span className="text-[10px] text-muted-foreground uppercase tracking-widest font-mono mt-0.5">
+              <span className="text-[10px] text-muted-foreground uppercase tracking-wider font-sans mt-0.5">
                 {t(s.labelKey)}
               </span>
             </div>

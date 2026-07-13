@@ -4,8 +4,6 @@ import { cn } from '../lib/utils';
 import { Link } from 'react-router';
 import { ArrowRight } from 'lucide-react';
 import { Button } from '../components/ui/button';
-import { Spotlight, SpotLightItem } from '../components/effects/Spotlight';
-import { NeonGradientCard } from '../components/ui/neon-gradient-card';
 
 // ── EduPlus program data (contents.md) ───────────────────────────────────────
 const PROGRAMS = [
@@ -26,30 +24,28 @@ const ROW_3 = [PROGRAMS[2], PROGRAMS[4], PROGRAMS[0], PROGRAMS[5], PROGRAMS[1], 
 function ProgramCard({
   name,
   tag,
-  id,
   className,
 }: {
   name: string;
   tag: string;
-  id: string;
   className?: string;
 }) {
   return (
-    <SpotLightItem className={cn('shrink-0', className)}>
-      <div className="relative flex items-center gap-3 px-4 py-3 backdrop-blur-sm select-none">
-        {/* Node ID */}
-        <span className="font-mono text-[9px] text-primary/50">{id}</span>
-        <div className="h-3 w-px bg-border" />
-        {/* Name */}
-        <span className="font-sans text-xs font-medium text-foreground whitespace-nowrap leading-none">
-          {name}
-        </span>
-        {/* Tag chip */}
-        <span className="ml-1 font-mono text-[8px] uppercase tracking-[0.15em] text-muted-foreground border border-border px-1.5 py-0.5 bg-background/60 whitespace-nowrap">
-          {tag}
-        </span>
-      </div>
-    </SpotLightItem>
+    <div
+      className={cn(
+        'relative flex items-center gap-3 border border-border bg-card/80 px-4 py-3 backdrop-blur-sm transition-all duration-300 hover:border-primary/40 hover:bg-card shrink-0 rounded-lg',
+        className,
+      )}
+    >
+      {/* Name */}
+      <span className="font-sans text-xs font-medium text-foreground whitespace-nowrap leading-none">
+        {name}
+      </span>
+      {/* Tag chip */}
+      <span className="ml-1 font-sans text-[9px] uppercase tracking-wider text-muted-foreground border border-border px-1.5 py-0.5 bg-background/60 rounded whitespace-nowrap">
+        {tag}
+      </span>
+    </div>
   );
 }
 
@@ -80,7 +76,7 @@ export default function ServicesMatrix() {
           observer.disconnect();
         }
       },
-      { threshold: 0.1 }
+      { threshold: 0.1 },
     );
     if (sectionRef.current) observer.observe(sectionRef.current);
     return () => observer.disconnect();
@@ -100,59 +96,44 @@ export default function ServicesMatrix() {
             visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
           }`}
         >
-          <NeonGradientCard className="border border-border/50 overflow-hidden">
-            {/* Grid dot background */}
-            <div
-              aria-hidden
-              className="absolute inset-0 z-0 opacity-20 pointer-events-none"
-              style={{
-                backgroundImage:
-                  'linear-gradient(to right, oklch(var(--border)) 1px, transparent 1px), linear-gradient(to bottom, oklch(var(--border)) 1px, transparent 1px)',
-                backgroundSize: '32px 32px',
-              }}
-            />
+          {/* Radial mask wrapper */}
+          <div
+            className="relative space-y-4 py-2"
+            style={{
+              maskImage:
+                'radial-gradient(ellipse 80% 80% at 50% 50%, #000 55%, transparent 100%)',
+              WebkitMaskImage:
+                'radial-gradient(ellipse 80% 80% at 50% 50%, #000 55%, transparent 100%)',
+            }}
+          >
+            {/* Row 1 - forward */}
+            <Marquee pauseOnHover className="[--duration:30s] [--gap:12px]">
+              {ROW_1.map((p) => (
+                <ProgramCard key={p.id + '-r1'} name={p.name} tag={p.tag} />
+              ))}
+            </Marquee>
 
-            {/* Spotlight and Radial mask wrapper */}
-            <Spotlight className="relative z-10">
-              <div
-                className="relative space-y-4 py-2"
-                style={{
-                  maskImage:
-                    'radial-gradient(ellipse 80% 80% at 50% 50%, #000 55%, transparent 100%)',
-                  WebkitMaskImage:
-                    'radial-gradient(ellipse 80% 80% at 50% 50%, #000 55%, transparent 100%)',
-                }}
-              >
-                {/* Row 1 - forward */}
-                <Marquee pauseOnHover className="[--duration:30s] [--gap:12px]">
-                  {ROW_1.map((p) => (
-                    <ProgramCard key={p.id + '-r1'} id={p.id} name={p.name} tag={p.tag} />
-                  ))}
-                </Marquee>
+            {/* Row 2 - reverse */}
+            <Marquee pauseOnHover reverse className="[--duration:28s] [--gap:12px]">
+              {ROW_2.map((p) => (
+                <ProgramCard key={p.id + '-r2'} name={p.name} tag={p.tag} />
+              ))}
+            </Marquee>
 
-                {/* Row 2 - reverse */}
-                <Marquee pauseOnHover reverse className="[--duration:28s] [--gap:12px]">
-                  {ROW_2.map((p) => (
-                    <ProgramCard key={p.id + '-r2'} id={p.id} name={p.name} tag={p.tag} />
-                  ))}
-                </Marquee>
+            {/* Row 3 - forward */}
+            <Marquee pauseOnHover className="[--duration:32s] [--gap:12px]">
+              {ROW_3.map((p) => (
+                <ProgramCard key={p.id + '-r3'} name={p.name} tag={p.tag} />
+              ))}
+            </Marquee>
 
-                {/* Row 3 - forward */}
-                <Marquee pauseOnHover className="[--duration:32s] [--gap:12px]">
-                  {ROW_3.map((p) => (
-                    <ProgramCard key={p.id + '-r3'} id={p.id} name={p.name} tag={p.tag} />
-                  ))}
-                </Marquee>
-
-                {/* Centre logo node */}
-                <div className="absolute inset-0 m-auto flex size-fit items-center justify-center z-20">
-                  <div className="flex size-16 items-center justify-center rounded-none border border-border bg-card/90 shadow-xl shadow-black/10 backdrop-blur-md ring-1 ring-primary/20">
-                    <EduPlusLogo className="text-lg" />
-                  </div>
-                </div>
+            {/* Centre logo node */}
+            <div className="absolute inset-0 m-auto flex size-fit items-center justify-center z-20">
+              <div className="flex px-4 py-2 items-center justify-center rounded-full border border-border bg-card/90 shadow-xl shadow-black/10 backdrop-blur-md">
+                <EduPlusLogo className="text-lg" />
               </div>
-            </Spotlight>
-          </NeonGradientCard>
+            </div>
+          </div>
         </div>
 
         {/* ── Text block ── */}
@@ -161,7 +142,7 @@ export default function ServicesMatrix() {
             visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
           }`}
         >
-          <span className="font-mono text-[10px] uppercase tracking-[0.3em] text-primary block">
+          <span className="font-sans font-medium text-xs uppercase tracking-wider text-primary block">
             Future-Ready Programs
           </span>
 
@@ -178,7 +159,7 @@ export default function ServicesMatrix() {
             asChild
             variant="outline"
             size="sm"
-            className="group inline-flex items-center gap-2 font-mono text-[10px] tracking-wider uppercase hover:border-primary/50 focus:outline-none focus:ring-1 focus:ring-primary/40 liquid-glass"
+            className="group inline-flex items-center gap-2 font-sans font-medium text-xs tracking-wider uppercase rounded-full"
           >
             <Link to="/programs" /* ui-ignore */>
               Explore All Programs
