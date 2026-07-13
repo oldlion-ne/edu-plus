@@ -94,7 +94,7 @@ export default function PathwaySimulator() {
               EduPlus plugs into the platforms your learners and institutions already trust - syncing progress, credentials, and communication in one intelligent network.
             </p>
 
-            <Button asChild variant="outline" size="sm" className="group inline-flex items-center gap-2 font-sans font-medium text-xs tracking-wider uppercase rounded-full">
+            <Button asChild variant="outline" size="sm" className="group inline-flex items-center gap-2 font-sans font-medium text-xs tracking-wider uppercase rounded-lg">
               <Link to="/contact" /* ui-ignore */>
                 Request Integration
                 <ArrowRight className="size-3 transition-transform duration-200 group-hover:translate-x-0.5" />
