@@ -55,7 +55,7 @@ function IntegrationCard({
   description: string;
 }) {
   return (
-    <div className="group space-y-4 border border-border bg-card p-5 transition-all duration-300 hover:border-primary/30 hover:bg-accent hover:shadow-md hover:shadow-primary/5">
+    <div className="group space-y-4 border border-border bg-card/60 p-5 transition-all duration-300 hover:border-primary/30 hover:bg-accent rounded-lg hover:shadow-md hover:shadow-primary/5">
       <div className="flex size-fit items-center justify-center">{icon}</div>
       <div className="space-y-1.5">
         <h3 className="text-sm font-medium text-foreground">{name}</h3>
@@ -81,7 +81,7 @@ export default function PathwaySimulator() {
 
           <div className="space-y-6">
             {/* Eyebrow */}
-            <span className="text-xs font-mono font-semibold tracking-[0.3em] uppercase text-primary block">
+            <span className="text-xs font-sans font-medium tracking-wider uppercase text-primary block">
               Interactive Workspace
             </span>
 
@@ -94,7 +94,7 @@ export default function PathwaySimulator() {
               EduPlus plugs into the platforms your learners and institutions already trust - syncing progress, credentials, and communication in one intelligent network.
             </p>
 
-            <Button asChild variant="outline" size="sm" className="group inline-flex items-center gap-2 font-mono text-xs tracking-wider uppercase hover:border-primary/50 focus:outline-none focus:ring-1 focus:ring-primary/40">
+            <Button asChild variant="outline" size="sm" className="group inline-flex items-center gap-2 font-sans font-medium text-xs tracking-wider uppercase rounded-full">
               <Link to="/contact" /* ui-ignore */>
                 Request Integration
                 <ArrowRight className="size-3 transition-transform duration-200 group-hover:translate-x-0.5" />
@@ -104,7 +104,7 @@ export default function PathwaySimulator() {
 
           {/* Testimonial */}
           <div className="mt-auto grid grid-cols-[auto_1fr] gap-4 border-t border-border pt-8">
-            <div className="flex size-10 items-center justify-center border border-border bg-card text-foreground">
+            <div className="flex size-10 items-center justify-center border border-border bg-card text-foreground rounded-lg">
               <span className="font-sans font-bold text-sm">
                 E<span className="text-primary font-light">+</span>
               </span>
@@ -123,7 +123,7 @@ export default function PathwaySimulator() {
 
         {/* ── Right: integration grid (masked) ── */}
         <div className="[mask-image:radial-gradient(ellipse_100%_100%_at_50%_0%,#000_60%,transparent_100%)]">
-          <div className="border border-border bg-card/30 p-3 shadow-lg md:pb-16">
+          <div className="border border-border bg-card/10 p-3 shadow-lg rounded-xl md:pb-16">
             <div className="grid grid-cols-2 gap-2">
               {INTEGRATIONS.map((integration) => (
                 <IntegrationCard key={integration.name} {...integration} />

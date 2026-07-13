@@ -95,7 +95,7 @@ export default function Navigation() {
             <NavLink /* ui-ignore */
               to="/dashboard"
               className={({ isActive }) =>
-                `font-mono text-xs tracking-widest uppercase transition-all duration-300 ${
+                `font-sans font-medium text-xs tracking-wider uppercase transition-all duration-300 ${
                   isActive ? 'text-primary' : 'text-foreground hover:text-primary'
                 }`
               }
@@ -108,7 +108,7 @@ export default function Navigation() {
             <Button
               variant="ghost"
               onClick={handleLogout}
-              className="text-xs font-mono tracking-widest uppercase text-destructive hover:text-destructive hover:bg-destructive/10 h-auto p-0"
+              className="text-xs font-sans font-medium tracking-wider uppercase text-destructive hover:text-destructive hover:bg-destructive/10 h-auto p-0"
             >
               {t('logout')}
             </Button>
@@ -116,7 +116,7 @@ export default function Navigation() {
             <Button
               asChild
               variant="ghost"
-              className="text-xs font-mono tracking-widest uppercase text-primary hover:text-primary hover:bg-primary/10 h-auto p-0"
+              className="text-xs font-sans font-medium tracking-wider uppercase text-primary hover:text-primary hover:bg-primary/10 h-auto p-0"
             >
               <Link to="/login" /* ui-ignore */>{t('login')}</Link>
             </Button>
@@ -167,7 +167,7 @@ export default function Navigation() {
                   to="/dashboard"
                   onClick={() => setIsOpen(false)}
                   className={({ isActive }) =>
-                    `text-lg font-mono tracking-wider uppercase transition-colors duration-300 ${
+                    `text-lg font-sans tracking-wide uppercase transition-colors duration-300 ${
                       isActive ? 'text-primary font-medium' : 'text-muted-foreground'
                     }`
                   }
@@ -183,7 +183,7 @@ export default function Navigation() {
                     setIsOpen(false);
                     handleLogout();
                   }}
-                  className="justify-start p-0 h-auto text-left font-mono text-lg tracking-wider uppercase text-destructive hover:text-destructive hover:bg-transparent"
+                  className="justify-start p-0 h-auto text-left font-sans text-lg tracking-wide uppercase text-destructive hover:text-destructive hover:bg-transparent"
                 >
                   {t('logout')}
                 </Button>
@@ -191,7 +191,7 @@ export default function Navigation() {
                 <Button
                   asChild
                   variant="ghost"
-                  className="justify-start p-0 h-auto text-left font-mono text-lg tracking-wider uppercase text-primary hover:text-primary hover:bg-transparent"
+                  className="justify-start p-0 h-auto text-left font-sans text-lg tracking-wide uppercase text-primary hover:text-primary hover:bg-transparent"
                 >
                   <Link to="/login" onClick={() => setIsOpen(false)} /* ui-ignore */>{t('login')}</Link>
                 </Button>

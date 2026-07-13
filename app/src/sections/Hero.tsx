@@ -43,7 +43,7 @@ export default function Hero() {
         loop
         muted
         playsInline
-        className="absolute inset-0 w-full h-full object-cover z-0 opacity-30 dark:opacity-55 dark:invert-0 invert grayscale-[0.95] dark:grayscale-0 contrast-[1.1] dark:contrast-100 brightness-[1.02] dark:brightness-100 transition-all duration-700"
+        className="absolute inset-0 w-full h-full object-cover z-0 opacity-10 transition-all duration-700"
         src="/assets/bg-hero-new.mp4"
       />
 
@@ -53,30 +53,9 @@ export default function Hero() {
         className="absolute inset-0 z-[1] pointer-events-none"
         style={{
           background: [
-            'radial-gradient(ellipse 80% 60% at 50% 40%, oklch(var(--background) / 0.25) 0%, oklch(var(--background) / 0.7) 100%)',
-            'linear-gradient(to bottom, oklch(var(--background) / 0.35) 0%, transparent 40%, oklch(var(--background) / 0.85) 100%)',
+            'radial-gradient(ellipse 80% 60% at 50% 40%, oklch(var(--background) / 0.15) 0%, oklch(var(--background) / 0.6) 100%)',
+            'linear-gradient(to bottom, oklch(var(--background) / 0.25) 0%, transparent 40%, oklch(var(--background) / 0.75) 100%)',
           ].join(', '),
-        }}
-      />
-
-      {/* ── Subtle neon top glow ── */}
-      <div
-        aria-hidden
-        className="absolute top-0 left-0 right-0 z-[2] pointer-events-none h-[40%]"
-        style={{
-          background:
-            'radial-gradient(ellipse 60% 40% at 50% 0%, oklch(var(--primary) / 0.06) 0%, transparent 80%)',
-        }}
-      />
-
-      {/* ── Grid dot overlay ── */}
-      <div
-        aria-hidden
-        className="absolute inset-0 z-[2] pointer-events-none opacity-[0.025]"
-        style={{
-          backgroundImage:
-            'linear-gradient(oklch(var(--primary)) 1px, transparent 1px), linear-gradient(90deg, oklch(var(--primary)) 1px, transparent 1px)',
-          backgroundSize: '48px 48px',
         }}
       />
 
@@ -91,20 +70,16 @@ export default function Hero() {
           timelineRef={sectionRef}
           className="mb-8"
         >
-          <div className="inline-flex items-center gap-2 border border-border bg-card/70 backdrop-blur-md px-4 py-2">
-            <span className="relative flex h-1.5 w-1.5">
-              <span className="animate-ping absolute inline-flex h-full w-full bg-primary opacity-75" />
-              <span className="relative inline-flex h-1.5 w-1.5 bg-primary" />
-            </span>
-            <span className="text-[10px] font-mono font-bold tracking-[0.25em] uppercase text-muted-foreground">
+          <div className="inline-flex items-center gap-2 border border-border bg-card/50 backdrop-blur-md px-4 py-2 rounded-full">
+            <span className="text-[10px] font-sans font-medium tracking-[0.2em] uppercase text-muted-foreground">
               {t('investing')}
             </span>
-            <span className="text-primary/40 text-[10px] font-mono">·</span>
-            <span className="text-[10px] font-mono font-bold tracking-[0.25em] uppercase text-muted-foreground">
+            <span className="text-primary/40 text-[10px] font-sans">·</span>
+            <span className="text-[10px] font-sans font-medium tracking-[0.2em] uppercase text-muted-foreground">
               {t('building')}
             </span>
-            <span className="text-primary/40 text-[10px] font-mono">·</span>
-            <span className="text-[10px] font-mono font-bold tracking-[0.25em] uppercase text-muted-foreground">
+            <span className="text-primary/40 text-[10px] font-sans">·</span>
+            <span className="text-[10px] font-sans font-medium tracking-[0.2em] uppercase text-muted-foreground">
               {t('advisory')}
             </span>
           </div>
@@ -141,13 +116,13 @@ export default function Hero() {
           timelineRef={sectionRef}
           className="flex flex-col sm:flex-row items-center gap-3 mb-12"
         >
-          <Button asChild size="lg">
+          <Button asChild size="lg" className="rounded-full">
             <Link to="/contact" className="inline-flex items-center gap-2" /* ui-ignore */>
               {t('startPathway')}
               <ArrowRight size={14} />
             </Link>
           </Button>
-          <Button asChild variant="outline" size="lg">
+          <Button asChild variant="outline" size="lg" className="rounded-full">
             <Link to="/about" /* ui-ignore */>
               {t('exploreNetwork')}
             </Link>
@@ -160,17 +135,17 @@ export default function Hero() {
           as="div"
           animationNum={5}
           timelineRef={sectionRef}
-          className="flex items-center gap-0 border border-border bg-card/70 backdrop-blur-sm"
+          className="flex items-center gap-0 border border-border bg-card/50 backdrop-blur-sm rounded-lg"
         >
           {STATS.map((s, i) => (
             <div
               key={s.labelKey}
               className={`flex flex-col items-center px-7 py-4 ${i < STATS.length - 1 ? 'border-r border-border' : ''}`}
             >
-              <span className="text-xl font-bold text-primary font-mono">
+              <span className="text-xl font-bold text-primary font-sans">
                 {s.value}
               </span>
-              <span className="text-[10px] text-muted-foreground uppercase tracking-widest font-mono mt-0.5">
+              <span className="text-[10px] text-muted-foreground uppercase tracking-wider font-sans mt-0.5">
                 {t(s.labelKey)}
               </span>
             </div>
