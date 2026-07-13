@@ -1,4 +1,4 @@
-# EduPlus UI/UX Testing Playbook
+# EduPlus UI/UX Testing Playbook — Nordic Lagom Design
 
 This playbook outlines the visual and behavioral standards required to maintain UI/UX consistency across the EduPlus web application. All developers must follow these guidelines and verify their implementation before submitting pull requests.
 
@@ -6,37 +6,58 @@ This playbook outlines the visual and behavioral standards required to maintain 
 
 ## 1. Core Design Tokens & Theme Constants
 
-All styles must adhere to the central theme tokens defined in `src/index.css`:
-- **Primary Background:** Solid Slate `#0B0F14` (for subpages) or Cloudinary Video Background (for Home page).
-- **Foreground/Text Primary:** `#E6EDF3` (Off-white).
-- **Accent Color:** Neon Cyan `#7DF9FF` (used for active states, outlines, highlights, and primary CTAs).
-- **Typography:**
-  - Body and general UI text: `Outfit` (sans-serif).
-  - Headings (`h1`, `h2`, `h3`, etc.): `Merriweather` (serif).
+All styles must adhere to the central theme tokens defined in `src/index.css` using the OKLCH color space:
+
+**Dark Mode (Primary — `.dark`)**
+- **Background:** Warm charcoal `oklch(18% 0.012 60deg)` — not cold/cyberpunk black.
+- **Foreground/Text:** Warm off-white `oklch(93% 0.006 80deg)`.
+- **Primary Accent:** Candlelight amber `oklch(78% 0.13 70deg)` — used for active states, outlines, highlights, and CTAs.
+- **Muted Text:** Desaturated warm slate `oklch(65% 0.012 60deg)`.
+- **Borders:** Subtle white-alpha `oklch(100% 0 0deg / 0.08)`.
+
+**Light Mode (`:root`)**
+- **Background:** Warm off-white cream `oklch(98.5% 0.004 80deg)`.
+- **Foreground/Text:** Warm dark charcoal `oklch(22% 0.01 60deg)`.
+- **Primary Accent:** Warm amber/gold `oklch(75% 0.12 70deg)`.
+
+**Typography:**
+- Body and general UI text: `Inter Variable` or `Outfit` (sans-serif).
+- Headings (`h1`–`h6`): `Inter Variable` (sans-serif) — clean and geometric.
+- Monospace: Reserved only for technical data (IDs, status codes). Never for headlines, navigation, or body copy.
 
 ---
 
 ## 2. The Straight-Edge Rule (Strict Requirement)
 
-To maintain a premium, high-tech, and consistent futuristic cyberpunk layout:
-- **No Rounded Corners:** All container blocks, cards, buttons, input fields, badges, custom dialogs, navigation links, and borders must have **straight lines only**.
+To maintain a premium, clean, and balanced Nordic Lagom layout:
+- **No Curved Lines:** All container blocks, cards, buttons, input fields, badges, dialogs, navigation links, borders, SVG paths, and chart interpolations must use **straight lines only**.
 - **Tailwind Class:** You must use `rounded-none` (or leave out any `rounded-*` class entirely).
 - **Prohibited Classes:** `rounded`, `rounded-sm`, `rounded-md`, `rounded-lg`, `rounded-xl`, `rounded-2xl`, `rounded-3xl`, `rounded-full`, and their side-specific variants (e.g. `rounded-t-*`, `rounded-r-*`).
-- **Exceptions:** Third-party components or media assets (e.g. avatar images, map layers, or specific third-party library primitives) if wrapped or isolated correctly, and marked with a `/* ui-ignore */` inline comment.
+- **SVG Paths:** Must use `L` (line to), `H` (horizontal), `V` (vertical), or `Z` (close). Bezier curves (`C`, `S`, `Q`, `A`) are forbidden.
+- **Charts:** Recharts components must use `type="linear"`. Values `type="monotone"` and `type="natural"` are forbidden.
+- **Exceptions:** Third-party components or media assets if wrapped or isolated correctly, and marked with a `/* ui-ignore */` inline comment.
 
 ---
 
-## 3. Interactive States Checklist
+## 3. Animation & Motion Checklist
 
-All interactive elements (buttons, links, form inputs) must support clear visual cues for user actions:
-- [ ] **Hover State:** Custom visual change (e.g., changing text color to `#7DF9FF`, scaling borders, or shifting background opacity). Example: `hover:text-[#7DF9FF]` or `hover:bg-[#7DF9FF] hover:text-[#0B0F14]`.
-- [ ] **Keyboard Focus State:** Standard outline indicator using the accent ring. Example: `focus:outline-none focus:ring-1 focus:ring-[#7DF9FF]`.
-- [ ] **Click Active State:** Immediate visual change when holding the element down (e.g. slight opacity shift or font weight change).
+- [x] **Allowed:** Fade-ins (`opacity` + `translateY`), smooth hover color transitions, soft scaling on hover.
+- [x] **Transitions:** Standard durations using `transition-all duration-200` or `duration-300`.
+- [ ] **Forbidden:** Glowing effects, pulsing neon, scrambling/typewriter text, cyberpunk HUD animations, `animate-pulse` on decorative elements.
+
+---
+
+## 4. Interactive States Checklist
+
+All interactive elements (buttons, links, form inputs) must support clear visual cues:
+- [ ] **Hover State:** Custom visual change using the primary amber accent (e.g., `hover:text-primary`, `hover:border-primary/50`).
+- [ ] **Keyboard Focus State:** Standard outline indicator using the accent ring. Example: `focus:outline-none focus:ring-1 focus:ring-ring`.
+- [ ] **Click Active State:** Immediate visual change when holding the element down (e.g. slight opacity shift).
 - [ ] **Transitions:** Smooth UI transitions using standard durations. Example: `transition-all duration-300`.
 
 ---
 
-## 4. Responsive Breakpoints Verification
+## 5. Responsive Breakpoints Verification
 
 Every UI feature must be manually verified across the following viewports:
 
@@ -53,4 +74,13 @@ Every UI feature must be manually verified across the following viewports:
 
 ### C. Desktop View (1024px+)
 - Container content is centered with a max-width of `max-w-[1440px]`.
-- Rich hover effects, background glows, and large layouts are fully enabled.
+- Warm hover effects and large layouts are fully enabled.
+
+---
+
+## 6. Illustration & Imagery Guidelines
+
+- **Style:** Ultra-clean flat vector illustration with soft gradient cel shading.
+- **Palette:** Warm dark charcoal backgrounds, candlelight amber highlights, slate grey shadows.
+- **Asian Community Requirement:** All human characters in illustrations and avatars **must** represent East Asian people. Non-Asian characters are strictly forbidden.
+- **Geometry:** Straight lines only in all visual elements. No curved decorative paths.

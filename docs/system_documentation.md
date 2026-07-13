@@ -32,26 +32,54 @@ The application is built using a modern, performant, and scale-ready technologic
 
 ---
 
-## 3. Design System & Style Guide
+## 3. Design System & Style Guide — Nordic Lagom Philosophy
 
-The Edu+ visual style draws heavily from modern HUD interfaces and dark glassmorphic design principles. To maintain visual integrity, all pages must adhere to the rules specified in the **UI/UX Testing Playbook**:
+The Edu+ visual identity follows the **Nordic Lagom** (Swedish for "just the right amount") design philosophy: clean, balanced, and quietly confident. The system uses warm neutrals, a dark-first palette with light mode support, and a restrained amber/gold accent. The aesthetic avoids flashy effects in favor of refined transitions, precise spacing, and serene composition.
 
-### A. Color Palette (HSL & Hex)
-- **Primary Background (Subpages):** Solid Slate `#0B0F14` / `oklch(14.7% 0.004 49.3deg)`
-- **Foreground (Primary Text):** Crisp Off-white `#E6EDF3` / `oklch(98.6% 0.002 67.8deg)`
-- **Accent / Interactive Tone:** Neon Cyan `#7DF9FF` (used for active states, indicators, highlights, and primary CTAs).
-- **Primary Accent Tone (Light mode):** Vibrant Lime-Green / `oklch(84.1% 0.238 128.85deg)`.
-- **Secondary Tone:** Slate Grey `#8B949E` (used for secondary typography and subtle borders).
+### A. Color Palette (OKLCH)
+
+All color tokens are defined in `src/index.css` using the OKLCH color space.
+
+**Light Mode (`:root`)**
+| Token | OKLCH Value | Description |
+|---|---|---|
+| `--background` | `98.5% 0.004 80deg` | Warm off-white cream |
+| `--foreground` | `22% 0.01 60deg` | Warm dark charcoal |
+| `--primary` | `75% 0.12 70deg` | Warm amber/gold accent |
+| `--muted-foreground` | `55% 0.015 60deg` | Warm slate grey (secondary text) |
+| `--border` | `90% 0.008 80deg` | Soft warm stone border |
+| `--card` | `97% 0.004 80deg` | Slightly off-white card surface |
+
+**Dark Mode (`.dark`)**
+| Token | OKLCH Value | Description |
+|---|---|---|
+| `--background` | `18% 0.012 60deg` | Warm charcoal (not cold black) |
+| `--foreground` | `93% 0.006 80deg` | Warm off-white text |
+| `--primary` | `78% 0.13 70deg` | Candlelight amber accent |
+| `--muted-foreground` | `65% 0.012 60deg` | Desaturated warm slate |
+| `--border` | `100% 0 0deg / 0.08` | Subtle white-alpha border |
+| `--card` | `22% 0.012 60deg` | Elevated warm charcoal surface |
 
 ### B. Typography
-- **Headings (`h1`, `h2`, `h3`, etc.):** Styled with `Merriweather` (serif) or `Inter Variable` for a stark, structured look.
-- **Body Content & UI Text:** Styled with `Outfit` or `Inter` (sans-serif) to ensure high readability across device sizes.
-- **System Telemetry & Details:** Monospace typography (`font-mono`) to emphasize technical logs, IDs, and statuses.
+- **Headings (`h1`–`h6`):** `Inter Variable` (sans-serif) — clean, geometric, and modern.
+- **Body Content & UI Text:** `Inter Variable` or `Outfit` (sans-serif) — high readability across device sizes.
+- **Monospace is reserved** only for technical data displays (e.g., IDs, status codes). It must not be used for headlines, navigation, or body copy.
 
 ### C. The Straight-Edge Rule
-- **No Rounded Corners:** All container blocks, cards, buttons, inputs, badges, custom dialogs, navigation links, and borders must have **straight lines only**.
-- **Implementation:** Developers must enforce the `rounded-none` class (or omit any `rounded-*` classes entirely).
-- **Exceptions:** Third-party assets (such as user avatar circles, map dots) are wrapped or isolated and accompanied by a `/* ui-ignore */` comment.
+- **No Curved Lines:** All container blocks, cards, buttons, inputs, badges, dialogs, navigation links, borders, SVG paths, and chart interpolations must use **straight lines only**.
+- **No rounded corners:** Developers must enforce the `rounded-none` class (or omit any `rounded-*` classes entirely).
+- **SVG paths:** Must use `L` (line to), `H` (horizontal), `V` (vertical), or `Z` (close). Bezier curves (`C`, `S`, `Q`, `A`) are forbidden.
+- **Charts:** Recharts components must use `type="linear"`. Values `type="monotone"` and `type="natural"` are forbidden.
+- **Exceptions:** Third-party assets are wrapped or isolated and accompanied by a `/* ui-ignore */` comment.
+
+### D. Animation Philosophy
+- **Allowed:** Refined transitions — fade-ins, soft translations (`translateY`), hover color shifts, and smooth opacity changes.
+- **Forbidden:** Glowing effects, pulsing neon, scrambling/typewriter text effects, cyberpunk HUD animations, or any motion that feels aggressive or flashy.
+
+### E. Illustration & Imagery Guidelines
+- **Style:** Ultra-clean flat vector illustration with soft gradient cel shading, warm dark charcoal backgrounds, candlelight amber highlights, and smooth matte color gradients.
+- **Asian Community Requirement:** All human characters depicted in illustrations and avatars **must** represent East Asian people. Non-Asian characters are strictly forbidden.
+- **Geometry:** Straight lines only in illustrations. No curved decorative paths.
 
 ---
 
