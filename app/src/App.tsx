@@ -1,5 +1,5 @@
 import { lazy, Suspense, useState, useRef } from 'react';
-import { Routes, Route, useLocation } from 'react-router';
+import { Routes, Route, useLocation, Navigate } from 'react-router';
 import Navigation from './sections/Navigation';
 import Footer from './sections/Footer';
 import ScrollToTop from './components/ScrollToTop';
@@ -20,7 +20,10 @@ const News = lazy(() => import('./pages/News'));
 const Contact = lazy(() => import('./pages/Contact'));
 const KnowledgeHub = lazy(() => import('./pages/KnowledgeHub'));
 const Dashboard = lazy(() => import('./pages/Dashboard'));
-const Login = lazy(() => import('./pages/Login'));
+const SignIn = lazy(() => import('./pages/auth/SignIn'));
+const SignUp = lazy(() => import('./pages/auth/SignUp'));
+const ForgotPassword = lazy(() => import('./pages/auth/ForgotPassword'));
+const ResetPassword = lazy(() => import('./pages/auth/ResetPassword'));
 
 // Minimal inline fallback — renders instantly, no layout shift
 const PageLoader = () => (
@@ -32,7 +35,7 @@ const PageLoader = () => (
 function App() {
   const location = useLocation();
   const isDashboard = location.pathname === '/dashboard';
-  const isLogin = location.pathname === '/login';
+  const isAuthRoute = location.pathname === '/login' || location.pathname.startsWith('/auth/');
   
   const scrollContainerRef = useRef<HTMLDivElement | null>(null);
   const [scrollEl, setScrollEl] = useState<HTMLDivElement | null>(null);
@@ -42,9 +45,9 @@ function App() {
     setScrollEl(node);
   };
 
-  const showChatAgent = !isDashboard && !isLogin;
-  const showPublicNav = !isDashboard;
-  const showPublicFooter = !isDashboard;
+  const showChatAgent = !isDashboard && !isAuthRoute;
+  const showPublicNav = !isDashboard && !isAuthRoute;
+  const showPublicFooter = !isDashboard && !isAuthRoute;
 
   if (isDashboard) {
     return (
@@ -92,7 +95,11 @@ function App() {
                     <Route path="/news" element={<News />} />
                     <Route path="/contact" element={<Contact />} />
                     <Route path="/knowledge-hub" element={<KnowledgeHub />} />
-                    <Route path="/login" element={<Login />} />
+                    <Route path="/login" element={<Navigate to="/auth/sign-in" replace />} />
+                    <Route path="/auth/sign-in" element={<SignIn />} />
+                    <Route path="/auth/sign-up" element={<SignUp />} />
+                    <Route path="/auth/forgot-password" element={<ForgotPassword />} />
+                    <Route path="/auth/reset-password" element={<ResetPassword />} />
                   </Routes>
                 )}
               </Suspense>
