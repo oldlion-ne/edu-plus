@@ -1,13 +1,14 @@
 import { useEffect, useState } from 'react';
-import { Card } from '../ui/card';
+import { MetricPanel } from '../layout/MetricPanel';
+import { WorkspaceHeader } from '../layout/WorkspaceHeader';
 import { supabase } from '../../lib/supabaseClient';
 
 const sources = [
-  ['Published news', 'news_posts'],
-  ['Events', 'events'],
-  ['Resources', 'resources'],
-  ['Knowledge sources', 'knowledge_sources'],
-  ['Open inquiries', 'contact_messages'],
+  ['Published news', 'news_posts', 'Stories currently visible to the community'],
+  ['Events', 'events', 'Scheduled learning and community gatherings'],
+  ['Resources', 'resources', 'Published and draft learning materials'],
+  ['Knowledge sources', 'knowledge_sources', 'Reviewed sources grounding AI guidance'],
+  ['Open inquiries', 'contact_messages', 'Messages that still need a team response'],
 ] as const;
 
 export function OverviewModule() {
@@ -25,17 +26,21 @@ export function OverviewModule() {
 
   return (
     <section>
-      <div className="mb-8">
-        <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-primary">Live operations</p>
-        <h1 className="mt-2 font-heading text-3xl font-semibold">Workspace overview</h1>
-        <p className="mt-2 text-sm text-muted-foreground">Counts come directly from the production data model—no demo analytics.</p>
-      </div>
-      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-        {sources.map(([label]) => (
-          <Card key={label} className="border border-border bg-card/50 p-6">
-            <p className="text-xs text-muted-foreground">{label}</p>
-            <p className="mt-3 font-heading text-4xl text-primary">{counts[label] ?? '—'}</p>
-          </Card>
+      <WorkspaceHeader
+        eyebrow="Current activity"
+        title="Workspace overview"
+        description="A direct view of EduPlus content, knowledge, events, and community support work. Every count comes from the current data model."
+      />
+      <div className="grid gap-px border border-border bg-border sm:grid-cols-2 xl:grid-cols-3">
+        {sources.map(([label, , context], index) => (
+          <MetricPanel
+            key={label}
+            label={label}
+            value={counts[label] ?? '—'}
+            context={context}
+            tone={index === 0 ? 'accent' : 'default'}
+            className="border-0"
+          />
         ))}
       </div>
     </section>

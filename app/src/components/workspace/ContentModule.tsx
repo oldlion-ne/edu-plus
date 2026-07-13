@@ -10,6 +10,7 @@ import { Input } from '../ui/input';
 import { Label } from '../ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 import { Textarea } from '../ui/textarea';
+import { WorkspaceHeader } from '../layout/WorkspaceHeader';
 
 type ContentKind = 'resource' | 'news' | 'event';
 type ContentRow = { id: string; title: string; status: string; created_at?: string; published_at?: string; starts_at?: string };
@@ -50,10 +51,12 @@ export function ContentModule() {
 
   return (
     <section>
-      <div className="mb-7 flex flex-col justify-between gap-4 md:flex-row md:items-end">
-        <div><p className="font-mono text-[10px] uppercase tracking-[0.25em] text-primary">Publishing workflow</p><h1 className="mt-2 font-heading text-3xl font-semibold">Content studio</h1></div>
-        <Select value={kind} onValueChange={(value) => setKind(value as ContentKind)}><SelectTrigger className="w-48"><SelectValue /></SelectTrigger><SelectContent><SelectItem value="resource">Resource</SelectItem><SelectItem value="news">News</SelectItem><SelectItem value="event">Event</SelectItem></SelectContent></Select>
-      </div>
+      <WorkspaceHeader
+        eyebrow="Publishing workflow"
+        title="Content studio"
+        description="Create resources, stories, and events with role-aware review and publication states."
+        actions={<Select value={kind} onValueChange={(value) => setKind(value as ContentKind)}><SelectTrigger className="w-48"><SelectValue /></SelectTrigger><SelectContent><SelectItem value="resource">Resource</SelectItem><SelectItem value="news">News</SelectItem><SelectItem value="event">Event</SelectItem></SelectContent></Select>}
+      />
       <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_minmax(320px,0.7fr)]">
         <Card className="border border-border bg-card/50 p-6">
           <form onSubmit={submit} className="space-y-4">

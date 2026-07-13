@@ -7,6 +7,7 @@ import { Card } from '../ui/card';
 import { Input } from '../ui/input';
 import { Label } from '../ui/label';
 import { Textarea } from '../ui/textarea';
+import { WorkspaceHeader } from '../layout/WorkspaceHeader';
 
 type Source = { id: string; title: string; status: string; created_at: string };
 const acceptedTypes = ['application/pdf', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/vnd.openxmlformats-officedocument.presentationml.presentation', 'text/plain', 'image/png', 'image/jpeg', 'image/webp'];
@@ -66,14 +67,14 @@ export function KnowledgeModule() {
 
   return (
     <section>
-      <div className="mb-7"><p className="font-mono text-[10px] uppercase tracking-[0.25em] text-primary">Grounded AI</p><h1 className="mt-2 font-heading text-3xl font-semibold">Knowledge base</h1><p className="mt-2 text-sm text-muted-foreground">Add reviewed facts or queue documents and images for secure ingestion. Provider fine-tuning is intentionally not used.</p></div>
+      <WorkspaceHeader eyebrow="Grounded guidance" title="Knowledge base" description="Add reviewed facts or queue documents and images for secure ingestion. Provider fine-tuning is intentionally not used." />
       <div className="grid gap-6 xl:grid-cols-2">
         <Card className="border border-border bg-card/50 p-6">
           <form onSubmit={createTextSource} className="space-y-4"><div className="space-y-2"><Label htmlFor="kb-title">Source title</Label><Input id="kb-title" required value={title} onChange={(e) => setTitle(e.target.value)} /></div><div className="space-y-2"><Label htmlFor="kb-content">Approved factual content</Label><Textarea id="kb-content" className="min-h-52" required value={content} onChange={(e) => setContent(e.target.value)} /></div><Button disabled={busy} className="w-full">{role === 'admin' ? 'Add and approve' : 'Submit for review'}</Button></form>
           <div className="my-6 border-t border-border" />
           <Label htmlFor="kb-file">Upload document or image (25 MB max)</Label><Input id="kb-file" type="file" disabled={busy} accept={acceptedTypes.join(',')} className="mt-2" onChange={(e) => upload(e.target.files?.[0] ?? null)} />
         </Card>
-        <div className="space-y-3">{sources.map((source) => <Card key={source.id} className="flex items-center justify-between gap-4 border border-border bg-card/30 p-4"><div><h3 className="font-medium">{source.title}</h3><p className="mt-1 font-mono text-[9px] uppercase text-muted-foreground">{source.status}</p></div>{role === 'admin' && source.status !== 'published' && <Button size="sm" variant="outline" onClick={() => approve(source.id)}>Approve</Button>}</Card>)}{sources.length === 0 && <p className="border border-border p-6 text-sm text-muted-foreground">No knowledge sources yet.</p>}</div>
+        <div className="space-y-3">{sources.map((source) => <Card key={source.id} className="flex items-center justify-between gap-4 border border-border bg-card/30 p-4"><div><h3 className="font-medium">{source.title}</h3><p className="mt-1 font-sans text-[9px] uppercase text-muted-foreground">{source.status}</p></div>{role === 'admin' && source.status !== 'published' && <Button size="sm" variant="outline" onClick={() => approve(source.id)}>Approve</Button>}</Card>)}{sources.length === 0 && <p className="border border-border p-6 text-sm text-muted-foreground">No knowledge sources yet.</p>}</div>
       </div>
     </section>
   );
