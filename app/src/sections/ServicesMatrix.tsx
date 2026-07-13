@@ -159,7 +159,7 @@ export default function ServicesMatrix() {
             asChild
             variant="outline"
             size="sm"
-            className="group inline-flex items-center gap-2 font-sans font-medium text-xs tracking-wider uppercase rounded-full"
+            className="group inline-flex items-center gap-2 font-sans font-medium text-xs tracking-wider uppercase rounded-lg"
           >
             <Link to="/programs" /* ui-ignore */>
               Explore All Programs

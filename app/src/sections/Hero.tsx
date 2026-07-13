@@ -70,7 +70,7 @@ export default function Hero() {
           timelineRef={sectionRef}
           className="mb-8"
         >
-          <div className="inline-flex items-center gap-2 border border-border bg-card/50 backdrop-blur-md px-4 py-2 rounded-full">
+          <div className="inline-flex items-center gap-2 border border-border bg-card/50 backdrop-blur-md px-4 py-2 rounded-lg">
             <span className="text-[10px] font-sans font-medium tracking-[0.2em] uppercase text-muted-foreground">
               {t('investing')}
             </span>
@@ -116,13 +116,13 @@ export default function Hero() {
           timelineRef={sectionRef}
           className="flex flex-col sm:flex-row items-center gap-3 mb-12"
         >
-          <Button asChild size="lg" className="rounded-full">
+          <Button asChild size="lg" className="rounded-lg">
             <Link to="/contact" className="inline-flex items-center gap-2" /* ui-ignore */>
               {t('startPathway')}
               <ArrowRight size={14} />
             </Link>
           </Button>
-          <Button asChild variant="outline" size="lg" className="rounded-full">
+          <Button asChild variant="outline" size="lg" className="rounded-lg">
             <Link to="/about" /* ui-ignore */>
               {t('exploreNetwork')}
             </Link>

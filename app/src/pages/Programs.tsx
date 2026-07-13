@@ -419,8 +419,8 @@ const PrepIllustration = () => {
       <div className="absolute inset-0 select-none pointer-events-none flex items-center">
         <div className="w-[45%] h-px bg-border/60 absolute left-10"></div>
         <svg className="w-full h-full absolute inset-0 text-border/60" viewBox="0 0 350 200" fill="none">
-          <path d="M160,100 C210,100 230,50 280,50" stroke="currentColor" strokeWidth="1" strokeDasharray="3 3" />
-          <path d="M160,100 C210,100 230,150 280,150" stroke="currentColor" strokeWidth="1" />
+          <path d="M160,100 L280,50" stroke="currentColor" strokeWidth="1" strokeDasharray="3 3" />
+          <path d="M160,100 L280,150" stroke="currentColor" strokeWidth="1" />
         </svg>
       </div>
       {/* Destination Nodes */}
