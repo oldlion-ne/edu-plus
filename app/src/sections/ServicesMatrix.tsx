@@ -59,6 +59,7 @@ export default function ServicesMatrix() {
               </p>
               <Link
                 to="/programs" /* ui-ignore */
+                aria-label={`Explore ${program.name}`}
                 className="text-[14px] font-medium text-primary hover:underline mt-auto"
               >
                 Explore &rarr;

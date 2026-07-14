@@ -70,7 +70,7 @@ export default function News() {
 
               {/* Link */}
               <div className="pt-2">
-                <Link to="/news" className="text-[14px] font-medium text-primary hover:underline">
+                <Link to={`/news/${article.title.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`} className="text-[14px] font-medium text-primary hover:underline">
                   Read Article &rarr;
                 </Link>
               </div>

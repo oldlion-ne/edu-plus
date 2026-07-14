@@ -176,6 +176,7 @@ export default function SignatureExperiences() {
                   <div key={key} className="border-b border-border/50">
                     <button
                       onClick={() => setOpenFaq(isOpen ? null : key)}
+                      aria-expanded={isOpen}
                       className="w-full flex items-center justify-between py-5 text-left gap-8 group"
                     >
                       <span className="text-[15px] font-medium text-foreground group-hover:text-primary transition-colors duration-150">

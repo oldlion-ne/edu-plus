@@ -834,7 +834,7 @@ export default function Dashboard() {
                                 })
                               }}
                               indicator="dot"
-                              className="rounded-lg border border-border bg-card text-foreground shadow-lg"
+                              className="rounded-none border border-border bg-card text-foreground shadow-lg"
                             />
                           }
                         />
@@ -860,11 +860,11 @@ export default function Dashboard() {
                     {/* Manual legend - rendered outside SVG so it's never clipped */}
                     <div className="flex items-center justify-center gap-6 pt-3 pb-1">
                       <div className="flex items-center gap-2">
-                        <div className="h-[2px] w-5 rounded" style={{ backgroundColor: chartConfig.desktop.color }} />
+                        <div className="h-[2px] w-5 rounded-none" style={{ backgroundColor: chartConfig.desktop.color }} />
                         <span className="font-sans font-medium text-[10px] text-muted-foreground uppercase tracking-wider">{t('dashboard.overview.desktop')}</span>
                       </div>
                       <div className="flex items-center gap-2">
-                        <div className="h-[2px] w-5 rounded" style={{ backgroundColor: chartConfig.mobile.color }} />
+                        <div className="h-[2px] w-5 rounded-none" style={{ backgroundColor: chartConfig.mobile.color }} />
                         <span className="font-sans font-medium text-[10px] text-muted-foreground uppercase tracking-wider">{t('dashboard.overview.mobile')}</span>
                       </div>
                     </div>
@@ -872,7 +872,7 @@ export default function Dashboard() {
                 </Card>
 
                 {/* Content Category Distribution */}
-                <Card className="border border-border p-6 bg-card rounded-lg text-left flex flex-col gap-0 py-6">
+                <Card className="border border-border p-6 bg-card rounded-none text-left flex flex-col gap-0 py-6">
                   <h3 className="font-sans text-[10px] font-bold text-primary tracking-wider mb-4 uppercase">{t('dashboard.overview.contentCategoryDistribution')}</h3>
                   <div className="space-y-4">
                     {['tutorial', 'podcast', 'webinar', 'study_material'].map(cat => {

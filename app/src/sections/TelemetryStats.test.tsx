@@ -11,6 +11,8 @@ test('renders the custom telemetry stats section', () => {
   expect(screen.getByText(/Countries Reached/i)).toBeInTheDocument();
   expect(screen.getByText('98%')).toBeInTheDocument();
   expect(screen.getByText(/Placement Rate/i)).toBeInTheDocument();
+  expect(screen.getByText('1.2M+')).toBeInTheDocument();
+  expect(screen.getByText(/Learning Hours/i)).toBeInTheDocument();
 });
 
 

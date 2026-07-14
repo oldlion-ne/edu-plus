@@ -71,7 +71,7 @@ export default function ImmersiveHero({
       <div className="relative z-10 w-full max-w-[1200px] mx-auto px-6 md:px-12 flex flex-col justify-center items-center py-6">
         <div className="space-y-6 max-w-3xl mx-auto flex flex-col items-center text-center">
           {/* Eyebrow */}
-          <div className="inline-flex items-center gap-2 border border-border bg-card/50 backdrop-blur-md px-4 py-2 rounded-lg">
+          <div className="inline-flex items-center gap-2 border border-border bg-card/50 backdrop-blur-md px-4 py-2 rounded-none">
             <span className="text-[10px] font-sans font-medium tracking-wider uppercase text-muted-foreground">
               {category}
             </span>
@@ -98,14 +98,6 @@ export default function ImmersiveHero({
 
       {/* spacer */}
       <div className="flex-1" />
-
-      {/* Telemetry Corner Footers */}
-      <div className="relative z-10 w-full max-w-[1200px] mx-auto px-6 md:px-12 mt-auto">
-        <div className="flex justify-between items-end text-[9px] font-sans text-muted-foreground/60 pt-4 border-t border-border/30">
-          <span>{telemetryLeft || "SYSTEM_ACTIVE_NODES // OK"}</span>
-          <span>{telemetryRight || "UTC_COORDINATES_ACTIVE"}</span>
-        </div>
-      </div>
 
       {/* ── Bottom fade ── */}
       <div

@@ -26,7 +26,7 @@ export default function Hero() {
 
         {/* CTAs */}
         <div className="flex flex-col sm:flex-row items-center gap-3">
-          <Button asChild size="lg" className="rounded-none h-[52px] px-[28px] bg-foreground text-background hover:bg-primary transition-colors duration-200">
+          <Button asChild size="lg" className="rounded-none h-[52px] px-[28px] bg-foreground text-background hover:bg-primary hover:text-primary-foreground transition-colors duration-200">
             <Link to="/contact" /* ui-ignore */>
               Start Your Pathway
             </Link>

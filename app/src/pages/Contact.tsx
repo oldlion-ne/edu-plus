@@ -34,20 +34,25 @@ export default function Contact() {
         status: 'unread',
       });
       if (error) throw error;
-    } catch (err) {
-      console.error('Error sending message to Supabase database:', err);
-    } finally {
       setSubmitted(true);
       setFormData({ name: '', email: '', profile: 'student', message: '' });
       setTimeout(() => setSubmitted(false), 5000);
+    } catch (err) {
+      console.error('Error sending message to Supabase database:', err);
     }
   };
 
-  const handleSubscribe = (e: React.FormEvent) => {
+  const handleSubscribe = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSubscribed(true);
-    setNewsletterEmail('');
-    setTimeout(() => setSubscribed(false), 5000);
+    try {
+      const { error } = await supabase.from('newsletter_subscribers').insert({ email: newsletterEmail });
+      if (error) throw error;
+      setSubscribed(true);
+      setNewsletterEmail('');
+      setTimeout(() => setSubscribed(false), 5000);
+    } catch (err) {
+      console.error('Error saving newsletter email:', err);
+    }
   };
 
   return (
