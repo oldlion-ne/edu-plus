@@ -401,8 +401,6 @@ export default function Connect() {
         titleNormal={t('heroTitleNormal')}
         titleHighlighted={t('heroTitleHighlighted')}
         description={t('heroDesc')}
-        telemetryLeft="MENTORSHIP_STREAM // ACTIVE"
-        telemetryRight="UTC_COORD_CONNECT"
       />
 
       <div className="max-w-[1200px] mx-auto px-6 md:px-12 relative z-10 mt-16">
