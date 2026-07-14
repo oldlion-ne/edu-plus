@@ -117,6 +117,7 @@ export default function Contact() {
   return (
     <div className="min-h-screen bg-background text-foreground pb-32 relative overflow-hidden">
       <EditorialHero
+        variant="full-bleed"
         image="/images/ContactVisual.webp"
         imageAlt="East Asian support team welcoming a community conversation"
         eyebrow={t('heroCategory')}

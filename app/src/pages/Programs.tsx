@@ -119,6 +119,7 @@ export default function Programs() {
   return (
     <div className="min-h-screen bg-background text-foreground pb-32 relative overflow-hidden">
       <EditorialHero
+        variant="full-bleed"
         image="/images/CurriculumVisual.webp"
         imageAlt="East Asian learners exploring practical education pathways"
         eyebrow={t('heroCategory')}

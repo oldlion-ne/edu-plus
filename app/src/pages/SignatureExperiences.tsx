@@ -175,6 +175,7 @@ export default function SignatureExperiences() {
   return (
     <div className="min-h-screen bg-background text-foreground pb-32 relative overflow-hidden">
       <EditorialHero
+        variant="full-bleed"
         image="/images/EventsVisual.webp"
         imageAlt="East Asian learners gathering for a community workshop"
         eyebrow={t('heroCategory')}

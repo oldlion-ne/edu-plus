@@ -252,6 +252,7 @@ export default function Council() {
   return (
     <div className="min-h-screen bg-background text-foreground pb-32 relative overflow-hidden">
       <EditorialHero
+        variant="full-bleed"
         image="/images/CouncilVisual.webp"
         imageAlt="East Asian council members in a collaborative discussion"
         eyebrow={t('heroCategory')}

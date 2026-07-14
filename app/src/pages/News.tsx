@@ -106,6 +106,7 @@ export default function News() {
   return (
     <div className="min-h-screen bg-background text-foreground pb-32 relative overflow-hidden">
       <EditorialHero
+        variant="full-bleed"
         image="/images/NewsVisual.webp"
         imageAlt="East Asian educators and learners exchanging community news"
         eyebrow={t('heroCategory')}

@@ -234,6 +234,7 @@ export default function Guidance() {
   return (
     <div className="min-h-screen bg-background text-foreground pb-32 relative overflow-hidden">
       <EditorialHero
+        variant="full-bleed"
         image="/images/MentorshipVisual.webp"
         imageAlt="East Asian mentor guiding a learner through a thoughtful decision"
         eyebrow={t('heroCategory')}

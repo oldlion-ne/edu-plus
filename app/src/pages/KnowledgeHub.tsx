@@ -76,6 +76,7 @@ export default function KnowledgeHub() {
   return (
     <div className="min-h-screen bg-background text-foreground pb-32 relative overflow-hidden font-sans">
       <EditorialHero
+        variant="full-bleed"
         image="/images/HubVisual.webp"
         imageAlt="East Asian community members sharing learning resources"
         eyebrow={t('heroCategory')}

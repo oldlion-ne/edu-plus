@@ -98,6 +98,7 @@ export default function About() {
     <div className="min-h-screen bg-background text-foreground pb-32 relative overflow-hidden">
       {/* Decorative Radial Glows */}
       <EditorialHero
+        variant="full-bleed"
         image="/images/AboutCollabVisual.webp"
         imageAlt="East Asian learners collaborating around shared ideas"
         eyebrow={t('aboutCategory')}
