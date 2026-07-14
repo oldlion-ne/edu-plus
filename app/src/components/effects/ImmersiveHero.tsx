@@ -10,8 +10,6 @@ interface ImmersiveHeroProps {
   titleNormal: string;
   titleHighlighted: string;
   description: string;
-  telemetryLeft?: string;
-  telemetryRight?: string;
   children?: React.ReactNode;
 }
 
@@ -20,8 +18,6 @@ export default function ImmersiveHero({
   titleNormal,
   titleHighlighted,
   description,
-  telemetryLeft,
-  telemetryRight,
   children
 }: ImmersiveHeroProps) {
   const containerRef = useRef<HTMLDivElement>(null);
