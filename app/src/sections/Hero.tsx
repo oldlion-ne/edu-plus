@@ -12,6 +12,7 @@ const STATS = [
 export default function Hero() {
   return (
     <EditorialHero
+      variant="full-bleed"
       eyebrow="Learning, held in balance"
       title={<>A calmer way to <span className="text-primary">move forward.</span></>}
       description="Practical learning, trusted guidance, and a connected East Asian community."

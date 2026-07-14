@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, NavLink, useNavigate } from 'react-router';
-import { Menu, X } from 'lucide-react';
+import { Menu, X as CloseIcon, Facebook, Linkedin } from 'lucide-react';
 import { toast } from 'sonner';
 import { AnimatedThemeToggler } from '@/components/ui/animated-theme-toggler';
 import { Button } from '@/components/ui/button';
@@ -21,6 +21,13 @@ const linkClass = ({ isActive }: { isActive: boolean }) =>
   `relative flex h-[72px] items-center border-b-2 px-1 text-sm font-medium transition-colors ${
     isActive ? 'border-primary text-foreground' : 'border-transparent text-muted-foreground hover:text-foreground'
   }`;
+
+// Custom modern X social icon SVG
+const XIcon = ({ className }: { className?: string }) => (
+  <svg viewBox="0 0 24 24" fill="currentColor" className={className}>
+    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+  </svg>
+);
 
 export default function Navigation() {
   const { user, signOut } = useAuth();
@@ -51,19 +58,29 @@ export default function Navigation() {
           Edu<span className="font-light text-primary">+</span>
         </Link>
 
-        <div className="hidden h-full items-center gap-5 md:flex xl:gap-7">
-          {NAV_LINKS.map((link) => (
-            <NavLink /* ui-ignore */
-              key={link.path}
-              to={link.path}
-              className={({ isActive }) => `${linkClass({ isActive })} ${link.priority ? '' : 'hidden xl:flex'}`}
-            >
-              {link.label}
-            </NavLink>
+        {/* Desktop links separated by slashes */}
+        <div className="hidden h-full items-center md:flex">
+          {NAV_LINKS.map((link, idx) => (
+            <div key={link.path} className={`flex items-center ${link.priority ? '' : 'hidden xl:flex'}`}>
+              {idx > 0 && (
+                <span
+                  className={`mx-2 text-muted-foreground/30 font-light select-none text-xs ${link.priority ? '' : 'hidden xl:flex'}`}
+                  aria-hidden
+                >
+                  /
+                </span>
+              )}
+              <NavLink /* ui-ignore */
+                to={link.path}
+                className={({ isActive }) => linkClass({ isActive })}
+              >
+                {link.label}
+              </NavLink>
+            </div>
           ))}
         </div>
 
-        <div className="ml-auto hidden items-center gap-2 md:flex">
+        <div className="ml-auto hidden items-center gap-4 md:flex">
           {user ? (
             <>
               <Button asChild variant="ghost" size="sm"><Link to="/dashboard" /* ui-ignore */>Workspace</Link></Button>
@@ -73,6 +90,20 @@ export default function Navigation() {
             <Button asChild variant="ghost" size="sm"><Link to="/auth/sign-in" /* ui-ignore */>Sign in</Link></Button>
           )}
           <AnimatedThemeToggler />
+
+          {/* Socials section with line-separator */}
+          <div className="flex items-center gap-3 border-r border-border pr-4 text-muted-foreground/60 transition-colors">
+            <a href="https://facebook.com" target="_blank" rel="noreferrer" className="hover:text-foreground transition-colors" aria-label="Facebook">
+              <Facebook className="size-4" />
+            </a>
+            <a href="https://x.com" target="_blank" rel="noreferrer" className="hover:text-foreground transition-colors" aria-label="X (formerly Twitter)">
+              <XIcon className="size-3.5" />
+            </a>
+            <a href="https://linkedin.com" target="_blank" rel="noreferrer" className="hover:text-foreground transition-colors" aria-label="LinkedIn">
+              <Linkedin className="size-4" />
+            </a>
+          </div>
+
           <Button asChild variant="raised" size="sm"><Link to="/programs" /* ui-ignore */>Start learning</Link></Button>
         </div>
 
@@ -80,7 +111,7 @@ export default function Navigation() {
           <Sheet open={isOpen} onOpenChange={setIsOpen}>
             <SheetTrigger asChild>
               <Button variant="ghost" size="icon" aria-label="Open navigation menu">
-                {isOpen ? <X className="size-5" /> : <Menu className="size-5" />}
+                {isOpen ? <CloseIcon className="size-5" /> : <Menu className="size-5" />}
               </Button>
             </SheetTrigger>
             <SheetContent side="right" className="w-full border-l border-border bg-background px-6 pt-20 sm:max-w-sm">
