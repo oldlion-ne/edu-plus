@@ -9,7 +9,8 @@ test('renders PathwaySimulator with nodes', () => {
       <PathwaySimulator />
     </MemoryRouter>
   );
-  expect(screen.getByText(/Interactive Workspace/i)).toBeDefined();
+  expect(screen.getByText(/Integrations/i)).toBeDefined();
   expect(screen.getByText(/Connect your favourite/i)).toBeDefined();
   expect(screen.getByText(/OpenAI/i)).toBeDefined();
 });
+

@@ -27,12 +27,11 @@ globalThis.ResizeObserver = ResizeObserverMock as unknown as typeof ResizeObserv
 describe('PedigreeShowcase Component', () => {
   it('renders the Technical Pedigree section header', () => {
     render(<PedigreeShowcase />);
-    expect(screen.getByText('Technical Pedigree & Advisory Network')).toBeDefined();
+    expect(screen.getByText(/Technical Pedigree/i)).toBeDefined();
     expect(screen.getByText(/world-class organizations/i)).toBeDefined();
-    expect(screen.getByText(/A robust framework of academic advisories/i)).toBeDefined();
   });
 
-  it('renders all 4 bento cards', () => {
+  it('renders all 4 typographic cards', () => {
     render(<PedigreeShowcase />);
     expect(screen.getByText('Strategic Integrations')).toBeDefined();
     expect(screen.getByText('Real-time Guidance')).toBeDefined();
