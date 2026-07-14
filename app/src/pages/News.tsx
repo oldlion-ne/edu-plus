@@ -1,4 +1,5 @@
 import { Link } from 'react-router';
+import { PageHero } from '@/components/ui/page-hero';
 
 const ARTICLES = [
   {
@@ -32,17 +33,11 @@ export default function News() {
     <div className="bg-background w-full min-h-screen">
 
       {/* ── Typographic Hero ── */}
-      <section className="pt-40 pb-32 px-6 md:px-12 max-w-[1440px] mx-auto">
-        <span className="text-[13px] font-medium tracking-wide uppercase text-muted-foreground mb-6 block">
-          Updates &amp; Publications
-        </span>
-        <h1 className="text-4xl sm:text-5xl md:text-[3.5rem] font-medium text-foreground tracking-tight leading-[1.15] max-w-3xl mb-8">
-          News &amp; Insights
-        </h1>
-        <p className="text-[18px] text-muted-foreground leading-relaxed max-w-2xl">
-          Success stories, event highlights, and perspectives on the evolving world of education, technology, and work.
-        </p>
-      </section>
+      <PageHero
+        eyebrow="Updates &amp; Publications"
+        title="News &amp; Insights"
+        description="Success stories, event highlights, and perspectives on the evolving world of education, technology, and work."
+      />
 
       {/* ── Clean Article Grid ── */}
       <section className="py-20 border-t border-border/50 px-6 md:px-12 max-w-[1440px] mx-auto">

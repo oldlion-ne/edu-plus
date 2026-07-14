@@ -109,7 +109,7 @@ The Home page DNA is the **only** design DNA allowed. No page-specific visual di
 
 ### Font Family
 *   **Primary**: `Inter Variable` (`400`, `500`, `600` weights only). No weight `700`, and no italics in UI.
-*   **Outlawed**: `Outfit` and all other geometric sans-serifs with rounded terminals.
+*   **Alternate**: `Outfit` is retained as an alternate sans-serif font.
 *   **Monospace**: Completely removed from all UI elements. Monospace is reserved exclusively for actual code blocks and database IDs. No code-like labels on cards, buttons, or navigation.
 
 ### Color Tokens (Locked)

@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { Link } from 'react-router';
-import { Button } from '../components/ui/button';
+import { Button } from '@/components/ui/button';
+import { PageHero } from '@/components/ui/page-hero';
+import { BulletList, BulletItem } from '@/components/ui/bullet-list';
 
 const TABS = [
   {
@@ -65,20 +67,15 @@ export default function Guidance() {
     <div className="bg-background w-full min-h-screen">
 
       {/* ── Typographic Hero ── */}
-      <section className="pt-40 pb-32 px-6 md:px-12 max-w-[1440px] mx-auto">
-        <span className="text-[13px] font-medium tracking-wide uppercase text-muted-foreground mb-6 block">
-          Advisory Services
-        </span>
-        <h1 className="text-4xl sm:text-5xl md:text-[3.5rem] font-medium text-foreground tracking-tight leading-[1.15] max-w-3xl mb-8">
-          One-to-One Guidance
-        </h1>
-        <p className="text-[18px] text-muted-foreground leading-relaxed max-w-2xl mb-10">
-          Dedicated, one-on-one support tailored to every stakeholder in the education ecosystem — students, parents, job seekers, and educators.
-        </p>
+      <PageHero
+        eyebrow="Advisory Services"
+        title="One-to-One Guidance"
+        description="Dedicated, one-on-one support tailored to every stakeholder in the education ecosystem — students, parents, job seekers, and educators."
+      >
         <Button asChild className="rounded-none h-[52px] px-[28px] bg-foreground text-background hover:bg-primary transition-colors duration-200">
-          <Link to="/contact" /* ui-ignore */>Book Free Discovery Call</Link>
+          <Link to="/contact" /* ui-ignore */>Book a Consultation</Link>
         </Button>
-      </section>
+      </PageHero>
 
       {/* ── Stakeholder Tabs ── */}
       <section className="py-20 border-t border-border/50 px-6 md:px-12 max-w-[1440px] mx-auto">
@@ -113,14 +110,11 @@ export default function Guidance() {
             <span className="text-[13px] font-medium uppercase tracking-wide text-muted-foreground mb-6 block">
               What You Get
             </span>
-            <ul className="flex flex-col gap-4">
+            <BulletList>
               {tab.outcomes.map((o) => (
-                <li key={o} className="text-[15px] text-foreground flex items-start gap-3">
-                  <span className="mt-2 w-1 h-1 bg-primary rounded-none shrink-0" />
-                  {o}
-                </li>
+                <BulletItem key={o}>{o}</BulletItem>
               ))}
-            </ul>
+            </BulletList>
           </div>
         </div>
 

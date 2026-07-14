@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { Link } from 'react-router';
-import { Button } from '../components/ui/button';
+import { Button } from '@/components/ui/button';
+import { PageHero } from '@/components/ui/page-hero';
+import { BulletList, BulletItem } from '@/components/ui/bullet-list';
 
 const EVENTS = [
   {
@@ -99,17 +101,11 @@ export default function SignatureExperiences() {
     <div className="min-h-screen bg-background w-full">
 
       {/* ── Typographic Hero ── */}
-      <section className="pt-40 pb-32 px-6 md:px-12 max-w-[1440px] mx-auto">
-        <span className="text-[13px] font-medium tracking-wide uppercase text-muted-foreground mb-6 block">
-          Flagship Events
-        </span>
-        <h1 className="text-4xl sm:text-5xl md:text-[3.5rem] font-medium text-foreground tracking-tight leading-[1.15] max-w-3xl mb-8">
-          Signature Experiences
-        </h1>
-        <p className="text-[18px] text-muted-foreground leading-relaxed max-w-2xl">
-          Curated events that bring energy, community, and real-world exposure into the learning experience — connecting students, educators, and industry experts.
-        </p>
-      </section>
+      <PageHero
+        eyebrow="Flagship Events"
+        title="Signature Experiences"
+        description="Curated events that bring energy, community, and real-world exposure into the learning experience — connecting students, educators, and industry experts."
+      />
 
       {/* ── Events: horizontal list with 1px top border dividers ── */}
       <section className="py-20 border-t border-border/50 px-6 md:px-12 max-w-[1440px] mx-auto">
@@ -131,14 +127,11 @@ export default function SignatureExperiences() {
               {/* Right: content */}
               <div>
                 <p className="text-[16px] text-muted-foreground leading-relaxed mb-8 max-w-[55ch]">{evt.desc}</p>
-                <ul className="flex flex-col gap-3 mb-8">
+                <BulletList className="mb-8">
                   {evt.highlights.map((h) => (
-                    <li key={h} className="text-[15px] text-foreground flex items-start gap-3">
-                      <span className="mt-2 w-1 h-1 bg-primary rounded-none shrink-0" />
-                      {h}
-                    </li>
+                    <BulletItem key={h}>{h}</BulletItem>
                   ))}
-                </ul>
+                </BulletList>
                 {evt.active && (
                   <Button asChild className="rounded-none h-[44px] px-6 bg-foreground text-background hover:bg-primary transition-colors duration-200">
                     <Link to="/contact" /* ui-ignore */>Register Now</Link>

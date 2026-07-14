@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
+import { PageHero } from '@/components/ui/page-hero';
 import { supabase } from '../lib/supabaseClient';
 
 import { Input } from '../components/ui/input';
@@ -32,6 +33,7 @@ export default function KnowledgeHub() {
   const [activeTab, setActiveTab] = useState('all');
   const [loading, setLoading] = useState(true);
   const [selectedVideo, setSelectedVideo] = useState<string | null>(null);
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     async function fetchItems() {
@@ -51,6 +53,18 @@ export default function KnowledgeHub() {
     }
     fetchItems();
   }, []);
+
+  useEffect(() => {
+    if (!selectedVideo) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setSelectedVideo(null);
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    
+    setTimeout(() => closeButtonRef.current?.focus(), 10);
+    
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [selectedVideo]);
 
   useEffect(() => {
     let filtered = items;
@@ -79,17 +93,11 @@ export default function KnowledgeHub() {
     <div className="min-h-screen bg-background w-full">
 
       {/* ── Typographic Hero ── */}
-      <section className="pt-40 pb-32 px-6 md:px-12 max-w-[1440px] mx-auto">
-        <span className="text-[13px] font-medium tracking-wide uppercase text-muted-foreground mb-6 block">
-          Ecosystem Nodes
-        </span>
-        <h1 className="text-4xl sm:text-5xl md:text-[3.5rem] font-medium text-foreground tracking-tight leading-[1.15] max-w-3xl mb-8">
-          Knowledge Hub
-        </h1>
-        <p className="text-[18px] text-muted-foreground leading-relaxed max-w-2xl">
-          Access elite technical tutorials, educational webinars, and expert podcasts compiled to accelerate your academic and skill roadmap.
-        </p>
-      </section>
+      <PageHero
+        eyebrow="Ecosystem Nodes"
+        title="Knowledge Hub"
+        description="Access elite technical tutorials, educational webinars, and expert podcasts compiled to accelerate your academic and skill roadmap."
+      />
 
       {/* ── Content Grid ── */}
       <section className="py-20 border-t border-border/50 px-6 md:px-12 max-w-[1440px] mx-auto">
@@ -195,11 +203,17 @@ export default function KnowledgeHub() {
 
       {/* Video overlay — stripped of cyber headers */}
       {selectedVideo && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-background/90 backdrop-blur-sm">
+        <div 
+          className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-background/90 backdrop-blur-sm"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="video-title"
+        >
           <div className="w-full max-w-4xl bg-background border border-border/50 relative">
             <div className="flex items-center justify-between p-4 border-b border-border/50">
-              <span className="text-[13px] font-medium text-foreground">Video Playback</span>
+              <span id="video-title" className="text-[13px] font-medium text-foreground">Video Playback</span>
               <button
+                ref={closeButtonRef}
                 onClick={() => setSelectedVideo(null)}
                 className="text-muted-foreground hover:text-foreground transition-colors"
                 aria-label="Close video"

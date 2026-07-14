@@ -38,9 +38,10 @@ The Edu+ visual identity follows the **Nordic Lagom** (Swedish for "just the rig
 
 ### A. Color Palette (OKLCH)
 
-All color tokens are defined in `src/index.css` using the OKLCH color space.
+All color tokens are defined in `app/src/index.css` using the OKLCH color space.
 
 **Light Mode (`:root`)**
+
 | Token | OKLCH Value | Description |
 |---|---|---|
 | `--background` | `98.5% 0.004 80deg` | Warm off-white cream |
@@ -51,6 +52,7 @@ All color tokens are defined in `src/index.css` using the OKLCH color space.
 | `--card` | `97% 0.004 80deg` | Slightly off-white card surface |
 
 **Dark Mode (`.dark`)**
+
 | Token | OKLCH Value | Description |
 |---|---|---|
 | `--background` | `18% 0.012 60deg` | Warm charcoal (not cold black) |

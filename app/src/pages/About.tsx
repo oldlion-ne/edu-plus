@@ -1,5 +1,6 @@
 import { Link } from 'react-router';
 import { Button } from '@/components/ui/button';
+import { PageHero } from '@/components/ui/page-hero';
 
 const VALUES = [
   {
@@ -59,20 +60,15 @@ export default function About() {
     <div className="bg-background w-full min-h-screen">
 
       {/* ── Typographic Hero ── */}
-      <section className="pt-40 pb-32 px-6 md:px-12 max-w-[1440px] mx-auto">
-        <span className="text-[13px] font-medium tracking-wide uppercase text-muted-foreground mb-6 block">
-          About EduPlus
-        </span>
-        <h1 className="text-4xl sm:text-5xl md:text-[3.5rem] font-medium text-foreground tracking-tight leading-[1.15] max-w-3xl mb-8">
-          Know Who We Are
-        </h1>
-        <p className="text-[18px] text-muted-foreground leading-relaxed max-w-2xl mb-10">
-          EduPlus Skills is an innovation-led skills and career platform that seamlessly combines education, training, and employment enablement — operating both online and offline across regions from Manipur to global career pathways.
-        </p>
+      <PageHero
+        eyebrow="About EduPlus"
+        title="Know Who We Are"
+        description="EduPlus Skills is an innovation-led skills and career platform that seamlessly combines education, training, and employment enablement — operating both online and offline across regions from Manipur to global career pathways."
+      >
         <Button asChild className="rounded-none h-[52px] px-[28px] bg-foreground text-background hover:bg-primary transition-colors duration-200">
           <Link to="/contact" /* ui-ignore */>Get in Touch</Link>
         </Button>
-      </section>
+      </PageHero>
 
       {/* ── What We Stand For ── */}
       <section className="py-32 border-t border-border/50 px-6 md:px-12 max-w-[1440px] mx-auto">

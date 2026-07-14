@@ -6,7 +6,7 @@ This playbook outlines the visual and behavioral standards required to maintain 
 
 ## 1. Core Design Tokens & Theme Constants
 
-All styles must adhere to the central theme tokens defined in `src/index.css` using the OKLCH color space:
+All styles must adhere to the central theme tokens defined in `app/src/index.css` using the OKLCH color space:
 
 **Dark Mode (Primary — `.dark`)**
 - **Background:** Warm charcoal `oklch(18% 0.012 60deg)` — not cold/cyberpunk black.

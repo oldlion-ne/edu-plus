@@ -22,6 +22,7 @@
 @import url("tw-animate-css");
 @import url("shadcn/tailwind.css");
 @import url("@fontsource-variable/inter");
+@import url("@fontsource-variable/outfit");
 
 @tailwind base;
 @tailwind components;
@@ -31,48 +32,48 @@
   :root {
     --font-sans: 'Inter Variable', sans-serif;
     --font-heading: 'Inter Variable', sans-serif;
-    --background: 80deg 0.004 98.5%;
-    --foreground: 60deg 0.01 22%;
-    --card: 80deg 0.004 97%;
-    --card-foreground: 60deg 0.01 22%;
-    --popover: 80deg 0.004 97%;
-    --popover-foreground: 60deg 0.01 22%;
-    --primary: 70deg 0.12 75%;
-    --primary-foreground: 60deg 0.02 22%;
-    --secondary: 80deg 0.008 94%;
-    --secondary-foreground: 60deg 0.015 35%;
-    --muted: 80deg 0.006 95%;
-    --muted-foreground: 60deg 0.015 55%;
-    --accent: 80deg 0.008 94%;
-    --accent-foreground: 60deg 0.015 30%;
-    --destructive: 25deg 0.2 55%;
-    --destructive-foreground: 60deg 0.002 98%;
-    --border: 80deg 0.008 90%;
-    --input: 80deg 0.008 90%;
-    --ring: 70deg 0.12 75%;
+    --background: 98.5% 0.004 80deg;
+    --foreground: 22% 0.01 60deg;
+    --card: 97% 0.004 80deg;
+    --card-foreground: 22% 0.01 60deg;
+    --popover: 97% 0.004 80deg;
+    --popover-foreground: 22% 0.01 60deg;
+    --primary: 75% 0.12 70deg;
+    --primary-foreground: 22% 0.02 60deg;
+    --secondary: 94% 0.008 80deg;
+    --secondary-foreground: 35% 0.015 60deg;
+    --muted: 95% 0.006 80deg;
+    --muted-foreground: 55% 0.015 60deg;
+    --accent: 94% 0.008 80deg;
+    --accent-foreground: 30% 0.015 60deg;
+    --destructive: 55% 0.2 25deg;
+    --destructive-foreground: 98% 0.002 60deg;
+    --border: 90% 0.008 80deg;
+    --input: 90% 0.008 80deg;
+    --ring: 75% 0.12 70deg;
     --radius: 0px;
   }
 
   .dark {
-    --background: 60deg 0.012 18%;
-    --foreground: 80deg 0.006 93%;
-    --card: 60deg 0.012 22%;
-    --card-foreground: 80deg 0.006 93%;
-    --popover: 60deg 0.012 22%;
-    --popover-foreground: 80deg 0.006 93%;
-    --primary: 70deg 0.13 78%;
-    --primary-foreground: 60deg 0.02 22%;
-    --secondary: 60deg 0.012 26%;
-    --secondary-foreground: 80deg 0.006 90%;
-    --muted: 60deg 0.012 26%;
-    --muted-foreground: 60deg 0.012 65%;
-    --accent: 60deg 0.012 26%;
-    --accent-foreground: 80deg 0.006 93%;
-    --destructive: 25deg 0.18 65%;
-    --destructive-foreground: 80deg 0.006 93%;
-    --border: 0deg 0 100% / 0.08;
-    --input: 0deg 0 100% / 0.1;
-    --ring: 60deg 0.012 65%;
+    --background: 18% 0.012 60deg;
+    --foreground: 93% 0.006 80deg;
+    --card: 22% 0.012 60deg;
+    --card-foreground: 93% 0.006 80deg;
+    --popover: 22% 0.012 60deg;
+    --popover-foreground: 93% 0.006 80deg;
+    --primary: 78% 0.13 70deg;
+    --primary-foreground: 22% 0.02 60deg;
+    --secondary: 26% 0.012 60deg;
+    --secondary-foreground: 90% 0.006 80deg;
+    --muted: 26% 0.012 60deg;
+    --muted-foreground: 65% 0.012 60deg;
+    --accent: 26% 0.012 60deg;
+    --accent-foreground: 93% 0.006 80deg;
+    --destructive: 65% 0.18 25deg;
+    --destructive-foreground: 93% 0.006 80deg;
+    --border: 0% 0 0deg / 0.08;
+    --input: 0% 0 0deg / 0.1;
+    --ring: 65% 0.012 60deg;
   }
 
   * {

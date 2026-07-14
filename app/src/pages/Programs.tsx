@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { Link } from 'react-router';
-import { Button } from '../components/ui/button';
+import { Button } from '@/components/ui/button';
+import { PageHero } from '@/components/ui/page-hero';
+import { BulletList, BulletItem } from '@/components/ui/bullet-list';
 
 const PROGRAMS = [
   {
@@ -85,17 +87,11 @@ export default function Programs() {
     <div className="bg-background w-full min-h-screen">
 
       {/* ── Typographic Hero ── */}
-      <section className="pt-40 pb-32 px-6 md:px-12 max-w-[1440px] mx-auto">
-        <span className="text-[13px] font-medium tracking-wide uppercase text-muted-foreground mb-6 block">
-          Curriculum Pathways
-        </span>
-        <h1 className="text-4xl sm:text-5xl md:text-[3.5rem] font-medium text-foreground tracking-tight leading-[1.15] max-w-3xl mb-8">
-          Future-Ready Programs
-        </h1>
-        <p className="text-[18px] text-muted-foreground leading-relaxed max-w-2xl">
-          Six interconnected modules supporting learners at every milestone — from discovering their strengths to launching global careers.
-        </p>
-      </section>
+      <PageHero
+        eyebrow="Curriculum Pathways"
+        title="Future-Ready Programs"
+        description="Six interconnected modules supporting learners at every milestone — from discovering their strengths to launching global careers."
+      />
 
       {/* ── Program Explorer ── */}
       <section className="py-20 border-t border-border/50 px-6 md:px-12 max-w-[1440px] mx-auto">
@@ -135,14 +131,11 @@ export default function Programs() {
               <span className="text-[13px] font-medium uppercase tracking-wide text-muted-foreground mb-6 block">
                 Core Outcomes
               </span>
-              <ul className="flex flex-col gap-3">
+              <BulletList>
                 {active.outcomes.map((o) => (
-                  <li key={o} className="text-[15px] text-foreground flex items-start gap-3">
-                    <span className="mt-2 w-1 h-1 bg-primary rounded-none shrink-0" />
-                    {o}
-                  </li>
+                  <BulletItem key={o}>{o}</BulletItem>
                 ))}
-              </ul>
+              </BulletList>
             </div>
 
             <Button asChild className="rounded-none h-[52px] px-[28px] bg-foreground text-background hover:bg-primary transition-colors duration-200">

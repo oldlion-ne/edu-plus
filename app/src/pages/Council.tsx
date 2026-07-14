@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
+import { PageHero } from '@/components/ui/page-hero';
 
 interface CouncilMember {
   name: string;
@@ -111,22 +112,30 @@ const COUNCIL_MEMBERS: CouncilMember[] = [
 
 export default function Council() {
   const [selectedMember, setSelectedMember] = useState<CouncilMember | null>(null);
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    if (!selectedMember) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setSelectedMember(null);
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    
+    // Focus the close button when the modal opens
+    setTimeout(() => closeButtonRef.current?.focus(), 10);
+    
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [selectedMember]);
 
   return (
     <div className="bg-background w-full min-h-screen">
       
       {/* ── Typographic Hero ── */}
-      <section className="pt-40 pb-32 px-6 md:px-12 max-w-[1440px] mx-auto">
-        <span className="text-[13px] font-medium tracking-wide uppercase text-muted-foreground mb-6 block">
-          Leadership &amp; Advisory Council
-        </span>
-        <h1 className="text-4xl sm:text-5xl md:text-[3.5rem] font-medium text-foreground tracking-tight leading-[1.15] max-w-3xl mb-8">
-          Global Expert Council
-        </h1>
-        <p className="text-[18px] text-muted-foreground leading-relaxed max-w-2xl">
-          The people powering EduPlus Skills — uniting researchers, corporate leaders, and community builders across Asia, Europe, and North America.
-        </p>
-      </section>
+      <PageHero
+        eyebrow="Leadership &amp; Advisory Council"
+        title="Global Expert Council"
+        description="The people powering EduPlus Skills — uniting researchers, corporate leaders, and community builders across Asia, Europe, and North America."
+      />
 
       {/* ── 3-Column Grid of Members ── */}
       <section className="py-20 border-t border-border/50 px-6 md:px-12 max-w-[1440px] mx-auto">
@@ -176,16 +185,23 @@ export default function Council() {
 
       {/* ── Dialog/Detail view ── */}
       {selectedMember && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-background/90 backdrop-blur-sm">
+        <div 
+          className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-background/90 backdrop-blur-sm"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="dialog-title"
+        >
           <div className="w-full max-w-lg bg-background border border-border/50 p-10 relative">
             <button
+              ref={closeButtonRef}
               onClick={() => setSelectedMember(null)}
               className="absolute top-6 right-6 text-muted-foreground hover:text-foreground text-xl"
+              aria-label="Close dialog"
             >
               &times;
             </button>
             <span className="text-[12px] text-primary uppercase tracking-wider mb-2 block">{selectedMember.location}</span>
-            <h3 className="text-2xl font-medium text-foreground mb-1">{selectedMember.name}</h3>
+            <h3 id="dialog-title" className="text-2xl font-medium text-foreground mb-1">{selectedMember.name}</h3>
             <p className="text-sm text-muted-foreground mb-6">{selectedMember.role}</p>
             <p className="text-[15px] text-muted-foreground leading-relaxed">{selectedMember.bio}</p>
           </div>

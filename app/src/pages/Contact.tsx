@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { supabase } from '../lib/supabaseClient';
+import { PageHero } from '../components/ui/page-hero';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
 import { Textarea } from '../components/ui/textarea';
@@ -59,17 +60,11 @@ export default function Contact() {
     <div className="bg-background w-full min-h-screen">
 
       {/* ── Typographic Hero ── */}
-      <section className="pt-40 pb-32 px-6 md:px-12 max-w-[1440px] mx-auto">
-        <span className="text-[13px] font-medium tracking-wide uppercase text-muted-foreground mb-6 block">
-          Connect With Us
-        </span>
-        <h1 className="text-4xl sm:text-5xl md:text-[3.5rem] font-medium text-foreground tracking-tight leading-[1.15] max-w-3xl mb-8">
-          Contact &amp; Locations
-        </h1>
-        <p className="text-[18px] text-muted-foreground leading-relaxed max-w-2xl">
-          Whether you seek strategic collaboration, student enrollment, counselor support, or training resources — we are here to support you.
-        </p>
-      </section>
+      <PageHero
+        eyebrow="Connect With Us"
+        title="Contact &amp; Locations"
+        description="Whether you seek strategic collaboration, student enrollment, counselor support, or training resources — we are here to support you."
+      />
 
       {/* ── Contact Info & Form Grid ── */}
       <section className="py-20 border-t border-border/50 px-6 md:px-12 max-w-[1440px] mx-auto">

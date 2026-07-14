@@ -13,7 +13,7 @@
 
 ## Design System — Nordic Lagom Philosophy
 - The visual identity follows the **Nordic Lagom** design philosophy: clean, balanced, and quietly confident.
-- **Color palette:** Warm charcoal backgrounds, candlelight amber/gold accent, warm off-white text. Defined in OKLCH in `src/index.css`.
+- **Color palette:** Warm charcoal backgrounds, candlelight amber/gold accent, warm off-white text. Defined in OKLCH in `app/src/index.css`.
 - **Typography:** `Inter Variable` for headings and body. `Outfit` as alternate sans-serif. Monospace is reserved only for technical data (IDs, status codes).
 - **No cyberpunk/HUD patterns:** No neon glows, pulsing animations, dot-grids, or scrambling text effects.
 
