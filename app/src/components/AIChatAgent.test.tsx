@@ -41,6 +41,6 @@ describe('AIChatAgent component', () => {
     fireEvent.click(button);
     
     expect(screen.getByText('EDU+ AI ADVISOR')).toBeDefined();
-    expect(screen.getByPlaceholderText(/enter cognitive inquiry/i)).toBeDefined();
+    expect(screen.getByPlaceholderText('ENTER COGNITIVE INQUIRY...')).toBeDefined();
   });
 });

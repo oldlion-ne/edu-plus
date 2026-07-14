@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { NavLink, Link, useNavigate } from 'react-router';
+import { useScrollContainer } from '../lib/ScrollContext';
 import { useAuth } from '../lib/AuthContext';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
@@ -38,14 +39,27 @@ export default function Navigation() {
   const [scrolled, setScrolled] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const navRef = useRef<HTMLElement>(null);
+  const scrollContext = useScrollContainer();
 
   useEffect(() => {
+    const el = scrollContext?.scrollContainerRef.current;
+    
     const handleScroll = () => {
-      setScrolled(window.scrollY > 50);
+      if (el) {
+        setScrolled(el.scrollTop > 50);
+      } else {
+        setScrolled(window.scrollY > 50);
+      }
     };
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+
+    if (el) {
+      el.addEventListener('scroll', handleScroll, { passive: true });
+      return () => el.removeEventListener('scroll', handleScroll);
+    } else {
+      window.addEventListener('scroll', handleScroll, { passive: true });
+      return () => window.removeEventListener('scroll', handleScroll);
+    }
+  }, [scrollContext?.scrollContainerRef.current]);
 
   const handleLogout = async () => {
     try {
@@ -60,9 +74,10 @@ export default function Navigation() {
   return (
     <nav
       ref={navRef}
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 bg-background/95 backdrop-blur-md ${
+      className={`fixed top-0 left-0 z-50 transition-all duration-500 bg-background/95 backdrop-blur-md ${
         scrolled ? 'shadow-sm border-b border-border' : ''
       }`}
+      style={{ width: 'calc(100% - var(--scrollbar-width, 0px))' }}
     >
       <div className="max-w-[1440px] mx-auto flex items-center justify-between px-6 md:px-12 py-4">
         {/* Logo */}
@@ -72,13 +87,13 @@ export default function Navigation() {
         </Link>
 
         {/* Center Nav Links */}
-        <div className="hidden md:flex items-center gap-8">
+        <div className="hidden xl:flex items-center gap-8">
           {NAV_LINKS.map((link) => (
             <NavLink /* ui-ignore */
               key={link.label}
               to={link.path}
               className={({ isActive }) =>
-                `text-sm font-sans transition-colors duration-300 relative group ${
+                `text-sm font-sans whitespace-nowrap transition-colors duration-300 relative group ${
                   isActive ? 'text-primary' : 'text-foreground hover:text-primary'
                 }`
               }
@@ -90,12 +105,12 @@ export default function Navigation() {
         </div>
 
         {/* CTA & Auth Area */}
-        <div className="hidden md:flex items-center gap-6">
+        <div className="hidden xl:flex items-center gap-6">
           {user && (
             <NavLink /* ui-ignore */
               to="/dashboard"
               className={({ isActive }) =>
-                `font-sans font-medium text-xs tracking-wider uppercase transition-all duration-300 ${
+                `font-sans font-medium text-xs whitespace-nowrap tracking-wider uppercase transition-all duration-300 ${
                   isActive ? 'text-primary' : 'text-foreground hover:text-primary'
                 }`
               }
@@ -124,13 +139,13 @@ export default function Navigation() {
 
           <AnimatedThemeToggler />
 
-          <Button asChild variant="outline" className="font-sans px-5 py-2 text-sm h-auto">
+          <Button asChild variant="outline" className="font-sans px-5 py-2 text-sm h-auto whitespace-nowrap">
             <Link to="/contact" /* ui-ignore */>{t('connect')}</Link>
           </Button>
         </div>
 
         {/* Mobile Menu via Sheet */}
-        <div className="md:hidden">
+        <div className="xl:hidden">
           <Sheet open={isOpen} onOpenChange={setIsOpen}>
             <SheetTrigger asChild>
               <Button
