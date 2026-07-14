@@ -1,109 +1,38 @@
-import { useEffect, useState } from 'react';
-import { Award, Briefcase, Cpu, Globe, GraduationCap } from 'lucide-react';
-import Marquee from '../components/magicui/Marquee';
-
-interface Partner {
-  name: string;
-  category: string;
-  type: 'academic' | 'corporate' | 'community' | 'research';
-}
-
-const PARTNERS: Partner[] = [
-  { name: 'Ministry of Education, Singapore', category: 'Academic Advisory', type: 'academic' },
-  { name: 'Goonj', category: 'Community Partner', type: 'community' },
-  { name: 'Hyundai', category: 'Corporate Pedigree', type: 'corporate' },
-  { name: 'Hero Honda', category: 'Corporate Pedigree', type: 'corporate' },
-  { name: 'LML', category: 'Corporate Pedigree', type: 'corporate' },
-  { name: 'Excel', category: 'Corporate Pedigree', type: 'corporate' },
-  { name: 'Powerica Ltd.', category: 'Corporate Pedigree', type: 'corporate' },
-  { name: 'Indian Maritime University', category: 'Academic Pedigree', type: 'academic' },
-  { name: 'Hungkuo Delin University of Technology', category: 'Global Academic', type: 'academic' },
-  { name: 'Delhi University', category: 'Academic Pedigree', type: 'academic' },
-  { name: 'HCL', category: 'Technology Pedigree', type: 'corporate' },
-  { name: 'IBM', category: 'Technology Pedigree', type: 'corporate' },
-  { name: 'NIIT', category: 'Education Pedigree', type: 'academic' },
-  { name: 'Convergys', category: 'Corporate Pedigree', type: 'corporate' },
-  { name: 'Kadi Sarva Vishwavidyalaya (KSV)', category: 'Academic Pedigree', type: 'academic' },
-  { name: 'Visva-Bharati University', category: 'Academic Pedigree', type: 'academic' },
-  { name: 'Green Hydrogen Research, South Korea', category: 'Research Connection', type: 'research' },
-  { name: 'Early Childcare and Education Center, Dallas', category: 'Education Pedigree', type: 'academic' }
+const PARTNERS = [
+  'Ministry of Education, Singapore',
+  'Goonj',
+  'Hyundai',
+  'Hero Honda',
+  'LML',
+  'Excel',
+  'Powerica Ltd.',
+  'Indian Maritime University',
+  'Hungkuo Delin University of Technology',
+  'Delhi University',
+  'HCL',
+  'IBM',
+  'NIIT',
+  'Convergys',
+  'Kadi Sarva Vishwavidyalaya',
+  'Visva-Bharati University',
+  'Green Hydrogen Research, South Korea',
+  'Early Childcare and Education Center, Dallas',
 ];
 
 export default function PartnerMarquee() {
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  const getIcon = (type: Partner['type']) => {
-    switch (type) {
-      case 'academic':
-        return <GraduationCap className="w-3.5 h-3.5 text-primary" />;
-      case 'corporate':
-        return <Briefcase className="w-3.5 h-3.5 text-primary" />;
-      case 'community':
-        return <Globe className="w-3.5 h-3.5 text-primary" />;
-      case 'research':
-        return <Cpu className="w-3.5 h-3.5 text-primary" />;
-      default:
-        return <Award className="w-3.5 h-3.5 text-primary" />;
-    }
-  };
-
-  const firstHalf = PARTNERS.slice(0, Math.ceil(PARTNERS.length / 2));
-  const secondHalf = PARTNERS.slice(Math.ceil(PARTNERS.length / 2));
-
-  if (!mounted) return null;
-
   return (
-    <section className="relative w-full py-8 bg-muted border-y border-border overflow-hidden space-y-4">
-      {/* Edge Fades */}
-      <div className="absolute inset-y-0 left-0 w-24 md:w-48 bg-gradient-to-r from-muted to-transparent z-10 pointer-events-none" />
-      <div className="absolute inset-y-0 right-0 w-24 md:w-48 bg-gradient-to-l from-muted to-transparent z-10 pointer-events-none" />
-
-      {/* Row 1: Forward Scrolling */}
-      <div className="relative w-full flex items-center">
-        <Marquee pauseOnHover className="[--duration:35s] py-1">
-          {firstHalf.map((partner) => (
-            <div
-              key={partner.name}
-              className="inline-flex items-center gap-3 px-5 py-2.5 bg-card border border-border transition-all duration-300 hover:border-primary/40 hover:bg-accent group mx-2 shrink-0"
+    <section className="relative w-full bg-background border-t border-border/50 py-16 overflow-hidden">
+      <div className="max-w-[1440px] mx-auto px-6 md:px-12">
+        <div className="flex flex-wrap justify-center items-center gap-x-16 gap-y-5">
+          {PARTNERS.map((partner) => (
+            <span
+              key={partner}
+              className="text-[15px] font-medium text-muted-foreground hover:text-foreground cursor-default transition-colors duration-200"
             >
-              {getIcon(partner.type)}
-              <div className="flex flex-col leading-none">
-                <span className="text-xs md:text-sm font-sans font-medium text-card-foreground group-hover:text-foreground transition-colors">
-                  {partner.name}
-                </span>
-                <span className="text-[9px] md:text-[10px] font-sans text-muted-foreground mt-0.5">
-                  {partner.category}
-                </span>
-              </div>
-            </div>
+              {partner}
+            </span>
           ))}
-        </Marquee>
-      </div>
-
-      {/* Row 2: Reverse Scrolling */}
-      <div className="relative w-full flex items-center">
-        <Marquee reverse pauseOnHover className="[--duration:35s] py-1">
-          {secondHalf.map((partner) => (
-            <div
-              key={partner.name}
-              className="inline-flex items-center gap-3 px-5 py-2.5 bg-card border border-border transition-all duration-300 hover:border-primary/40 hover:bg-accent group mx-2 shrink-0"
-            >
-              {getIcon(partner.type)}
-              <div className="flex flex-col leading-none">
-                <span className="text-xs md:text-sm font-sans font-medium text-card-foreground group-hover:text-foreground transition-colors">
-                  {partner.name}
-                </span>
-                <span className="text-[9px] md:text-[10px] font-sans text-muted-foreground mt-0.5">
-                  {partner.category}
-                </span>
-              </div>
-            </div>
-          ))}
-        </Marquee>
+        </div>
       </div>
     </section>
   );
