@@ -19,7 +19,7 @@ const translations = {
   heroCategory: "Leadership & Global Expert Council",
   heroTitleNormal: "Expert",
   heroTitleHighlighted: "Council",
-  heroDesc: "The people powering EduPlus Skills - uniting researchers, corporate leaders, and community builders across Asia, Europe, and North America.",
+  heroDesc: "Researchers, corporate leaders, and community builders across three continents.",
   councilStructureForum: "Council Structure // Methodology Forum",
   innovativeCouncil: "Innovative Methodology Council",
   councilDescription: "The Council comprises five distinct committees of academics, industry experts, and community leaders. Together, they deliberate, analyze, and design future-ready curricula to ensure teaching methodology bridges the gap between regional potential and global opportunity.",
@@ -257,7 +257,6 @@ export default function Council() {
         eyebrow={t('heroCategory')}
         title={<>{t('heroTitleNormal')} <span className="text-primary">{t('heroTitleHighlighted')}</span></>}
         description={t('heroDesc')}
-        layout="split"
       />
 
       <div className={`max-w-[1200px] mx-auto px-6 md:px-12 relative z-10 mt-20 transition-all duration-1000 delay-300 transform ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
@@ -267,7 +266,7 @@ export default function Council() {
           <span className="text-xs font-sans font-medium tracking-[0.3em] uppercase text-primary block mb-2">
             {t('councilStructureForum')}
           </span>
-          <h2 className="font-heading text-3xl md:text-5xl font-semibold tracking-tight text-foreground mb-4">
+          <h2 className="section-title text-foreground mb-4">
             {t('innovativeCouncil')}
           </h2>
           <p className="font-sans text-muted-foreground text-base leading-relaxed">
@@ -443,10 +442,10 @@ export default function Council() {
         <section className="mt-32 border-t border-border/60 pt-20">
           <div className="max-w-4xl mx-auto px-6">
             <div className="space-y-4 text-center md:text-left mb-12">
-              <span className="text-xs font-sans font-medium tracking-[0.3em] uppercase text-primary block mb-2">
+                  <span className="eyebrow block mb-2">
                 {t('testimonialsCategory')}
               </span>
-              <h2 className="font-heading text-3xl md:text-5xl font-semibold tracking-tight text-foreground">
+              <h2 className="section-title text-foreground">
                 {t('testimonialsTitle')}
               </h2>
               <p className="font-sans text-muted-foreground text-sm max-w-2xl">

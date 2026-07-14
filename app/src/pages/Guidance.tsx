@@ -10,7 +10,7 @@ const translations = {
   heroCategory: "Advisory Services",
   heroTitleNormal: "One-to-One",
   heroTitleHighlighted: "Guidance",
-  heroDesc: "EduPlus Skills offers dedicated, one-on-one support tailored to each stakeholder in the education ecosystem. We guide you toward realistic, fulfilling paths with confidence.",
+  heroDesc: "Dedicated one-on-one support tailored to every learner's journey.",
   tailoredRoadmap: "Tailored Roadmap",
   milestonesStrategy: "Milestones & Strategy:",
   logPort: "LOG_PORT: TERMINAL_EXECUTION_DEV",
@@ -239,7 +239,6 @@ export default function Guidance() {
         eyebrow={t('heroCategory')}
         title={<>{t('heroTitleNormal')} <span className="text-primary">{t('heroTitleHighlighted')}</span></>}
         description={t('heroDesc')}
-        layout="poster"
       />
 
       <div className="max-w-[1200px] mx-auto px-6 md:px-12 relative z-10 mt-16">

@@ -10,7 +10,7 @@ const translations = {
   heroCategory: "Curriculum Pathways",
   heroTitleNormal: "Future-Ready",
   heroTitleHighlighted: "Programs",
-  heroDesc: "At EduPlus Skills, our programs are designed as interconnected modules that support learners at every milestone-from discovering their strengths to launching global careers.",
+  heroDesc: "Interconnected modules from discovery to global career launch.",
   skillRoadmaps: "Skill Roadmaps // Interactive Pathways",
   skillEnhancementJourney: "The Skill Enhancement Journey",
   selectPhase: "Select a phase on the interactive pipeline below to inspect curriculum details, outcomes, and routing.",
@@ -124,17 +124,16 @@ export default function Programs() {
         eyebrow={t('heroCategory')}
         title={<>{t('heroTitleNormal')} <span className="text-primary">{t('heroTitleHighlighted')}</span></>}
         description={t('heroDesc')}
-        layout="offset"
       />
 
       <div className="max-w-[1200px] mx-auto px-6 md:px-12 relative z-10 mt-20">
         
         {/* Pathway intro */}
         <div className={`max-w-3xl mb-16 transition-all duration-1000 transform ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-          <span className="text-xs font-sans font-medium tracking-[0.3em] uppercase text-primary block mb-2">
+          <span className="eyebrow block mb-2">
             {t('skillRoadmaps')}
           </span>
-          <h2 className="font-heading text-3xl md:text-5xl font-semibold tracking-tight text-foreground mb-4">
+          <h2 className="section-title text-foreground mb-4">
             {t('skillEnhancementJourney')}
           </h2>
           <p className="font-sans text-muted-foreground text-base leading-relaxed">

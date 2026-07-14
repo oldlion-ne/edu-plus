@@ -12,7 +12,7 @@ const translations = {
   heroCategory: "Ecosystem Nodes",
   heroTitleNormal: "Knowledge",
   heroTitleHighlighted: "Hub",
-  heroDesc: "Access elite technical tutorials, educational webinars, and expert podcasts compiled to accelerate your academic and skill roadmap.",
+  heroDesc: "Tutorials, webinars, and expert podcasts to accelerate your roadmap.",
   searchPlaceholder: "Search resources...",
   loadingResources: "LOADING RESOURCES...",
   noResources: "NO RESOURCES MATCHING QUERY.",
@@ -81,7 +81,6 @@ export default function KnowledgeHub() {
         eyebrow={t('heroCategory')}
         title={<>{t('heroTitleNormal')} <span className="text-primary">{t('heroTitleHighlighted')}</span></>}
         description={t('heroDesc')}
-        layout="split"
       />
 
       <div className="max-w-[1200px] mx-auto px-6 md:px-12 relative z-10 mt-12">

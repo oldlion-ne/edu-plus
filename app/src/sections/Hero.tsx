@@ -14,10 +14,9 @@ export default function Hero() {
     <EditorialHero
       eyebrow="Learning, held in balance"
       title={<>A calmer way to <span className="text-primary">move forward.</span></>}
-      description="Practical learning, trusted guidance, and a connected East Asian community—designed to turn uncertainty into confident next steps."
+      description="Practical learning, trusted guidance, and a connected East Asian community."
       image="/images/HomeHeroVisual.webp"
       imageAlt="East Asian learners and mentors collaborating in a calm modern learning space"
-      layout="offset"
       actions={
         <>
           <Button asChild size="lg" variant="raised">

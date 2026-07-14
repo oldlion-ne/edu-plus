@@ -1,4 +1,4 @@
-import { lazy, Suspense, useState, useRef } from 'react';
+import { lazy, Suspense, useState, useRef, useLayoutEffect } from 'react';
 import { Routes, Route, useLocation, Navigate } from 'react-router';
 import Navigation from './sections/Navigation';
 import Footer from './sections/Footer';
@@ -36,14 +36,35 @@ function App() {
   const location = useLocation();
   const isDashboard = location.pathname === '/dashboard';
   const isAuthRoute = location.pathname === '/login' || location.pathname.startsWith('/auth/');
-  
+
   const scrollContainerRef = useRef<HTMLDivElement | null>(null);
   const [scrollEl, setScrollEl] = useState<HTMLDivElement | null>(null);
+  const roRef = useRef<ResizeObserver | null>(null);
 
   const handleScrollRef = (node: HTMLDivElement | null) => {
     scrollContainerRef.current = node;
     setScrollEl(node);
   };
+
+  // Measure the scroll container's scrollbar width and expose it as a CSS
+  // variable on <html> so the fixed navbar can subtract it from its width.
+  // Using overflow-y-scroll guarantees the scrollbar is always rendered at
+  // mount time, so offsetWidth - clientWidth is reliable without timing hacks.
+  useLayoutEffect(() => {
+    const el = scrollContainerRef.current;
+    if (!el) return;
+    const measure = () => {
+      const w = el.offsetWidth - el.clientWidth;
+      document.documentElement.style.setProperty('--scrollbar-width', `${w}px`);
+    };
+    measure();
+    roRef.current = new ResizeObserver(measure);
+    roRef.current.observe(el);
+    return () => {
+      roRef.current?.disconnect();
+      document.documentElement.style.removeProperty('--scrollbar-width');
+    };
+  }, [scrollEl]);
 
   const showChatAgent = !isDashboard && !isAuthRoute;
   const showPublicNav = !isDashboard && !isAuthRoute;
@@ -76,10 +97,10 @@ function App() {
         <div className="relative flex h-[100dvh] w-full min-w-0 flex-col overflow-hidden bg-background">
           {showPublicNav && <Navigation />}
           {showChatAgent && <AIChatAgent />}
-          <div 
+          <div
             ref={handleScrollRef}
             id="main-scroll-container"
-            className="flex min-h-0 min-w-0 flex-1 flex-col justify-between overflow-x-clip overflow-y-auto overscroll-y-contain [touch-action:pan-y]"
+            className="flex min-h-0 min-w-0 flex-1 flex-col justify-between overflow-x-clip overflow-y-scroll overscroll-y-contain [scrollbar-gutter:stable] [touch-action:pan-y]"
           >
             <main className="min-w-0 flex-grow">
               <Suspense fallback={<PageLoader />}>
@@ -113,4 +134,3 @@ function App() {
 }
 
 export default App;
-

@@ -64,7 +64,7 @@ export default function PedigreeShowcase() {
           </div>
 
           {/* Main heading */}
-          <h2 className="font-sans text-3xl sm:text-4xl md:text-5xl lg:text-[3.25rem] font-light text-foreground max-w-4xl leading-[1.15] tracking-tight text-balance">
+          <h2 className="section-title text-foreground max-w-4xl text-balance">
             Our founders &amp; advisors bring experience from{' '}
             <span className="text-primary">world-class organizations</span>
           </h2>

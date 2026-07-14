@@ -38,7 +38,11 @@ export default function Navigation() {
   };
 
   return (
-    <nav aria-label="Main navigation" className="fixed inset-x-0 top-0 z-50 border-b border-border bg-background/95">
+    <nav
+      aria-label="Main navigation"
+      className="fixed left-0 top-0 z-50 border-b border-border bg-background/95 backdrop-blur-md"
+      style={{ width: 'calc(100% - var(--scrollbar-width, 0px))' }}
+    >
       <div className="mx-auto flex h-[72px] max-w-[1440px] items-center px-5 md:px-8 xl:px-12">
         <Link
           to="/"

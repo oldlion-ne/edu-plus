@@ -10,7 +10,7 @@ const translations = {
   heroCategory: "Updates & Publications",
   heroTitleNormal: "News &",
   heroTitleHighlighted: "Insights",
-  heroDesc: "This space brings you closer to the people, programs, and impact behind EduPlus Skills. We share success stories, event highlights, and perspectives on the evolving world of education and work.",
+  heroDesc: "Stories, highlights, and perspectives from the EduPlus community.",
   readArticleLabel: "Read Article \u2192",
   
   // Editorial Focus
@@ -111,7 +111,6 @@ export default function News() {
         eyebrow={t('heroCategory')}
         title={<>{t('heroTitleNormal')} <span className="text-primary">{t('heroTitleHighlighted')}</span></>}
         description={t('heroDesc')}
-        layout="poster"
       />
 
       <div className="max-w-[1200px] mx-auto px-6 md:px-12 relative z-10 mt-16">

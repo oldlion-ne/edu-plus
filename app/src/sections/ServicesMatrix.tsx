@@ -142,11 +142,11 @@ export default function ServicesMatrix() {
             visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
           }`}
         >
-          <span className="font-sans font-medium text-xs uppercase tracking-wider text-primary block">
+          <span className="eyebrow block">
             Future-Ready Programs
           </span>
 
-          <h2 className="font-heading text-3xl md:text-4xl font-light text-foreground text-balance leading-tight">
+          <h2 className="section-title text-foreground text-balance">
             Connect your learning journey across every milestone
           </h2>
 

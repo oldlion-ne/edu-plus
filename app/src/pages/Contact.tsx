@@ -20,7 +20,7 @@ const translations = {
   heroCategory: "Connect With Us",
   heroTitleNormal: "Contact &",
   heroTitleHighlighted: "Locations",
-  heroDesc: "Let's Build Your Next Chapter. Whether you seek strategic collaboration, student enrollment, counselor support, or training resources-we are here to launch you forward.",
+  heroDesc: "Strategic collaboration, enrollment, and support — we're here.",
   officeTitle: "Primary Head Office",
   officeName: "Mommy Complex",
   officeAddress: "Nambol Bazar, Bishnupur District, Nambol 795134, Manipur, India",
@@ -122,7 +122,6 @@ export default function Contact() {
         eyebrow={t('heroCategory')}
         title={<>{t('heroTitleNormal')} <span className="text-primary">{t('heroTitleHighlighted')}</span></>}
         description={t('heroDesc')}
-        layout="split"
       />
 
       <div className="max-w-[1200px] mx-auto px-6 md:px-12 relative z-10 mt-16 pb-20">

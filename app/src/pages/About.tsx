@@ -9,7 +9,7 @@ const translations = {
   aboutCategory: "Inside EduPlus Skills",
   aboutTitleNormal: "Know Who",
   aboutTitleHighlighted: "We Are",
-  aboutDesc: "EduPlus Skills is an innovation-led skills and career platform that seamlessly combines education, training, and employment enablement. We operate both online and offline, ensuring access and outreach across regions-from local communities in Manipur to global education and career pathways.",
+  aboutDesc: "An innovation-led platform combining education, training, and career enablement across regions.",
   learnMore: "Learn More",
   specializeDesc: "We specialize in structured skill-building, career mapping, higher studies support, and curated placement opportunities, supported by a diverse network of experts from India, Asia, and beyond. Our programs are designed to be practical, experiential, and outcomes-focused, so that learning translates directly into confidence, clarity, and career progress.",
   whatWeStandFor: "What We Stand For",
@@ -103,7 +103,6 @@ export default function About() {
         eyebrow={t('aboutCategory')}
         title={<>{t('aboutTitleNormal')} <span className="text-primary">{t('aboutTitleHighlighted')}</span></>}
         description={t('aboutDesc')}
-        layout="poster"
         actions={
         <Button
           asChild
@@ -122,10 +121,10 @@ export default function About() {
         
         {/* Story Intro */}
         <div className={`max-w-3xl mb-20 transition-all duration-1000 transform ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-          <span className="text-xs font-sans font-medium tracking-[0.3em] uppercase text-primary block mb-2">
+          <span className="eyebrow block mb-2">
             {t('storyMatrixTimeline')}
           </span>
-          <h2 className="font-heading text-3xl md:text-5xl font-semibold tracking-tight text-foreground mb-6">
+          <h2 className="section-title text-foreground mb-6">
             {t('journeyBuiltOnPurpose')}
           </h2>
           <p className="font-sans text-muted-foreground text-lg leading-relaxed">

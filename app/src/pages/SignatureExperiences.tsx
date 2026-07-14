@@ -11,7 +11,7 @@ const translations = {
   heroCategory: "Flagship Events",
   heroTitleNormal: "Signature",
   heroTitleHighlighted: "Experiences",
-  heroDesc: "Our flagship events bring energy, community, and real-world exposure into the learning experience. These curated experiences connect students, educators, and industry experts.",
+  heroDesc: "Curated experiences connecting students, educators, and industry.",
   timelineHeader: "Flagship Event Logs // Historical Tracks",
   durationLabel: "DURATION // ",
   targetLabel: "TARGET // ",
@@ -180,7 +180,6 @@ export default function SignatureExperiences() {
         eyebrow={t('heroCategory')}
         title={<>{t('heroTitleNormal')} <span className="text-primary">{t('heroTitleHighlighted')}</span></>}
         description={t('heroDesc')}
-        layout="offset"
       />
 
       <div className="max-w-[1200px] mx-auto px-6 md:px-12 relative z-10 mt-20">
@@ -188,10 +187,10 @@ export default function SignatureExperiences() {
         
         {/* Intro */}
         <div className={`max-w-3xl mb-16 transition-all duration-1000 transform ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-          <span className="text-xs font-sans font-medium tracking-[0.3em] uppercase text-primary block mb-2">
+          <span className="eyebrow block mb-2">
             {t('timelineHeader')}
           </span>
-          <h2 className="font-heading text-3xl md:text-5xl font-semibold tracking-tight text-foreground mb-4">
+          <h2 className="section-title text-foreground mb-4">
             {t('heroTitleNormal')} {t('heroTitleHighlighted')}
           </h2>
         </div>
