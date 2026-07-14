@@ -4,7 +4,7 @@
 - Use **pnpm** exclusively. **NPM is forbidden.**
 - Start dev server: `pnpm run dev`
 - Production build: `pnpm run build`
-- Type checking: `pnpm tsc -b` (or `npx tsc -b`)
+- Type checking: `pnpm tsc -b`
 - Run tests: `pnpm run test:run`
 - Run linter: `pnpm run lint`
 

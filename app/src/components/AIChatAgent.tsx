@@ -265,7 +265,7 @@ export default function AIChatAgent() {
         <div className="fixed bottom-6 right-6 z-50 font-sans">
           <button /* ui-ignore */
             onClick={() => setIsOpen(true)}
-            className="group flex flex-col items-center justify-center h-14 w-14 bg-background border border-primary/30 text-foreground hover:border-primary/80 transition-all duration-300 cursor-pointer relative shadow-[0_0_15px_rgba(0,0,0,0.2)] animate-chat-glow rounded-none"
+            className="group flex flex-col items-center justify-center h-14 w-14 bg-background border border-primary/30 text-foreground hover:border-primary/80 transition-all duration-300 cursor-pointer relative shadow-[0_0_15px_rgba(0,0,0,0.2)] rounded-none"
             aria-label="Open AI chat support"
           >
             <span className="font-mono text-xs font-bold tracking-widest text-primary group-hover:scale-105 transition-transform duration-200">
@@ -273,13 +273,12 @@ export default function AIChatAgent() {
             </span>
             <div className="flex items-center gap-1 mt-1">
               <span className="relative flex h-1.5 w-1.5">
-                <span className="animate-ping absolute inline-flex h-full w-full bg-[#22C55E] opacity-75"></span>
-                <span className="relative inline-flex h-1.5 w-1.5 bg-[#22C55E]"></span>
+                <span className="relative inline-flex rounded h-1.5 w-1.5 bg-emerald-500"></span>
               </span>
-              <span className="font-mono text-[6px] tracking-widest text-[#22C55E] uppercase font-bold">{t('statusOnline')}</span>
+              <span className="font-mono text-[6px] tracking-widest text-emerald-500 uppercase font-bold">{t('statusOnline')}</span>
             </div>
-            <svg className="absolute inset-0 w-full h-full text-primary/10 group-hover:text-primary/30 transition-colors duration-300 group-hover:animate-spin [animation-duration:6s] pointer-events-none" viewBox="0 0 100 100">
-              <circle cx="50" cy="50" r="46" stroke="currentColor" strokeWidth="1" strokeDasharray="4 4" fill="none" />
+            <svg className="absolute inset-0 w-full h-full text-primary/10 group-hover:text-primary/30 transition-colors duration-300 pointer-events-none" viewBox="0 0 100 100">
+              <rect x="4" y="4" width="92" height="92" stroke="currentColor" strokeWidth="1" strokeDasharray="4 4" fill="none" />
             </svg>
           </button>
         </div>
@@ -301,8 +300,7 @@ export default function AIChatAgent() {
             <div className="flex items-center justify-between px-5 py-4 bg-muted/50 border-b border-border/80 flex-shrink-0">
               <div className="flex items-center gap-2">
                 <span className="relative flex h-2 w-2">
-                  <span className="animate-ping absolute inline-flex h-full w-full bg-primary opacity-75"></span>
-                  <span className="relative inline-flex h-2 w-2 bg-primary"></span>
+                  <span className="relative inline-flex rounded h-2 w-2 bg-primary"></span>
                 </span>
                 <span className="font-mono text-xs font-bold tracking-widest text-primary uppercase">{t('advisorTitle')}</span>
               </div>
@@ -383,7 +381,7 @@ export default function AIChatAgent() {
                 type="text"
                 value={inputValue}
                 onChange={(e) => setInputValue(e.target.value)}
-                placeholder="ENTER COGNITIVE INQUIRY..."
+                placeholder="How can we help?"
                 disabled={isLoading}
                 className="flex-1 bg-background border border-input text-foreground text-xs px-3 py-2 outline-none focus:border-primary focus:ring-1 focus:ring-primary/25 disabled:opacity-50 font-mono transition-all rounded-none placeholder:text-muted-foreground/45"
               />

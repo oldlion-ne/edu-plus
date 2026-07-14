@@ -1,475 +1,141 @@
-import { useEffect, useState } from 'react';
-import ImmersiveHero from '../components/effects/ImmersiveHero';
-import { NeonGradientCard } from '../components/ui/neon-gradient-card';
-import { Button } from '../components/ui/button';
-import { CharacterReveal } from '../components/ui/character-reveal';
-import { CustomIcon } from '../components/ui/custom-icon';
+import { Link } from 'react-router';
+import { Button } from '@/components/ui/button';
+import { PageHero } from '@/components/ui/page-hero';
 
-const translations = {
-  altAbout: "About EduPlus",
-  aboutCategory: "Inside EduPlus Skills",
-  aboutTitleNormal: "Know Who",
-  aboutTitleHighlighted: "We Are",
-  aboutDesc: "EduPlus Skills is an innovation-led skills and career platform that seamlessly combines education, training, and employment enablement. We operate both online and offline, ensuring access and outreach across regions-from local communities in Manipur to global education and career pathways.",
-  learnMore: "Learn More",
-  specializeDesc: "We specialize in structured skill-building, career mapping, higher studies support, and curated placement opportunities, supported by a diverse network of experts from India, Asia, and beyond. Our programs are designed to be practical, experiential, and outcomes-focused, so that learning translates directly into confidence, clarity, and career progress.",
-  whatWeStandFor: "What We Stand For",
-  whatWeStandForDesc: "We believe that every learner deserves clarity of direction, access to opportunity, and the right skills at the right time. Our work centers on reducing confusion, demystifying career decisions, and making high-quality guidance accessible to students as early as school.",
-  num01: "01",
-  clarityOfDirection: "Clarity of Direction",
-  clarityDesc: "Reducing confusion, demystifying career decisions, and making high-quality guidance accessible to students as early as school. We break complex educational decisions down into personalized milestones.",
-  num02: "02",
-  accessToOpportunity: "Access to Opportunity",
-  psychometricSelection: "Psychometric Stream Selection",
-  successRate: "94% Success",
-  globalMentorship: "Global Mentorship Access",
-  coverageRate: "89% Coverage",
-  num03: "03",
-  rightSkillsTitle: "Right Skills at the Right Time",
-  rightSkillsDesc: "Empowering learners with critical soft skills, professional toolkits, and technical readiness designed for a fast-changing global economy.",
-  criticalSoftSkills: "Critical Soft Skills & AI",
-  criticalSoftSkillsDesc: "Integrated corporate preparedness programs mapped for global academic and corporate team collaboration routes across Singapore and Delhi hubs.",
-  greenHydrogen: "Green Hydrogen & Energy Sciences",
-  greenHydrogenDesc: "Pioneering clean energy training tracks built to channel local talent in Manipur toward emerging industrial hubs across Southeast Asia.",
-  maritimeLogistics: "Maritime Logistics & Port Operations",
-  maritimeLogisticsDesc: "Curating deep supply-chain and global port management modules to link Asian logistics experts to global shipping pathways.",
-  internationalLaw: "International Law & Public Health",
-  internationalLawDesc: "Mentorship channels guided by specialized global advisory councils to prep academic research candidates for top global institutions.",
-  multiDomainExpertise: "Multi-Domain Expertise",
-  professionalPedigree: "Our Professional Pedigree",
-  pedigreeDesc: "Our team combines experience across education, corporate sectors, community development, research, healthcare, law, maritime, communication, and global academia. This multi-domain expertise allows us to build programs that are not only aspirational but deeply grounded in reality.",
-  storyMatrixTimeline: "The Story Matrix // Timeline",
-  journeyBuiltOnPurpose: "A Journey Built on Purpose",
-  chapter01Roots: "Chapter 01 // The Roots",
-  chapter01Title: "Nurturing Local Potential",
-  chapter01Desc1: "EduPlus Skills originated from a simple yet powerful conviction: that geography should never dictate opportunity. Beginning our work directly at the grassroot levels in Manipur, we set out to build pathways that connect local, talented individuals with world-class capability standards.",
-  chapter01Desc2: "We designed our programs not just as abstract courses, but as practical interventions that recognize the cultural, economic, and operational realities of the regions we serve. By building regional access channels, we ensure that learning is immediately relevant and outcomes-driven.",
-  chapter02HubModel: "Chapter 02 // The Hub Model",
-  chapter02Title: "Connecting East India to Global Networks",
-  chapter02Desc1: "To scale our impact, we developed a distributed node network linking local communities to national and international metropolises. Operating active collaboration lines across Manipur, Kolkata, Delhi, and Singapore, we bridge the gap between traditional educational structures and modern professional ecosystems.",
-  singapore: "SINGAPORE",
-  speechInterventions: "Speech Interventions",
-  delhiKolkata: "DELHI & KOLKATA",
-  corporateToolkits: "Corporate Toolkits",
-  globalAdvisory: "GLOBAL ADVISORY",
-  directMentorship: "Direct Mentorship",
-  chapter03CorePillars: "Chapter 03 // Core Pillars",
-  ourValues: "Our Values & Enablement",
-  systemPsychometrics: "SYSTEM // PSYCHOMETRICS",
-  connectGlobalNetwork: "CONNECT // GLOBAL_NETWORK",
-  chapter04Foundations: "Chapter 04 // Foundations",
-  domain_edu: "Education",
-  domain_corp: "Corporate leadership",
-  domain_comm: "Community development",
-  domain_research: "Research",
-  domain_health: "Healthcare",
-  domain_law: "Law",
-  domain_maritime: "Maritime",
-  manipurRoot: "MANIPUR ROOT",
-  epicenterOpportunity: "Epicenter of Opportunity",
-  nexusNode: "NEXUS NODE",
-  clarityPipeline: "CLARITY PIPELINE",
-  accessNode: "ACCESS NODE",
-  skillsReady: "SKILLS READY",
-  governance: "GOVERNANCE",
-  advisoryCouncil: "ADVISORY COUNCIL"
-};
+const VALUES = [
+  {
+    num: '01',
+    title: 'Clarity of Direction',
+    desc: 'Reducing confusion, demystifying career decisions, and making high-quality guidance accessible to learners as early as school.',
+  },
+  {
+    num: '02',
+    title: 'Access to Opportunity',
+    desc: 'Ensuring geography never dictates potential — from communities in Manipur to global academic and corporate networks.',
+  },
+  {
+    num: '03',
+    title: 'Right Skills at the Right Time',
+    desc: 'Empowering learners with critical soft skills, professional toolkits, and technical readiness for a fast-changing global economy.',
+  },
+];
 
-const translationMap = new Map<string, string>(Object.entries(translations));
-const t = (key: keyof typeof translations) => translationMap.get(key) || '';
+const DOMAINS = [
+  'Education',
+  'Corporate Leadership',
+  'Community Development',
+  'Research',
+  'Healthcare',
+  'Law',
+  'Maritime',
+  'Communication',
+  'Global Academia',
+];
 
-const DOMAIN_KEYS = [
-  'domain_edu',
-  'domain_corp',
-  'domain_comm',
-  'domain_research',
-  'domain_health',
-  'domain_law',
-  'domain_maritime'
-] as const;
+const TIMELINE = [
+  {
+    chapter: '01 — The Roots',
+    title: 'Nurturing Local Potential',
+    desc: 'EduPlus Skills originated from a conviction that geography should never dictate opportunity. Beginning at the grassroot level in Manipur, we built pathways connecting local talent with world-class standards.',
+  },
+  {
+    chapter: '02 — The Hub Model',
+    title: 'Connecting East India to Global Networks',
+    desc: 'We developed a distributed network linking local communities to national and international metropolises — operating across Manipur, Kolkata, Delhi, and Singapore.',
+  },
+  {
+    chapter: '03 — Core Pillars',
+    title: 'Values & Enablement',
+    desc: 'Psychometric guidance, global network connectivity, and a multi-domain advisory council form the three pillars of our operational framework.',
+  },
+  {
+    chapter: '04 — Foundations',
+    title: 'Professional Pedigree',
+    desc: 'Our team combines experience across nine domains: education, corporate leadership, community development, research, healthcare, law, maritime, communication, and global academia.',
+  },
+];
 
 export default function About() {
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
   return (
-    <div className="min-h-screen bg-background text-foreground pb-32 relative overflow-hidden">
-      {/* Decorative Radial Glows */}
-      <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-primary/5 rounded-none blur-[120px] pointer-events-none" />
-      <div className="absolute bottom-1/4 right-1/4 w-[600px] h-[600px] bg-primary/3 rounded-none blur-[150px] pointer-events-none" />
+    <div className="bg-background w-full min-h-screen">
 
-      {/* Immersive Top Hero Viewport */}
-      <ImmersiveHero
-        category={t('aboutCategory')}
-        titleNormal={t('aboutTitleNormal')}
-        titleHighlighted={t('aboutTitleHighlighted')}
-        description={t('aboutDesc')}
-        telemetryLeft="COLLAB_NEXUS // LOCAL_ROOTS"
-        telemetryRight="GLOBAL_VALUE_NETWORKS // ONLINE"
+      {/* ── Typographic Hero ── */}
+      <PageHero
+        eyebrow="About EduPlus"
+        title="Know Who We Are"
+        description="EduPlus Skills is an innovation-led skills and career platform that seamlessly combines education, training, and employment enablement — operating both online and offline across regions from Manipur to global career pathways."
       >
-        <Button
-          asChild
-          className="mt-2 pr-1.5"
-        >
-          <a href="#story" className="hover:text-primary focus:outline-none focus:ring-1 focus:ring-primary transition-colors">
-            <span className="text-nowrap">{t('learnMore')}</span>
-            <CustomIcon name="chevron-right" type="solid" className="opacity-50 size-4" />
-          </a>
+        <Button asChild className="rounded-none h-[52px] px-[28px] bg-foreground text-background hover:bg-primary transition-colors duration-200">
+          <Link to="/contact" /* ui-ignore */>Get in Touch</Link>
         </Button>
-      </ImmersiveHero>
+      </PageHero>
 
-      {/* Main Container */}
-      <div id="story" className="max-w-[1200px] mx-auto px-6 md:px-12 relative z-10 mt-24">
-        
-        {/* Story Intro */}
-        <div className={`max-w-3xl mb-20 transition-all duration-1000 transform ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-          <span className="text-xs font-mono font-medium tracking-[0.3em] uppercase text-primary block mb-2">
-            {t('storyMatrixTimeline')}
-          </span>
-          <h2 className="font-heading text-3xl md:text-5xl font-semibold tracking-tight text-foreground mb-6">
-            {t('journeyBuiltOnPurpose')}
-          </h2>
-          <CharacterReveal textClassName="font-sans text-muted-foreground/30 text-lg leading-relaxed">
-            {t('specializeDesc')}
-          </CharacterReveal>
+      {/* ── What We Stand For ── */}
+      <section className="py-32 border-t border-border/50 px-6 md:px-12 max-w-[1440px] mx-auto">
+        <span className="text-[13px] font-medium tracking-wide uppercase text-muted-foreground mb-4 block">
+          What We Stand For
+        </span>
+        <h2 className="text-3xl sm:text-4xl font-light text-foreground tracking-tight leading-[1.2] mb-20 max-w-2xl">
+          Every learner deserves clarity, access, and the right skills at the right time.
+        </h2>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-x-12 gap-y-16">
+          {VALUES.map((v) => (
+            <div key={v.num} className="p-10 bg-transparent hover:bg-secondary transition-colors duration-200">
+              <span className="text-[13px] font-medium text-primary mb-4 block">{v.num}</span>
+              <h3 className="text-[20px] font-medium text-foreground mb-4">{v.title}</h3>
+              <p className="text-[15px] text-muted-foreground leading-relaxed">{v.desc}</p>
+            </div>
+          ))}
         </div>
+      </section>
 
-        {/* Narrative Vertical Storyline */}
-        <div className="relative border-l border-border/80 pl-8 md:pl-16 ml-4 md:ml-8 space-y-24">
-          
-          {/* Chapter 01: The Genesis */}
-          <div className={`relative transition-all duration-1000 delay-100 transform ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-            {/* Timeline Node */}
-            <div className="absolute -left-[41px] md:-left-[73px] top-4 flex items-center justify-center">
-              <span className="relative flex h-5 w-5">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-none bg-primary/20 opacity-75"></span>
-                <span className="relative inline-flex rounded-none h-5 w-5 bg-primary border-4 border-background"></span>
-              </span>
-            </div>
-
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-              {/* Left Side: Narrative Card */}
-              <div className="lg:col-span-7 space-y-4">
-                <div className="space-y-2">
-                  <span className="font-mono text-xs uppercase tracking-widest text-primary/70 block">
-                    {t('chapter01Roots')}
-                  </span>
-                  <div className="inline-flex items-center gap-1.5 font-mono text-[9px] uppercase tracking-[0.2em] text-muted-foreground border border-border px-2 py-0.5 bg-card/50">
-                    <CustomIcon name="location-dot" type="solid" className="size-2.5 text-primary" /> Manipur Genesis
-                  </div>
-                </div>
-                <NeonGradientCard className="border border-border/50">
-                  <div className="space-y-4">
-                    <h3 className="font-heading text-2xl font-semibold tracking-tight text-foreground">
-                      {t('chapter01Title')}
-                    </h3>
-                    <CharacterReveal textClassName="font-sans text-muted-foreground/30 text-sm leading-relaxed">
-                      {t('chapter01Desc1')}
-                    </CharacterReveal>
-                    <CharacterReveal textClassName="font-sans text-muted-foreground/30 text-sm leading-relaxed">
-                      {t('chapter01Desc2')}
-                    </CharacterReveal>
-                  </div>
-                </NeonGradientCard>
+      {/* ── Journey Timeline ── */}
+      <section className="py-32 border-t border-border/50 px-6 md:px-12 max-w-[1440px] mx-auto">
+        <span className="text-[13px] font-medium tracking-wide uppercase text-muted-foreground mb-4 block">
+          Our Journey
+        </span>
+        <h2 className="text-3xl sm:text-4xl font-light text-foreground tracking-tight leading-[1.2] mb-20">
+          A journey built on purpose
+        </h2>
+        <div className="flex flex-col gap-0">
+          {TIMELINE.map((item, i) => (
+            <div
+              key={item.chapter}
+              className={`grid md:grid-cols-[1fr_3fr] gap-8 md:gap-16 py-12 ${i < TIMELINE.length - 1 ? 'border-b border-border/50' : ''}`}
+            >
+              <div>
+                <span className="text-[13px] font-medium text-muted-foreground uppercase tracking-wide block">{item.chapter}</span>
               </div>
-
-              {/* Right Side: Manipur Root Image Card */}
-              <div className="lg:col-span-5 self-stretch flex flex-col justify-center">
-                <div className="relative h-56 w-full overflow-hidden rounded-none bg-card/10 border border-border/50 flex flex-col justify-end p-6 group/image-card">
-                  {/* Image Background */}
-                  <img
-                    src="/assets/manipur_root.png"
-                    alt="Manipur Root"
-                    className="absolute inset-0 w-full h-full object-cover opacity-95 transition-transform duration-700 group-hover/image-card:scale-105"
-                  />
-                  {/* Overlay gradient to keep text highly readable */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-background/70 via-background/20 to-transparent z-[1]" />
-                  {/* Focal Node */}
-                  <div className="relative z-10 flex flex-col items-center justify-center h-full">
-                    <div className="relative flex h-4 w-4">
-                      <span className="animate-ping absolute inline-flex h-full w-full rounded-none bg-primary opacity-75"></span>
-                      <span className="relative inline-flex rounded-none h-4 w-4 bg-primary border-2 border-background"></span>
-                    </div>
-                    <span className="mt-3 text-[10px] font-mono tracking-[0.3em] text-primary font-bold">{t('manipurRoot')}</span>
-                    <span className="mt-1 text-[8px] font-mono text-muted-foreground uppercase">{t('epicenterOpportunity')}</span>
-                  </div>
-                </div>
+              <div>
+                <h3 className="text-[22px] font-medium text-foreground mb-4">{item.title}</h3>
+                <p className="text-[16px] text-muted-foreground leading-relaxed max-w-[55ch]">{item.desc}</p>
               </div>
             </div>
-          </div>
-
-          {/* Chapter 02: Expansion (The Hub Model) */}
-          <div className={`relative transition-all duration-1000 delay-200 transform ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-            {/* Timeline Node */}
-            <div className="absolute -left-[41px] md:-left-[73px] top-4 flex items-center justify-center">
-              <span className="relative flex h-5 w-5">
-                <span className="relative inline-flex rounded-none h-5 w-5 bg-muted border-4 border-background"></span>
-              </span>
-            </div>
-
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-              {/* Left Side: Narrative Card */}
-              <div className="lg:col-span-7 space-y-4">
-                <div className="space-y-2">
-                  <span className="font-mono text-xs uppercase tracking-widest text-primary/70 block">
-                    {t('chapter02HubModel')}
-                  </span>
-                  <div className="inline-flex items-center gap-1.5 font-mono text-[9px] uppercase tracking-[0.2em] text-muted-foreground border border-border px-2 py-0.5 bg-card/50">
-                    <CustomIcon name="globe" type="solid" className="size-2.5 text-primary" /> Delhi &amp; SG Connections
-                  </div>
-                </div>
-                <NeonGradientCard className="border border-border/50">
-                  <div className="space-y-4">
-                    <h3 className="font-heading text-2xl font-semibold tracking-tight text-foreground">
-                      {t('chapter02Title')}
-                    </h3>
-                    <CharacterReveal textClassName="font-sans text-muted-foreground/30 text-sm leading-relaxed">
-                      {t('chapter02Desc1')}
-                    </CharacterReveal>
-                    
-                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2 text-xs font-mono">
-                      <div className="p-3 border border-border/30 bg-background/40 space-y-1">
-                        <span className="text-primary block font-semibold text-[10px] tracking-wider">{t('singapore')}</span>
-                        <span className="text-muted-foreground text-[10px]">{t('speechInterventions')}</span>
-                      </div>
-                      <div className="p-3 border border-border/30 bg-background/40 space-y-1">
-                        <span className="text-primary block font-semibold text-[10px] tracking-wider">{t('delhiKolkata')}</span>
-                        <span className="text-muted-foreground text-[10px]">{t('corporateToolkits')}</span>
-                      </div>
-                      <div className="p-3 border border-border/30 bg-background/40 space-y-1">
-                        <span className="text-primary block font-semibold text-[10px] tracking-wider">{t('globalAdvisory')}</span>
-                        <span className="text-muted-foreground text-[10px]">{t('directMentorship')}</span>
-                      </div>
-                    </div>
-                  </div>
-                </NeonGradientCard>
-              </div>
-
-              {/* Right Side: Connections Hub Graph */}
-              <div className="lg:col-span-5 self-stretch flex flex-col justify-center">
-                <div className="relative h-56 w-full p-5 rounded-none bg-card/10 border border-border/50 flex flex-col justify-between overflow-hidden group/nexus-card">
-                  {/* Image Background */}
-                  <img
-                    src="/assets/nexus-node.png"
-                    alt="Nexus Node"
-                    className="absolute inset-0 w-full h-full object-cover opacity-95 transition-transform duration-700 group-hover/nexus-card:scale-105"
-                  />
-                  {/* Overlay gradient to keep text highly readable */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-background/70 via-background/20 to-transparent z-[1]" />
-                  
-                  <div className="relative flex justify-between items-center z-10">
-                    <div className="bg-background/90 backdrop-blur-sm shadow-sm ring-1 ring-border rounded-none px-2.5 py-1 text-[9px] font-mono text-muted-foreground flex items-center gap-1.5 hover:ring-primary/40 transition-all select-none">
-                      <span className="h-1 w-1 rounded-none bg-primary animate-pulse"></span>
-                      SINGAPORE
-                    </div>
-                    <div className="bg-background/90 backdrop-blur-sm shadow-sm ring-1 ring-border rounded-none px-2.5 py-1 text-[9px] font-mono text-muted-foreground flex items-center gap-1.5 hover:ring-primary/40 transition-all select-none">
-                      <span className="h-1 w-1 rounded-none bg-primary animate-pulse"></span>
-                      DELHI
-                    </div>
-                  </div>
-
-                  <div className="relative flex justify-center z-10">
-                    <div className="bg-card shadow-black/10 ring-1 ring-primary/30 relative flex h-9 items-center rounded-none px-4 shadow-sm select-none">
-                      <span className="text-[10px] font-mono font-bold tracking-wider text-primary">{t('nexusNode')}</span>
-                    </div>
-                  </div>
-
-                  <div className="relative flex justify-between items-center z-10">
-                    <div className="bg-background/90 backdrop-blur-sm shadow-sm ring-1 ring-border rounded-none px-2.5 py-1 text-[9px] font-mono text-muted-foreground flex items-center gap-1.5 hover:ring-primary/40 transition-all select-none">
-                      <span className="h-1 w-1 rounded-none bg-primary animate-pulse"></span>
-                      KOLKATA
-                    </div>
-                    <div className="bg-background/90 backdrop-blur-sm shadow-sm ring-1 ring-border rounded-none px-2.5 py-1 text-[9px] font-mono text-muted-foreground flex items-center gap-1.5 hover:ring-primary/40 transition-all select-none">
-                      <span className="h-1 w-1 rounded-none bg-primary"></span>
-                      GLOBAL ADVISORY
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Chapter 03: Core Pillars */}
-          <div className={`relative transition-all duration-1000 delay-300 transform ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-            {/* Timeline Node */}
-            <div className="absolute -left-[41px] md:-left-[73px] top-4 flex items-center justify-center">
-              <span className="relative flex h-5 w-5">
-                <span className="relative inline-flex rounded-none h-5 w-5 bg-muted border-4 border-background"></span>
-              </span>
-            </div>
-
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-              {/* Left Side: Narrative Card with Bento Pillars */}
-              <div className="lg:col-span-7 space-y-4">
-                <div className="space-y-2">
-                  <span className="font-mono text-xs uppercase tracking-widest text-primary/70 block">
-                    {t('chapter03CorePillars')}
-                  </span>
-                  <div className="inline-flex items-center gap-1.5 font-mono text-[9px] uppercase tracking-[0.2em] text-muted-foreground border border-border px-2 py-0.5 bg-card/50">
-                    <CustomIcon name="star" type="solid" className="size-2.5 text-primary" /> {t('whatWeStandFor')}
-                  </div>
-                </div>
-                <NeonGradientCard className="border border-border/50">
-                  <div className="space-y-6">
-                    <div>
-                      <h3 className="font-heading text-2xl font-semibold tracking-tight text-foreground mb-3">
-                        {t('ourValues')}
-                      </h3>
-                      <CharacterReveal textClassName="font-sans text-muted-foreground/30 text-sm leading-relaxed">
-                        {t('whatWeStandForDesc')}
-                      </CharacterReveal>
-                    </div>
-
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      {/* Pillar 1 */}
-                      <div className="border border-border/40 p-4 bg-background/30 space-y-2">
-                        <div className="flex items-center gap-2">
-                          <span className="font-mono text-[10px] text-primary font-semibold border border-primary/20 px-1.5 py-0.2 bg-primary/5">{t('num01')}</span>
-                          <h4 className="font-sans font-semibold text-xs text-foreground">{t('clarityOfDirection')}</h4>
-                        </div>
-                        <p className="font-sans text-[11px] text-muted-foreground leading-relaxed">
-                          {t('clarityDesc')}
-                        </p>
-                      </div>
-
-                      {/* Pillar 2 */}
-                      <div className="border border-border/40 p-4 bg-background/30 space-y-2">
-                        <div className="flex items-center gap-2">
-                          <span className="font-mono text-[10px] text-primary font-semibold border border-primary/20 px-1.5 py-0.2 bg-primary/5">{t('num02')}</span>
-                          <h4 className="font-sans font-semibold text-xs text-foreground">{t('accessToOpportunity')}</h4>
-                        </div>
-                        <div className="space-y-1 font-sans text-[10px]">
-                          <div className="flex justify-between border-b border-border/20 pb-0.5">
-                            <span className="text-muted-foreground">{t('psychometricSelection')}</span>
-                            <span className="text-primary font-semibold">{t('successRate')}</span>
-                          </div>
-                          <div className="flex justify-between">
-                            <span className="text-muted-foreground">{t('globalMentorship')}</span>
-                            <span className="text-primary font-semibold">{t('coverageRate')}</span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Pillar 3 */}
-                    <div className="border border-border/40 p-4 bg-background/30 space-y-3">
-                      <div className="flex items-center gap-2">
-                        <span className="font-mono text-[10px] text-primary font-semibold border border-primary/20 px-1.5 py-0.2 bg-primary/5">{t('num03')}</span>
-                        <h4 className="font-sans font-semibold text-xs text-foreground">{t('rightSkillsTitle')}</h4>
-                      </div>
-                      <p className="font-sans text-[11px] text-muted-foreground leading-relaxed">
-                        {t('rightSkillsDesc')}
-                      </p>
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 bg-background/60 p-3 border border-border/30">
-                        <div className="space-y-0.5">
-                          <span className="text-[10px] font-semibold text-primary font-sans block">{t('criticalSoftSkills')}</span>
-                          <p className="text-[9px] text-muted-foreground leading-normal">{t('criticalSoftSkillsDesc')}</p>
-                        </div>
-                        <div className="space-y-0.5">
-                          <span className="text-[10px] font-semibold text-primary font-sans block">{t('greenHydrogen')}</span>
-                          <p className="text-[9px] text-muted-foreground leading-normal">{t('greenHydrogenDesc')}</p>
-                        </div>
-                        <div className="space-y-0.5 border-t border-border/20 pt-1.5">
-                          <span className="text-[10px] font-semibold text-primary font-sans block">{t('maritimeLogistics')}</span>
-                          <p className="text-[9px] text-muted-foreground leading-normal">{t('maritimeLogisticsDesc')}</p>
-                        </div>
-                        <div className="space-y-0.5 border-t border-border/20 pt-1.5">
-                          <span className="text-[10px] font-semibold text-primary font-sans block">{t('internationalLaw')}</span>
-                          <p className="text-[9px] text-muted-foreground leading-normal">{t('internationalLawDesc')}</p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </NeonGradientCard>
-              </div>
-
-              {/* Right Side: Milestone Matrix Graphic */}
-              <div className="lg:col-span-5 self-stretch flex flex-col justify-center">
-                <div className="relative h-56 w-full px-5 py-8 rounded-none bg-card/10 border border-border/50 flex justify-between items-end overflow-hidden group/pillars-card">
-                  {/* Image Background */}
-                  <img
-                    src="/assets/core-pillars.png"
-                    alt="Core Pillars"
-                    className="absolute inset-0 w-full h-full object-cover opacity-95 transition-transform duration-700 group-hover/pillars-card:scale-105"
-                  />
-                  {/* Overlay gradient to keep text highly readable */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-background/70 via-background/20 to-transparent z-[1]" />
-                  
-                  <div className="absolute inset-x-0 bottom-1 flex justify-between px-3 text-[8px] font-mono text-muted-foreground bg-background/80 py-1 border-t border-border/40 z-10">
-                    <span>{t('clarityPipeline')}</span>
-                    <span>{t('accessNode')}</span>
-                    <span>{t('skillsReady')}</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Chapter 04: The Professional Pedigree */}
-          <div className={`relative transition-all duration-1000 delay-500 transform ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-            {/* Timeline Node */}
-            <div className="absolute -left-[41px] md:-left-[73px] top-4 flex items-center justify-center">
-              <span className="relative flex h-5 w-5">
-                <span className="relative inline-flex rounded-none h-5 w-5 bg-primary border-4 border-background"></span>
-              </span>
-            </div>
-
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-              {/* Left Side: Narrative Card */}
-              <div className="lg:col-span-7 space-y-4">
-                <div className="space-y-2">
-                  <span className="font-mono text-xs uppercase tracking-widest text-primary/70 block">
-                    {t('chapter04Foundations')}
-                  </span>
-                  <div className="inline-flex items-center gap-1.5 font-mono text-[9px] uppercase tracking-[0.2em] text-muted-foreground border border-border px-2 py-0.5 bg-card/50">
-                    <CustomIcon name="book-open" type="solid" className="size-2.5 text-primary" /> {t('multiDomainExpertise')}
-                  </div>
-                </div>
-                <NeonGradientCard className="border border-border/50">
-                  <div className="space-y-4">
-                    <h3 className="font-heading text-2xl font-semibold tracking-tight text-foreground">
-                      {t('professionalPedigree')}
-                    </h3>
-                    <CharacterReveal textClassName="font-sans text-muted-foreground/30 text-sm leading-relaxed">
-                      {t('pedigreeDesc')}
-                    </CharacterReveal>
-                    <div className="flex flex-wrap gap-1.5 pt-2">
-                      {DOMAIN_KEYS.map(key => (
-                        <span key={key} className="font-mono text-[9px] uppercase tracking-wider text-muted-foreground border border-border/40 px-2 py-1 bg-background/50">
-                          {t(key)}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                </NeonGradientCard>
-              </div>
-
-              {/* Right Side: Enterprise Protection Shield */}
-              <div className="lg:col-span-5 self-stretch flex flex-col justify-center">
-                <div className="relative h-56 w-full flex items-center justify-center rounded-none bg-card/10 border border-border/50 overflow-hidden group/foundations-card">
-                  {/* Image Background */}
-                  <img
-                    src="/assets/foundations.png"
-                    alt="Foundations"
-                    className="absolute inset-0 w-full h-full object-cover opacity-95 transition-transform duration-700 group-hover/foundations-card:scale-105"
-                  />
-                  {/* Overlay gradient to keep text highly readable */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-background/70 via-background/20 to-transparent z-[1]" />
-                  
-                  <div className="relative z-10 text-center space-y-1 bg-background/80 px-4 py-2 border border-border/40 backdrop-blur-sm select-none">
-                    <span className="block text-[11px] font-mono font-bold tracking-[0.25em] text-foreground">{t('governance')}</span>
-                    <span className="block text-[8px] font-mono text-muted-foreground tracking-widest">{t('advisoryCouncil')}</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
+          ))}
         </div>
-      </div>
+      </section>
+
+      {/* ── Multi-Domain Expertise ── */}
+      <section className="py-32 border-t border-border/50 px-6 md:px-12 max-w-[1440px] mx-auto">
+        <span className="text-[13px] font-medium tracking-wide uppercase text-muted-foreground mb-4 block">
+          Professional Pedigree
+        </span>
+        <h2 className="text-3xl sm:text-4xl font-light text-foreground tracking-tight leading-[1.2] mb-10 max-w-2xl">
+          Multi-domain expertise grounded in reality
+        </h2>
+        <p className="text-[16px] text-muted-foreground leading-relaxed max-w-2xl mb-16">
+          Our team combines experience across nine domains, allowing us to build programs that are aspirational yet deeply practical.
+        </p>
+        <div className="flex flex-wrap gap-x-12 gap-y-4">
+          {DOMAINS.map((d, i) => (
+            <span key={d} className="text-[15px] font-medium text-muted-foreground">
+              <span className="text-[11px] text-primary/60 mr-2">{String(i + 1).padStart(2, '0')}</span>
+              {d}
+            </span>
+          ))}
+        </div>
+      </section>
+
     </div>
   );
 }

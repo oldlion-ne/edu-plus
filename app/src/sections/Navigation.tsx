@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { NavLink, Link, useNavigate } from 'react-router';
+import { useScrollContainer } from '../lib/ScrollContext';
 import { useAuth } from '../lib/AuthContext';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
@@ -10,10 +11,11 @@ import { AnimatedThemeToggler } from '@/components/ui/animated-theme-toggler';
 const NAV_LINKS = [
   { label: 'About', path: '/about' },
   { label: 'Programs', path: '/programs' },
+  { label: 'Knowledge Hub', path: '/knowledge-hub' },
+  { label: 'Events', path: '/events' },
   { label: 'Council', path: '/council' },
-  { label: 'Resources', path: '/resources' },
-  { label: 'Pricing', path: '/pricing' },
-  { label: 'Connect', path: '/connect' },
+  { label: 'Guidance', path: '/guidance' },
+  { label: 'News', path: '/news' },
 ];
 
 const translations = {
@@ -37,14 +39,27 @@ export default function Navigation() {
   const [scrolled, setScrolled] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const navRef = useRef<HTMLElement>(null);
+  const scrollContext = useScrollContainer();
 
   useEffect(() => {
+    const el = scrollContext?.scrollContainerRef.current;
+    
     const handleScroll = () => {
-      setScrolled(window.scrollY > 50);
+      if (el) {
+        setScrolled(el.scrollTop > 50);
+      } else {
+        setScrolled(window.scrollY > 50);
+      }
     };
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+
+    if (el) {
+      el.addEventListener('scroll', handleScroll, { passive: true });
+      return () => el.removeEventListener('scroll', handleScroll);
+    } else {
+      window.addEventListener('scroll', handleScroll, { passive: true });
+      return () => window.removeEventListener('scroll', handleScroll);
+    }
+  }, [scrollContext?.scrollContainerRef.current]);
 
   const handleLogout = async () => {
     try {
@@ -59,9 +74,10 @@ export default function Navigation() {
   return (
     <nav
       ref={navRef}
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 bg-background/95 backdrop-blur-md ${
+      className={`fixed top-0 left-0 z-50 transition-all duration-500 bg-background/95 backdrop-blur-md ${
         scrolled ? 'shadow-sm border-b border-border' : ''
       }`}
+      style={{ width: 'calc(100% - var(--scrollbar-width, 0px))' }}
     >
       <div className="max-w-[1440px] mx-auto flex items-center justify-between px-6 md:px-12 py-4">
         {/* Logo */}
@@ -71,13 +87,13 @@ export default function Navigation() {
         </Link>
 
         {/* Center Nav Links */}
-        <div className="hidden md:flex items-center gap-8">
+        <div className="hidden xl:flex items-center gap-8">
           {NAV_LINKS.map((link) => (
             <NavLink /* ui-ignore */
               key={link.label}
               to={link.path}
               className={({ isActive }) =>
-                `text-sm font-sans transition-colors duration-300 relative group ${
+                `text-sm font-sans whitespace-nowrap transition-colors duration-300 relative group ${
                   isActive ? 'text-primary' : 'text-foreground hover:text-primary'
                 }`
               }
@@ -89,33 +105,47 @@ export default function Navigation() {
         </div>
 
         {/* CTA & Auth Area */}
-        <div className="hidden md:flex items-center gap-6">
-          {user ? (
-            <Button
-              variant="ghost"
-              onClick={handleLogout}
-              className="text-xs font-mono tracking-widest uppercase text-destructive hover:text-destructive hover:bg-destructive/10 h-auto p-0"
-            >
-              {t('logout')}
-            </Button>
-          ) : (
+        <div className="hidden xl:flex items-center gap-6">
+          {user && (
             <NavLink /* ui-ignore */
-              to="/login"
+              to="/dashboard"
               className={({ isActive }) =>
-                `font-mono text-xs tracking-widest uppercase transition-all duration-300 ${
+                `font-sans font-medium text-xs whitespace-nowrap tracking-wider uppercase transition-all duration-300 ${
                   isActive ? 'text-primary' : 'text-foreground hover:text-primary'
                 }`
               }
             >
-              {t('login')}
+              {t('dashboard')}
             </NavLink>
           )}
 
+          {user ? (
+            <Button
+              variant="ghost"
+              onClick={handleLogout}
+              className="text-xs font-sans font-medium tracking-wider uppercase text-destructive hover:text-destructive hover:bg-destructive/10 h-auto p-0"
+            >
+              {t('logout')}
+            </Button>
+          ) : (
+            <Button
+              asChild
+              variant="ghost"
+              className="text-xs font-sans font-medium tracking-wider uppercase text-primary hover:text-primary hover:bg-primary/10 h-auto p-0"
+            >
+              <Link to="/login" /* ui-ignore */>{t('login')}</Link>
+            </Button>
+          )}
+
           <AnimatedThemeToggler />
+
+          <Button asChild variant="outline" className="font-sans px-5 py-2 text-sm h-auto whitespace-nowrap">
+            <Link to="/contact" /* ui-ignore */>{t('connect')}</Link>
+          </Button>
         </div>
 
         {/* Mobile Menu via Sheet */}
-        <div className="md:hidden">
+        <div className="xl:hidden">
           <Sheet open={isOpen} onOpenChange={setIsOpen}>
             <SheetTrigger asChild>
               <Button
@@ -147,6 +177,20 @@ export default function Navigation() {
                 </NavLink>
               ))}
 
+              {user && (
+                <NavLink /* ui-ignore */
+                  to="/dashboard"
+                  onClick={() => setIsOpen(false)}
+                  className={({ isActive }) =>
+                    `text-lg font-sans tracking-wide uppercase transition-colors duration-300 ${
+                      isActive ? 'text-primary font-medium' : 'text-muted-foreground'
+                    }`
+                  }
+                >
+                  {t('dashboard')}
+                </NavLink>
+              )}
+
               {user ? (
                 <Button
                   variant="ghost"
@@ -154,23 +198,27 @@ export default function Navigation() {
                     setIsOpen(false);
                     handleLogout();
                   }}
-                  className="justify-start p-0 h-auto text-left font-mono text-lg tracking-wider uppercase text-destructive hover:text-destructive hover:bg-transparent"
+                  className="justify-start p-0 h-auto text-left font-sans text-lg tracking-wide uppercase text-destructive hover:text-destructive hover:bg-transparent"
                 >
                   {t('logout')}
                 </Button>
               ) : (
-                <NavLink /* ui-ignore */
-                  to="/login"
-                  onClick={() => setIsOpen(false)}
-                  className={({ isActive }) =>
-                    `text-lg font-mono tracking-wider uppercase transition-colors duration-300 ${
-                      isActive ? 'text-primary font-medium' : 'text-muted-foreground'
-                    }`
-                  }
+                <Button
+                  asChild
+                  variant="ghost"
+                  className="justify-start p-0 h-auto text-left font-sans text-lg tracking-wide uppercase text-primary hover:text-primary hover:bg-transparent"
                 >
-                  {t('login')}
-                </NavLink>
+                  <Link to="/login" onClick={() => setIsOpen(false)} /* ui-ignore */>{t('login')}</Link>
+                </Button>
               )}
+
+              <Button
+                asChild
+                variant="outline"
+                className="font-sans py-2.5 text-center text-sm w-full mt-2 h-auto"
+              >
+                <Link to="/contact" onClick={() => setIsOpen(false)} /* ui-ignore */>{t('connect')}</Link>
+              </Button>
 
               <div className="flex items-center justify-between pt-4 border-t border-border/40 mt-2">
                 <span className="text-sm text-muted-foreground font-sans">{t('themeLabel')}</span>

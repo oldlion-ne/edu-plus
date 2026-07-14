@@ -152,11 +152,11 @@ const chartConfig = {
   },
   desktop: {
     label: "Desktop",
-    color: "oklch(var(--primary))",
+    color: "oklch(var(--chart-1))",
   },
   mobile: {
     label: "Mobile",
-    color: "oklch(var(--secondary))",
+    color: "oklch(var(--chart-2))",
   },
 } satisfies ChartConfig;
 
@@ -798,12 +798,12 @@ export default function Dashboard() {
                       <AreaChart data={filteredData} margin={{ left: 12, right: 12, top: 20, bottom: 12 }}>
                         <defs>
                           <linearGradient id="fillDesktop" x1="0" y1="0" x2="0" y2="1">
-                            <stop offset="5%" stopColor={chartConfig.desktop.color} stopOpacity={0.5} />
-                            <stop offset="95%" stopColor={chartConfig.desktop.color} stopOpacity={0.05} />
+                            <stop offset="5%" stopColor={chartConfig.desktop.color} stopOpacity={0.4} />
+                            <stop offset="95%" stopColor={chartConfig.desktop.color} stopOpacity={0.02} />
                           </linearGradient>
                           <linearGradient id="fillMobile" x1="0" y1="0" x2="0" y2="1">
-                            <stop offset="5%" stopColor={chartConfig.mobile.color} stopOpacity={0.5} />
-                            <stop offset="95%" stopColor={chartConfig.mobile.color} stopOpacity={0.05} />
+                            <stop offset="5%" stopColor={chartConfig.mobile.color} stopOpacity={0.4} />
+                            <stop offset="95%" stopColor={chartConfig.mobile.color} stopOpacity={0.02} />
                           </linearGradient>
                         </defs>
                         <CartesianGrid vertical={false} stroke="oklch(var(--border)/0.2)" />
@@ -813,14 +813,14 @@ export default function Dashboard() {
                           axisLine={false}
                           tickMargin={8}
                           minTickGap={32}
-                          tick={{ fill: 'currentColor', fontSize: 10, fontFamily: 'monospace' }}
-                          className="fill-muted-foreground"
+                          tick={{ fill: 'currentColor', fontSize: 10 }}
+                          className="fill-muted-foreground font-sans"
                           tickFormatter={(value) => {
                             const date = new Date(value)
                             return date.toLocaleDateString("en-US", {
                               month: "short",
                               day: "numeric",
-                            })
+                             })
                           }}
                         />
                         <ChartTooltip
@@ -834,13 +834,13 @@ export default function Dashboard() {
                                 })
                               }}
                               indicator="dot"
-                              className="rounded-none border border-primary/30 bg-card text-foreground"
+                              className="rounded-none border border-border bg-card text-foreground shadow-lg"
                             />
                           }
                         />
                         <Area
                           dataKey="mobile"
-                          type="natural"
+                          type="linear"
                           fill="url(#fillMobile)"
                           fillOpacity={1}
                           stroke={chartConfig.mobile.color}
@@ -848,7 +848,7 @@ export default function Dashboard() {
                         />
                         <Area
                           dataKey="desktop"
-                          type="natural"
+                          type="linear"
                           fill="url(#fillDesktop)"
                           fillOpacity={1}
                           stroke={chartConfig.desktop.color}
@@ -860,12 +860,12 @@ export default function Dashboard() {
                     {/* Manual legend - rendered outside SVG so it's never clipped */}
                     <div className="flex items-center justify-center gap-6 pt-3 pb-1">
                       <div className="flex items-center gap-2">
-                        <div className="h-[2px] w-5 rounded-none" style={{ backgroundColor: chartConfig.desktop.color, boxShadow: `0 0 6px ${chartConfig.desktop.color}` }} />
-                        <span className="font-mono text-[10px] text-muted-foreground uppercase tracking-wider">{t('dashboard.overview.desktop')}</span>
+                        <div className="h-[2px] w-5 rounded-none" style={{ backgroundColor: chartConfig.desktop.color }} />
+                        <span className="font-sans font-medium text-[10px] text-muted-foreground uppercase tracking-wider">{t('dashboard.overview.desktop')}</span>
                       </div>
                       <div className="flex items-center gap-2">
-                        <div className="h-[2px] w-5 rounded-none" style={{ backgroundColor: chartConfig.mobile.color, boxShadow: `0 0 6px ${chartConfig.mobile.color}` }} />
-                        <span className="font-mono text-[10px] text-muted-foreground uppercase tracking-wider">{t('dashboard.overview.mobile')}</span>
+                        <div className="h-[2px] w-5 rounded-none" style={{ backgroundColor: chartConfig.mobile.color }} />
+                        <span className="font-sans font-medium text-[10px] text-muted-foreground uppercase tracking-wider">{t('dashboard.overview.mobile')}</span>
                       </div>
                     </div>
                   </div>
@@ -873,7 +873,7 @@ export default function Dashboard() {
 
                 {/* Content Category Distribution */}
                 <Card className="border border-border p-6 bg-card rounded-none text-left flex flex-col gap-0 py-6">
-                  <h3 className="font-mono text-[10px] font-bold text-primary tracking-wider mb-4 uppercase">{t('dashboard.overview.contentCategoryDistribution')}</h3>
+                  <h3 className="font-sans text-[10px] font-bold text-primary tracking-wider mb-4 uppercase">{t('dashboard.overview.contentCategoryDistribution')}</h3>
                   <div className="space-y-4">
                     {['tutorial', 'podcast', 'webinar', 'study_material'].map(cat => {
                       const count = knowledgeHubItems.filter(i => i.category === cat).length;

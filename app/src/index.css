@@ -1,9 +1,7 @@
 @import url("tw-animate-css");
 @import url("shadcn/tailwind.css");
-@import url("@fontsource-variable/outfit");
-@import url("@fontsource-variable/merriweather");
 @import url("@fontsource-variable/inter");
-
+@import url("@fontsource-variable/outfit");
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -12,44 +10,45 @@
   :root {
     --font-sans: 'Inter Variable', sans-serif;
     --font-heading: 'Inter Variable', sans-serif;
-    --background: 100% 0 0deg;
-    --foreground: 14.7% 0.004 49.3deg;
-    --card: 100% 0 0deg;
-    --card-foreground: 14.7% 0.004 49.3deg;
-    --popover: 100% 0 0deg;
-    --popover-foreground: 14.7% 0.004 49.3deg;
-    --primary: 84.1% 0.238 128.85deg;
-    --primary-foreground: 40.5% 0.101 131.063deg;
-    --secondary: 96.7% 0.001 286.375deg;
-    --secondary-foreground: 21% 0.006 285.885deg;
-    --muted: 96% 0.002 17.2deg;
-    --muted-foreground: 54.7% 0.021 43.1deg;
-    --accent: 96% 0.002 17.2deg;
-    --accent-foreground: 21.4% 0.009 43.1deg;
-    --destructive: 57.7% 0.245 27.325deg;
-    --destructive-foreground: 98.6% 0.002 67.8deg;
-    --border: 92.2% 0.005 34.3deg;
-    --input: 92.2% 0.005 34.3deg;
-    --ring: 71.4% 0.014 41.2deg;
-    --chart-1: 78.5% 0.115 274.713deg;
-    --chart-2: 58.5% 0.233 277.117deg;
-    --chart-3: 51.1% 0.262 276.966deg;
-    --chart-4: 45.7% 0.24 277.023deg;
-    --chart-5: 39.8% 0.195 277.366deg;
-    --radius: 0;
-    --sidebar: 98.6% 0.002 67.8deg;
-    --sidebar-foreground: 14.7% 0.004 49.3deg;
-    --sidebar-primary: 64.8% 0.2 131.684deg;
-    --sidebar-primary-foreground: 98.6% 0.031 120.757deg;
-    --sidebar-accent: 96% 0.002 17.2deg;
-    --sidebar-accent-foreground: 21.4% 0.009 43.1deg;
-    --sidebar-border: 92.2% 0.005 34.3deg;
-    --sidebar-ring: 71.4% 0.014 41.2deg;
+    /* Nordic Light — warm whites, soft stone, amber accent */
+    --background: 98.5% 0.004 80deg;
+    --foreground: 22% 0.01 60deg;
+    --card: 97% 0.004 80deg;
+    --card-foreground: 22% 0.01 60deg;
+    --popover: 97% 0.004 80deg;
+    --popover-foreground: 22% 0.01 60deg;
+    --primary: 75% 0.12 70deg;
+    --primary-foreground: 22% 0.02 60deg;
+    --secondary: 94% 0.008 80deg;
+    --secondary-foreground: 35% 0.015 60deg;
+    --muted: 95% 0.006 80deg;
+    --muted-foreground: 55% 0.015 60deg;
+    --accent: 94% 0.008 80deg;
+    --accent-foreground: 30% 0.015 60deg;
+    --destructive: 55% 0.2 25deg;
+    --destructive-foreground: 98% 0.002 60deg;
+    --border: 90% 0.008 80deg;
+    --input: 90% 0.008 80deg;
+    --ring: 75% 0.12 70deg;
+    --chart-1: 75% 0.12 70deg;
+    --chart-2: 65% 0.10 70deg;
+    --chart-3: 55% 0.08 70deg;
+    --chart-4: 45% 0.06 70deg;
+    --chart-5: 35% 0.04 70deg;
+    --radius: 0px;
+    --sidebar: 96% 0.004 80deg;
+    --sidebar-foreground: 22% 0.01 60deg;
+    --sidebar-primary: 75% 0.12 70deg;
+    --sidebar-primary-foreground: 22% 0.02 60deg;
+    --sidebar-accent: 94% 0.008 80deg;
+    --sidebar-accent-foreground: 30% 0.015 60deg;
+    --sidebar-border: 90% 0.008 80deg;
+    --sidebar-ring: 75% 0.12 70deg;
   }
 
   html, body {
     height: 100dvh;
-    width: 100vw;
+    width: 100%;
     overflow: hidden;
     margin: 0;
     padding: 0;
@@ -68,142 +67,61 @@
   }
 
   .dark {
-    --background: 14.7% 0.004 49.3deg;
-    --foreground: 98.6% 0.002 67.8deg;
-    --card: 21.4% 0.009 43.1deg;
-    --card-foreground: 98.6% 0.002 67.8deg;
-    --popover: 21.4% 0.009 43.1deg;
-    --popover-foreground: 98.6% 0.002 67.8deg;
-    --primary: 76.8% 0.233 130.85deg;
-    --primary-foreground: 40.5% 0.101 131.063deg;
-    --secondary: 27.4% 0.006 286.033deg;
-    --secondary-foreground: 98.5% 0 0deg;
-    --muted: 26.8% 0.011 36.5deg;
-    --muted-foreground: 71.4% 0.014 41.2deg;
-    --accent: 26.8% 0.011 36.5deg;
-    --accent-foreground: 98.6% 0.002 67.8deg;
-    --destructive: 70.4% 0.191 22.216deg;
-    --destructive-foreground: 98.6% 0.002 67.8deg;
-    --border: 100% 0 0deg / 0.1;
-    --input: 100% 0 0deg / 0.15;
-    --ring: 54.7% 0.021 43.1deg;
-    --chart-1: 78.5% 0.115 274.713deg;
-    --chart-2: 58.5% 0.233 277.117deg;
-    --chart-3: 51.1% 0.262 276.966deg;
-    --chart-4: 45.7% 0.24 277.023deg;
-    --chart-5: 39.8% 0.195 277.366deg;
-    --sidebar: 21.4% 0.009 43.1deg;
-    --sidebar-foreground: 98.6% 0.002 67.8deg;
-    --sidebar-primary: 76.8% 0.233 130.85deg;
-    --sidebar-primary-foreground: 27.4% 0.072 132.109deg;
-    --sidebar-accent: 26.8% 0.011 36.5deg;
-    --sidebar-accent-foreground: 98.6% 0.002 67.8deg;
-    --sidebar-border: 100% 0 0deg / 0.1;
-    --sidebar-ring: 54.7% 0.021 43.1deg;
+    /* Nordic Dark — warm charcoal, soft contrast, amber accent */
+    --background: 18% 0.012 60deg;
+    --foreground: 93% 0.006 80deg;
+    --card: 22% 0.012 60deg;
+    --card-foreground: 93% 0.006 80deg;
+    --popover: 22% 0.012 60deg;
+    --popover-foreground: 93% 0.006 80deg;
+    --primary: 78% 0.13 70deg;
+    --primary-foreground: 22% 0.02 60deg;
+    --secondary: 26% 0.012 60deg;
+    --secondary-foreground: 90% 0.006 80deg;
+    --muted: 26% 0.012 60deg;
+    --muted-foreground: 65% 0.012 60deg;
+    --accent: 26% 0.012 60deg;
+    --accent-foreground: 93% 0.006 80deg;
+    --destructive: 65% 0.18 25deg;
+    --destructive-foreground: 93% 0.006 80deg;
+    --border: 100% 0 0deg / 0.08;
+    --input: 100% 0 0deg / 0.1;
+    --ring: 65% 0.012 60deg;
+    --chart-1: 78% 0.13 70deg;
+    --chart-2: 68% 0.11 70deg;
+    --chart-3: 58% 0.09 70deg;
+    --chart-4: 48% 0.07 70deg;
+    --chart-5: 38% 0.05 70deg;
+    --sidebar: 20% 0.012 60deg;
+    --sidebar-foreground: 93% 0.006 80deg;
+    --sidebar-primary: 78% 0.13 70deg;
+    --sidebar-primary-foreground: 22% 0.02 60deg;
+    --sidebar-accent: 26% 0.012 60deg;
+    --sidebar-accent-foreground: 93% 0.006 80deg;
+    --sidebar-border: 100% 0 0deg / 0.08;
+    --sidebar-ring: 65% 0.012 60deg;
   }
 
   * {
-    @apply border-border outline-ring/50;
+    @apply border-border outline-ring/50 rounded-none;
   }
 }
 
-
-
 @layer utilities {
-  .scramble-glow {
-    animation: glow 3s infinite;
-  }
-
-  .liquid-glass {
-    background: rgb(255 255 255 / 0.01);
-    background-blend-mode: luminosity;
-    backdrop-filter: blur(4px);
-    /* stylelint-disable-next-line property-no-vendor-prefix */
-    -webkit-backdrop-filter: blur(4px);
-    border: none;
-    box-shadow: inset 0 1px 1px rgb(255 255 255 / 0.1);
-    position: relative;
-    overflow: hidden;
-  }
-
-  .liquid-glass::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    border-radius: inherit;
-    padding: 1.4px;
-    background: linear-gradient(180deg,
-      rgb(255 255 255 / 0.45) 0%, rgb(255 255 255 / 0.15) 20%,
-      rgb(255 255 255 / 0) 40%, rgb(255 255 255 / 0) 60%,
-      rgb(255 255 255 / 0.15) 80%, rgb(255 255 255 / 0.45) 100%);
-    /* stylelint-disable-next-line property-no-vendor-prefix */
-    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-    /* stylelint-disable-next-line property-no-vendor-prefix */
-    -webkit-mask-composite: xor;
-    mask-composite: exclude;
-    pointer-events: none;
-  }
-
-  .liquid-glass-strong {
-    background: rgb(255 255 255 / 0.02);
-    background-blend-mode: luminosity;
-    backdrop-filter: blur(50px);
-    /* stylelint-disable-next-line property-no-vendor-prefix */
-    -webkit-backdrop-filter: blur(50px);
-    border: none;
-    box-shadow: 4px 4px 4px rgb(0 0 0 / 0.05), inset 0 1px 1px rgb(255 255 255 / 0.15);
-    position: relative;
-    overflow: hidden;
-  }
-
-  .liquid-glass-strong::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    border-radius: inherit;
-    padding: 1.4px;
-    background: linear-gradient(180deg,
-      rgb(255 255 255 / 0.5) 0%, rgb(255 255 255 / 0.2) 20%,
-      rgb(255 255 255 / 0) 40%, rgb(255 255 255 / 0) 60%,
-      rgb(255 255 255 / 0.2) 80%, rgb(255 255 255 / 0.5) 100%);
-    /* stylelint-disable-next-line property-no-vendor-prefix */
-    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-    /* stylelint-disable-next-line property-no-vendor-prefix */
-    -webkit-mask-composite: xor;
-    mask-composite: exclude;
-    pointer-events: none;
-  }
-
   @keyframes fadeIn {
     from {
       opacity: 0;
-      transform: scale(0.98);
+      transform: translateY(8px);
     }
 
     to {
       opacity: 1;
-      transform: scale(1);
+      transform: translateY(0);
     }
   }
 
   .animate-fade-in {
-    animation: fadeIn 0.25s ease-out forwards;
-  }
-
-  @keyframes chatGlow {
-    0%, 100% {
-      box-shadow: 0 0 0 0 oklch(var(--primary) / 40%);
-    }
-
-    50% {
-      box-shadow: 0 0 15px 4px oklch(var(--primary) / 70%);
-    }
-  }
-
-  .animate-chat-glow {
-    animation: chatGlow 2.5s infinite ease-in-out;
+    animation: fadeIn 0.4s ease-out forwards;
   }
 }
 
@@ -216,25 +134,4 @@
 /* Scoped to AnimatedThemeToggler - the toggler sets the data-attribute and the variable only during a theme toggle. */
 html[data-magicui-theme-vt="active"]::view-transition-group(root) {
   animation-duration: var(--magicui-theme-toggle-vt-duration);
-}
-
-@keyframes orbit {
-  0% {
-    transform: rotate(calc(var(--angle) * 1deg))
-      translateY(calc(var(--radius) * 1px)) rotate(calc(var(--angle) * -1deg));
-  }
-
-  100% {
-    transform: rotate(calc(var(--angle) * 1deg + 360deg))
-      translateY(calc(var(--radius) * 1px))
-      rotate(calc((var(--angle) * -1deg) - 360deg));
-  }
-}
-
-.animate-orbit {
-  animation: orbit calc(var(--duration) * 1s) linear infinite;
-}
-
-.animate-orbit-pause:hover {
-  animation-play-state: paused !important;
 }
