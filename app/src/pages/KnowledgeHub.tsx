@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+
 import { EditorialMedia } from '@/components/ui/editorial-media';
 import { PageHero } from '@/components/ui/page-hero';
 import { editorialIllustrations } from '@/lib/editorialIllustrations';
@@ -34,6 +35,7 @@ export default function KnowledgeHub() {
   const [searchQuery, setSearchQuery] = useState('');
   const [activeTab, setActiveTab] = useState('all');
   const [loading, setLoading] = useState(true);
+
   const [selectedVideo, setSelectedVideo] = useState<string | null>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
 
@@ -45,6 +47,7 @@ export default function KnowledgeHub() {
           .select('*')
           .order('created_at', { ascending: false });
         if (error) throw error;
+
         setItems(data || []);
         setFilteredItems(data || []);
       } catch (err) {
@@ -55,18 +58,6 @@ export default function KnowledgeHub() {
     }
     fetchItems();
   }, []);
-
-  useEffect(() => {
-    if (!selectedVideo) return;
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') setSelectedVideo(null);
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    
-    setTimeout(() => closeButtonRef.current?.focus(), 10);
-    
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [selectedVideo]);
 
   useEffect(() => {
     let filtered = items;
@@ -107,11 +98,16 @@ export default function KnowledgeHub() {
 
         {/* Controls row — text link tabs + plain search input */}
         <div className="flex flex-col md:flex-row gap-6 justify-between items-start md:items-center mb-12">
-          <div className="flex gap-6 border-b border-border/50 w-full md:w-auto">
+          <div
+            className="flex gap-6 border-b border-border/50 w-full md:w-auto"
+            role="group"
+            aria-label="Filter resources by category"
+          >
             {CATEGORY_TABS.map((tab) => (
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
+                aria-pressed={activeTab === tab}
                 className={`pb-3 text-[14px] font-medium whitespace-nowrap transition-colors duration-150 border-b-2 -mb-px focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground focus-visible:ring-offset-2 focus-visible:ring-offset-background ${
                   activeTab === tab
                     ? 'border-primary text-foreground'
