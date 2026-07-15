@@ -1,7 +1,9 @@
 import {
   copyFile,
+  lstat,
   mkdir,
   mkdtemp,
+  realpath,
   readdir,
   rm,
   unlink,
@@ -64,6 +66,11 @@ function normalizedPath(value) {
   return process.platform === 'win32' ? resolved.toLowerCase() : resolved;
 }
 
+function isFilesystemRoot(value) {
+  const resolved = path.resolve(value);
+  return normalizedPath(resolved) === normalizedPath(path.parse(resolved).root);
+}
+
 function isPathInside(parent, candidate) {
   const relative = path.relative(path.resolve(parent), path.resolve(candidate));
   return (
@@ -84,13 +91,93 @@ function assertSafeOutputDirectory(outputRoot, outputDir) {
   }
 }
 
-function assertSafeStagingDirectory(outputRoot, stagingDir) {
+async function lstatIfPresent(target) {
+  try {
+    return await lstat(target);
+  } catch (error) {
+    if (error?.code === 'ENOENT') return null;
+    throw error;
+  }
+}
+
+function assertRealDirectory(stats, label) {
+  if (stats.isSymbolicLink()) {
+    throw new Error(`${label} must not be a symbolic link or junction.`);
+  }
+  if (!stats.isDirectory()) {
+    throw new Error(`${label} must be a directory.`);
+  }
+}
+
+async function canonicalizeOutputRoot(outputRoot) {
+  if (isFilesystemRoot(outputRoot)) {
+    throw new Error('Editorial output root must not be a filesystem root.');
+  }
+
+  const stats = await lstatIfPresent(outputRoot);
+  if (!stats) {
+    throw new Error('Editorial output root must already exist.');
+  }
+  assertRealDirectory(stats, 'Editorial output root');
+
+  const canonicalOutputRoot = await realpath(outputRoot);
+  if (isFilesystemRoot(canonicalOutputRoot)) {
+    throw new Error('Editorial output root must not resolve to a filesystem root.');
+  }
+  return canonicalOutputRoot;
+}
+
+async function inspectOutputDirectory(canonicalOutputRoot, outputDir) {
+  const stats = await lstatIfPresent(outputDir);
+  if (!stats) return null;
+  assertRealDirectory(stats, 'Editorial linked output');
+
+  const canonicalOutputDir = await realpath(outputDir);
+  const expectedOutputDir = path.join(canonicalOutputRoot, 'editorial');
+  if (
+    !isPathInside(canonicalOutputRoot, canonicalOutputDir) ||
+    normalizedPath(canonicalOutputDir) !== normalizedPath(expectedOutputDir)
+  ) {
+    throw new Error('Canonical editorial output must be the editorial child of the output root.');
+  }
+  return canonicalOutputDir;
+}
+
+async function ensureOutputDirectory(canonicalOutputRoot, configuredOutputDir) {
+  const existingOutputDir = await inspectOutputDirectory(canonicalOutputRoot, configuredOutputDir);
+  if (existingOutputDir) return existingOutputDir;
+
+  const expectedOutputDir = path.join(canonicalOutputRoot, 'editorial');
+  await mkdir(expectedOutputDir);
+  const createdOutputDir = await inspectOutputDirectory(canonicalOutputRoot, expectedOutputDir);
+  if (!createdOutputDir) {
+    throw new Error('Editorial output directory disappeared after creation.');
+  }
+  return createdOutputDir;
+}
+
+async function inspectSafeStagingDirectory(outputRoot, stagingDir) {
   if (
     !isPathInside(outputRoot, stagingDir) ||
     !path.basename(stagingDir).startsWith('.editorial-staging-')
   ) {
     throw new Error('Refusing to clean an unverified editorial staging directory.');
   }
+
+  const stats = await lstatIfPresent(stagingDir);
+  if (!stats) {
+    throw new Error('Editorial staging directory disappeared before verification.');
+  }
+  assertRealDirectory(stats, 'Editorial staging directory');
+
+  const canonicalStagingDir = await realpath(stagingDir);
+  if (
+    !isPathInside(outputRoot, canonicalStagingDir) ||
+    !path.basename(canonicalStagingDir).startsWith('.editorial-staging-')
+  ) {
+    throw new Error('Canonical editorial staging directory escaped the output root.');
+  }
+  return canonicalStagingDir;
 }
 
 function isWebp(name) {
@@ -169,8 +256,13 @@ async function convertSources(sourceDir, stagingDir) {
   return convertedOutputs;
 }
 
-async function reconcileOutputs(stagingDir, outputDir, stagedNames) {
-  await mkdir(outputDir, { recursive: true });
+async function reconcileOutputs(
+  stagingDir,
+  canonicalOutputRoot,
+  configuredOutputDir,
+  stagedNames,
+) {
+  const outputDir = await ensureOutputDirectory(canonicalOutputRoot, configuredOutputDir);
   const existingEntries = await readdir(outputDir, { withFileTypes: true });
   for (const entry of existingEntries) {
     if ((entry.isFile() || entry.isSymbolicLink()) && isWebp(entry.name)) {
@@ -182,7 +274,12 @@ async function reconcileOutputs(stagingDir, outputDir, stagedNames) {
     await copyFile(path.join(stagingDir, name), path.join(outputDir, name));
   }
 
+  const verifiedOutputDir = await inspectOutputDirectory(canonicalOutputRoot, outputDir);
+  if (!verifiedOutputDir) {
+    throw new Error('Editorial output directory disappeared during reconciliation.');
+  }
   validateManagedNames(await readdir(outputDir), outputDir);
+  return verifiedOutputDir;
 }
 
 export async function prepareEditorialImages(options = {}) {
@@ -190,6 +287,8 @@ export async function prepareEditorialImages(options = {}) {
   const outputRoot = path.resolve(options.outputRoot ?? defaultOutputRoot);
   const outputDir = path.resolve(options.outputDir ?? path.join(outputRoot, 'editorial'));
   assertSafeOutputDirectory(outputRoot, outputDir);
+  const canonicalOutputRoot = await canonicalizeOutputRoot(outputRoot);
+  await inspectOutputDirectory(canonicalOutputRoot, outputDir);
 
   const sourceNames = new Set(await readdir(sourceDir));
   const missingSourceNames = requiredSourceNames.filter((name) => !sourceNames.has(name));
@@ -197,20 +296,30 @@ export async function prepareEditorialImages(options = {}) {
     throw new Error(`Missing required editorial sources:\n${missingSourceNames.join('\n')}`);
   }
 
-  await mkdir(outputRoot, { recursive: true });
-  const stagingDir = await mkdtemp(path.join(outputRoot, '.editorial-staging-'));
-  assertSafeStagingDirectory(outputRoot, stagingDir);
+  const stagingDir = await mkdtemp(path.join(canonicalOutputRoot, '.editorial-staging-'));
+  await inspectSafeStagingDirectory(canonicalOutputRoot, stagingDir);
+  let preparedOutputDir;
 
   try {
     const convertedOutputs = await convertSources(sourceDir, stagingDir);
     const stagedNames = await validateStagedOutputs(stagingDir, convertedOutputs);
-    await reconcileOutputs(stagingDir, outputDir, stagedNames);
+    preparedOutputDir = await reconcileOutputs(
+      stagingDir,
+      canonicalOutputRoot,
+      outputDir,
+      stagedNames,
+    );
   } finally {
-    assertSafeStagingDirectory(outputRoot, stagingDir);
-    await rm(stagingDir, { recursive: true, force: true, maxRetries: 5, retryDelay: 100 });
+    const verifiedStagingDir = await inspectSafeStagingDirectory(canonicalOutputRoot, stagingDir);
+    await rm(verifiedStagingDir, {
+      recursive: true,
+      force: true,
+      maxRetries: 5,
+      retryDelay: 100,
+    });
   }
 
-  return { outputDir, outputNames: [...expectedOutputNames] };
+  return { outputDir: preparedOutputDir, outputNames: [...expectedOutputNames] };
 }
 
 function isMainModule() {

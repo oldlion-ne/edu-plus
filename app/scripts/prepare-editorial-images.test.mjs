@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { readFile, mkdir, mkdtemp, readdir, rm, writeFile } from 'node:fs/promises';
+import { readFile, mkdir, mkdtemp, readdir, rm, symlink, writeFile } from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 import { spawnSync } from 'node:child_process';
@@ -252,6 +252,51 @@ test('rejects an output directory that is not the editorial child of its output 
     assert.notEqual(result.status, 0);
     assert.match(result.stderr, /editorial child of the output root/i);
     assert.equal(await readFile(sentinelPath, 'utf8'), 'do not touch');
+  } finally {
+    await cleanupSandbox(sandbox.tempRoot);
+  }
+});
+
+test('rejects a linked editorial output without touching its victim', async () => {
+  const sandbox = await createSandbox();
+  const linkType = process.platform === 'win32' ? 'junction' : 'dir';
+  try {
+    await writePngFixtures(sandbox.sourceDir);
+    const victimDir = path.join(sandbox.tempRoot, 'victim');
+    const victimPath = path.join(victimDir, 'victim.WEBP');
+    await mkdir(victimDir);
+    await writeFile(victimPath, 'victim must survive');
+
+    assert.ok(isPathInside(sandbox.tempRoot, sandbox.outputDir));
+    await rm(sandbox.outputDir, { recursive: true });
+    await symlink(victimDir, sandbox.outputDir, linkType);
+
+    const result = runPreparation({
+      sourceDir: sandbox.sourceDir,
+      outputRoot: sandbox.outputRoot,
+      outputDir: sandbox.outputDir,
+      cwd: sandbox.sandboxAppDir,
+    });
+    assert.notEqual(result.status, 0);
+    assert.match(result.stderr, /symbolic link|junction|linked output/i);
+    assert.equal(await readFile(victimPath, 'utf8'), 'victim must survive');
+  } finally {
+    await cleanupSandbox(sandbox.tempRoot);
+  }
+});
+
+test('rejects a filesystem root as the output root before processing sources', async () => {
+  const sandbox = await createSandbox();
+  try {
+    const filesystemRoot = path.parse(sandbox.tempRoot).root;
+    const result = runPreparation({
+      sourceDir: sandbox.sourceDir,
+      outputRoot: filesystemRoot,
+      outputDir: path.join(filesystemRoot, 'editorial'),
+      cwd: sandbox.sandboxAppDir,
+    });
+    assert.notEqual(result.status, 0);
+    assert.match(result.stderr, /filesystem root/i);
   } finally {
     await cleanupSandbox(sandbox.tempRoot);
   }
