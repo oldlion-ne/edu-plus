@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen, within } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { MemoryRouter } from 'react-router';
 import { describe, expect, it, vi } from 'vitest';
@@ -27,6 +27,59 @@ const focusClasses = [
 
 function renderPage(page: React.ReactNode) {
   return render(<MemoryRouter>{page}</MemoryRouter>);
+}
+
+function expectTabState(tab: HTMLElement, selected: boolean) {
+  expect(tab).toHaveAttribute('aria-selected', String(selected));
+  expect(tab).toHaveAttribute('tabindex', selected ? '0' : '-1');
+}
+
+function expectTabRelationships(tabs: HTMLElement[]) {
+  for (const tab of tabs) {
+    const panel = document.getElementById(tab.getAttribute('aria-controls')!);
+
+    expect(panel).toHaveAttribute('role', 'tabpanel');
+    expect(panel).toHaveAttribute('aria-labelledby', tab.id);
+    if (tab.getAttribute('aria-selected') === 'true') {
+      expect(panel).not.toHaveAttribute('hidden');
+    } else {
+      expect(panel).toHaveAttribute('hidden');
+    }
+  }
+}
+
+function exerciseTabKeyboard(tabs: HTMLElement[]) {
+  fireEvent.keyDown(tabs[0], { key: 'ArrowRight' });
+  expectTabState(tabs[1], true);
+  expect(tabs[1]).toHaveFocus();
+
+  fireEvent.keyDown(tabs[1], { key: 'ArrowDown' });
+  expectTabState(tabs[2], true);
+  expect(tabs[2]).toHaveFocus();
+
+  fireEvent.keyDown(tabs[2], { key: 'ArrowLeft' });
+  expectTabState(tabs[1], true);
+  expect(tabs[1]).toHaveFocus();
+
+  fireEvent.keyDown(tabs[1], { key: 'ArrowUp' });
+  expectTabState(tabs[0], true);
+  expect(tabs[0]).toHaveFocus();
+
+  fireEvent.keyDown(tabs[0], { key: 'ArrowLeft' });
+  expectTabState(tabs.at(-1)!, true);
+  expect(tabs.at(-1)).toHaveFocus();
+
+  fireEvent.keyDown(tabs.at(-1)!, { key: 'ArrowRight' });
+  expectTabState(tabs[0], true);
+  expect(tabs[0]).toHaveFocus();
+
+  fireEvent.keyDown(tabs[0], { key: 'End' });
+  expectTabState(tabs.at(-1)!, true);
+  expect(tabs.at(-1)).toHaveFocus();
+
+  fireEvent.keyDown(tabs.at(-1)!, { key: 'Home' });
+  expectTabState(tabs[0], true);
+  expect(tabs[0]).toHaveFocus();
 }
 
 describe('core public page editorial artwork', () => {
@@ -67,26 +120,31 @@ describe('core public page editorial artwork', () => {
 });
 
 describe('core public page visible keyboard focus', () => {
-  it('styles every Programs selector button', () => {
+  it('styles every Programs tab', () => {
     renderPage(<Programs />);
+    const tablist = screen.getByRole('tablist', { name: 'Program pathways' });
 
-    for (const button of screen.getAllByRole('button')) {
-      expect(button).toHaveClass(...focusClasses);
+    for (const tab of within(tablist).getAllByRole('tab')) {
+      expect(tab).toHaveClass(...focusClasses);
     }
   });
 
-  it('styles every Guidance tab button', () => {
+  it('styles every Guidance tab', () => {
     renderPage(<Guidance />);
+    const tablist = screen.getByRole('tablist', { name: 'Guidance audiences' });
 
-    for (const button of screen.getAllByRole('button')) {
-      expect(button).toHaveClass(...focusClasses);
+    for (const tab of within(tablist).getAllByRole('tab')) {
+      expect(tab).toHaveClass(...focusClasses);
     }
   });
 
   it('styles every Events FAQ button', () => {
     renderPage(<SignatureExperiences />);
+    const faqSection = screen
+      .getByRole('heading', { name: 'Frequently Asked Questions' })
+      .closest('section')!;
 
-    for (const button of screen.getAllByRole('button')) {
+    for (const button of within(faqSection).getAllByRole('button')) {
       expect(button).toHaveClass(...focusClasses);
     }
   });
@@ -99,6 +157,92 @@ describe('core public page visible keyboard focus', () => {
     );
     expect(screen.getByRole('link', { name: 'hello@eduplus.skills' })).toHaveClass(
       ...focusClasses,
+    );
+  });
+});
+
+describe('core public page accessible selectors', () => {
+  it('exposes Programs tabs and their active panel relationship', () => {
+    renderPage(<Programs />);
+    const tablist = screen.getByRole('tablist', { name: 'Program pathways' });
+    const tabs = within(tablist).getAllByRole('tab');
+    const firstTab = within(tablist).getByRole('tab', { name: /FuturePath Navigator/ });
+    const secondTab = within(tablist).getByRole('tab', { name: /LifeSkills Lab/ });
+
+    expectTabState(firstTab, true);
+    expectTabState(secondTab, false);
+    expect(firstTab).toHaveAttribute('id', 'program-tab-01');
+    expect(firstTab).toHaveAttribute('aria-controls', 'program-panel-01');
+    expect(tabs.filter((tab) => tab.tabIndex === 0)).toHaveLength(1);
+    expectTabRelationships(tabs);
+
+    const firstPanel = screen.getByRole('tabpanel', { name: /FuturePath Navigator/ });
+    expect(firstPanel).toHaveAttribute('id', 'program-panel-01');
+    expect(firstPanel).toHaveAttribute('aria-labelledby', 'program-tab-01');
+
+    fireEvent.click(secondTab);
+
+    expectTabState(firstTab, false);
+    expectTabState(secondTab, true);
+    expectTabRelationships(tabs);
+    const secondPanel = screen.getByRole('tabpanel', { name: /LifeSkills Lab/ });
+    expect(secondPanel).toHaveAttribute('id', 'program-panel-02');
+    expect(secondPanel).toHaveAttribute('aria-labelledby', 'program-tab-02');
+  });
+
+  it('supports roving keyboard selection and focus for Programs tabs', () => {
+    renderPage(<Programs />);
+    const tabs = within(
+      screen.getByRole('tablist', { name: 'Program pathways' }),
+    ).getAllByRole('tab');
+
+    exerciseTabKeyboard(tabs);
+
+    expect(screen.getByRole('tabpanel', { name: /FuturePath Navigator/ })).toHaveAttribute(
+      'aria-labelledby',
+      'program-tab-01',
+    );
+  });
+
+  it('exposes Guidance tabs and their active panel relationship', () => {
+    renderPage(<Guidance />);
+    const tablist = screen.getByRole('tablist', { name: 'Guidance audiences' });
+    const tabs = within(tablist).getAllByRole('tab');
+    const firstTab = within(tablist).getByRole('tab', { name: 'For Students' });
+    const secondTab = within(tablist).getByRole('tab', { name: 'For Parents' });
+
+    expectTabState(firstTab, true);
+    expectTabState(secondTab, false);
+    expect(firstTab).toHaveAttribute('id', 'guidance-tab-students');
+    expect(firstTab).toHaveAttribute('aria-controls', 'guidance-panel-students');
+    expect(tabs.filter((tab) => tab.tabIndex === 0)).toHaveLength(1);
+    expectTabRelationships(tabs);
+
+    const firstPanel = screen.getByRole('tabpanel', { name: 'For Students' });
+    expect(firstPanel).toHaveAttribute('id', 'guidance-panel-students');
+    expect(firstPanel).toHaveAttribute('aria-labelledby', 'guidance-tab-students');
+
+    fireEvent.click(secondTab);
+
+    expectTabState(firstTab, false);
+    expectTabState(secondTab, true);
+    expectTabRelationships(tabs);
+    const secondPanel = screen.getByRole('tabpanel', { name: 'For Parents' });
+    expect(secondPanel).toHaveAttribute('id', 'guidance-panel-parents');
+    expect(secondPanel).toHaveAttribute('aria-labelledby', 'guidance-tab-parents');
+  });
+
+  it('supports roving keyboard selection and focus for Guidance tabs', () => {
+    renderPage(<Guidance />);
+    const tabs = within(
+      screen.getByRole('tablist', { name: 'Guidance audiences' }),
+    ).getAllByRole('tab');
+
+    exerciseTabKeyboard(tabs);
+
+    expect(screen.getByRole('tabpanel', { name: 'For Students' })).toHaveAttribute(
+      'aria-labelledby',
+      'guidance-tab-students',
     );
   });
 });

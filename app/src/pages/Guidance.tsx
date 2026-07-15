@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, type KeyboardEvent } from 'react';
 import { Link } from 'react-router';
 import { Button } from '@/components/ui/button';
 import { PageHero } from '@/components/ui/page-hero';
@@ -62,7 +62,36 @@ const TABS = [
 
 export default function Guidance() {
   const [activeTab, setActiveTab] = useState(0);
-  const tab = TABS[activeTab];
+
+  const handleTabKeyDown = (
+    event: KeyboardEvent<HTMLButtonElement>,
+    index: number,
+  ) => {
+    let nextIndex: number;
+
+    switch (event.key) {
+      case 'ArrowRight':
+      case 'ArrowDown':
+        nextIndex = (index + 1) % TABS.length;
+        break;
+      case 'ArrowLeft':
+      case 'ArrowUp':
+        nextIndex = (index - 1 + TABS.length) % TABS.length;
+        break;
+      case 'Home':
+        nextIndex = 0;
+        break;
+      case 'End':
+        nextIndex = TABS.length - 1;
+        break;
+      default:
+        return;
+    }
+
+    event.preventDefault();
+    setActiveTab(nextIndex);
+    document.getElementById(`guidance-tab-${TABS[nextIndex].id}`)?.focus();
+  };
 
   return (
     <div className="bg-background w-full min-h-screen">
@@ -83,11 +112,22 @@ export default function Guidance() {
       <section className="py-20 border-t border-border/50 px-6 md:px-12 max-w-[1440px] mx-auto">
 
         {/* Text tabs — underline active, no filled backgrounds */}
-        <div className="flex gap-8 border-b border-border/50 mb-16 overflow-x-auto">
+        <div
+          role="tablist"
+          aria-label="Guidance audiences"
+          className="flex gap-8 border-b border-border/50 mb-16 overflow-x-auto"
+        >
           {TABS.map((t, i) => (
             <button
               key={t.id}
+              type="button"
+              role="tab"
+              id={`guidance-tab-${t.id}`}
+              aria-selected={activeTab === i}
+              aria-controls={`guidance-panel-${t.id}`}
+              tabIndex={activeTab === i ? 0 : -1}
               onClick={() => setActiveTab(i)}
+              onKeyDown={(event) => handleTabKeyDown(event, i)}
               className={`pb-4 text-[15px] font-medium whitespace-nowrap transition-colors duration-150 border-b-2 -mb-px focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground focus-visible:ring-offset-2 focus-visible:ring-offset-background ${
                 activeTab === i
                   ? 'border-primary text-foreground'
@@ -99,26 +139,35 @@ export default function Guidance() {
           ))}
         </div>
 
-        {/* Detail panel */}
-        <div className="grid md:grid-cols-2 gap-16">
-          <div>
-            <h2 className="text-[28px] font-medium text-foreground mb-6 leading-snug">{tab.title}</h2>
-            <p className="text-[16px] text-muted-foreground leading-relaxed mb-10 max-w-[55ch]">{tab.desc}</p>
-            <Button asChild className="rounded-none h-[52px] px-[28px] bg-foreground text-background hover:bg-primary transition-colors duration-200">
-              <Link to="/contact" /* ui-ignore */>{tab.cta}</Link>
-            </Button>
+        {/* Detail panels */}
+        {TABS.map((audience, i) => (
+          <div
+            key={audience.id}
+            role="tabpanel"
+            id={`guidance-panel-${audience.id}`}
+            aria-labelledby={`guidance-tab-${audience.id}`}
+            hidden={activeTab !== i}
+            className={activeTab === i ? 'grid md:grid-cols-2 gap-16' : 'hidden'}
+          >
+            <div>
+              <h2 className="text-[28px] font-medium text-foreground mb-6 leading-snug">{audience.title}</h2>
+              <p className="text-[16px] text-muted-foreground leading-relaxed mb-10 max-w-[55ch]">{audience.desc}</p>
+              <Button asChild className="rounded-none h-[52px] px-[28px] bg-foreground text-background hover:bg-primary transition-colors duration-200">
+                <Link to="/contact" /* ui-ignore */>{audience.cta}</Link>
+              </Button>
+            </div>
+            <div>
+              <span className="text-[13px] font-medium uppercase tracking-wide text-muted-foreground mb-6 block">
+                What You Get
+              </span>
+              <BulletList>
+                {audience.outcomes.map((outcome) => (
+                  <BulletItem key={outcome}>{outcome}</BulletItem>
+                ))}
+              </BulletList>
+            </div>
           </div>
-          <div>
-            <span className="text-[13px] font-medium uppercase tracking-wide text-muted-foreground mb-6 block">
-              What You Get
-            </span>
-            <BulletList>
-              {tab.outcomes.map((o) => (
-                <BulletItem key={o}>{o}</BulletItem>
-              ))}
-            </BulletList>
-          </div>
-        </div>
+        ))}
 
       </section>
 
