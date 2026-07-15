@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import ImmersiveHero from '../components/effects/ImmersiveHero';
 import { Button } from '../components/ui/button';
+import { FadeIn } from '@/components/effects/FadeIn';
 import { Card } from '../components/ui/card';
 import { Input } from '../components/ui/input';
 import { Textarea } from '../components/ui/textarea';
@@ -122,7 +123,7 @@ const translations = {
   placeholderEmailInput: "john@example.com",
   inquiriesLabel: "Inquiries & Support",
   inquiriesEmail: "hello@eduplus.skills",
-  hotlinePhone: "+91 (985) 645 6703"
+  hotlinePhone: "+91 90895 13731"
 };
 
 const translationMap = new Map<string, string>(Object.entries(translations));
@@ -562,8 +563,9 @@ export default function Connect() {
         </section>
 
         {/* Contact Form & Office Split Section */}
-        <section id="contact-form-section" className="mt-28 border-t border-border/60 pt-20">
-          <div className="grid lg:grid-cols-12 gap-12 pb-20">
+        <section className="py-20 border-t border-border/50 px-6 md:px-12 max-w-[1440px] mx-auto">
+        <FadeIn direction="up" delay={0.2}>
+          <div className="grid lg:grid-cols-12 gap-16 lg:gap-24">
             {/* Left Column: Office & Details */}
             <div className="lg:col-span-5 space-y-6">
               <Card className="p-6 bg-card rounded-none border border-border flex flex-col justify-between min-h-[360px] shadow-sm">
@@ -591,7 +593,7 @@ export default function Connect() {
                       <span className="text-[9px] font-mono text-muted-foreground uppercase tracking-widest block mb-1">
                         {t('hotlineLabel')}
                       </span>
-                      <a href="tel:+919856456703" className="text-sm font-semibold font-mono text-foreground hover:text-primary hover:underline focus:outline-none focus:ring-1 focus:ring-primary">
+                      <a href="tel:+919089513731" className="text-sm font-semibold font-mono text-foreground hover:text-primary hover:underline focus:outline-none focus:ring-1 focus:ring-primary">
                         {t('hotlinePhone')}
                       </a>
                     </div>
@@ -749,7 +751,8 @@ export default function Connect() {
               </Card>
             </div>
           </div>
-        </section>
+        </FadeIn>
+      </section>
 
       {/* Dynamic EduPlus Scheduler Modal using shadcn Calendar & Dialog */}
       <Dialog open={isSchedulerOpen} onOpenChange={setIsSchedulerOpen}>

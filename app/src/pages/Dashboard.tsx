@@ -9,7 +9,6 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
-  DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from '../components/ui/dialog';
@@ -203,8 +202,8 @@ export default function Dashboard() {
             bio: profileBio
           };
           localStorage.setItem('edu_plus_sim_session', JSON.stringify(parsed));
-          toast.success('[SIMULATED COGNITIVE OVERRIDE SUCCESS]', {
-            description: 'Local simulated session profile nodes re-aligned successfully.',
+          toast.success('Profile Updated', {
+            description: 'Your profile has been updated successfully.',
             style: { background: 'oklch(var(--card))', border: '1px solid oklch(var(--primary)/0.3)', color: 'oklch(var(--foreground))', borderRadius: '0px' }
           });
           window.location.reload();
@@ -221,14 +220,14 @@ export default function Dashboard() {
 
         if (error) throw error;
 
-        toast.success('[DATABASE SYNC COMPLETE]', {
+        toast.success('Profile Updated', {
           description: 'Your profile credentials have been updated securely.',
           style: { background: 'oklch(var(--card))', border: '1px solid oklch(var(--primary)/0.3)', color: 'oklch(var(--foreground))', borderRadius: '0px' }
         });
       }
       setIsSettingsOpen(false);
     } catch (err: any) {
-      toast.error('COMPILATION_ERROR', {
+      toast.error('Update Failed', {
         description: err.message || 'Failed to update user profile.',
         style: { background: 'oklch(var(--card))', border: '1px solid oklch(var(--destructive)/0.3)', color: 'oklch(var(--foreground))', borderRadius: '0px' }
       });
@@ -238,13 +237,13 @@ export default function Dashboard() {
   const handleLogout = async () => {
     try {
       await signOut();
-      toast.success('[SESSION TERMINATED]', {
-        description: 'You have logged out successfully from Dashboard.',
+      toast.success('Signed Out', {
+        description: 'You have been signed out successfully.',
         style: { background: 'oklch(var(--card))', border: '1px solid oklch(var(--primary)/0.3)', color: 'oklch(var(--foreground))', borderRadius: '0px' }
       });
       navigate('/', { replace: true });
     } catch (err: any) {
-      toast.error('LOGOUT_ERROR', {
+      toast.error('Sign Out Failed', {
         description: err.message || 'Logout failed.',
         style: { background: 'oklch(var(--card))', border: '1px solid oklch(var(--destructive)/0.3)', color: 'oklch(var(--foreground))', borderRadius: '0px' }
       });
@@ -257,6 +256,10 @@ export default function Dashboard() {
   const [contactMessages, setContactMessages] = useState<any[]>([]);
 
   // Form inputs
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [isUploading, setIsUploading] = useState(false);
+  const [coverFile, setCoverFile] = useState<File | null>(null);
+  const [coverPreviewUrl, setCoverPreviewUrl] = useState<string>('');
   const [newHubItem, setNewHubItem] = useState({
     title: '',
     description: '',
@@ -270,6 +273,15 @@ export default function Dashboard() {
     question: '',
     answer: ''
   });
+
+
+
+  // Cleanup object URL for cover image previews on unmount
+  useEffect(() => {
+    return () => {
+      if (coverPreviewUrl) URL.revokeObjectURL(coverPreviewUrl);
+    };
+  }, [coverPreviewUrl]);
 
   useEffect(() => {
     const completed = localStorage.getItem('edu_plus_onboarding_completed');
@@ -336,19 +348,60 @@ export default function Dashboard() {
 
   const handleCreateHubItem = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsUploading(true);
+    const uploadedPaths: string[] = [];
     try {
+      let finalUrl = newHubItem.url;
+
+      // Upload cover image if provided
+      let coverImageUrl: string | null = null;
+      if (coverFile) {
+        const coverExt = coverFile.name.split('.').pop();
+        const coverName = `covers/${Date.now()}-${Math.random().toString(36).slice(2)}.${coverExt}`;
+        const { error: coverUploadError } = await supabase.storage
+          .from('resources')
+          .upload(coverName, coverFile);
+        if (coverUploadError) throw coverUploadError;
+        const { data: coverData } = supabase.storage.from('resources').getPublicUrl(coverName);
+        coverImageUrl = coverData.publicUrl;
+        uploadedPaths.push(coverName);
+      }
+
+      // Upload document file if document_url type
+      if (newHubItem.media_type === 'document_url') {
+        if (!selectedFile) {
+          toast.error('File Required', {
+            description: 'Please select a document file to upload.',
+            style: { background: 'oklch(var(--card))', border: '1px solid oklch(var(--destructive)/0.3)', color: 'oklch(var(--foreground))', borderRadius: '0px' }
+          });
+          setIsUploading(false);
+          return;
+        }
+        const fileExt = selectedFile.name.split('.').pop();
+        const fileName = `${Date.now()}-${Math.random().toString(36).slice(2)}.${fileExt}`;
+        const fp = `uploads/${fileName}`;
+        const { error: uploadError } = await supabase.storage
+          .from('resources')
+          .upload(fp, selectedFile);
+        if (uploadError) throw uploadError;
+        const { data } = supabase.storage.from('resources').getPublicUrl(fp);
+        finalUrl = data.publicUrl;
+        uploadedPaths.push(fp);
+      }
+
       const { error } = await supabase.from('knowledge_hub').insert({
         title: newHubItem.title,
         description: newHubItem.description,
         category: newHubItem.category,
         media_type: newHubItem.media_type,
-        url: newHubItem.url,
+        url: finalUrl,
+        cover_image_url: coverImageUrl,
         author_name: newHubItem.author_name || 'Staff Advisor'
       });
 
       if (error) throw error;
 
-      toast.success('[TRANSMISSION SUCCESSFUL]', {
+      toast.success('Resource Published', {
         description: 'Knowledge node has been compiled to public database.',
         style: { background: 'oklch(var(--card))', border: '1px solid oklch(var(--primary)/0.3)', color: 'oklch(var(--foreground))', borderRadius: '0px' }
       });
@@ -361,13 +414,23 @@ export default function Dashboard() {
         url: '',
         author_name: ''
       });
+      setSelectedFile(null);
+      setCoverFile(null);
+      setCoverPreviewUrl('');
 
       fetchData();
     } catch (err) {
-      toast.error('TRANSMISSION_ERROR', {
+      console.error(err);
+      if (uploadedPaths.length > 0) {
+        // Cleanup orphaned uploads on failure
+        supabase.storage.from('resources').remove(uploadedPaths).catch(console.error);
+      }
+      toast.error('Upload Failed', {
         description: 'Unauthorized role or empty input variables.',
         style: { background: 'oklch(var(--card))', border: '1px solid oklch(var(--destructive)/0.3)', color: 'oklch(var(--foreground))', borderRadius: '0px' }
       });
+    } finally {
+      setIsUploading(false);
     }
   };
 
@@ -382,16 +445,16 @@ export default function Dashboard() {
 
       if (error) throw error;
 
-      toast.success('[COGNITIVE COMPILATION SUCCESS]', {
-        description: 'AI custom factual guideline loaded dynamically.',
+      toast.success('Guideline Saved', {
+        description: 'AI knowledge guideline has been added successfully.',
         style: { background: 'oklch(var(--card))', border: '1px solid oklch(var(--primary)/0.3)', color: 'oklch(var(--foreground))', borderRadius: '0px' }
       });
 
       setNewKbDoc({ question: '', answer: '' });
       fetchData();
     } catch (err) {
-      toast.error('COMPILATION_ERROR', {
-        description: 'Failed to write fact to AI matrix.',
+      toast.error('Save Failed', {
+        description: 'Failed to save knowledge guideline. Please try again.',
         style: { background: 'oklch(var(--card))', border: '1px solid oklch(var(--destructive)/0.3)', color: 'oklch(var(--foreground))', borderRadius: '0px' }
       });
     }
@@ -418,6 +481,8 @@ export default function Dashboard() {
   };
 
   const hasPermission = (allowed: UserRole[]) => {
+    // If a real user is authenticated but role is still resolving, deny access until resolved
+    if (user && !selectedRole) return false;
     return allowed.includes(selectedRole || 'none');
   };
 
@@ -543,25 +608,37 @@ export default function Dashboard() {
             </button>
           </DialogTrigger>
 
-          <DialogContent className="max-w-md bg-card border border-border text-foreground rounded-none p-6 shadow-xl font-sans animate-fade-in">
-            <DialogHeader className="border-b border-border pb-4">
-              <DialogTitle className="text-foreground font-sans font-semibold text-lg tracking-tight">{t('dashboard.profile.title')}</DialogTitle>
-              <DialogDescription className="text-muted-foreground font-sans text-xs">
-                Manage your display name, avatar image, and workspace parameters.
-              </DialogDescription>
-            </DialogHeader>
-
-            {/* Form and Settings section */}
-            <form onSubmit={handleUpdateProfile} className="space-y-4 pt-3 font-sans">
-              <div className="flex justify-center mb-4">
-                <Avatar className="size-16 border-2 border-primary rounded-none shadow-md animate-pulse">
-                  <AvatarImage src={profileAvatar} className="rounded-none object-cover" />
-                  <AvatarFallback className="bg-background text-primary font-sans font-bold text-lg rounded-none flex items-center justify-center">
-                    {profileName.substring(0, 2).toUpperCase() || 'AD'}
-                  </AvatarFallback>
-                </Avatar>
+          <DialogContent className="max-w-lg w-full bg-card border border-border text-foreground rounded-none p-0 shadow-2xl font-sans overflow-hidden">
+            {/* Profile Identity Header */}
+            <div className="flex items-center gap-4 p-6 border-b border-border bg-background/40">
+              <Avatar className="size-14 border border-primary/30 rounded-none shrink-0">
+                <AvatarImage src={profileAvatar} className="rounded-none object-cover" />
+                <AvatarFallback className="bg-primary/10 text-primary font-mono font-bold text-base rounded-none flex items-center justify-center">
+                  {profileName.substring(0, 2).toUpperCase() || 'AD'}
+                </AvatarFallback>
+              </Avatar>
+              <div className="flex-grow min-w-0">
+                <DialogTitle className="text-foreground font-sans font-semibold text-base tracking-tight truncate">{profileName || 'Administrator'}</DialogTitle>
+                <p className="font-mono text-[10px] text-muted-foreground mt-0.5 truncate">{user?.email}</p>
+                <span className={`inline-block mt-1.5 px-1.5 py-0.5 text-[7px] font-mono rounded-none uppercase border font-bold tracking-widest ${
+                  selectedRole === 'admin'
+                    ? 'border-destructive/50 bg-destructive/10 text-destructive'
+                    : selectedRole === 'educator'
+                    ? 'border-[#22C55E]/50 bg-[#22C55E]/10 text-[#4ADE80]'
+                    : 'border-primary/50 bg-primary/10 text-primary'
+                }`}>
+                  {selectedRole ? selectedRole.replace('_', ' ') : 'NONE'}
+                </span>
               </div>
+            </div>
 
+            {/* Dialog description for a11y */}
+            <DialogDescription className="sr-only">
+              Manage your display name, avatar image, and workspace parameters.
+            </DialogDescription>
+
+            {/* Form body */}
+            <form onSubmit={handleUpdateProfile} className="p-6 space-y-4 font-sans">
               <div className="space-y-1.5">
                 <Label className="text-[9px] font-mono text-muted-foreground uppercase tracking-wider block">{t('dashboard.profile.displayFullName')}</Label>
                 <Input
@@ -594,14 +671,13 @@ export default function Dashboard() {
                 />
               </div>
 
-              {/* Quick simulated bypass swapper (only for dev simulated user sessions) */}
+              {/* Dev role switcher — simulated sessions only */}
               {isSimulated && (
-                <div className="border border-primary/20 bg-primary/5 p-3 rounded-none mt-2 text-left space-y-2">
-                  <span className="font-mono text-[9px] text-primary tracking-wider uppercase block font-bold">// DEV BYPASS ACCESS PANEL</span>
-                  <span className="font-mono text-[8px] text-muted-foreground block">{t('dashboard.profile.swapRoles')}</span>
+                <div className="border border-primary/20 bg-primary/5 p-3 rounded-none text-left space-y-2">
+                  <span className="font-mono text-[9px] text-primary tracking-wider uppercase block font-bold">// DEV: Switch Role</span>
                   <div className="grid grid-cols-3 gap-1.5">
                     {(['admin', 'educator', 'resource_person'] as const).map(role => (
-                      <Button key={role} type="button" variant="outline" onClick={() => { signInSimulated(role); toast.success(`[ROLE_OVERRIDE: ${role.toUpperCase()}]`, { description: `Simulated identity shifted successfully.`, style: { background: 'oklch(var(--card))', border: '1px solid oklch(var(--primary))', color: 'oklch(var(--foreground))', borderRadius: '0px' } }); setIsSettingsOpen(false); }} className={`py-1 text-center font-mono text-[8px] uppercase tracking-wider border cursor-pointer transition-all rounded-none focus:outline-none focus:ring-1 focus:ring-primary/70 ${selectedRole === role ? 'border-primary bg-primary/10 text-primary' : 'border-transparent text-muted-foreground hover:text-foreground hover:border-border'}`}>
+                      <Button key={role} type="button" variant="outline" onClick={() => { signInSimulated(role); toast.success(`Role set to ${role}`, { style: { background: 'oklch(var(--card))', border: '1px solid oklch(var(--primary))', color: 'oklch(var(--foreground))', borderRadius: '0px' } }); setIsSettingsOpen(false); }} className={`py-1 text-center font-mono text-[8px] uppercase tracking-wider border cursor-pointer transition-all rounded-none focus:outline-none focus:ring-1 focus:ring-primary/70 ${selectedRole === role ? 'border-primary bg-primary/10 text-primary' : 'border-transparent text-muted-foreground hover:text-foreground hover:border-border'}`}>
                         {role.replace('_', ' ')}
                       </Button>
                     ))}
@@ -609,14 +685,14 @@ export default function Dashboard() {
                 </div>
               )}
 
-              {/* Controls panel */}
+              {/* Actions */}
               <div className="flex gap-2 pt-2 border-t border-border">
                 <Button type="submit" className="flex-grow py-2 bg-primary text-primary-foreground hover:bg-foreground hover:text-background focus:outline-none focus:ring-1 focus:ring-primary/70 transition-all font-mono text-[9px] font-bold tracking-wider uppercase cursor-pointer rounded-none h-9">
                   Save Changes
                 </Button>
-                <Link to="/" onClick={() => setIsSettingsOpen(false)} className="px-4 py-2 border border-border hover:border-foreground focus:outline-none focus:ring-1 focus:ring-primary/70 text-center font-mono text-[9px] uppercase tracking-wider transition-all inline-flex items-center justify-center h-9 text-foreground hover:bg-accent hover:text-accent-foreground">
-                  Exit Site
-                </Link>
+                <Button type="button" variant="outline" onClick={() => setIsSettingsOpen(false)} className="px-4 py-2 border border-border hover:border-foreground focus:outline-none focus:ring-1 focus:ring-primary/70 font-mono text-[9px] uppercase tracking-wider transition-all rounded-none h-9 cursor-pointer">
+                  Close
+                </Button>
                 <Button type="button" variant="destructive" onClick={() => { setIsSettingsOpen(false); handleLogout(); }} className="px-4 py-2 border border-destructive/30 hover:border-destructive hover:bg-destructive/10 bg-destructive/5 text-destructive focus:outline-none focus:ring-1 focus:ring-destructive font-mono text-[9px] uppercase tracking-wider transition-all cursor-pointer rounded-none h-9">
                   Logout
                 </Button>
@@ -908,6 +984,49 @@ export default function Dashboard() {
 
                 {hasPermission(['admin', 'educator', 'resource_person']) ? (
                   <form onSubmit={handleCreateHubItem} className="space-y-5">
+
+                    {/* Cover Image Banner Uploader — 16:9, full width */}
+                    <div className="space-y-2">
+                      <Label className="text-[10px] font-mono text-muted-foreground uppercase tracking-wider block">Heading Cover Image</Label>
+                      {coverPreviewUrl ? (
+                        <div className="relative w-full overflow-hidden border border-border bg-card/30" style={{ aspectRatio: '16/9' }}>
+                          <img src={coverPreviewUrl} alt="Cover Preview" className="w-full h-full object-cover" />
+                          <Button
+                            type="button"
+                            variant="destructive"
+                            onClick={() => { setCoverFile(null); setCoverPreviewUrl(''); }}
+                            className="absolute top-2 right-2 px-2.5 py-1 text-[9px] font-mono rounded-none uppercase h-7 cursor-pointer border border-destructive/30"
+                          >
+                            Remove Cover
+                          </Button>
+                        </div>
+                      ) : (
+                        <button
+                          type="button"
+                          onClick={() => document.getElementById('cover-file-input')?.click()}
+                          className="w-full flex flex-col items-center justify-center border border-dashed border-border hover:border-primary/50 bg-background/30 hover:bg-primary/5 transition-all duration-300 cursor-pointer py-10 gap-2"
+                        >
+                          <UploadCloud className="size-7 text-muted-foreground/50" />
+                          <span className="font-mono text-[9px] text-primary tracking-wider uppercase font-bold mt-1">Upload Cover Image (16:9)</span>
+                          <span className="text-[8px] text-muted-foreground">Recommended: 1200×675px — JPEG, PNG, WEBP</span>
+                          <input
+                            id="cover-file-input"
+                            type="file"
+                            accept="image/*"
+                            className="hidden"
+                            onChange={e => {
+                              if (e.target.files && e.target.files[0]) {
+                                const file = e.target.files[0];
+                                setCoverFile(file);
+                                if (coverPreviewUrl) URL.revokeObjectURL(coverPreviewUrl);
+                                setCoverPreviewUrl(URL.createObjectURL(file));
+                              }
+                            }}
+                          />
+                        </button>
+                      )}
+                    </div>
+
                     <div className="grid md:grid-cols-2 gap-5">
                       <div className="space-y-2">
                         <Label className="text-[10px] font-mono text-muted-foreground uppercase tracking-wider block">{t('dashboard.uploader.title')}</Label>
@@ -969,17 +1088,37 @@ export default function Dashboard() {
                       </div>
                     </div>
 
-                    <div className="space-y-2">
-                      <Label className="text-[10px] font-mono text-muted-foreground uppercase tracking-wider block">{t('dashboard.uploader.resourceUrl')}</Label>
-                      <Input
-                        type="url"
-                        required
-                        value={newHubItem.url}
-                        onChange={e => setNewHubItem(p => ({ ...p, url: e.target.value }))}
-                        placeholder="https://www.youtube.com/watch?v=..."
-                        className="w-full bg-background border border-border text-xs px-4 py-2.5 outline-none focus:border-primary rounded-none text-foreground font-sans h-9"
-                      />
-                    </div>
+                    {newHubItem.media_type === 'document_url' ? (
+                      <div className="space-y-2">
+                        <Label className="text-[10px] font-mono text-muted-foreground uppercase tracking-wider block">Document File Node</Label>
+                        <Input
+                          type="file"
+                          accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt"
+                          required={!selectedFile}
+                          onChange={e => {
+                            if (e.target.files && e.target.files[0]) {
+                              setSelectedFile(e.target.files[0]);
+                            }
+                          }}
+                          className="w-full bg-background border border-border text-xs px-4 py-1.5 outline-none focus:border-primary rounded-none text-foreground font-mono h-9 file:mr-4 file:py-1 file:px-2 file:rounded-none file:border-0 file:text-[10px] file:font-mono file:bg-primary file:text-primary-foreground hover:file:bg-foreground hover:file:text-background"
+                        />
+                        {selectedFile && (
+                          <p className="text-[10px] font-mono text-muted-foreground">Active payload: {selectedFile.name}</p>
+                        )}
+                      </div>
+                    ) : (
+                      <div className="space-y-2">
+                        <Label className="text-[10px] font-mono text-muted-foreground uppercase tracking-wider block">{t('dashboard.uploader.resourceUrl')}</Label>
+                        <Input
+                          type="url"
+                          required
+                          value={newHubItem.url}
+                          onChange={e => setNewHubItem(p => ({ ...p, url: e.target.value }))}
+                          placeholder={newHubItem.media_type === 'video_embed' ? "https://www.youtube.com/watch?v=..." : "https://example.com/..."}
+                          className="w-full bg-background border border-border text-xs px-4 py-2.5 outline-none focus:border-primary rounded-none text-foreground font-sans h-9"
+                        />
+                      </div>
+                    )}
 
                     <div className="space-y-2">
                       <Label className="text-[10px] font-mono text-muted-foreground uppercase tracking-wider block">{t('dashboard.uploader.briefDescription')}</Label>
@@ -992,13 +1131,14 @@ export default function Dashboard() {
                       />
                     </div>
 
-                    <Button type="submit" className="px-6 py-3 bg-primary text-primary-foreground hover:bg-foreground hover:text-background focus:outline-none focus:ring-1 focus:ring-primary transition-all duration-300 font-mono text-[10px] font-bold tracking-widest uppercase cursor-pointer rounded-none h-10">
-                      COMPILE RESOURCE
+                    <Button type="submit" disabled={isUploading} className="px-6 py-3 bg-primary text-primary-foreground hover:bg-foreground hover:text-background focus:outline-none focus:ring-1 focus:ring-primary transition-all duration-300 font-mono text-[10px] font-bold tracking-widest uppercase cursor-pointer rounded-none h-10 disabled:opacity-50 disabled:cursor-not-allowed">
+                      {isUploading ? 'UPLOADING...' : 'PUBLISH RESOURCE'}
                     </Button>
                   </form>
                 ) : (
-                  <Card className="p-8 text-center text-destructive font-mono text-xs border border-destructive/20 bg-destructive/5 rounded-none flex flex-col gap-0 py-8">
-                    ACCESS DENIED. USER PROTOCOL REQUIRES LEVEL: STAFF, EDUCATOR, OR ADMIN.
+                  <Card className="p-8 text-center font-mono text-xs border border-border bg-card/30 rounded-none flex flex-col gap-2 py-8">
+                    <span className="text-foreground font-semibold text-sm">Access Restricted</span>
+                    <span className="text-muted-foreground text-[11px]">This section requires Educator or Admin privileges. Contact your administrator to request access.</span>
                   </Card>
                 )}
               </div>
@@ -1035,7 +1175,7 @@ export default function Dashboard() {
                         />
                       </div>
                       <Button type="submit" className="px-4 py-2 bg-primary/10 border border-primary/30 text-primary hover:bg-primary hover:text-primary-foreground focus:outline-none focus:ring-1 focus:ring-primary transition-all duration-300 font-mono text-[9px] font-bold tracking-wider rounded-none cursor-pointer h-9">
-                        TRAIN COGNITIVE ADVISOR
+                        ADD GUIDELINE
                       </Button>
                     </form>
 
@@ -1070,8 +1210,9 @@ export default function Dashboard() {
                     </div>
                   </div>
                 ) : (
-                  <Card className="p-8 text-center text-destructive font-mono text-xs border border-destructive/20 bg-destructive/5 rounded-none flex flex-col gap-0 py-8">
-                    ACCESS DENIED. AI COMPILING CAPABILITIES REQUIRE SECURITY LEVEL: EDUCATOR OR ADMIN.
+                  <Card className="p-8 text-center font-mono text-xs border border-border bg-card/30 rounded-none flex flex-col gap-2 py-8">
+                    <span className="text-foreground font-semibold text-sm">Access Restricted</span>
+                    <span className="text-muted-foreground text-[11px]">AI Knowledge Base management requires Educator or Admin privileges.</span>
                   </Card>
                 )}
               </div>
@@ -1126,8 +1267,9 @@ export default function Dashboard() {
                     )}
                   </div>
                 ) : (
-                  <Card className="p-8 text-center text-destructive font-mono text-xs border border-destructive/20 bg-destructive/5 rounded-none flex flex-col gap-0 py-8">
-                    ACCESS DENIED. COMPROMISED CLEARANCE LEVEL. REQUIRED NODES: EDUCATOR OR ADMIN.
+                  <Card className="p-8 text-center font-mono text-xs border border-border bg-card/30 rounded-none flex flex-col gap-2 py-8">
+                    <span className="text-foreground font-semibold text-sm">Access Restricted</span>
+                    <span className="text-muted-foreground text-[11px]">Inbound Inquiries management requires Educator or Admin privileges.</span>
                   </Card>
                 )}
               </div>

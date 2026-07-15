@@ -5,76 +5,78 @@ import { PageHero } from '@/components/ui/page-hero';
 import { BulletList, BulletItem } from '@/components/ui/bullet-list';
 import { editorialIllustrations } from '@/lib/editorialIllustrations';
 
+import { ScrollReveal } from '@/components/effects/ScrollReveal';
+
 const PROGRAMS = [
   {
     num: '01',
-    title: 'FuturePath Navigator',
-    tag: 'Career Exploration',
-    desc: 'Decodes natural strengths, interests, and aptitudes using psychometric assessments and DMIT evaluations for smarter stream and career selection.',
+    title: 'MBBS Abroad (Vietnam)',
+    tag: 'Medical Admissions',
+    desc: 'Affordable, high-quality English-medium medical programs in Vietnam with excellent clinical exposure. We provide personalized guidance throughout your admission journey.',
     outcomes: [
-      'Scientific strengths mapping',
-      '1-on-1 counselling sessions',
-      'Custom academic and career roadmaps',
-      'Board & subject selection clarity',
+      'NMC guideline compliance',
+      'End-to-end documentation support',
+      'Modern laboratory exposure',
+      'Pre-departure orientation',
     ],
   },
   {
     num: '02',
-    title: 'LifeSkills Lab',
-    tag: 'Mastery Training',
-    desc: 'Trains communication, resilience, financial literacy, emotional intelligence, and AI-readiness — the complete toolkit for a modern professional.',
+    title: 'Overseas Placement & Dubai Jobs',
+    tag: 'Global Careers',
+    desc: 'Career mapping and international placements for rewarding global careers. Access walk-in interviews, attractive salary packages, and vocational training.',
     outcomes: [
-      'Soft skills & corporate communication',
-      'Financial literacy frameworks',
-      'AI & tech adaptability training',
-      'Leadership & team dynamics',
+      '100% placement assistance',
+      'Dubai industry walk-ins',
+      'Attractive salary packages',
+      'International networking',
     ],
   },
   {
     num: '03',
-    title: 'Expert Connect Live',
-    tag: 'Mentorship',
-    desc: 'Connects learners directly to industry experts, researchers, and global academics for guided career mentorship and insight sessions.',
+    title: 'Summer Camps & Skills Development',
+    tag: 'Immersive Learning',
+    desc: 'Immersive regional camps in collaboration with NIELIT, CIPET, and RIMS, focusing on IoT, Robotics, Plastic Engineering, and Medical Awareness.',
     outcomes: [
-      'Curated expert matching',
-      'Live mentorship sessions',
-      'Industry insight access',
-      'Research and field introductions',
+      'Industrial expo exposure',
+      'Robotics & IoT training',
+      'Medical & Oral Health awareness',
+      'Community mentorship',
     ],
   },
   {
     num: '04',
-    title: 'Global Admissions Studio',
-    tag: 'Higher Studies',
-    desc: 'End-to-end support for competitive domestic preparation (JEE, NEET) and international university admissions (SAT, GRE, IELTS).',
+    title: 'Vision Talk & Expert Mentorship',
+    tag: 'Professional Guidance',
+    desc: 'An exclusive 4-month mentorship program bridging the gap between classroom and career, featuring industry experts and academic innovators.',
     outcomes: [
-      'Domestic competitive prep',
-      'International admissions support',
-      'Application strategy & essays',
-      'Scholarship identification',
+      '4-month deep immersion',
+      'Leadership & team building',
+      'Public speaking training',
+      'Industry expert connect',
     ],
   },
   {
     num: '05',
-    title: 'Career Launchpad',
-    tag: 'Job Placement',
-    desc: 'Resume optimisation, LinkedIn strategy, mock interviews, and direct placement support for job-ready graduates.',
+    title: 'Domestic & Global Admissions',
+    tag: 'Higher Studies',
+    desc: 'End-to-end guidance for competitive domestic preparation (JEE, NEET, IMU CET) and securing seats in premier global universities.',
     outcomes: [
-      'Professional resume & LinkedIn',
-      'Mock interview coaching',
-      'Placement network access',
-      'Salary negotiation training',
+      'Domestic competitive prep',
+      'IMU CET counseling',
+      'International admissions support',
+      'Scholarship identification',
     ],
   },
   {
     num: '06',
     title: 'Innovation Studio & Educator Academy',
     tag: 'Alpha Projects',
-    desc: 'Sets up STEM and robotics innovation labs in schools while providing professional pedagogical growth training for educators.',
+    desc: 'Setting up STEM and robotics innovation labs in schools, alongside professional pedagogical growth training for modern educators.',
     outcomes: [
       'STEM & robotics lab setup',
       'Educator workshop series',
-      'Curriculum innovation support',
+      'AI-integration in classrooms',
       'Institutional partnership programs',
     ],
   },
@@ -124,16 +126,17 @@ export default function Programs() {
 
       {/* ── Program Explorer ── */}
       <section className="py-20 border-t border-border/50 px-6 md:px-12 max-w-[1440px] mx-auto">
-        <div className="grid md:grid-cols-[280px_1fr] gap-16">
+        <ScrollReveal>
+          <div className="grid md:grid-cols-[280px_1fr] gap-16">
 
-          {/* Left: Program list */}
-          <div
-            role="tablist"
-            aria-label="Program pathways"
-            aria-orientation="vertical"
-            className="border-r border-border/50 pr-8 flex flex-col gap-1"
-          >
-            {PROGRAMS.map((p, i) => (
+            {/* Left: Program list */}
+            <div
+              role="tablist"
+              aria-label="Program pathways"
+              aria-orientation="vertical"
+              className="border-r border-border/50 pr-8 flex flex-col gap-1"
+            >
+              {PROGRAMS.map((p, i) => (
               <button
                 key={p.num}
                 type="button"
@@ -195,6 +198,7 @@ export default function Programs() {
             ))}
           </div>
         </div>
+        </ScrollReveal>
       </section>
 
     </div>

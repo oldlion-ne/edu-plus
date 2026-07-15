@@ -47,3 +47,15 @@ app/extract.js
 # Image-generation working masters
 tmp/imagegen/
 
+# Scratch scripts and temp files
+*.mjs
+
+# Tests
+*.test.tsx
+*.test.ts
+*.test.jsx
+*.test.js
+*.spec.tsx
+*.spec.ts
+*.spec.jsx
+*.spec.js

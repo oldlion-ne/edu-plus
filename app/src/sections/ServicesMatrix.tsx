@@ -2,28 +2,28 @@ import { Link } from 'react-router';
 
 const PROGRAMS = [
   {
-    name: 'FuturePath Navigator',
-    description: 'Decodes strengths, psychometrics, and DMIT assessments to guide subject, stream, and career selection.',
+    name: 'MBBS Abroad (Vietnam)',
+    description: 'Affordable, high-quality English-medium medical programs in Vietnam with excellent clinical exposure. We provide personalized guidance throughout your admission journey.',
   },
   {
-    name: 'LifeSkills Lab',
-    description: 'Trains soft skills, communication, emotional resilience, and financial literacy for real-world readiness.',
+    name: 'Overseas Placement & Dubai Jobs',
+    description: 'Career mapping and international placements for rewarding global careers. Access walk-in interviews, attractive salary packages, and vocational training.',
   },
   {
-    name: 'Expert Connect Live',
-    description: 'Connects learners directly to industry experts, academics, and global researchers for guided mentorship.',
+    name: 'Summer Camps & Skills Development',
+    description: 'Immersive regional camps in collaboration with NIELIT, CIPET, and RIMS, focusing on IoT, Robotics, Plastic Engineering, and Medical Awareness.',
   },
   {
-    name: 'Global Admissions Studio',
-    description: 'End-to-end guidance for competitive domestic prep and international university admissions.',
+    name: 'Vision Talk & Expert Mentorship',
+    description: 'An exclusive 4-month mentorship program bridging the gap between classroom and career, featuring industry experts and academic innovators.',
   },
   {
-    name: 'Career Launchpad',
-    description: 'Resume building, LinkedIn optimisation, mock interviews, and direct placement support.',
+    name: 'Domestic & Global Admissions',
+    description: 'End-to-end guidance for competitive domestic preparation (JEE, NEET) and securing seats in premier global universities.',
   },
   {
     name: 'Innovation Studio & Educator Academy',
-    description: 'Sets up STEM and robotics labs in schools while providing professional pedagogical growth training.',
+    description: 'Setting up STEM and robotics labs in schools, alongside professional pedagogical growth training for modern educators.',
   },
 ];
 

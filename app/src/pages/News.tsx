@@ -3,35 +3,36 @@ import { EditorialMedia } from '@/components/ui/editorial-media';
 import { PageHero } from '@/components/ui/page-hero';
 import { editorialIllustrations } from '@/lib/editorialIllustrations';
 import { FOCUS_RING_CLASSES } from '@/lib/utils';
+import { ScrollReveal } from '@/components/effects/ScrollReveal';
 
 const ARTICLES = [
   {
-    title: 'Transforming Learning at Mommy Complex, Nambol Bazar',
-    date: 'May 12, 2026',
-    category: 'Grassroots Impact',
-    desc: 'Establishing our new offline learning center in Manipur to deliver immersive psychometric evaluations, career mapping, and life skills workshops to schools across the Bishnupur district.',
+    title: 'MBBS in Vietnam: Gateway for Indian Students',
+    date: 'July 6, 2026',
+    category: 'Medical Admissions',
+    desc: 'Holistic Eduplus Skills announces affordable, high-quality MBBS programs at Hong Bang International University and Dong A University, featuring modern clinical exposure and NMC compliance.',
     illustration: editorialIllustrations.newsCommunity,
   },
   {
-    title: "Bridging Singapore's Clinical Speech Interventions to Local Classrooms",
-    date: 'April 28, 2026',
-    category: 'Academic Insights',
-    desc: 'Co-founder Ronen Akoijam highlights the importance of language development and inclusive education practices in early childhood curriculums, standardizing student accessibility.',
+    title: 'Dubai Job Placement Walk-in Drive',
+    date: 'July 3, 2026',
+    category: 'Global Careers',
+    desc: 'Ready to build your career in Dubai? Eduplus Skills is hosting walk-in interviews with leading companies across multiple industries offering attractive salary packages.',
+    illustration: editorialIllustrations.newsCoaching,
+  },
+  {
+    title: 'Summer Camp Imphal 2026 Kicks Off!',
+    date: 'June 25, 2026',
+    category: 'Skill Development',
+    desc: 'An exciting journey of skill-building in collaboration with NIELIT Imphal, Manipur University, RIMS Dental College, and CIPET Takyel, featuring IoT, Robotics, and Plastic Engineering.',
     illustration: editorialIllustrations.newsSpeech,
   },
   {
-    title: 'Green Hydrogen Internships: South Korea to Manipur Dialogues',
-    date: 'April 15, 2026',
-    category: 'Global Research',
-    desc: 'Council expert Dr. Soram Bobby Singh outlines the future of green energy and energy materials science, detailing new research internship paths for high school STEM cohorts.',
+    title: 'IMU CET Results Out: Chart Your Maritime Course',
+    date: 'June 24, 2026',
+    category: 'Admissions Support',
+    desc: 'The IMU CET results are out! Step-by-step admission and counseling guidance is now available for students securing their seats in the Merchant Navy.',
     illustration: editorialIllustrations.newsEnergy,
-  },
-  {
-    title: 'Behavioral Transformation: Launching the "Smart Behaviour Installation Guide"',
-    date: 'March 30, 2026',
-    category: 'Professional Prep',
-    desc: 'Executive mentor Khumukcham Roshaan Singh releases his new guide detailing auto-industry ready soft skills and behavioral standards now integrated into Career Launchpad.',
-    illustration: editorialIllustrations.newsCoaching,
   },
 ];
 
@@ -96,12 +97,12 @@ export default function News() {
       {/* ── Clean Article Grid ── */}
       <section className="py-20 border-t border-border/50 px-6 md:px-12 max-w-[1440px] mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-x-16 gap-y-20">
-          {ARTICLES.map((article) => (
-            <div
-              key={article.title}
-              className="group flex flex-col gap-6 p-10 bg-transparent hover:bg-secondary transition-colors duration-200"
-            >
-              <EditorialMedia asset={article.illustration} />
+          {ARTICLES.map((article, i) => (
+            <ScrollReveal key={article.title} delay={i * 0.1}>
+              <div
+                className="group flex flex-col gap-6 p-10 bg-transparent hover:bg-secondary transition-colors duration-200 h-full rounded-none"
+              >
+                <EditorialMedia asset={article.illustration} />
 
               {/* Text content */}
               <div className="space-y-4">
@@ -119,8 +120,9 @@ export default function News() {
                 <Link to={`/news/${article.title.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`} className={`text-[14px] font-medium text-primary hover:underline ${FOCUS_RING_CLASSES}`}>
                   Read Article &rarr;
                 </Link>
+                </div>
               </div>
-            </div>
+            </ScrollReveal>
           ))}
         </div>
       </section>
