@@ -5,6 +5,7 @@ import { supabase } from '../lib/supabaseClient';
 import { toast } from 'sonner';
 import { useAuth } from '../lib/AuthContext';
 import DashboardOnboardingTour from '../components/DashboardOnboardingTour';
+import { NumberTicker } from '../components/magicui/NumberTicker';
 import {
   Dialog,
   DialogContent,
@@ -822,15 +823,21 @@ export default function Dashboard() {
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 w-full">
                   <Card className="border border-border bg-card rounded-none text-left p-5 flex flex-col gap-0 py-5">
                     <span className="font-mono text-[9px] text-primary tracking-wider block mb-1">{t('dashboard.overview.hubResources')}</span>
-                    <span className="font-heading text-3xl font-light text-foreground">{knowledgeHubItems.length}</span>
+                    <span className="font-heading text-3xl font-light text-foreground">
+                      <NumberTicker value={knowledgeHubItems.length} />
+                    </span>
                   </Card>
                   <Card className="border border-border bg-card rounded-none text-left p-5 flex flex-col gap-0 py-5">
                     <span className="font-mono text-[9px] text-primary tracking-wider block mb-1">{t('dashboard.overview.aiTrainingRules')}</span>
-                    <span className="font-heading text-3xl font-light text-foreground">{kbDocuments.length}</span>
+                    <span className="font-heading text-3xl font-light text-foreground">
+                      <NumberTicker value={kbDocuments.length} />
+                    </span>
                   </Card>
                   <Card className="border border-border bg-card rounded-none text-left p-5 flex flex-col gap-0 py-5">
                     <span className="font-mono text-[9px] text-primary tracking-wider block mb-1">{t('dashboard.overview.inboundInquiries')}</span>
-                    <span className="font-heading text-3xl font-light text-foreground">{contactMessages.length}</span>
+                    <span className="font-heading text-3xl font-light text-foreground">
+                      <NumberTicker value={contactMessages.length} />
+                    </span>
                   </Card>
                 </div>
 

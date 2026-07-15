@@ -6,6 +6,8 @@ import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Eye, EyeOff } from 'lucide-react';
+import { GridPattern } from '@/components/magicui/GridPattern';
+import { AuroraText } from '@/components/magicui/AuroraText';
 
 const translations = {
   brandName: "Edu",
@@ -53,13 +55,20 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen w-full flex items-center justify-center bg-background px-6">
-      <div className="w-full max-w-sm border border-border bg-card p-8 flex flex-col gap-8">
+    <div className="relative min-h-screen w-full flex items-center justify-center bg-background px-6 overflow-hidden">
+      <GridPattern
+        width={40}
+        height={40}
+        x={-1}
+        y={-1}
+        className="[mask-image:linear-gradient(to_bottom,white,transparent,transparent)]"
+      />
+      <div className="relative z-10 w-full max-w-sm border border-border bg-card p-8 flex flex-col gap-8">
 
         {/* Brand */}
         <div>
           <span className="font-heading font-bold text-2xl text-card-foreground leading-none">
-            {t('brandName')}<span className="text-primary font-light">{t('brandPlus')}</span>
+            {t('brandName')}<AuroraText className="font-light">{t('brandPlus')}</AuroraText>
           </span>
           <p className="text-[10px] text-muted-foreground font-mono uppercase tracking-widest mt-2">
             {t('staffPortal')}
