@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import ImmersiveHero from '../components/effects/ImmersiveHero';
 import { Button } from '../components/ui/button';
-import { NeonGradientCard } from '../components/ui/neon-gradient-card';
+import { BorderBeam } from '../components/magicui/BorderBeam';
 import { Card } from '../components/ui/card';
 import { Check, HelpCircle, ArrowRight, User, Building, ShieldCheck, Sparkles } from 'lucide-react';
 import { Link } from 'react-router';
@@ -378,9 +378,12 @@ export default function Pricing() {
             return (
               <div key={plan.id} className="relative flex flex-col h-full">
                 {plan.popular ? (
-                  <NeonGradientCard className="border border-border/50 h-full flex flex-col justify-between">
-                    {CardMarkup}
-                  </NeonGradientCard>
+                  <div className="relative h-full">
+                    <Card className="border border-primary/30 bg-card/45 backdrop-blur-sm rounded-none h-full flex flex-col justify-between p-6">
+                      {CardMarkup}
+                    </Card>
+                    <BorderBeam size={250} duration={12} delay={9} />
+                  </div>
                 ) : (
                   <Card className="border border-border bg-card/45 backdrop-blur-sm rounded-none h-full flex flex-col justify-between p-6">
                     {CardMarkup}

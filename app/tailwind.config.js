@@ -89,6 +89,11 @@ module.exports = {
           "0%, 100%": { opacity: "1" },
           "50%": { opacity: "0" },
         },
+        "border-beam": {
+          "100%": {
+            "offset-distance": "100%",
+          },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -97,6 +102,7 @@ module.exports = {
         "blink-cursor": "blink-cursor 1s step-start infinite",
         marquee: "marquee var(--duration) linear infinite",
         "marquee-vertical": "marquee-vertical var(--duration) linear infinite",
+        "border-beam": "border-beam calc(var(--duration)*1s) infinite linear",
       },
       transitionTimingFunction: {
         "out-cubic": "cubic-bezier(0.22, 1, 0.36, 1)",

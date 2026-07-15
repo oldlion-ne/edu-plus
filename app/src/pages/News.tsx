@@ -4,6 +4,7 @@ import { PageHero } from '@/components/ui/page-hero';
 import { editorialIllustrations } from '@/lib/editorialIllustrations';
 import { FOCUS_RING_CLASSES } from '@/lib/utils';
 import { ScrollReveal } from '@/components/effects/ScrollReveal';
+import { MagicCard } from '@/components/magicui/MagicCard';
 
 const ARTICLES = [
   {
@@ -99,8 +100,9 @@ export default function News() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-x-16 gap-y-20">
           {ARTICLES.map((article, i) => (
             <ScrollReveal key={article.title} delay={i * 0.1}>
-              <div
-                className="group flex flex-col gap-6 p-10 bg-transparent hover:bg-secondary transition-colors duration-200 h-full rounded-none"
+              <MagicCard
+                className="group flex flex-col gap-6 p-10 bg-transparent hover:bg-secondary transition-colors duration-200 h-full rounded-none border border-border/30"
+                gradientColor="oklch(var(--primary) / 0.08)"
               >
                 <EditorialMedia asset={article.illustration} />
 
@@ -121,7 +123,7 @@ export default function News() {
                   Read Article &rarr;
                 </Link>
                 </div>
-              </div>
+              </MagicCard>
             </ScrollReveal>
           ))}
         </div>
