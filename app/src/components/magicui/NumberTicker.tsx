@@ -30,11 +30,13 @@ export function NumberTicker({
   const isInView = useInView(ref, { once: true, margin: "0px" });
 
   useEffect(() => {
+    let timeout: ReturnType<typeof setTimeout>;
     if (isInView) {
-      setTimeout(() => {
+      timeout = setTimeout(() => {
         motionValue.set(direction === "down" ? 0 : value);
       }, delay * 1000);
     }
+    return () => clearTimeout(timeout);
   }, [motionValue, isInView, delay, value, direction]);
 
   useEffect(() => {
@@ -51,12 +53,18 @@ export function NumberTicker({
     });
   }, [springValue, decimalPlaces, prefix, suffix]);
 
+  const initialValue = direction === "down" ? value : 0;
+  const formattedInitialValue = Intl.NumberFormat("en-US", {
+    minimumFractionDigits: decimalPlaces,
+    maximumFractionDigits: decimalPlaces,
+  }).format(initialValue);
+
   return (
     <span
       ref={ref}
       className={cn("inline-block tabular-nums", className)}
     >
-      {prefix}0{suffix}
+      {prefix}{formattedInitialValue}{suffix}
     </span>
   );
 }

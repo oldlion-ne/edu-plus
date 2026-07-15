@@ -31,8 +31,7 @@ export function MagicCard({
   }
 
   function handleMouseLeave() {
-    mouseX.set(-gradientSize);
-    mouseY.set(-gradientSize);
+    // Keep last mouse position so the gradient fades out in place
   }
 
   const background = useMotionTemplate`radial-gradient(${gradientSize}px circle at ${mouseX}px ${mouseY}px, ${gradientColor}, transparent 100%)`;
@@ -42,12 +41,12 @@ export function MagicCard({
       ref={cardRef}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
-      className={cn("group relative overflow-hidden", className)}
+      className={cn("group relative overflow-hidden rounded-none", className)}
     >
       {children}
       <motion.div
-        className="pointer-events-none absolute inset-0 transition-opacity duration-300 group-hover:opacity-100"
-        style={{ background, opacity: gradientOpacity }}
+        className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-[var(--gradient-opacity)]"
+        style={{ background, "--gradient-opacity": gradientOpacity } as any}
       />
     </div>
   );

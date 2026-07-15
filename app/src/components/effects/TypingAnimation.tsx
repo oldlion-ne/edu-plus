@@ -58,16 +58,22 @@ export function TypingAnimation({
   useEffect(() => {
     if (!shouldStart || words.length === 0) return
 
+    // Stop completely if not looping and we've finished the last word
+    if (!loop && currentWordIndex === words.length - 1 && phase === "pause") {
+      return
+    }
+
     let timeout: ReturnType<typeof setTimeout> | null = null
 
-    const timeoutDelay =
-      delay > 0 && displayedText === ""
-        ? delay
-        : phase === "typing"
-          ? typeSpeed
-          : phase === "deleting"
-            ? deleteSpeed
-            : pauseDelay
+    const isInitialStart = delay > 0 && currentWordIndex === 0 && currentCharIndex === 0 && phase === "typing"
+
+    const timeoutDelay = isInitialStart
+      ? delay
+      : phase === "typing"
+        ? typeSpeed
+        : phase === "deleting"
+          ? deleteSpeed
+          : pauseDelay
 
     timeout = setTimeout(() => {
       const currentWord = words[currentWordIndex] || ""
@@ -84,7 +90,9 @@ export function TypingAnimation({
           break
 
         case "pause":
-          setPhase("deleting")
+          if (loop || currentWordIndex < words.length - 1) {
+            setPhase("deleting")
+          }
           break
 
         case "deleting":

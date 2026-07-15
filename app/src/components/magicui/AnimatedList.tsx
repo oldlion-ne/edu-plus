@@ -1,4 +1,4 @@
-import React, { type ReactElement, useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 
 export interface AnimatedListProps {
@@ -10,7 +10,8 @@ export interface AnimatedListProps {
 export const AnimatedList = React.memo(
   ({ className, children, delay = 1000 }: AnimatedListProps) => {
     const [index, setIndex] = useState(0);
-    const childrenArray = React.Children.toArray(children);
+    // Memoize the children array so it doesn't recalculate unnecessarily
+    const childrenArray = useMemo(() => React.Children.toArray(children), [children]);
 
     useEffect(() => {
       if (index < childrenArray.length - 1) {
@@ -26,10 +27,10 @@ export const AnimatedList = React.memo(
     }, [index, childrenArray]);
 
     return (
-      <div className={`flex flex-col gap-4 ${className || ""}`}>
+      <div className={`rounded-none ${className || ""}`}>
         <AnimatePresence>
-          {itemsToShow.map((item) => (
-            <AnimatedListItem key={(item as ReactElement).key}>
+          {itemsToShow.map((item, i) => (
+            <AnimatedListItem key={(item as any).key || String(i)}>
               {item}
             </AnimatedListItem>
           ))}
