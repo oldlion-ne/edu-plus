@@ -3,12 +3,15 @@ import type { ReactNode } from 'react';
 import type { EditorialIllustration } from '@/lib/editorialIllustrations';
 
 import { FadeIn } from '@/components/effects/FadeIn';
+import { TypingAnimation } from '@/components/effects/TypingAnimation';
 
 import { EditorialMedia } from './editorial-media';
 
 interface PageHeroProps {
   eyebrow: string;
   title: string;
+  /** If provided, replaces the last word of `title` with an animated cycling word. */
+  titleSuffixWords?: string[];
   description: string;
   illustration?: EditorialIllustration;
   children?: ReactNode;
@@ -17,10 +20,15 @@ interface PageHeroProps {
 export function PageHero({
   eyebrow,
   title,
+  titleSuffixWords,
   description,
   illustration,
   children,
 }: PageHeroProps) {
+  // Split the title so the last word can be animated
+  const titleWords = title.trim().split(' ');
+  const titlePrefix = titleSuffixWords ? titleWords.slice(0, -1).join(' ') : null;
+
   return (
     <section className="w-full border-b border-border/50 bg-background pt-12">
       <div
@@ -41,7 +49,27 @@ export function PageHero({
             </FadeIn>
             <FadeIn delay={0.2}>
               <h1 className="mb-6 text-3xl font-medium leading-[1.15] tracking-tight text-foreground md:text-4xl lg:text-5xl">
-                {title}
+                {titleSuffixWords && titlePrefix ? (
+                  <>
+                    {/* Line 1: static — never moves */}
+                    <span className="block">{titlePrefix}</span>
+                    {/* Line 2: reserved height = 1 line at current font size so the
+                        layout NEVER shifts regardless of which word is typed */}
+                    <span className="block min-h-[1.15em]">
+                      <TypingAnimation
+                        words={titleSuffixWords}
+                        className="text-primary"
+                        typeSpeed={80}
+                        deleteSpeed={45}
+                        pauseDelay={2000}
+                        delay={800}
+                        loop
+                      />
+                    </span>
+                  </>
+                ) : (
+                  title
+                )}
               </h1>
             </FadeIn>
             <FadeIn delay={0.3}>
