@@ -3,6 +3,7 @@
 **Date**: 2026-07-14  
 **Status**: APPROVED  
 **Topic**: Nordic Minimalism Redesign
+**Amended by**: `2026-07-14-A` and `2026-07-14-nordic-editorial-illustration-system-design.md`
 
 ---
 
@@ -10,7 +11,19 @@
 We are implementing **Extreme Lagom (Option A): Global Typographic Minimalism**. Every page, every section, and every component must adhere strictly to this rule: 
 > *"If it does not help the learner take the next step, it is removed."*
 
-We define boundaries and layout structure through negative space, generous margins, and precise typography alignment—never through boxed borders, shadows, backgrounds, or decorative lines.
+We define content boundaries and layout structure through negative space, generous margins, and precise typography alignment—never through boxed cards, shadows, or decorative lines. Ratified dark illustration plates are the sole background exception.
+
+## Ratified Amendment 2026-07-14-A
+
+This amendment reintroduces narrative illustration as a controlled exception to the original typography-only direction. The operative implementation details live in `2026-07-14-nordic-editorial-illustration-system-design.md`; the following rules supersede conflicting clauses in this document.
+
+1. **Human geometry:** Human figures use softly faceted, natural forms. Strict straight-line geometry applies to architecture, furniture, props, and environmental structures. Explicit Bézier-style curved ornamentation remains prohibited.
+2. **Amber accessibility:** Candlelight amber (`#D79A4B`) on Warm Charcoal passes WCAG AA at `6.56:1` and may be used for text and interactive elements on dark surfaces. Amber on Arctic Paper fails at `2.22:1` and is decorative-only; it must not be used for text, links, or focus indicators on light surfaces.
+3. **Mobile hero:** Copy appears first, CTA second, and artwork third. Artwork uses a focal-safe `3:2` crop with a maximum height constraint. Opacity reductions and blend modes are prohibited.
+4. **Dark plate transitions:** Dark artwork plates receive generous padding, a straight `1px` Soft Stone (`#D8D1C7`) border, and additional whitespace below. Drop shadows remain prohibited.
+5. **Council portraits:** The hero retains a group roundtable scene. Member portraits come from coordinated contact sheets created for deterministic `4:5` cropping and are not cropped from the group hero.
+6. **Knowledge Hub empty state:** The zero-results state uses a centered `1:1` crop of the Quiet Archive artwork at a maximum width of `240px`.
+7. **Raster-first workflow:** Use built-in raster image generation, targeted regeneration, and WebP optimization. External vectorization is not the default. Manual vector cleanup is a contingency for isolated geometric defects only.
 
 ---
 
@@ -18,7 +31,7 @@ We define boundaries and layout structure through negative space, generous margi
 
 ### Hero Section (`Hero.tsx`)
 *   **Remove**: Background video, all absolute overlays, timeline animations, bottom stats strip, and decorative elements.
-*   **Implement**: Solid `bg-background` (`#FAF9F7`), generous vertical padding (`pt-40 pb-32`), and a clean, centered typographic hierarchy.
+*   **Implement**: Solid `bg-background` (`#FAF9F7`), generous vertical padding, and a clean typographic hierarchy. Under Amendment 2026-07-14-A, the hero uses the shared 55/45 copy-and-poster composition rather than the original centered copy-only variant.
 *   **Typography**:
     *   Eyebrow: `13px` / `500` / `#9B9B9B` / uppercase / tracking-wide
     *   H1: `56px` / `500` / `#1A1A1A` / line-height `1.15`
@@ -69,7 +82,7 @@ We define boundaries and layout structure through negative space, generous margi
 
 ## 2. Subpages (Global Enforcement)
 
-The Home page DNA is the **only** design DNA allowed. No page-specific visual diagrams, primary illustrations, or custom ornaments will be preserved.
+The Home page DNA is the **only** design DNA allowed. No page-specific visual diagrams or custom ornaments will be preserved. Primary illustrations are permitted only through the ratified Nordic Editorial Learning Posters system.
 
 ### Global Removals (To Be Deleted Universally):
 *   Floating background grids or grid overlays
@@ -86,7 +99,7 @@ The Home page DNA is the **only** design DNA allowed. No page-specific visual di
 *   All decorative icons on cards
 
 ### Global Additions (To Be Implemented Universally):
-*   Typographic hero (eyebrow, H1, subtext, optional CTA, `160px+` vertical padding)
+*   Typographic hero (eyebrow, H1, subtext, optional CTA) with an optional ratified editorial poster plate and generous vertical padding
 *   Clean flat grids (cards: no border, no background, no shadow, `40px` padding, `#F5F3F0` background on hover)
 *   Clean list groups (no borders between items; `1px` `#E8E6E3` top border only if needed for separation)
 *   Generous negative space (`py-24` to `py-32` minimum between main sections)

@@ -40,9 +40,11 @@ This specification supersedes the earlier typography-only rule that prohibited p
 | Warm charcoal | `#24211F` | Primary text and button fill |
 | Soft stone | `#D8D1C7` | Dividers and quiet surfaces |
 | Muted ink | `#716B63` | Body and supporting copy |
-| Candlelight amber | `#D79A4B` | Active states, links, artwork highlights |
+| Candlelight amber | `#D79A4B` | Active states, links, artwork highlights; see accessibility rule below |
 
 Existing OKLCH theme tokens remain the source of truth. Hex values describe the intended appearance and will be mapped to the current tokens rather than duplicated throughout components.
+
+**Amber accessibility rule:** Candlelight amber on Warm Charcoal has a WCAG contrast ratio of `6.56:1` and is permitted for interactive elements and text on dark surfaces. Amber on Arctic Paper has a contrast ratio of `2.22:1` and is restricted to decorative highlights; it must not be used for text, links, or focus indicators on the light background.
 
 ### 4.2 Illustration palette
 
@@ -62,8 +64,8 @@ The system is called **Nordic Editorial Learning Posters**.
 - Ultra-clean flat-vector appearance rendered as optimized raster assets.
 - Restrained soft cel shading for depth; no photorealism, glossy 3D rendering, or airbrushed fantasy lighting.
 - Warm-charcoal background with candlelight amber key light.
-- Straight-line architectural and decorative geometry. No curved ornamental paths.
-- Angular, simplified human silhouettes with calm expressions and natural collaborative poses.
+- Human figures use softly faceted, natural forms to convey warmth and empathy while maintaining the graphic system's restraint.
+- Strict straight-line geometry applies to architecture, furniture, props, and environmental structures. Explicit Bézier-style curved ornamentation remains prohibited.
 - East Asian representation in every scene containing people.
 - One primary narrative anchor, two to four figures at most, and only a few secondary props.
 - Large areas of quiet space; no dense decorative fields.
@@ -77,7 +79,7 @@ The system is called **Nordic Editorial Learning Posters**.
 - News thumbnails: `3:2` crop with a shared focal-safe area.
 - Council portraits: `4:5` editorial crop with consistent headroom and shoulder line.
 - Desktop hero: 55% copy / 45% illustration at the large breakpoint.
-- Mobile hero: copy first, artwork second; no text overlays on the raster image.
+- Mobile hero: copy first, CTA second, then artwork. Artwork uses a focal-safe `3:2` crop with a maximum height constraint to prevent excessive vertical screen occupation. Do not use opacity reductions or blend modes to lessen visual weight. No text is overlaid on the raster image.
 
 ## 5. Page Story Map
 
@@ -95,11 +97,11 @@ Two founders and one learner meet at an equal-height table. The composition emph
 
 ### Knowledge Hub — Quiet Archive
 
-A reader and a listening learner occupy a modular archive of books, headphones, and study material. The image makes resource discovery feel calm and purposeful and also supports the empty state without implying a broken page.
+A reader and a listening learner occupy a modular archive of books, headphones, and study material. The image makes resource discovery feel calm and purposeful and supports the empty state without implying a broken page. The empty state uses a centered `1:1` crop of the archive artwork at a maximum width of `240px`.
 
 ### Council — Global Roundtable
 
-Four East Asian experts exchange ideas around a square table. A coordinated set of individual portraits provides distinct, dignified expert imagery with varied age, gender presentation, hair, clothing, and pose.
+Four East Asian experts exchange ideas around a square table in the hero scene. Individual member portraits come from coordinated portrait contact sheets generated specifically for deterministic `4:5` editorial cropping. Portraits must not be cropped from the group hero because that degrades resolution and compromises headroom. The portrait set varies age, gender presentation, hair, clothing, and pose while retaining one art direction.
 
 ### Guidance — Pathfinding
 
@@ -146,6 +148,9 @@ Page components consume the registry rather than repeating string paths and alt 
 - Maintains one H1, one concise description, and optional CTA group.
 - Keeps image semantics explicit: meaningful images receive descriptive alt text; decorative images use an empty alt.
 - Uses CSS aspect ratios to prevent layout shift.
+- Uses a focal-safe `3:2` crop and maximum height constraint on mobile.
+- Gives dark artwork plates generous surrounding padding, a straight `1px` Soft Stone border, and additional whitespace below to reset vertical rhythm.
+- Prohibits drop shadows on artwork plates.
 - Uses a refined opacity/translation entrance only when reduced-motion is not requested.
 - Does not perform parallax, scaling, glowing, pulsing, or hover spectacle.
 
@@ -160,7 +165,11 @@ A small shared media wrapper standardizes:
 - `object-fit` and focal positioning;
 - loading behavior;
 - responsive `sizes`;
-- optional caption or visually hidden context.
+- optional caption or visually hidden context;
+- straight `1px` Soft Stone border treatment for dark artwork plates;
+- mobile `3:2` focal-safe cropping with an explicit maximum height;
+- recovery spacing below dark plates on light surfaces;
+- zero drop shadows, opacity reductions, or blend-mode treatments.
 
 It is used by hero art, article thumbnails, feature panels, and council portraits.
 
@@ -176,7 +185,7 @@ It is used by hero art, article thumbnails, feature panels, and council portrait
 
 ### 7.1 Generation
 
-Use the built-in image generation workflow. Every asset receives its own page-specific prompt while repeating the locked palette, representation, geometry, and negative constraints.
+Maintain the built-in raster-first image-generation workflow. Every asset receives its own page-specific prompt while repeating the locked palette, representation, geometry, and negative constraints. Use targeted regeneration and WebP optimization to achieve visual consistency. External vectorization tools are rejected as the default because they add manual dependencies and may introduce prohibited curved SVG paths. Manual vector cleanup is reserved strictly as a contingency for correcting isolated geometric defects.
 
 For consistency:
 
