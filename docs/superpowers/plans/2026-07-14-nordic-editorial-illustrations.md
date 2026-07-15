@@ -28,7 +28,7 @@
 - `app/src/components/ui/editorial-media.tsx` — straight-edged responsive media primitive.
 - `app/src/components/ui/editorial-media.test.tsx` — media semantics, loading, and crop tests.
 - `app/src/components/ui/page-hero.test.tsx` — copy-only and copy-plus-art hero behavior.
-- `app/scripts/prepare-editorial-images.mjs` — WebP optimization and council-sheet extraction.
+- `app/scripts/prepare-editorial-images.mjs` — WebP optimization and standalone Council portrait normalization.
 - `app/public/images/editorial/*.webp` — final production artwork.
 - `tmp/imagegen/editorial/*.png` — ignored generation masters used only during preparation.
 
@@ -206,36 +206,31 @@ Expected: all nine scenes match the master’s palette, representation, geometry
 
 ---
 
-### Task 4: Generate News Thumbnails and Council Portrait Contact Sheets
+### Task 4: Generate News Thumbnails and Standalone Council Portraits
 
 #### Execution amendment 2026-07-14-B
 
-The Task 4 contact sheets were rejected because the generator's fixed `1254px` canvas could not provide deterministic four-column geometry, consistent row headroom and baselines, or reliable cell boundaries. This amendment supersedes the contact-sheet instructions below for execution while retaining them as historical audit text. The approved raster-first contingency uses these fourteen coordinated, centered, crop-safe standalone portrait sources:
-
-- `council-bikash-oinam-v2.png`
-- `council-roshan-khumukcham-v2.png`
-- `council-ronen-akoijam-v2.png`
-- `council-soram-bobby-singh-v2.png`
-- `council-romen-ningthoujam-v2.png`
-- `council-khumukcham-roshaan-singh-v2.png`
-- `council-nutan-nongthongbam-v2.png`
-- `council-takhellambam-geetarani-v2.png`
-- `council-rojit-keisham-v2.png`
-- `council-ngangbam-shantikumar-meetei-v2.png`
-- `council-ronendrojit-akoijam-v2.png`
-- `council-purnimashi-moirangthem-v2.png`
-- `council-tomba-singh-thokchom-v2.png`
-- `council-usham-rojio-v2.png`
-
-Each source contains one East Asian expert on plain warm charcoal with coordinated lighting and camera distance. The Council group hero remains unchanged, and no member portrait is cropped from that hero. The rejected contact sheets remain ignored working masters and are not production inputs.
+The Task 4 contact sheets were rejected because the generator's fixed `1254px` canvas could not provide deterministic four-column geometry, consistent row headroom and baselines, or reliable cell boundaries. The numbered workflow in this amendment is the sole executable portrait-generation path. The old contact-sheet text is retained only in the non-executable historical appendix at the end of this task.
 
 **Files:**
 - Create: `tmp/imagegen/editorial/news-community-classroom-v2.png`
 - Create: `tmp/imagegen/editorial/news-speech-intervention-v2.png`
 - Create: `tmp/imagegen/editorial/news-green-energy-v2.png`
 - Create: `tmp/imagegen/editorial/news-behavioral-coaching-v2.png`
-- Create: `tmp/imagegen/editorial/council-portraits-a-v2.png`
-- Create: `tmp/imagegen/editorial/council-portraits-b-v2.png`
+- Create: `tmp/imagegen/editorial/council-bikash-oinam-v2.png`
+- Create: `tmp/imagegen/editorial/council-roshan-khumukcham-v2.png`
+- Create: `tmp/imagegen/editorial/council-ronen-akoijam-v2.png`
+- Create: `tmp/imagegen/editorial/council-soram-bobby-singh-v2.png`
+- Create: `tmp/imagegen/editorial/council-romen-ningthoujam-v2.png`
+- Create: `tmp/imagegen/editorial/council-khumukcham-roshaan-singh-v2.png`
+- Create: `tmp/imagegen/editorial/council-nutan-nongthongbam-v2.png`
+- Create: `tmp/imagegen/editorial/council-takhellambam-geetarani-v2.png`
+- Create: `tmp/imagegen/editorial/council-rojit-keisham-v2.png`
+- Create: `tmp/imagegen/editorial/council-ngangbam-shantikumar-meetei-v2.png`
+- Create: `tmp/imagegen/editorial/council-ronendrojit-akoijam-v2.png`
+- Create: `tmp/imagegen/editorial/council-purnimashi-moirangthem-v2.png`
+- Create: `tmp/imagegen/editorial/council-tomba-singh-thokchom-v2.png`
+- Create: `tmp/imagegen/editorial/council-usham-rojio-v2.png`
 
 - [ ] **Step 1: Generate four article thumbnails**
 
@@ -251,7 +246,94 @@ GREEN ENERGY: An East Asian researcher and student inspect a simplified straight
 BEHAVIORAL COACHING: An East Asian mentor and learner rehearse an interview across an angular table with one notebook and a simple posture cue. Save as news-behavioral-coaching-v2.png.
 ```
 
-- [ ] **Step 2: Generate two square portrait contact sheets**
+- [ ] **Step 2: Lock the portrait references and identity mapping**
+
+Use `tmp/imagegen/editorial/home-campus-walk-v2.png` as the palette and rendering reference and `tmp/imagegen/editorial/council-roundtable-v2.png` as the Council lighting and wardrobe reference. They are visual references only; do not crop, composite, or derive pixels from either image. After the first standalone portrait is accepted, include it as the framing reference for the remaining thirteen.
+
+Generate exactly one standalone source per row:
+
+| Identity brief | Exact source path |
+| --- | --- |
+| Male education founder in his 40s | `tmp/imagegen/editorial/council-bikash-oinam-v2.png` |
+| Male corporate mentor in his 40s | `tmp/imagegen/editorial/council-roshan-khumukcham-v2.png` |
+| Male speech therapist in his 40s | `tmp/imagegen/editorial/council-ronen-akoijam-v2.png` |
+| Male green-hydrogen scientist in his 50s | `tmp/imagegen/editorial/council-soram-bobby-singh-v2.png` |
+| Male community-development leader in his 50s | `tmp/imagegen/editorial/council-romen-ningthoujam-v2.png` |
+| Male executive career coach in his 40s | `tmp/imagegen/editorial/council-khumukcham-roshaan-singh-v2.png` |
+| Female life-skills and public-health trainer in her 40s | `tmp/imagegen/editorial/council-nutan-nongthongbam-v2.png` |
+| Female senior corporate lawyer in her 40s | `tmp/imagegen/editorial/council-takhellambam-geetarani-v2.png` |
+| Male maritime faculty member in his 40s | `tmp/imagegen/editorial/council-rojit-keisham-v2.png` |
+| Male English professor in his 50s | `tmp/imagegen/editorial/council-ngangbam-shantikumar-meetei-v2.png` |
+| Male senior speech-language therapist in his 50s | `tmp/imagegen/editorial/council-ronendrojit-akoijam-v2.png` |
+| Female early-childhood education director in her 40s | `tmp/imagegen/editorial/council-purnimashi-moirangthem-v2.png` |
+| Male teacher-education professor in his 50s | `tmp/imagegen/editorial/council-tomba-singh-thokchom-v2.png` |
+| Male literature and theatre professor in his 40s | `tmp/imagegen/editorial/council-usham-rojio-v2.png` |
+
+- [ ] **Step 3: Generate the fourteen standalone portraits**
+
+Run built-in image generation once per identity. Substitute the row's identity brief and exact destination into this complete locked prompt; do not batch multiple identities into one canvas.
+
+```text
+Use case: stylized-concept
+Asset type: standalone Council member portrait source for centered 4:5 production crop
+Reference assets: use home-campus-walk-v2.png for palette and flat-vector rendering; use council-roundtable-v2.png for lighting and wardrobe. Use the first accepted standalone portrait as the framing reference for portraits 2–14. References control style only; do not copy or crop a person from them.
+Primary request: Create one distinct East Asian expert, chest-up, matching this identity brief: {IDENTITY BRIEF}. Place the subject alone on a plain warm-charcoal #24211F field. Use the same camera distance across the set, a candlelight amber key from the upper left, restrained warm off-white and muted-sage clothing accents, softly faceted natural human forms, and an ultra-clean premium flat-vector raster finish.
+Framing: Center the face and torso inside the canvas's centered 4:5-safe region. Keep the top of the hair below the safe region's top edge, both shoulders fully inside its side edges, the eyes near the upper third, and the shoulder line consistent with the approved framing reference. Leave crop-safe space around hair, ears, chin, and shoulders. Use a straight-on or very slight three-quarter pose; no dramatic tilt or extreme perspective.
+Set variation: Keep the lighting, background, camera, headroom, and shoulder baseline coordinated while varying facial structure, hair, clothing, age cues, and pose enough to make every member unmistakably distinct.
+Avoid: additional people, paired portraits, contact-sheet layouts, panels, dividers, props, scenery, gradients, decorative lines, text, labels, logos, watermarks, pseudo-writing, duplicated faces, cropped hair or shoulders, hands near the face, anatomical defects, fantasy clothing, uniforms, glossy 3D, photorealism, neon, HUD motifs, and visual clutter.
+Destination: save the accepted source exactly as {EXACT SOURCE PATH}.
+```
+
+- [ ] **Step 4: Apply the one-regeneration acceptance gate**
+
+Inspect each initial output at full size and with a centered `4:5` crop preview. Accept it only when every item passes:
+
+- exactly one clearly East Asian expert matching the mapped age, gender presentation, and professional character;
+- plain `#24211F`-like background, coordinated upper-left amber light, camera distance, headroom, and shoulder baseline;
+- face, hair, ears, chin, and both shoulders remain intact in the centered `4:5` crop;
+- natural anatomy and a distinct face, hairstyle, clothing, and pose compared with all accepted portraits;
+- approved softly faceted flat-vector raster finish with no text, logo, watermark, prop, divider, extra person, glossy 3D, or photorealism.
+
+If an initial output fails, perform exactly one targeted regeneration that names the failed checklist item while keeping every locked rule unchanged. Reinspect the replacement against the full checklist. If it still fails, stop and report the portrait as blocked; do not accept it, substitute another identity, or fall back to a contact sheet.
+
+- [ ] **Step 5: Verify the accepted sources and hashes**
+
+Visually compare all fourteen accepted sources side by side and inspect their centered `640×800` previews before running Task 5. Then run this read-only verification from `C:/edu-plus` to prove all exact sources exist and no two accepted files are byte-identical:
+
+```powershell
+$names = @(
+  'council-bikash-oinam-v2.png',
+  'council-roshan-khumukcham-v2.png',
+  'council-ronen-akoijam-v2.png',
+  'council-soram-bobby-singh-v2.png',
+  'council-romen-ningthoujam-v2.png',
+  'council-khumukcham-roshaan-singh-v2.png',
+  'council-nutan-nongthongbam-v2.png',
+  'council-takhellambam-geetarani-v2.png',
+  'council-rojit-keisham-v2.png',
+  'council-ngangbam-shantikumar-meetei-v2.png',
+  'council-ronendrojit-akoijam-v2.png',
+  'council-purnimashi-moirangthem-v2.png',
+  'council-tomba-singh-thokchom-v2.png',
+  'council-usham-rojio-v2.png'
+)
+$files = $names | ForEach-Object { Get-Item -LiteralPath "tmp/imagegen/editorial/$_" }
+$hashes = $files | Get-FileHash -Algorithm SHA256
+if ($files.Count -ne 14) { throw "Expected 14 standalone portraits, found $($files.Count)" }
+if (($hashes.Hash | Sort-Object -Unique).Count -ne 14) { throw 'Council portrait hashes are not unique' }
+$hashes | Sort-Object Path | Format-Table Hash, Path
+```
+
+Expected: fourteen exact paths, fourteen unique SHA-256 hashes, and fourteen visually approved centered `4:5` previews. The Council group hero remains unchanged and is not a portrait source.
+
+#### Historical appendix — rejected contact-sheet workflow (non-executable)
+
+**Do not execute this appendix.** It records the superseded Task 4 approach for auditability. The rejected files remain ignored working masters and are not production inputs:
+
+- Historical create: `tmp/imagegen/editorial/council-portraits-a-v2.png`
+- Historical create: `tmp/imagegen/editorial/council-portraits-b-v2.png`
+
+The superseded workflow generated two square portrait contact sheets. It used the following prompts and geometry gate:
 
 Use this complete prompt for sheet A, then repeat with the sheet B identities. Each sheet is a strict `4 columns × 2 rows` grid with seven used cells and one empty charcoal cell. Every used cell contains one centered, chest-up portrait inside a 4:5-safe region; no dividers, labels, or text.
 
@@ -273,7 +355,7 @@ Color palette: #24211F, #D79A4B, #F7F4EE, #D8D1C7, muted sage, tiny dusty rose d
 Constraints: all subjects East Asian and clearly distinct; varied hair, clothing, age, facial structure, and pose; no text, labels, logos, dividers, watermark, duplicate faces, uniforms, fantasy clothing, glossy 3D, or photorealism.
 ```
 
-- [ ] **Step 3: Inspect sheet geometry before accepting it**
+**Historical geometry gate:** Inspect sheet geometry before accepting it.
 
 Expected: exactly eight equal cells, seven distinct portraits, one empty final cell, consistent background/lighting, and no face crossing a cell boundary. Regenerate a sheet if the grid is irregular because deterministic extraction depends on it.
 
@@ -283,7 +365,7 @@ Expected: exactly eight equal cells, seven distinct portraits, one empty final c
 
 #### Execution amendment 2026-07-14-B
 
-This amendment supersedes the contact-sheet extraction implementation below while retaining it as historical audit text. The final preparation script must skip `council-portraits-a-v2.png` and `council-portraits-b-v2.png`, detect the fourteen standalone council portrait PNGs listed in Task 4, and process them directly with a centered `resize({ width: 640, height: 800, fit: 'cover' })` before WebP encoding. No `1280px` contact-sheet normalization or cell extraction is required in the final pipeline.
+This is the sole executable raster-preparation strategy. The script skips `council-portraits-a-v2.png` and `council-portraits-b-v2.png`, requires the fourteen standalone portrait PNGs listed in Task 4, and processes those portraits directly. No contact-sheet normalization or cell extraction is permitted.
 
 The final output count is exactly 28 production WebPs: ten page posters, four news thumbnails, and fourteen council portraits.
 
@@ -327,66 +409,106 @@ const root = path.resolve(process.cwd(), '..');
 const sourceDir = path.join(root, 'tmp', 'imagegen', 'editorial');
 const outputDir = path.join(process.cwd(), 'public', 'images', 'editorial');
 
-const portraitSheets = {
-  'council-portraits-a-v2.png': [
-    'council-bikash-oinam-v2.webp',
-    'council-roshan-khumukcham-v2.webp',
-    'council-ronen-akoijam-v2.webp',
-    'council-soram-bobby-singh-v2.webp',
-    'council-romen-ningthoujam-v2.webp',
-    'council-khumukcham-roshaan-singh-v2.webp',
-    'council-nutan-nongthongbam-v2.webp',
-  ],
-  'council-portraits-b-v2.png': [
-    'council-takhellambam-geetarani-v2.webp',
-    'council-rojit-keisham-v2.webp',
-    'council-ngangbam-shantikumar-meetei-v2.webp',
-    'council-ronendrojit-akoijam-v2.webp',
-    'council-purnimashi-moirangthem-v2.webp',
-    'council-tomba-singh-thokchom-v2.webp',
-    'council-usham-rojio-v2.webp',
-  ],
-};
+const genericSourceNames = [
+  'home-campus-walk-v2.png',
+  'programs-focus-studio-v2.png',
+  'about-mentorship-table-v2.png',
+  'knowledge-quiet-archive-v2.png',
+  'council-roundtable-v2.png',
+  'guidance-pathfinding-v2.png',
+  'news-field-notes-v2.png',
+  'events-learning-beyond-walls-v2.png',
+  'contact-open-channel-v2.png',
+  'login-threshold-v2.png',
+  'news-community-classroom-v2.png',
+  'news-speech-intervention-v2.png',
+  'news-green-energy-v2.png',
+  'news-behavioral-coaching-v2.png',
+];
+
+const portraitSourceNames = [
+  'council-bikash-oinam-v2.png',
+  'council-roshan-khumukcham-v2.png',
+  'council-ronen-akoijam-v2.png',
+  'council-soram-bobby-singh-v2.png',
+  'council-romen-ningthoujam-v2.png',
+  'council-khumukcham-roshaan-singh-v2.png',
+  'council-nutan-nongthongbam-v2.png',
+  'council-takhellambam-geetarani-v2.png',
+  'council-rojit-keisham-v2.png',
+  'council-ngangbam-shantikumar-meetei-v2.png',
+  'council-ronendrojit-akoijam-v2.png',
+  'council-purnimashi-moirangthem-v2.png',
+  'council-tomba-singh-thokchom-v2.png',
+  'council-usham-rojio-v2.png',
+];
+
+const rejectedSheetNames = new Set([
+  'council-portraits-a-v2.png',
+  'council-portraits-b-v2.png',
+]);
+
+const genericSourceSet = new Set(genericSourceNames);
+const portraitSourceSet = new Set(portraitSourceNames);
+const requiredSourceNames = [...genericSourceNames, ...portraitSourceNames];
+const expectedOutputNames = requiredSourceNames
+  .map((name) => name.replace(/\.png$/i, '.webp'))
+  .sort();
+
+if (expectedOutputNames.length !== 28) {
+  throw new Error(`Expected 28 configured outputs, found ${expectedOutputNames.length}`);
+}
 
 await mkdir(outputDir, { recursive: true });
-const files = await readdir(sourceDir);
+const sourceNames = await readdir(sourceDir);
+const sourceNameSet = new Set(sourceNames);
+const missingSourceNames = requiredSourceNames.filter((name) => !sourceNameSet.has(name));
 
-for (const file of files.filter((name) => name.endsWith('.png'))) {
-  if (portraitSheets[file]) continue;
+if (missingSourceNames.length > 0) {
+  throw new Error(`Missing required editorial sources:\n${missingSourceNames.join('\n')}`);
+}
+
+for (const file of sourceNames) {
+  if (rejectedSheetNames.has(file)) continue;
+  if (!genericSourceSet.has(file) && !portraitSourceSet.has(file)) continue;
+
+  const input = path.join(sourceDir, file);
   const outputName = file.replace(/\.png$/i, '.webp');
-  await sharp(path.join(sourceDir, file))
+  const output = path.join(outputDir, outputName);
+
+  if (portraitSourceSet.has(file)) {
+    await sharp(input)
+      .resize({ width: 640, height: 800, fit: 'cover', position: 'centre' })
+      .webp({ quality: 90, effort: 6 })
+      .toFile(output);
+    continue;
+  }
+
+  await sharp(input)
     .resize({ width: 1600, withoutEnlargement: true })
     .webp({ quality: 88, effort: 6 })
-    .toFile(path.join(outputDir, outputName));
+    .toFile(output);
 }
 
-for (const [sheet, portraits] of Object.entries(portraitSheets)) {
-  const input = path.join(sourceDir, sheet);
-  const metadata = await sharp(input).metadata();
-  if (!metadata.width || !metadata.height) throw new Error(`Missing dimensions for ${sheet}`);
+const actualOutputNames = (await readdir(outputDir))
+  .filter((name) => name.endsWith('.webp'))
+  .sort();
+const missingOutputNames = expectedOutputNames.filter((name) => !actualOutputNames.includes(name));
+const unexpectedOutputNames = actualOutputNames.filter((name) => !expectedOutputNames.includes(name));
 
-  const cellWidth = Math.floor(metadata.width / 4);
-  const cellHeight = Math.floor(metadata.height / 2);
-  const cropHeight = Math.min(cellHeight, Math.floor(cellWidth * 1.25));
-  const verticalInset = Math.floor((cellHeight - cropHeight) / 2);
-
-  for (const [index, outputName] of portraits.entries()) {
-    const column = index % 4;
-    const row = Math.floor(index / 4);
-    await sharp(input)
-      .extract({
-        left: column * cellWidth,
-        top: row * cellHeight + verticalInset,
-        width: cellWidth,
-        height: cropHeight,
-      })
-      .resize({ width: 640, height: 800, fit: 'cover', withoutEnlargement: true })
-      .webp({ quality: 90, effort: 6 })
-      .toFile(path.join(outputDir, outputName));
-  }
+if (
+  actualOutputNames.length !== 28 ||
+  missingOutputNames.length > 0 ||
+  unexpectedOutputNames.length > 0
+) {
+  throw new Error([
+    `Expected exactly 28 production WebPs, found ${actualOutputNames.length}.`,
+    `Missing: ${missingOutputNames.join(', ') || 'none'}`,
+    `Unexpected: ${unexpectedOutputNames.join(', ') || 'none'}`,
+  ].join('\n'));
 }
 
-console.log(`Prepared editorial assets in ${outputDir}`);
+console.log(`Prepared and verified 28 editorial assets in ${outputDir}`);
 ```
 
 - [ ] **Step 4: Prepare the production assets**
