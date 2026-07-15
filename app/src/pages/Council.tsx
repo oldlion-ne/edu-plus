@@ -154,7 +154,7 @@ export default function Council() {
                   alt={`${member.name}, ${member.role}`}
                   loading="lazy"
                   decoding="async"
-                  className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-300"
+                  className="h-full w-full object-cover transition-[filter] duration-200 grayscale group-hover:grayscale-0 group-focus-visible:grayscale-0"
                 />
               </div>
               <h3 className="text-[20px] font-medium text-foreground mb-2 leading-snug group-hover:text-primary transition-colors">

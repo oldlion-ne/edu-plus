@@ -147,6 +147,21 @@ describe('Council editorial portraits and keyboard access', () => {
     }
   });
 
+  it('uses a refined filter-only transition for all 14 portraits', () => {
+    const { container } = renderPage(<Council />);
+    const portraits = Array.from(
+      container.querySelectorAll<HTMLImageElement>(
+        'img[src*="/council-"]:not([src*="roundtable"])',
+      ),
+    );
+
+    expect(portraits).toHaveLength(14);
+    for (const portrait of portraits) {
+      expect(portrait).toHaveClass('transition-[filter]', 'duration-200');
+      expect(portrait).not.toHaveClass('transition-all', 'duration-300');
+    }
+  });
+
   it('opens the selected member detail with Enter and Space', async () => {
     renderPage(<Council />);
 
