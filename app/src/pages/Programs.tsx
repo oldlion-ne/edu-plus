@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { PageHero } from '@/components/ui/page-hero';
 import { BulletList, BulletItem } from '@/components/ui/bullet-list';
 import { editorialIllustrations } from '@/lib/editorialIllustrations';
+import { MagicCard } from '@/components/magicui/MagicCard';
 
 import { ScrollReveal } from '@/components/effects/ScrollReveal';
 
@@ -168,8 +169,12 @@ export default function Programs() {
                 id={`program-panel-${program.num}`}
                 aria-labelledby={`program-tab-${program.num}`}
                 hidden={selected !== i}
-                className={selected === i ? 'py-4' : 'hidden'}
+                className={selected === i ? 'h-full' : 'hidden'}
               >
+                <MagicCard 
+                  className="h-full border border-border/50 p-8 md:p-12 rounded-none bg-card/30 backdrop-blur-sm"
+                  gradientColor="oklch(var(--primary) / 0.05)"
+                >
                 <span className="text-[13px] font-medium tracking-wide uppercase text-muted-foreground mb-3 block">
                   {program.tag}
                 </span>
@@ -194,6 +199,7 @@ export default function Programs() {
                 <Button asChild className="rounded-none h-[52px] px-[28px] bg-foreground text-background hover:bg-primary transition-colors duration-200">
                   <Link to="/contact" /* ui-ignore */>Request Advisory Consult</Link>
                 </Button>
+                </MagicCard>
               </div>
             ))}
           </div>

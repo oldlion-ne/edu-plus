@@ -1,8 +1,11 @@
+import { NumberTicker } from '../components/magicui/NumberTicker';
+
+// Each stat: numeric value for animation + display prefix/suffix for formatting
 const STATS = [
-  { value: '4,200+', label: 'Active Learners' },
-  { value: '38',     label: 'Countries Reached' },
-  { value: '98%',    label: 'Placement Rate' },
-  { value: '1.2M+',  label: 'Learning Hours' },
+  { value: 4200, prefix: '',    suffix: '+', label: 'Active Learners' },
+  { value: 38,   prefix: '',    suffix: '',  label: 'Countries Reached' },
+  { value: 98,   prefix: '',    suffix: '%', label: 'Placement Rate' },
+  { value: 1.2,  prefix: '',    suffix: 'M+', label: 'Learning Hours', decimalPlaces: 1 },
 ];
 
 export default function TelemetryStats() {
@@ -15,12 +18,19 @@ export default function TelemetryStats() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-12 md:gap-0 items-start">
           {STATS.map((stat, index) => (
             <div key={stat.label} className="relative flex flex-col items-start md:px-10">
-              {/* Ochre dot accent */}
+              {/* Amber dot accent */}
               <div className="w-1 h-1 bg-primary mb-4 rounded-none" />
 
-              {/* Metric number */}
+              {/* Animated metric number */}
               <span className="text-[48px] font-medium text-foreground leading-none tracking-tight">
-                {stat.value}
+                <NumberTicker
+                  value={stat.value}
+                  prefix={stat.prefix}
+                  suffix={stat.suffix}
+                  decimalPlaces={stat.decimalPlaces ?? 0}
+                  delay={0.2 + index * 0.1}
+                  className="text-[48px] font-medium text-foreground leading-none tracking-tight tabular-nums"
+                />
               </span>
 
               {/* Label */}
@@ -28,7 +38,7 @@ export default function TelemetryStats() {
                 {stat.label}
               </span>
 
-              {/* Single 1px vertical rule between col 2 and 3 only */}
+              {/* Vertical divider between col 2 and 3 */}
               {index === 1 && (
                 <div className="hidden md:block absolute -right-0 inset-y-0 w-px bg-border/50" />
               )}

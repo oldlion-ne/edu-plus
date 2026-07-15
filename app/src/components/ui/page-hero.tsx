@@ -27,7 +27,9 @@ export function PageHero({
 }: PageHeroProps) {
   // Split the title so the last word can be animated
   const titleWords = title.trim().split(' ');
-  const titlePrefix = titleSuffixWords ? titleWords.slice(0, -1).join(' ') : null;
+  const hasValidSuffixWords = titleSuffixWords && titleSuffixWords.length > 0;
+  const hasValidPrefix = titleWords.length > 1;
+  const titlePrefix = hasValidSuffixWords && hasValidPrefix ? titleWords.slice(0, -1).join(' ') : null;
 
   return (
     <section className="w-full border-b border-border/50 bg-background pt-12">

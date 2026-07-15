@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { AnimatedList } from '../components/magicui/AnimatedList';
 import ImmersiveHero from '../components/effects/ImmersiveHero';
 import { Button } from '../components/ui/button';
 import { FadeIn } from '@/components/effects/FadeIn';
@@ -476,16 +477,16 @@ export default function Connect() {
                         <h4 className="font-mono text-xs text-foreground uppercase tracking-wider mb-4">
                           {t('milestonesStrategy')}
                         </h4>
-                        <div className="grid sm:grid-cols-2 gap-4">
+                        <AnimatedList delay={250} className="grid sm:grid-cols-2 gap-4 items-start">
                           {stakeholder.roadmapKeys.map((stepKey, idx) => (
-                            <div key={stepKey} className="flex items-start gap-3 text-sm text-muted-foreground font-sans">
+                            <div key={stepKey} className="flex items-start gap-3 text-sm text-muted-foreground font-sans w-full">
                               <span className="w-6 h-6 bg-primary/10 border border-primary/20 flex items-center justify-center text-xs text-primary font-medium font-heading shrink-0">
                                 {idx + 1}
                               </span>
                               <span>{t(stepKey)}</span>
                             </div>
                           ))}
-                        </div>
+                        </AnimatedList>
                       </div>
                     </div>
 

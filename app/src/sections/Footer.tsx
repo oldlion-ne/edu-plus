@@ -1,5 +1,7 @@
 import { Link } from 'react-router';
 
+import { GridPattern } from '@/components/magicui/GridPattern';
+
 const links = [
   { title: 'About',       href: '/about'    },
   { title: 'Programs',    href: '/programs' },
@@ -11,8 +13,15 @@ const links = [
 
 export default function Footer() {
   return (
-    <footer className="border-t border-border bg-background py-12">
-      <div className="mx-auto max-w-5xl px-6">
+    <footer className="relative border-t border-border bg-background py-12 overflow-hidden">
+      <GridPattern
+        width={30}
+        height={30}
+        x={-1}
+        y={-1}
+        className="[mask-image:linear-gradient(to_bottom,white,transparent,transparent)]"
+      />
+      <div className="relative z-10 mx-auto max-w-5xl px-6">
         <div className="flex flex-wrap justify-between gap-6">
           <span className="text-muted-foreground order-last block text-center text-sm md:order-first">
             © {new Date().getFullYear()} EduPlus Skills. All rights reserved.

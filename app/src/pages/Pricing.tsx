@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import ImmersiveHero from '../components/effects/ImmersiveHero';
 import { Button } from '../components/ui/button';
-import { NeonGradientCard } from '../components/ui/neon-gradient-card';
+import { BorderBeam } from '../components/magicui/BorderBeam';
+import { AnimatedList } from '../components/magicui/AnimatedList';
 import { Card } from '../components/ui/card';
 import { Check, HelpCircle, ArrowRight, User, Building, ShieldCheck, Sparkles } from 'lucide-react';
 import { Link } from 'react-router';
@@ -339,9 +340,9 @@ export default function Pricing() {
                     <h4 className="font-mono text-[10px] uppercase tracking-widest text-foreground font-semibold flex items-center gap-1">
                       <ShieldCheck className="size-3.5 text-primary" /> {t('featuresHeader')}
                     </h4>
-                    <ul className="space-y-3 font-sans text-xs">
+                    <AnimatedList className="space-y-3 font-sans text-xs">
                       {plan.features.map((feature, fIdx) => (
-                        <li
+                        <div
                           key={fIdx}
                           className={cn(
                             "flex items-start gap-2.5 leading-normal",
@@ -354,9 +355,9 @@ export default function Pricing() {
                             <span className="font-mono text-primary/40 shrink-0 mt-0.5 w-3.5 text-center">&bull;</span>
                           )}
                           <span>{feature.text}</span>
-                        </li>
+                        </div>
                       ))}
-                    </ul>
+                    </AnimatedList>
                   </div>
                 </div>
 
@@ -378,9 +379,12 @@ export default function Pricing() {
             return (
               <div key={plan.id} className="relative flex flex-col h-full">
                 {plan.popular ? (
-                  <NeonGradientCard className="border border-border/50 h-full flex flex-col justify-between">
-                    {CardMarkup}
-                  </NeonGradientCard>
+                  <div className="relative h-full">
+                    <Card className="border border-primary/30 bg-card/45 backdrop-blur-sm rounded-none h-full flex flex-col justify-between p-6">
+                      {CardMarkup}
+                    </Card>
+                    <BorderBeam size={250} duration={12} delay={9} />
+                  </div>
                 ) : (
                   <Card className="border border-border bg-card/45 backdrop-blur-sm rounded-none h-full flex flex-col justify-between p-6">
                     {CardMarkup}
