@@ -21,13 +21,13 @@ describe('Vision Component', () => {
   it('renders the mission and vision as semantic copy', () => {
     render(<Vision />);
 
-    expect(screen.getByText('Our Mission')).toBeInTheDocument();
+    expect(screen.getByText('Our Mission')).toBeVisible();
     expect(
       screen.getByRole('heading', {
         name: /To become a leading skills development platform/i,
       }),
     ).toBeInTheDocument();
-    expect(screen.getByText('Our Vision')).toBeInTheDocument();
+    expect(screen.getByText('Our Vision')).toBeVisible();
     expect(
       screen.getByText(/To empower individuals to acquire future-ready/i),
     ).toBeInTheDocument();
