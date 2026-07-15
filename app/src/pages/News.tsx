@@ -1,5 +1,7 @@
 import { Link } from 'react-router';
+import { EditorialMedia } from '@/components/ui/editorial-media';
 import { PageHero } from '@/components/ui/page-hero';
+import { editorialIllustrations } from '@/lib/editorialIllustrations';
 
 const ARTICLES = [
   {
@@ -7,24 +9,28 @@ const ARTICLES = [
     date: 'May 12, 2026',
     category: 'Grassroots Impact',
     desc: 'Establishing our new offline learning center in Manipur to deliver immersive psychometric evaluations, career mapping, and life skills workshops to schools across the Bishnupur district.',
+    illustration: editorialIllustrations.newsCommunity,
   },
   {
     title: "Bridging Singapore's Clinical Speech Interventions to Local Classrooms",
     date: 'April 28, 2026',
     category: 'Academic Insights',
     desc: 'Co-founder Ronen Akoijam highlights the importance of language development and inclusive education practices in early childhood curriculums, standardizing student accessibility.',
+    illustration: editorialIllustrations.newsSpeech,
   },
   {
     title: 'Green Hydrogen Internships: South Korea to Manipur Dialogues',
     date: 'April 15, 2026',
     category: 'Global Research',
     desc: 'Council expert Dr. Soram Bobby Singh outlines the future of green energy and energy materials science, detailing new research internship paths for high school STEM cohorts.',
+    illustration: editorialIllustrations.newsEnergy,
   },
   {
     title: 'Behavioral Transformation: Launching the "Smart Behaviour Installation Guide"',
     date: 'March 30, 2026',
     category: 'Professional Prep',
     desc: 'Executive mentor Khumukcham Roshaan Singh releases his new guide detailing auto-industry ready soft skills and behavioral standards now integrated into Career Launchpad.',
+    illustration: editorialIllustrations.newsCoaching,
   },
 ];
 
@@ -36,6 +42,7 @@ export default function News() {
       <PageHero
         eyebrow="Updates &amp; Publications"
         title="News &amp; Insights"
+        illustration={editorialIllustrations.news}
         description="Success stories, event highlights, and perspectives on the evolving world of education, technology, and work."
       />
 
@@ -47,10 +54,7 @@ export default function News() {
               key={article.title}
               className="group flex flex-col gap-6 p-10 bg-transparent hover:bg-secondary transition-colors duration-200"
             >
-              {/* 3:2 contained thumbnail placeholder */}
-              <div className="aspect-[3/2] w-full bg-secondary flex items-center justify-center text-muted-foreground">
-                <span className="text-[11px] uppercase tracking-wide">{article.category}</span>
-              </div>
+              <EditorialMedia asset={article.illustration} />
 
               {/* Text content */}
               <div className="space-y-4">
@@ -65,7 +69,7 @@ export default function News() {
 
               {/* Link */}
               <div className="pt-2">
-                <Link to={`/news/${article.title.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`} className="text-[14px] font-medium text-primary hover:underline">
+                <Link to={`/news/${article.title.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`} className="text-[14px] font-medium text-primary hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground focus-visible:ring-offset-2 focus-visible:ring-offset-background">
                   Read Article &rarr;
                 </Link>
               </div>

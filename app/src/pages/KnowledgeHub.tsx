@@ -1,5 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
+import { EditorialMedia } from '@/components/ui/editorial-media';
 import { PageHero } from '@/components/ui/page-hero';
+import { editorialIllustrations } from '@/lib/editorialIllustrations';
 import { supabase } from '../lib/supabaseClient';
 
 import { Input } from '../components/ui/input';
@@ -96,6 +98,7 @@ export default function KnowledgeHub() {
       <PageHero
         eyebrow="Ecosystem Nodes"
         title="Knowledge Hub"
+        illustration={editorialIllustrations.knowledge}
         description="Access elite technical tutorials, educational webinars, and expert podcasts compiled to accelerate your academic and skill roadmap."
       />
 
@@ -109,7 +112,7 @@ export default function KnowledgeHub() {
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
-                className={`pb-3 text-[14px] font-medium whitespace-nowrap transition-colors duration-150 border-b-2 -mb-px ${
+                className={`pb-3 text-[14px] font-medium whitespace-nowrap transition-colors duration-150 border-b-2 -mb-px focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground focus-visible:ring-offset-2 focus-visible:ring-offset-background ${
                   activeTab === tab
                     ? 'border-primary text-foreground'
                     : 'border-transparent text-muted-foreground hover:text-foreground'
@@ -136,8 +139,13 @@ export default function KnowledgeHub() {
             Loading resources...
           </div>
         ) : filteredItems.length === 0 ? (
-          <div className="py-20 text-center text-[14px] text-muted-foreground">
-            No resources match your query.
+          <div className="flex flex-col items-center py-20 text-center text-[14px] text-muted-foreground">
+            <EditorialMedia
+              asset={editorialIllustrations.knowledgeEmpty}
+              decorative
+              frameClassName="mb-8 max-w-[240px]"
+            />
+            <p>No resources match your query.</p>
           </div>
         ) : (
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-16">
@@ -178,7 +186,7 @@ export default function KnowledgeHub() {
                     {isYoutube ? (
                       <button
                         onClick={() => setSelectedVideo(item.url)}
-                        className="text-[14px] font-medium text-primary hover:underline"
+                        className="text-[14px] font-medium text-primary hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground focus-visible:ring-offset-2 focus-visible:ring-offset-background"
                       >
                         Watch &rarr;
                       </button>
@@ -187,7 +195,7 @@ export default function KnowledgeHub() {
                         href={item.url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-[14px] font-medium text-primary hover:underline"
+                        className="text-[14px] font-medium text-primary hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground focus-visible:ring-offset-2 focus-visible:ring-offset-background"
                         /* ui-ignore */
                       >
                         Open resource &rarr;
@@ -215,7 +223,7 @@ export default function KnowledgeHub() {
               <button
                 ref={closeButtonRef}
                 onClick={() => setSelectedVideo(null)}
-                className="text-muted-foreground hover:text-foreground transition-colors"
+                className="text-muted-foreground hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground focus-visible:ring-offset-2 focus-visible:ring-offset-background"
                 aria-label="Close video"
               >
                 <X className="size-4" />
