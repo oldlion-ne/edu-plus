@@ -163,10 +163,10 @@ export default function Contact() {
                         value={formData.profile}
                         onValueChange={(val) => setFormData((prev) => ({ ...prev, profile: val }))}
                       >
-                        <SelectTrigger id="contact-profile" className="w-full rounded-none bg-background border-border/50 h-[48px] text-[14px]">
+                        <SelectTrigger id="contact-profile" className="w-full rounded-none bg-background border-border/50 h-[48px] text-[14px] text-foreground">
                           <SelectValue placeholder="Select Profile" />
                         </SelectTrigger>
-                        <SelectContent className="rounded-none text-[14px] bg-background border border-border/50">
+                        <SelectContent className="rounded-none text-[14px] bg-background border border-border text-foreground">
                           <SelectItem value="student">Student</SelectItem>
                           <SelectItem value="parent">Parent / Guardian</SelectItem>
                           <SelectItem value="educator">Educator / School Leader</SelectItem>

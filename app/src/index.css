@@ -2,6 +2,7 @@
 @import url("shadcn/tailwind.css");
 @import url("@fontsource-variable/inter");
 @import url("@fontsource-variable/outfit");
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -10,6 +11,7 @@
   :root {
     --font-sans: 'Inter Variable', sans-serif;
     --font-heading: 'Inter Variable', sans-serif;
+
     /* Nordic Light — warm whites, soft stone, amber accent */
     --background: 96.78% 0.0086 84.6deg;
     --foreground: 25.03% 0.0059 56.1deg;
@@ -85,7 +87,7 @@
     --destructive: 65% 0.18 25deg;
     --destructive-foreground: 93% 0.006 80deg;
     --border: 100% 0 0deg / 0.08;
-    --input: 100% 0 0deg / 0.1;
+    --input: 28% 0.012 60deg;
     --ring: 65% 0.012 60deg;
     --chart-1: 78% 0.13 70deg;
     --chart-2: 68% 0.11 70deg;
