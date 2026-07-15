@@ -14,8 +14,10 @@
     "ui-check": "node scripts/check-ui-compliance.js",
     "test": "vitest",
     "test:run": "vitest run",
+    "test:editorial-assets": "node --test scripts/prepare-editorial-images.test.mjs",
     "test:e2e": "playwright test",
-    "test:e2e:ui": "playwright test --ui"
+    "test:e2e:ui": "playwright test --ui",
+    "assets:editorial": "node scripts/prepare-editorial-images.mjs"
   },
   "dependencies": {
     "@fontsource-variable/inter": "5.2.8",
@@ -101,6 +103,7 @@
     "jsdom": "29.1.1",
     "kimi-plugin-inspect-react": "1.0.3",
     "postcss": "8.5.6",
+    "sharp": "^0.35.3",
     "stylelint": "17.12.0",
     "stylelint-config-standard": "40.0.0",
     "tailwindcss": "3.4.19",
