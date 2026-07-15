@@ -36,7 +36,7 @@ export function FadeIn({ children, delay = 0, className, direction = "up" }: Fad
           ? { duration: 0.2, delay }
           : { type: "spring", duration: 0.5, bounce: 0, delay }
       }
-      className={cn(className)}
+      className={cn("rounded-none", className)}
     >
       {children}
     </motion.div>

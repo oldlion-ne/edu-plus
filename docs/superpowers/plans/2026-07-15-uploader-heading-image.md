@@ -10,7 +10,7 @@
 
 ---
 
-### Task 1: Add Cover Image Form Input UI
+## Task 1: Add Cover Image Form Input UI
 
 **Files:**
 - Modify: `src/pages/Dashboard.tsx`
@@ -81,7 +81,7 @@
 
 ---
 
-### Task 2: Implement Cover Upload Logic in Submission
+## Task 2: Implement Cover Upload Logic in Submission
 
 **Files:**
 - Modify: `src/pages/Dashboard.tsx`
@@ -124,7 +124,7 @@
 
 ---
 
-### Task 3: Compile & Validate Types
+## Task 3: Compile & Validate Types
 
 **Files:**
 - Command: `pnpm tsc -b`

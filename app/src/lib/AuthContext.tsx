@@ -3,7 +3,7 @@ import { supabase } from './supabaseClient';
 
 interface AuthContextType {
   user: any | null;
-  role: 'admin' | 'educator' | 'resource_person' | null;
+  role: 'admin' | 'educator' | 'resource_person' | 'none' | null;
   loading: boolean;
   isSimulated: boolean;
   signIn: (email: string, password: string) => Promise<{ error: any }>;
@@ -16,7 +16,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<any | null>(null);
-  const [role, setRole] = useState<'admin' | 'educator' | 'resource_person' | null>(null);
+  const [role, setRole] = useState<'admin' | 'educator' | 'resource_person' | 'none' | null>(null);
   const [loading, setLoading] = useState(true);
   const [isSimulated, setIsSimulated] = useState(false);
 
@@ -38,14 +38,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         roleFetchedForRef.current = userId;
         return true;
       } else {
-        // No role row found — default authenticated users to admin for full access
-        setRole('admin');
+        setRole('none');
         roleFetchedForRef.current = userId;
         return false;
       }
     } catch (err) {
-      // Network/RLS error — still grant admin so UI remains functional
-      setRole('admin');
+      setRole('none');
       roleFetchedForRef.current = userId;
       return false;
     }

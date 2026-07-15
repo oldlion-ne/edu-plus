@@ -17,7 +17,7 @@ export function ScrollReveal({
   direction = "up",
   once = true 
 }: ScrollRevealProps) {
-  const ref = useRef(null);
+  const ref = useRef<HTMLDivElement>(null);
   const isInView = useInView(ref, { once, margin: "-100px" });
   const shouldReduceMotion = useReducedMotion();
 
@@ -46,7 +46,7 @@ export function ScrollReveal({
           ? { duration: 0.2, delay }
           : { type: "spring", duration: 0.6, bounce: 0, delay }
       }
-      className={cn(className)}
+      className={cn("rounded-none", className)}
     >
       {children}
     </motion.div>

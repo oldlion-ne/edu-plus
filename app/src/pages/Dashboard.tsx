@@ -274,12 +274,7 @@ export default function Dashboard() {
     answer: ''
   });
 
-  // Auto-activate simulated admin session if no user is authenticated at all
-  useEffect(() => {
-    if (!user) {
-      signInSimulated('admin');
-    }
-  }, [user, signInSimulated]);
+
 
   // Cleanup object URL for cover image previews on unmount
   useEffect(() => {
@@ -354,6 +349,7 @@ export default function Dashboard() {
   const handleCreateHubItem = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsUploading(true);
+    const uploadedPaths: string[] = [];
     try {
       let finalUrl = newHubItem.url;
 
@@ -368,6 +364,7 @@ export default function Dashboard() {
         if (coverUploadError) throw coverUploadError;
         const { data: coverData } = supabase.storage.from('resources').getPublicUrl(coverName);
         coverImageUrl = coverData.publicUrl;
+        uploadedPaths.push(coverName);
       }
 
       // Upload document file if document_url type
@@ -389,6 +386,7 @@ export default function Dashboard() {
         if (uploadError) throw uploadError;
         const { data } = supabase.storage.from('resources').getPublicUrl(fp);
         finalUrl = data.publicUrl;
+        uploadedPaths.push(fp);
       }
 
       const { error } = await supabase.from('knowledge_hub').insert({
@@ -423,6 +421,10 @@ export default function Dashboard() {
       fetchData();
     } catch (err) {
       console.error(err);
+      if (uploadedPaths.length > 0) {
+        // Cleanup orphaned uploads on failure
+        supabase.storage.from('resources').remove(uploadedPaths).catch(console.error);
+      }
       toast.error('Upload Failed', {
         description: 'Unauthorized role or empty input variables.',
         style: { background: 'oklch(var(--card))', border: '1px solid oklch(var(--destructive)/0.3)', color: 'oklch(var(--foreground))', borderRadius: '0px' }
@@ -479,8 +481,8 @@ export default function Dashboard() {
   };
 
   const hasPermission = (allowed: UserRole[]) => {
-    // If a real user is authenticated but role is still resolving, grant access optimistically
-    if (user && !selectedRole) return true;
+    // If a real user is authenticated but role is still resolving, deny access until resolved
+    if (user && !selectedRole) return false;
     return allowed.includes(selectedRole || 'none');
   };
 
@@ -999,7 +1001,8 @@ export default function Dashboard() {
                           </Button>
                         </div>
                       ) : (
-                        <div
+                        <button
+                          type="button"
                           onClick={() => document.getElementById('cover-file-input')?.click()}
                           className="w-full flex flex-col items-center justify-center border border-dashed border-border hover:border-primary/50 bg-background/30 hover:bg-primary/5 transition-all duration-300 cursor-pointer py-10 gap-2"
                         >
@@ -1020,7 +1023,7 @@ export default function Dashboard() {
                               }
                             }}
                           />
-                        </div>
+                        </button>
                       )}
                     </div>
 

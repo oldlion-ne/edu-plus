@@ -100,7 +100,7 @@ export default function News() {
           {ARTICLES.map((article, i) => (
             <ScrollReveal key={article.title} delay={i * 0.1}>
               <div
-                className="group flex flex-col gap-6 p-10 bg-transparent hover:bg-secondary transition-colors duration-200 h-full"
+                className="group flex flex-col gap-6 p-10 bg-transparent hover:bg-secondary transition-colors duration-200 h-full rounded-none"
               >
                 <EditorialMedia asset={article.illustration} />
 
