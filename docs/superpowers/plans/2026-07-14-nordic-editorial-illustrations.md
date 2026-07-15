@@ -4,7 +4,7 @@
 
 **Goal:** Replace the public site's mixed illustration set with a coherent Nordic Editorial Learning Poster system, integrate it through shared responsive media components, and leave the public experience accessible, performant, and compliant.
 
-**Architecture:** A typed illustration registry owns paths, semantics, focal behavior, and aspect ratios. `EditorialMedia` renders all new artwork; `PageHero` owns the responsive 55/45 copy-and-poster layout and delegates media behavior to that primitive. Built-in image generation produces raster masters, a pnpm-managed Sharp script optimizes them to WebP and extracts deterministic council portraits, and public routes consume only versioned registry entries.
+**Architecture:** A typed illustration registry owns paths, semantics, focal behavior, and aspect ratios. `EditorialMedia` renders all new artwork; `PageHero` owns the responsive 55/45 copy-and-poster layout and delegates media behavior to that primitive. Built-in image generation produces raster masters, a pnpm-managed Sharp script optimizes them to WebP and normalizes coordinated standalone council portraits, and public routes consume only versioned registry entries.
 
 **Tech Stack:** React 19, TypeScript, Tailwind CSS, Vitest, Testing Library, Playwright, Sharp, built-in image generation, pnpm.
 
@@ -208,6 +208,27 @@ Expected: all nine scenes match the master’s palette, representation, geometry
 
 ### Task 4: Generate News Thumbnails and Council Portrait Contact Sheets
 
+#### Execution amendment 2026-07-14-B
+
+The Task 4 contact sheets were rejected because the generator's fixed `1254px` canvas could not provide deterministic four-column geometry, consistent row headroom and baselines, or reliable cell boundaries. This amendment supersedes the contact-sheet instructions below for execution while retaining them as historical audit text. The approved raster-first contingency uses these fourteen coordinated, centered, crop-safe standalone portrait sources:
+
+- `council-bikash-oinam-v2.png`
+- `council-roshan-khumukcham-v2.png`
+- `council-ronen-akoijam-v2.png`
+- `council-soram-bobby-singh-v2.png`
+- `council-romen-ningthoujam-v2.png`
+- `council-khumukcham-roshaan-singh-v2.png`
+- `council-nutan-nongthongbam-v2.png`
+- `council-takhellambam-geetarani-v2.png`
+- `council-rojit-keisham-v2.png`
+- `council-ngangbam-shantikumar-meetei-v2.png`
+- `council-ronendrojit-akoijam-v2.png`
+- `council-purnimashi-moirangthem-v2.png`
+- `council-tomba-singh-thokchom-v2.png`
+- `council-usham-rojio-v2.png`
+
+Each source contains one East Asian expert on plain warm charcoal with coordinated lighting and camera distance. The Council group hero remains unchanged, and no member portrait is cropped from that hero. The rejected contact sheets remain ignored working masters and are not production inputs.
+
 **Files:**
 - Create: `tmp/imagegen/editorial/news-community-classroom-v2.png`
 - Create: `tmp/imagegen/editorial/news-speech-intervention-v2.png`
@@ -259,6 +280,12 @@ Expected: exactly eight equal cells, seven distinct portraits, one empty final c
 ---
 
 ### Task 5: Add the Raster Preparation Pipeline
+
+#### Execution amendment 2026-07-14-B
+
+This amendment supersedes the contact-sheet extraction implementation below while retaining it as historical audit text. The final preparation script must skip `council-portraits-a-v2.png` and `council-portraits-b-v2.png`, detect the fourteen standalone council portrait PNGs listed in Task 4, and process them directly with a centered `resize({ width: 640, height: 800, fit: 'cover' })` before WebP encoding. No `1280px` contact-sheet normalization or cell extraction is required in the final pipeline.
+
+The final output count is exactly 28 production WebPs: ten page posters, four news thumbnails, and fourteen council portraits.
 
 **Files:**
 - Modify: `.gitignore`

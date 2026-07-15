@@ -101,7 +101,9 @@ A reader and a listening learner occupy a modular archive of books, headphones, 
 
 ### Council — Global Roundtable
 
-Four East Asian experts exchange ideas around a square table in the hero scene. Individual member portraits come from coordinated portrait contact sheets generated specifically for deterministic `4:5` editorial cropping. Portraits must not be cropped from the group hero because that degrades resolution and compromises headroom. The portrait set varies age, gender presentation, hair, clothing, and pose while retaining one art direction.
+Four East Asian experts exchange ideas around a square table in the unchanged hero scene. Individual member portraits use fourteen coordinated standalone sources created specifically for centered, crop-safe `4:5` editorial framing. Each source contains one East Asian expert on a plain warm-charcoal field with consistent lighting, camera distance, headroom, and shoulder framing; the raster preparation pipeline normalizes it to `640×800` WebP. Portraits are not cropped from the group hero because that degrades resolution and compromises framing.
+
+This standalone strategy is the ratified raster-first contingency for production. Built-in generation could not produce deterministic contact-sheet geometry on its fixed `1254px` canvas: equal four-column division, consistent row baselines and headroom, and reliable cell boundaries could not all be maintained. The rejected contact sheets remain ignored working masters, not production inputs. The standalone portrait set varies age, gender presentation, hair, clothing, and pose while retaining one art direction.
 
 ### Guidance — Pathfinding
 

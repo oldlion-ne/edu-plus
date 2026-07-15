@@ -3,7 +3,7 @@
 **Date**: 2026-07-14  
 **Status**: APPROVED  
 **Topic**: Nordic Minimalism Redesign
-**Amended by**: `2026-07-14-A` and `2026-07-14-nordic-editorial-illustration-system-design.md`
+**Amended by**: `2026-07-14-A`, `2026-07-14-B`, and `2026-07-14-nordic-editorial-illustration-system-design.md`
 
 ---
 
@@ -24,6 +24,12 @@ This amendment reintroduces narrative illustration as a controlled exception to 
 5. **Council portraits:** The hero retains a group roundtable scene. Member portraits come from coordinated contact sheets created for deterministic `4:5` cropping and are not cropped from the group hero.
 6. **Knowledge Hub empty state:** The zero-results state uses a centered `1:1` crop of the Quiet Archive artwork at a maximum width of `240px`.
 7. **Raster-first workflow:** Use built-in raster image generation, targeted regeneration, and WebP optimization. External vectorization is not the default. Manual vector cleanup is a contingency for isolated geometric defects only.
+
+## Ratified Implementation Amendment 2026-07-14-B
+
+This implementation amendment supersedes Amendment A's contact-sheet clause for production. Built-in image generation could not achieve deterministic contact-sheet geometry: the fixed `1254px` canvas is not divisible into four equal columns, row headroom and baselines remained inconsistent, and correction attempts introduced boundary crossings. The rejected contact sheets remain ignored working masters and are not production inputs.
+
+The Council hero remains the unchanged group roundtable scene. The fourteen member portraits instead use coordinated standalone, crop-safe `4:5` sources, each showing one East Asian expert on a plain warm-charcoal field with consistent lighting, camera distance, headroom, and shoulder framing. These sources are not cropped from the group hero. The raster preparation pipeline normalizes each standalone source to `640×800` WebP. This quality-preserving raster-first contingency retains the approved art direction without accepting unreliable sheet extraction.
 
 ---
 
