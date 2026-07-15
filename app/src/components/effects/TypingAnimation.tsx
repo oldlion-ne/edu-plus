@@ -129,13 +129,14 @@ export function TypingAnimation({
   return (
     <span
       ref={elementRef}
-      className={cn("inline-block", className)}
+      className={cn(className)}
     >
       {displayedText}
       {showCursor && (
         <span
+          aria-hidden="true"
           className={cn(
-            "inline-block text-primary",
+            "ml-px inline-block align-baseline opacity-80",
             blinkCursor && "animate-blink-cursor"
           )}
         >

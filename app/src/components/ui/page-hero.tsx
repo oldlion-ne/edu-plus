@@ -51,16 +51,21 @@ export function PageHero({
               <h1 className="mb-6 text-3xl font-medium leading-[1.15] tracking-tight text-foreground md:text-4xl lg:text-5xl">
                 {titleSuffixWords && titlePrefix ? (
                   <>
-                    {titlePrefix}{' '}
-                    <TypingAnimation
-                      words={titleSuffixWords}
-                      className="text-primary"
-                      typeSpeed={80}
-                      deleteSpeed={45}
-                      pauseDelay={2000}
-                      delay={800}
-                      loop
-                    />
+                    {/* Line 1: static — never moves */}
+                    <span className="block">{titlePrefix}</span>
+                    {/* Line 2: reserved height = 1 line at current font size so the
+                        layout NEVER shifts regardless of which word is typed */}
+                    <span className="block min-h-[1.15em]">
+                      <TypingAnimation
+                        words={titleSuffixWords}
+                        className="text-primary"
+                        typeSpeed={80}
+                        deleteSpeed={45}
+                        pauseDelay={2000}
+                        delay={800}
+                        loop
+                      />
+                    </span>
                   </>
                 ) : (
                   title
