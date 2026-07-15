@@ -3,6 +3,7 @@ import { Link } from 'react-router';
 import { Button } from '@/components/ui/button';
 import { PageHero } from '@/components/ui/page-hero';
 import { BulletList, BulletItem } from '@/components/ui/bullet-list';
+import { editorialIllustrations } from '@/lib/editorialIllustrations';
 
 const PROGRAMS = [
   {
@@ -91,6 +92,7 @@ export default function Programs() {
         eyebrow="Curriculum Pathways"
         title="Future-Ready Programs"
         description="Six interconnected modules supporting learners at every milestone — from discovering their strengths to launching global careers."
+        illustration={editorialIllustrations.programs}
       />
 
       {/* ── Program Explorer ── */}

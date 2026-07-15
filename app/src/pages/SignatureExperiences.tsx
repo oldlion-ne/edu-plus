@@ -3,6 +3,7 @@ import { Link } from 'react-router';
 import { Button } from '@/components/ui/button';
 import { PageHero } from '@/components/ui/page-hero';
 import { BulletList, BulletItem } from '@/components/ui/bullet-list';
+import { editorialIllustrations } from '@/lib/editorialIllustrations';
 
 const EVENTS = [
   {
@@ -105,6 +106,7 @@ export default function SignatureExperiences() {
         eyebrow="Flagship Events"
         title="Signature Experiences"
         description="Curated events that bring energy, community, and real-world exposure into the learning experience — connecting students, educators, and industry experts."
+        illustration={editorialIllustrations.events}
       />
 
       {/* ── Events: horizontal list with 1px top border dividers ── */}

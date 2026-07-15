@@ -1,6 +1,7 @@
 import { Link } from 'react-router';
 import { Button } from '@/components/ui/button';
 import { PageHero } from '@/components/ui/page-hero';
+import { editorialIllustrations } from '@/lib/editorialIllustrations';
 
 const VALUES = [
   {
@@ -64,6 +65,7 @@ export default function About() {
         eyebrow="About EduPlus"
         title="Know Who We Are"
         description="EduPlus Skills is an innovation-led skills and career platform that seamlessly combines education, training, and employment enablement — operating both online and offline across regions from Manipur to global career pathways."
+        illustration={editorialIllustrations.about}
       >
         <Button asChild className="rounded-none h-[52px] px-[28px] bg-foreground text-background hover:bg-primary transition-colors duration-200">
           <Link to="/contact" /* ui-ignore */>Get in Touch</Link>
