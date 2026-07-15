@@ -15,7 +15,8 @@ export default function ScrollToTop() {
       if (typeof container.scrollTo === 'function') {
         container.scrollTo(0, 0);
       } else {
-        container.scrollTop = 0;
+        // eslint-disable-next-line react-hooks/immutability
+        (container as HTMLElement).scrollTop = 0;
       }
     }
   }, [pathname, scrollContext?.scrollContainerRef]);
@@ -74,7 +75,8 @@ export default function ScrollToTop() {
           behavior: 'smooth'
         });
       } else {
-        container.scrollTop = 0;
+        // eslint-disable-next-line react-hooks/immutability
+        (container as HTMLElement).scrollTop = 0;
       }
     }
   };

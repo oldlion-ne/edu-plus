@@ -127,7 +127,9 @@ export function ScrollScrubVideo({ src, className = '', scrollFactor = 1.5, chil
             })
             .catch(() => {});
         }
-      } catch (e) {}
+      } catch (e) {
+        console.debug('Video prime error', e);
+      }
     };
 
     window.addEventListener('touchstart', primeVideo, { once: true, passive: true });

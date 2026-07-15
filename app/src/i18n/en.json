@@ -26,11 +26,11 @@
     },
     "overview": {
       "heading": "Ecosystem Overview",
-      "telemetryLink": "TELEMETRY_LINK // DIAGNOSTIC_ACTIVE",
+      "telemetryLink": "System performance and engagement overview.",
       "hubResources": "HUB RESOURCES",
-      "aiTrainingRules": "AI TRAINING RULES",
+      "aiTrainingRules": "AI KNOWLEDGE RULES",
       "inboundInquiries": "INBOUND INQUIRIES",
-      "systemAnalytics": "SYSTEM ANALYTICS TELEMETRY",
+      "systemAnalytics": "SYSTEM ANALYTICS",
       "desktop": "Desktop",
       "mobile": "Mobile",
       "contentCategoryDistribution": "Content Category Distribution"
@@ -47,21 +47,21 @@
       "studyMaterial": "Study Material",
       "mediaType": "Media Type",
       "videoLink": "YouTube/Video link (Embedded player)",
-      "pdfLink": "Study PDF link",
+      "pdfLink": "Document Upload (PDF, DOC)",
       "externalLink": "Generic External Link",
       "resourceUrl": "Resource URL",
       "briefDescription": "Brief Description"
     },
     "aiMatrix": {
-      "heading": "AI Cognitive Training Matrix",
+      "heading": "AI Knowledge Base",
       "subheading": "Inject custom facts directly into the site advisor chatbot.",
-      "newFactualGuideline": "New Factual Guideline Influx",
-      "activeFactMatrix": "Active Fact Matrix",
-      "noTrainingInjections": "NO TRAINING INJECTIONS RECORDED.",
+      "newFactualGuideline": "Add Factual Guideline",
+      "activeFactMatrix": "Active Fact Rules",
+      "noTrainingInjections": "NO TRAINING RULES RECORDED.",
       "topicPrefix": "TOPIC: "
     },
     "messages": {
-      "heading": "Sonar Inquiries Terminal",
+      "heading": "Inbound Inquiries",
       "subheading": "Signals received from public contact nodes.",
       "noInquiries": "No inquiries received yet."
     }

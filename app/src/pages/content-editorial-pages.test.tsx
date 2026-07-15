@@ -352,21 +352,21 @@ describe('News editorial artwork and links', () => {
     const firstLink = screen.getAllByRole('link', { name: /Read Article/ })[0];
     expect(firstLink).toHaveAttribute(
       'href',
-      '/news/transforming-learning-at-mommy-complex-nambol-bazar',
+      '/news/mbbs-in-vietnam-gateway-for-indian-students',
     );
     fireEvent.click(firstLink);
 
     expect(
       await screen.findByRole('heading', {
-        name: 'Transforming Learning at Mommy Complex, Nambol Bazar',
+        name: 'MBBS in Vietnam: Gateway for Indian Students',
       }),
     ).toBeInTheDocument();
-    expect(screen.getByText('Grassroots Impact')).toBeInTheDocument();
-    expect(screen.getByText('May 12, 2026')).toBeInTheDocument();
+    expect(screen.getByText('Medical Admissions')).toBeInTheDocument();
+    expect(screen.getByText('July 6, 2026')).toBeInTheDocument();
     expect(
       screen.getByRole('img', { name: editorialIllustrations.newsCommunity.alt }),
     ).toHaveAttribute('src', editorialIllustrations.newsCommunity.src);
-    expect(screen.getByText(/Establishing our new offline learning center/)).toBeInTheDocument();
+    expect(screen.getByText(/Holistic Eduplus Skills announces affordable/)).toBeInTheDocument();
     expect(screen.getByRole('link', { name: 'Back to News' })).toHaveClass(
       ...focusClasses,
     );

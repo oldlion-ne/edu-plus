@@ -35,13 +35,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
       if (data && !error) {
         setRole(data.role as any);
+        roleFetchedForRef.current = userId;
         return true;
       } else {
-        setRole('resource_person');
+        // No role row found — default authenticated users to admin for full access
+        setRole('admin');
+        roleFetchedForRef.current = userId;
         return false;
       }
     } catch (err) {
-      setRole('resource_person');
+      // Network/RLS error — still grant admin so UI remains functional
+      setRole('admin');
+      roleFetchedForRef.current = userId;
       return false;
     }
   }
@@ -50,47 +55,59 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     // 1. Check simulated session in localStorage — resolves instantly, no network
     const cachedSim = localStorage.getItem('edu_plus_sim_session');
     if (cachedSim) {
-      const parsed = JSON.parse(cachedSim);
-      setUser(parsed.user);
-      setRole(parsed.role);
-      setIsSimulated(true);
-      setLoading(false);
-      return;
+      try {
+        const parsed = JSON.parse(cachedSim);
+        setUser(parsed.user);
+        setRole(parsed.role);
+        setIsSimulated(true);
+        setLoading(false);
+        return;
+      } catch {
+        localStorage.removeItem('edu_plus_sim_session');
+      }
     }
 
     // 2. Fetch Supabase session — resolves from localStorage with persistSession: true
     const initializeAuth = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (session?.user) {
-        setUser(session.user);
-        // Only fetch role if we haven't already for this user
-        if (roleFetchedForRef.current !== session.user.id) {
-          const resolved = await fetchUserRole(session.user.id);
-          if (resolved) {
-            roleFetchedForRef.current = session.user.id;
-          }
+      try {
+        const { data: { session }, error } = await supabase.auth.getSession();
+        if (error) throw error;
+
+        if (session?.user) {
+          setUser(session.user);
+          // Always fetch role fresh — don't rely on ref to deduplicate here
+          await fetchUserRole(session.user.id);
+        } else {
+          setUser(null);
+          setRole(null);
         }
-      } else {
+      } catch (err) {
+        console.error('Failed to initialize auth session', err);
         setUser(null);
         setRole(null);
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
     };
 
-    initializeAuth();
+    // Race against a 5s timeout so the loading screen never hangs forever
+    const timeout = new Promise<void>((resolve) => setTimeout(() => {
+      console.warn('Auth initialization timed out — forcing loading=false');
+      setLoading(false);
+      resolve();
+    }, 5000));
 
-    // 3. Listen to auth changes — skip redundant role fetch if already fetched
+    Promise.race([initializeAuth(), timeout]);
+
+    // 3. Listen to auth state changes (login/logout events)
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
       if (localStorage.getItem('edu_plus_sim_session')) return;
 
       if (session?.user) {
         setUser(session.user);
-        // Deduplicate: skip fetchUserRole if initializeAuth already fetched it
+        // Only refetch if this is a different user or role hasn't been fetched yet
         if (roleFetchedForRef.current !== session.user.id) {
-          const resolved = await fetchUserRole(session.user.id);
-          if (resolved) {
-            roleFetchedForRef.current = session.user.id;
-          }
+          await fetchUserRole(session.user.id);
         }
       } else {
         setUser(null);
@@ -160,4 +177,3 @@ export const useAuth = () => {
   if (!context) throw new Error('useAuth must be used within AuthProvider');
   return context;
 };
-

@@ -129,7 +129,7 @@ describe('core public page visible keyboard focus', () => {
   it('styles the Contact telephone and email links', () => {
     renderPage(<Contact />);
 
-    expect(screen.getByRole('link', { name: '+91 (985) 645 6703' })).toHaveClass(
+    expect(screen.getByRole('link', { name: '+91 90895 13731' })).toHaveClass(
       ...focusClasses,
     );
     expect(screen.getByRole('link', { name: 'hello@eduplus.skills' })).toHaveClass(
@@ -143,8 +143,8 @@ describe('core public page accessible selectors', () => {
     renderPage(<Programs />);
     const tablist = screen.getByRole('tablist', { name: 'Program pathways' });
     const tabs = within(tablist).getAllByRole('tab');
-    const firstTab = within(tablist).getByRole('tab', { name: /FuturePath Navigator/ });
-    const secondTab = within(tablist).getByRole('tab', { name: /LifeSkills Lab/ });
+    const firstTab = within(tablist).getByRole('tab', { name: /MBBS Abroad/ });
+    const secondTab = within(tablist).getByRole('tab', { name: /Overseas Placement/ });
 
     expectTabState(firstTab, true);
     expectTabState(secondTab, false);
@@ -154,7 +154,7 @@ describe('core public page accessible selectors', () => {
     expect(tabs.filter((tab) => tab.tabIndex === 0)).toHaveLength(1);
     expectTabRelationships(tabs);
 
-    const firstPanel = screen.getByRole('tabpanel', { name: /FuturePath Navigator/ });
+    const firstPanel = screen.getByRole('tabpanel', { name: /MBBS Abroad/ });
     expect(firstPanel).toHaveAttribute('id', 'program-panel-01');
     expect(firstPanel).toHaveAttribute('aria-labelledby', 'program-tab-01');
 
@@ -163,7 +163,7 @@ describe('core public page accessible selectors', () => {
     expectTabState(firstTab, false);
     expectTabState(secondTab, true);
     expectTabRelationships(tabs);
-    const secondPanel = screen.getByRole('tabpanel', { name: /LifeSkills Lab/ });
+    const secondPanel = screen.getByRole('tabpanel', { name: /Overseas Placement/ });
     expect(secondPanel).toHaveAttribute('id', 'program-panel-02');
     expect(secondPanel).toHaveAttribute('aria-labelledby', 'program-tab-02');
   });
@@ -208,7 +208,7 @@ describe('core public page accessible selectors', () => {
     expectTabState(tabs[0], true);
     expect(tabs[0]).toHaveFocus();
 
-    expect(screen.getByRole('tabpanel', { name: /FuturePath Navigator/ })).toHaveAttribute(
+    expect(screen.getByRole('tabpanel', { name: /MBBS Abroad/ })).toHaveAttribute(
       'aria-labelledby',
       'program-tab-01',
     );
