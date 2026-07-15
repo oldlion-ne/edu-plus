@@ -18,16 +18,18 @@ class IntersectionObserverMock {
 globalThis.IntersectionObserver = IntersectionObserverMock as unknown as typeof IntersectionObserver;
 
 describe('Vision Component', () => {
-  it('renders the Vision section with Our Mission label and scroll reveal text', () => {
+  it('renders the mission and vision as semantic copy', () => {
     render(<Vision />);
-    
-    // Check for "Our Mission" label
+
     expect(screen.getByText('Our Mission')).toBeInTheDocument();
-    
-    // Check that individual key words from the mission statement are rendered in the DOM
-    expect(screen.getAllByText('become').length).toBeGreaterThan(0);
-    expect(screen.getAllByText('skills').length).toBeGreaterThan(0);
-    expect(screen.getAllByText('work').length).toBeGreaterThan(0);
-    expect(screen.getAllByText('workforce').length).toBeGreaterThan(0);
+    expect(
+      screen.getByRole('heading', {
+        name: /To become a leading skills development platform/i,
+      }),
+    ).toBeInTheDocument();
+    expect(screen.getByText('Our Vision')).toBeInTheDocument();
+    expect(
+      screen.getByText(/To empower individuals to acquire future-ready/i),
+    ).toBeInTheDocument();
   });
 });
