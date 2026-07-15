@@ -43,7 +43,7 @@ export default function PedigreeShowcase() {
           </h2>
         </div>
 
-        {/* 2×2 typographic card grid — no diagrams, no borders, no shadows, no glows */}
+        {/* 2�-2 typographic card grid — no diagrams, no borders, no shadows, no glows */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-x-16 gap-y-20">
           {CARDS.map((card) => (
             <div

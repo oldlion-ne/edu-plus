@@ -1015,7 +1015,7 @@ export default function Dashboard() {
                         >
                           <UploadCloud className="size-7 text-muted-foreground/50" />
                           <span className="font-mono text-[9px] text-primary tracking-wider uppercase font-bold mt-1">Upload Cover Image (16:9)</span>
-                          <span className="text-[8px] text-muted-foreground">Recommended: 1200×675px — JPEG, PNG, WEBP</span>
+                          <span className="text-[8px] text-muted-foreground">Recommended: 1200�-675px — JPEG, PNG, WEBP</span>
                           <input
                             id="cover-file-input"
                             type="file"
