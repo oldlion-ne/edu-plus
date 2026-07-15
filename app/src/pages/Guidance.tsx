@@ -3,6 +3,7 @@ import { Link } from 'react-router';
 import { Button } from '@/components/ui/button';
 import { PageHero } from '@/components/ui/page-hero';
 import { BulletList, BulletItem } from '@/components/ui/bullet-list';
+import { editorialIllustrations } from '@/lib/editorialIllustrations';
 
 const TABS = [
   {
@@ -70,6 +71,7 @@ export default function Guidance() {
       <PageHero
         eyebrow="Advisory Services"
         title="One-to-One Guidance"
+        illustration={editorialIllustrations.guidance}
         description="Dedicated, one-on-one support tailored to every stakeholder in the education ecosystem — students, parents, job seekers, and educators."
       >
         <Button asChild className="rounded-none h-[52px] px-[28px] bg-foreground text-background hover:bg-primary transition-colors duration-200">
@@ -86,7 +88,7 @@ export default function Guidance() {
             <button
               key={t.id}
               onClick={() => setActiveTab(i)}
-              className={`pb-4 text-[15px] font-medium whitespace-nowrap transition-colors duration-150 border-b-2 -mb-px ${
+              className={`pb-4 text-[15px] font-medium whitespace-nowrap transition-colors duration-150 border-b-2 -mb-px focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground focus-visible:ring-offset-2 focus-visible:ring-offset-background ${
                 activeTab === i
                   ? 'border-primary text-foreground'
                   : 'border-transparent text-muted-foreground hover:text-foreground'
@@ -122,42 +124,44 @@ export default function Guidance() {
 
       {/* ── Pricing block ── */}
       <section className="py-32 border-t border-border/50 px-6 md:px-12 max-w-[1440px] mx-auto">
-        <div className="max-w-xl">
-          <span className="text-[13px] font-medium tracking-wide uppercase text-muted-foreground mb-4 block">
-            Get Started
-          </span>
-          <h2 className="text-3xl font-light text-foreground tracking-tight leading-[1.2] mb-10">
-            Transform your learning & career journey
-          </h2>
-          <div className="p-12 bg-secondary">
-            <div className="mb-8">
-              <span className="text-[13px] text-muted-foreground uppercase tracking-wide block mb-2">Discovery Call</span>
-              <div className="text-[52px] font-medium text-foreground leading-none">
-                Free
+        <div className="mx-auto max-w-xl">
+          <div>
+            <span className="text-[13px] font-medium tracking-wide uppercase text-muted-foreground mb-4 block">
+              Get Started
+            </span>
+            <h2 className="text-3xl font-light text-foreground tracking-tight leading-[1.2] mb-10">
+              Transform your learning & career journey
+            </h2>
+            <div className="p-12 bg-secondary">
+              <div className="mb-8">
+                <span className="text-[13px] text-muted-foreground uppercase tracking-wide block mb-2">Discovery Call</span>
+                <div className="text-[52px] font-medium text-foreground leading-none">
+                  Free
+                </div>
+                <span className="text-[14px] text-muted-foreground mt-2 block">Free forever for initial discovery sessions</span>
               </div>
-              <span className="text-[14px] text-muted-foreground mt-2 block">Free forever for initial discovery sessions</span>
+              <ul className="flex flex-col gap-3 mb-10">
+                <li className="text-[15px] text-foreground flex items-start gap-3">
+                  <span className="mt-2 w-1 h-1 bg-primary rounded-none shrink-0" />
+                  1-on-1 personalised discovery session
+                </li>
+                <li className="text-[15px] text-foreground flex items-start gap-3">
+                  <span className="mt-2 w-1 h-1 bg-primary rounded-none shrink-0" />
+                  Aptitude & cognitive mapping (DMIT)
+                </li>
+                <li className="text-[15px] text-foreground flex items-start gap-3">
+                  <span className="mt-2 w-1 h-1 bg-primary rounded-none shrink-0" />
+                  Detailed career pathway & college prep report
+                </li>
+                <li className="text-[15px] text-foreground flex items-start gap-3">
+                  <span className="mt-2 w-1 h-1 bg-primary rounded-none shrink-0" />
+                  Alignment with global internships & programmes
+                </li>
+              </ul>
+              <Button asChild className="w-full rounded-none h-[52px] bg-foreground text-background hover:bg-primary transition-colors duration-200">
+                <Link to="/contact" /* ui-ignore */>Book Free Advisory Consult</Link>
+              </Button>
             </div>
-            <ul className="flex flex-col gap-3 mb-10">
-              <li className="text-[15px] text-foreground flex items-start gap-3">
-                <span className="mt-2 w-1 h-1 bg-primary rounded-none shrink-0" />
-                1-on-1 personalised discovery session
-              </li>
-              <li className="text-[15px] text-foreground flex items-start gap-3">
-                <span className="mt-2 w-1 h-1 bg-primary rounded-none shrink-0" />
-                Aptitude & cognitive mapping (DMIT)
-              </li>
-              <li className="text-[15px] text-foreground flex items-start gap-3">
-                <span className="mt-2 w-1 h-1 bg-primary rounded-none shrink-0" />
-                Detailed career pathway & college prep report
-              </li>
-              <li className="text-[15px] text-foreground flex items-start gap-3">
-                <span className="mt-2 w-1 h-1 bg-primary rounded-none shrink-0" />
-                Alignment with global internships & programmes
-              </li>
-            </ul>
-            <Button asChild className="w-full rounded-none h-[52px] bg-foreground text-background hover:bg-primary transition-colors duration-200">
-              <Link to="/contact" /* ui-ignore */>Book Free Advisory Consult</Link>
-            </Button>
           </div>
         </div>
       </section>

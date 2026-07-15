@@ -172,7 +172,7 @@ export default function SignatureExperiences() {
                     <button
                       onClick={() => setOpenFaq(isOpen ? null : key)}
                       aria-expanded={isOpen}
-                      className="w-full flex items-center justify-between py-5 text-left gap-8 group"
+                      className="w-full flex items-center justify-between py-5 text-left gap-8 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground focus-visible:ring-offset-2 focus-visible:ring-offset-background"
                     >
                       <span className="text-[15px] font-medium text-foreground group-hover:text-primary transition-colors duration-150">
                         {item.q}

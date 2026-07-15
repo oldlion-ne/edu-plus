@@ -105,7 +105,7 @@ export default function Programs() {
               <button
                 key={p.num}
                 onClick={() => setSelected(i)}
-                className={`text-left py-4 px-4 transition-colors duration-150 flex items-start gap-4 ${
+                className={`text-left py-4 px-4 transition-colors duration-150 flex items-start gap-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground focus-visible:ring-offset-2 focus-visible:ring-offset-background ${
                   selected === i
                     ? 'bg-secondary text-foreground'
                     : 'text-muted-foreground hover:text-foreground hover:bg-secondary/60'
