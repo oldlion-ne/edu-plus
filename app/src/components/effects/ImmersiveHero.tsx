@@ -1,10 +1,8 @@
 import { useRef } from 'react';
 import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
-import { RetroGrid } from '../ui/retro-grid';
 
 interface ImmersiveHeroProps {
   bgImage?: string;
-  bgVideo?: string;
   bgPosition?: string;
   category: string;
   titleNormal: string;
@@ -14,6 +12,8 @@ interface ImmersiveHeroProps {
 }
 
 export default function ImmersiveHero({
+  bgImage,
+  bgPosition,
   category,
   titleNormal,
   titleHighlighted,
@@ -33,74 +33,48 @@ export default function ImmersiveHero({
   return (
     <div 
       ref={containerRef}
-      className="relative w-full h-[55vh] min-h-[420px] md:h-[60vh] overflow-hidden bg-background border-b border-border select-none group flex flex-col justify-between py-12 md:py-16"
+      className="relative w-full min-h-[75vh] overflow-hidden bg-background border-b border-border/50 select-none group flex flex-col justify-center pt-12 pb-16 md:pb-24"
     >
-      {/* Parallax Background Layer */}
+      {/* Parallax Background Layer (Subtle Gradient / Image) */}
       <motion.div
         className="absolute inset-0 w-full h-full z-0 pointer-events-none transition-transform duration-[1.6s] cubic-bezier(0.16, 1, 0.3, 1) group-hover:scale-[1.03]"
         style={{
           y: ySmooth,
+          backgroundImage: bgImage ? `url(${bgImage})` : 'none',
+          backgroundPosition: bgPosition || 'center',
+          backgroundSize: 'cover'
         }}
       >
-        <RetroGrid
-          angle={65}
-          cellSize={50}
-          opacity={0.3}
-          lightLineColor="#8B949E"
-          darkLineColor="#7DF9FF"
-        />
+        {/* Very subtle ambient glow */}
+        <div className="absolute inset-0 bg-background/80" />
       </motion.div>
 
-      {/* ── Dark overlays ── */}
-      <div
-        aria-hidden
-        className="absolute inset-0 z-[1] pointer-events-none"
-        style={{
-          background: [
-            'radial-gradient(ellipse 80% 60% at 50% 40%, oklch(var(--background) / 0.25) 0%, oklch(var(--background) / 0.7) 100%)',
-            'linear-gradient(to bottom, oklch(var(--background) / 0.35) 0%, transparent 40%, oklch(var(--background) / 0.85) 100%)',
-          ].join(', '),
-        }}
-      />
-
       {/* Foreground Content */}
-      <div className="relative z-10 w-full max-w-[1200px] mx-auto px-6 md:px-12 flex flex-col justify-center items-center py-6">
-        <div className="space-y-6 max-w-3xl mx-auto flex flex-col items-center text-center">
-          {/* Eyebrow */}
-          <div className="inline-flex items-center gap-2 border border-border bg-card/50 backdrop-blur-md px-4 py-2 rounded-none">
-            <span className="text-[10px] font-sans font-medium tracking-wider uppercase text-muted-foreground">
-              {category}
-            </span>
+      <div className="relative z-10 w-full max-w-4xl mx-auto px-8 md:px-12 flex flex-col justify-center items-center py-6 text-center">
+        
+        {/* Eyebrow */}
+        <span className="text-[10px] font-medium tracking-[0.3em] uppercase text-primary mb-5 block">
+          {category}
+        </span>
+
+        {/* Headline */}
+        <h1 className="text-3xl md:text-4xl lg:text-5xl font-medium tracking-tight leading-[1.15] text-foreground mb-6">
+          {titleNormal} <span className="text-primary">{titleHighlighted}</span>
+        </h1>
+
+        {/* Description */}
+        <p className="text-sm md:text-base text-muted-foreground leading-relaxed mb-10 max-w-md mx-auto">
+          {description}
+        </p>
+
+        {/* Children in-flow (e.g. CTA buttons) */}
+        {children && (
+          <div className="flex flex-col sm:flex-row items-center gap-3 justify-center w-full">
+            {children}
           </div>
-
-          {/* Headline */}
-          <h1 className="font-sans text-4xl sm:text-5xl md:text-6xl font-semibold tracking-tight leading-[1.1] text-foreground">
-            {titleNormal} <span className="text-primary">{titleHighlighted}</span>
-          </h1>
-
-          {/* Description */}
-          <p className="text-muted-foreground text-sm md:text-base max-w-xl leading-relaxed">
-            {description}
-          </p>
-
-          {/* Children in-flow (e.g. CTA buttons) */}
-          {children && (
-            <div className="mt-4 flex flex-wrap items-center justify-center gap-3">
-              {children}
-            </div>
-          )}
-        </div>
+        )}
       </div>
 
-      {/* spacer */}
-      <div className="flex-1" />
-
-      {/* ── Bottom fade ── */}
-      <div
-        aria-hidden
-        className="absolute bottom-0 left-0 right-0 h-24 z-[3] pointer-events-none"
-        style={{ background: 'linear-gradient(to top, oklch(var(--background)) 0%, transparent 100%)' }} /* ui-ignore */
-      />
     </div>
   );
 }

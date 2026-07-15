@@ -148,7 +148,7 @@ async function ensureOutputDirectory(canonicalOutputRoot, configuredOutputDir) {
   if (existingOutputDir) return existingOutputDir;
 
   const expectedOutputDir = path.join(canonicalOutputRoot, 'editorial');
-  await mkdir(expectedOutputDir);
+  await mkdir(expectedOutputDir, { recursive: true });
   const createdOutputDir = await inspectOutputDirectory(canonicalOutputRoot, expectedOutputDir);
   if (!createdOutputDir) {
     throw new Error('Editorial output directory disappeared after creation.');

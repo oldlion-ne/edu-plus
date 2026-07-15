@@ -1,7 +1,8 @@
-import { Link } from 'react-router';
+import { Link, useParams } from 'react-router';
 import { EditorialMedia } from '@/components/ui/editorial-media';
 import { PageHero } from '@/components/ui/page-hero';
 import { editorialIllustrations } from '@/lib/editorialIllustrations';
+import { FOCUS_RING_CLASSES } from '@/lib/utils';
 
 const ARTICLES = [
   {
@@ -35,6 +36,52 @@ const ARTICLES = [
 ];
 
 export default function News() {
+  const { slug } = useParams();
+
+  if (slug) {
+    const article = ARTICLES.find(a => a.title.toLowerCase().replace(/[^a-z0-9]+/g, '-') === slug);
+    if (!article) {
+      return (
+        <div className="bg-background w-full min-h-screen pt-40 px-6">
+          <div className="max-w-2xl mx-auto text-center">
+            <h1 className="text-3xl font-medium text-foreground mb-4">Article not found</h1>
+            <p className="text-muted-foreground mb-8">We could not find the news article you are looking for.</p>
+            <Link to="/news" className={`inline-block text-[14px] font-medium text-primary hover:underline ${FOCUS_RING_CLASSES}`}>
+              Back to News
+            </Link>
+          </div>
+        </div>
+      );
+    }
+
+    return (
+      <div className="bg-background w-full min-h-screen pt-32 px-6 pb-32">
+        <div className="max-w-3xl mx-auto">
+          <div className="mb-12">
+            <Link to="/news" className={`inline-block text-[14px] font-medium text-primary hover:underline ${FOCUS_RING_CLASSES}`}>
+              Back to News
+            </Link>
+          </div>
+          <span className="text-[12px] font-medium text-primary uppercase tracking-wide block mb-4">
+            {article.category}
+          </span>
+          <h1 className="text-4xl font-medium text-foreground mb-6 leading-tight">
+            {article.title}
+          </h1>
+          <span className="text-[14px] text-muted-foreground block mb-12">
+            {article.date}
+          </span>
+          <div className="mb-12">
+            <EditorialMedia asset={article.illustration} />
+          </div>
+          <p className="text-lg text-foreground leading-relaxed">
+            {article.desc}
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="bg-background w-full min-h-screen">
 
@@ -69,7 +116,7 @@ export default function News() {
 
               {/* Link */}
               <div className="pt-2">
-                <Link to={`/news/${article.title.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`} className="text-[14px] font-medium text-primary hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground focus-visible:ring-offset-2 focus-visible:ring-offset-background">
+                <Link to={`/news/${article.title.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`} className={`text-[14px] font-medium text-primary hover:underline ${FOCUS_RING_CLASSES}`}>
                   Read Article &rarr;
                 </Link>
               </div>
