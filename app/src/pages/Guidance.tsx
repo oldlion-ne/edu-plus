@@ -71,11 +71,9 @@ export default function Guidance() {
 
     switch (event.key) {
       case 'ArrowRight':
-      case 'ArrowDown':
         nextIndex = (index + 1) % TABS.length;
         break;
       case 'ArrowLeft':
-      case 'ArrowUp':
         nextIndex = (index - 1 + TABS.length) % TABS.length;
         break;
       case 'Home':
@@ -115,6 +113,7 @@ export default function Guidance() {
         <div
           role="tablist"
           aria-label="Guidance audiences"
+          aria-orientation="horizontal"
           className="flex gap-8 border-b border-border/50 mb-16 overflow-x-auto"
         >
           {TABS.map((t, i) => (

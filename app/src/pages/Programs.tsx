@@ -90,11 +90,9 @@ export default function Programs() {
     let nextIndex: number;
 
     switch (event.key) {
-      case 'ArrowRight':
       case 'ArrowDown':
         nextIndex = (index + 1) % PROGRAMS.length;
         break;
-      case 'ArrowLeft':
       case 'ArrowUp':
         nextIndex = (index - 1 + PROGRAMS.length) % PROGRAMS.length;
         break;
@@ -132,6 +130,7 @@ export default function Programs() {
           <div
             role="tablist"
             aria-label="Program pathways"
+            aria-orientation="vertical"
             className="border-r border-border/50 pr-8 flex flex-col gap-1"
           >
             {PROGRAMS.map((p, i) => (

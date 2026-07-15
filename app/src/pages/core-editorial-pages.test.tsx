@@ -48,38 +48,15 @@ function expectTabRelationships(tabs: HTMLElement[]) {
   }
 }
 
-function exerciseTabKeyboard(tabs: HTMLElement[]) {
-  fireEvent.keyDown(tabs[0], { key: 'ArrowRight' });
-  expectTabState(tabs[1], true);
-  expect(tabs[1]).toHaveFocus();
+function pressTabKey(tab: HTMLElement, key: string) {
+  const event = new KeyboardEvent('keydown', {
+    key,
+    bubbles: true,
+    cancelable: true,
+  });
 
-  fireEvent.keyDown(tabs[1], { key: 'ArrowDown' });
-  expectTabState(tabs[2], true);
-  expect(tabs[2]).toHaveFocus();
-
-  fireEvent.keyDown(tabs[2], { key: 'ArrowLeft' });
-  expectTabState(tabs[1], true);
-  expect(tabs[1]).toHaveFocus();
-
-  fireEvent.keyDown(tabs[1], { key: 'ArrowUp' });
-  expectTabState(tabs[0], true);
-  expect(tabs[0]).toHaveFocus();
-
-  fireEvent.keyDown(tabs[0], { key: 'ArrowLeft' });
-  expectTabState(tabs.at(-1)!, true);
-  expect(tabs.at(-1)).toHaveFocus();
-
-  fireEvent.keyDown(tabs.at(-1)!, { key: 'ArrowRight' });
-  expectTabState(tabs[0], true);
-  expect(tabs[0]).toHaveFocus();
-
-  fireEvent.keyDown(tabs[0], { key: 'End' });
-  expectTabState(tabs.at(-1)!, true);
-  expect(tabs.at(-1)).toHaveFocus();
-
-  fireEvent.keyDown(tabs.at(-1)!, { key: 'Home' });
-  expectTabState(tabs[0], true);
-  expect(tabs[0]).toHaveFocus();
+  fireEvent(tab, event);
+  return event;
 }
 
 describe('core public page editorial artwork', () => {
@@ -173,6 +150,7 @@ describe('core public page accessible selectors', () => {
     expectTabState(secondTab, false);
     expect(firstTab).toHaveAttribute('id', 'program-tab-01');
     expect(firstTab).toHaveAttribute('aria-controls', 'program-panel-01');
+    expect(tablist).toHaveAttribute('aria-orientation', 'vertical');
     expect(tabs.filter((tab) => tab.tabIndex === 0)).toHaveLength(1);
     expectTabRelationships(tabs);
 
@@ -190,13 +168,45 @@ describe('core public page accessible selectors', () => {
     expect(secondPanel).toHaveAttribute('aria-labelledby', 'program-tab-02');
   });
 
-  it('supports roving keyboard selection and focus for Programs tabs', () => {
+  it('uses vertical keyboard navigation for Programs tabs', () => {
     renderPage(<Programs />);
     const tabs = within(
       screen.getByRole('tablist', { name: 'Program pathways' }),
     ).getAllByRole('tab');
 
-    exerciseTabKeyboard(tabs);
+    tabs[0].focus();
+
+    expect(pressTabKey(tabs[0], 'ArrowDown').defaultPrevented).toBe(true);
+    expectTabState(tabs[1], true);
+    expect(tabs[1]).toHaveFocus();
+
+    expect(pressTabKey(tabs[1], 'ArrowUp').defaultPrevented).toBe(true);
+    expectTabState(tabs[0], true);
+    expect(tabs[0]).toHaveFocus();
+
+    expect(pressTabKey(tabs[0], 'ArrowUp').defaultPrevented).toBe(true);
+    expectTabState(tabs.at(-1)!, true);
+    expect(tabs.at(-1)).toHaveFocus();
+
+    expect(pressTabKey(tabs.at(-1)!, 'ArrowDown').defaultPrevented).toBe(true);
+    expectTabState(tabs[0], true);
+    expect(tabs[0]).toHaveFocus();
+
+    expect(pressTabKey(tabs[0], 'End').defaultPrevented).toBe(true);
+    expectTabState(tabs.at(-1)!, true);
+    expect(tabs.at(-1)).toHaveFocus();
+
+    expect(pressTabKey(tabs.at(-1)!, 'Home').defaultPrevented).toBe(true);
+    expectTabState(tabs[0], true);
+    expect(tabs[0]).toHaveFocus();
+
+    expect(pressTabKey(tabs[0], 'ArrowRight').defaultPrevented).toBe(false);
+    expectTabState(tabs[0], true);
+    expect(tabs[0]).toHaveFocus();
+
+    expect(pressTabKey(tabs[0], 'ArrowLeft').defaultPrevented).toBe(false);
+    expectTabState(tabs[0], true);
+    expect(tabs[0]).toHaveFocus();
 
     expect(screen.getByRole('tabpanel', { name: /FuturePath Navigator/ })).toHaveAttribute(
       'aria-labelledby',
@@ -215,6 +225,7 @@ describe('core public page accessible selectors', () => {
     expectTabState(secondTab, false);
     expect(firstTab).toHaveAttribute('id', 'guidance-tab-students');
     expect(firstTab).toHaveAttribute('aria-controls', 'guidance-panel-students');
+    expect(tablist).toHaveAttribute('aria-orientation', 'horizontal');
     expect(tabs.filter((tab) => tab.tabIndex === 0)).toHaveLength(1);
     expectTabRelationships(tabs);
 
@@ -232,13 +243,45 @@ describe('core public page accessible selectors', () => {
     expect(secondPanel).toHaveAttribute('aria-labelledby', 'guidance-tab-parents');
   });
 
-  it('supports roving keyboard selection and focus for Guidance tabs', () => {
+  it('uses horizontal keyboard navigation for Guidance tabs', () => {
     renderPage(<Guidance />);
     const tabs = within(
       screen.getByRole('tablist', { name: 'Guidance audiences' }),
     ).getAllByRole('tab');
 
-    exerciseTabKeyboard(tabs);
+    tabs[0].focus();
+
+    expect(pressTabKey(tabs[0], 'ArrowRight').defaultPrevented).toBe(true);
+    expectTabState(tabs[1], true);
+    expect(tabs[1]).toHaveFocus();
+
+    expect(pressTabKey(tabs[1], 'ArrowLeft').defaultPrevented).toBe(true);
+    expectTabState(tabs[0], true);
+    expect(tabs[0]).toHaveFocus();
+
+    expect(pressTabKey(tabs[0], 'ArrowLeft').defaultPrevented).toBe(true);
+    expectTabState(tabs.at(-1)!, true);
+    expect(tabs.at(-1)).toHaveFocus();
+
+    expect(pressTabKey(tabs.at(-1)!, 'ArrowRight').defaultPrevented).toBe(true);
+    expectTabState(tabs[0], true);
+    expect(tabs[0]).toHaveFocus();
+
+    expect(pressTabKey(tabs[0], 'End').defaultPrevented).toBe(true);
+    expectTabState(tabs.at(-1)!, true);
+    expect(tabs.at(-1)).toHaveFocus();
+
+    expect(pressTabKey(tabs.at(-1)!, 'Home').defaultPrevented).toBe(true);
+    expectTabState(tabs[0], true);
+    expect(tabs[0]).toHaveFocus();
+
+    expect(pressTabKey(tabs[0], 'ArrowDown').defaultPrevented).toBe(false);
+    expectTabState(tabs[0], true);
+    expect(tabs[0]).toHaveFocus();
+
+    expect(pressTabKey(tabs[0], 'ArrowUp').defaultPrevented).toBe(false);
+    expectTabState(tabs[0], true);
+    expect(tabs[0]).toHaveFocus();
 
     expect(screen.getByRole('tabpanel', { name: 'For Students' })).toHaveAttribute(
       'aria-labelledby',
