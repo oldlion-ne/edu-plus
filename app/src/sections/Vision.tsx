@@ -1,3 +1,5 @@
+import { BlurFade } from '../components/magicui/BlurFade';
+
 export default function Vision() {
   return (
     <section id="investing" className="relative w-full py-24 md:py-32 lg:py-40 bg-background border-b border-border/50">
@@ -11,12 +13,16 @@ export default function Vision() {
             </span>
           </div>
           <div className="lg:col-span-8">
-            <h2 className="text-3xl md:text-4xl lg:text-[2.75rem] font-medium tracking-tight leading-[1.15] text-foreground">
-              To become a leading skills development platform that reimagines how people learn, grow, and work — creating measurable impact on the global workforce and the communities we serve.
-            </h2>
-            <p className="mt-8 text-sm md:text-base text-muted-foreground leading-relaxed max-w-2xl">
-              We aim to make world-class skill development accessible, practical, and outcomes-driven for every learner, irrespective of geography or background.
-            </p>
+            <BlurFade delay={0.2} inView>
+              <h2 className="text-3xl md:text-4xl lg:text-[2.75rem] font-medium tracking-tight leading-[1.15] text-foreground">
+                To become a leading skills development platform that reimagines how people learn, grow, and work — creating measurable impact on the global workforce and the communities we serve.
+              </h2>
+            </BlurFade>
+            <BlurFade delay={0.4} inView>
+              <p className="mt-8 text-sm md:text-base text-muted-foreground leading-relaxed max-w-2xl">
+                We aim to make world-class skill development accessible, practical, and outcomes-driven for every learner, irrespective of geography or background.
+              </p>
+            </BlurFade>
           </div>
         </div>
 
@@ -28,11 +34,13 @@ export default function Vision() {
             </span>
           </div>
           <div className="lg:col-span-8">
-            <div className="border-l border-border/50 pl-8 lg:pl-12">
-              <p className="text-xl md:text-2xl font-medium tracking-tight leading-[1.4] text-foreground max-w-3xl">
-                To empower individuals to acquire future-ready, in-demand skills; to close the gap between education and industry; and to cultivate a global community of lifelong learners who are confident, employable, and resilient in the face of change.
-              </p>
-            </div>
+            <BlurFade delay={0.3} inView>
+              <div className="border-l border-border/50 pl-8 lg:pl-12">
+                <p className="text-xl md:text-2xl font-medium tracking-tight leading-[1.4] text-foreground max-w-3xl">
+                  To empower individuals to acquire future-ready, in-demand skills; to close the gap between education and industry; and to cultivate a global community of lifelong learners who are confident, employable, and resilient in the face of change.
+                </p>
+              </div>
+            </BlurFade>
           </div>
         </div>
 

@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { MagicCard } from '../components/magicui/MagicCard';
 
 import { EditorialMedia } from '@/components/ui/editorial-media';
 import { PageHero } from '@/components/ui/page-hero';
@@ -192,9 +193,10 @@ export default function KnowledgeHub() {
               const isYoutube = item.media_type === 'video_embed' && getYoutubeId(item.url);
               const youtubeId = isYoutube ? getYoutubeId(item.url) : null;
               return (
-                <div
+                <MagicCard
                   key={item.id}
-                  className="group flex flex-col gap-4 p-8 bg-transparent hover:bg-secondary transition-colors duration-200"
+                  className="group flex flex-col gap-4 p-8 bg-transparent hover:bg-secondary transition-colors duration-200 rounded-none border border-border/30"
+                  gradientColor="oklch(var(--primary) / 0.08)"
                 >
                   {/* 3:2 thumbnail */}
                   {youtubeId ? (
@@ -241,7 +243,7 @@ export default function KnowledgeHub() {
                       </a>
                     )}
                   </div>
-                </div>
+                </MagicCard>
               );
             })}
           </div>
