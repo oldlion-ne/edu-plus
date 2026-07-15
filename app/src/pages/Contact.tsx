@@ -5,6 +5,7 @@ import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
 import { Textarea } from '../components/ui/textarea';
 import { Label } from '../components/ui/label';
+import { editorialIllustrations } from '@/lib/editorialIllustrations';
 import {
   Select,
   SelectContent,
@@ -63,6 +64,7 @@ export default function Contact() {
       <PageHero
         eyebrow="Connect With Us"
         title="Contact &amp; Locations"
+        illustration={editorialIllustrations.contact}
         description="Whether you seek strategic collaboration, student enrollment, counselor support, or training resources — we are here to support you."
       />
 
@@ -86,7 +88,7 @@ export default function Contact() {
               <span className="text-[13px] font-medium uppercase tracking-wide text-muted-foreground mb-4 block">
                 Direct Advisory Hotline
               </span>
-              <a href="tel:+919856456703" className="text-[16px] font-medium text-foreground hover:underline">
+              <a href="tel:+919856456703" className="text-[16px] font-medium text-foreground hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground focus-visible:ring-offset-2 focus-visible:ring-offset-background">
                 +91 (985) 645 6703
               </a>
             </div>
@@ -95,7 +97,7 @@ export default function Contact() {
               <span className="text-[13px] font-medium uppercase tracking-wide text-muted-foreground mb-4 block">
                 Inquiries &amp; Support
               </span>
-              <a href="mailto:hello@eduplus.skills" className="text-[16px] font-medium text-foreground hover:underline">
+              <a href="mailto:hello@eduplus.skills" className="text-[16px] font-medium text-foreground hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground focus-visible:ring-offset-2 focus-visible:ring-offset-background">
                 hello@eduplus.skills
               </a>
             </div>

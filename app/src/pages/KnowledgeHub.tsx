@@ -1,6 +1,10 @@
 import { useState, useEffect, useRef } from 'react';
+
+import { EditorialMedia } from '@/components/ui/editorial-media';
 import { PageHero } from '@/components/ui/page-hero';
+import { editorialIllustrations } from '@/lib/editorialIllustrations';
 import { supabase } from '../lib/supabaseClient';
+import { FOCUS_RING_CLASSES } from '../lib/utils';
 
 import { Input } from '../components/ui/input';
 import { X } from 'lucide-react';
@@ -32,8 +36,42 @@ export default function KnowledgeHub() {
   const [searchQuery, setSearchQuery] = useState('');
   const [activeTab, setActiveTab] = useState('all');
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
+
   const [selectedVideo, setSelectedVideo] = useState<string | null>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    if (!selectedVideo) return;
+
+    const previousFocus = document.activeElement as HTMLElement | null;
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setSelectedVideo(null);
+      }
+    };
+
+    const handleFocus = (e: FocusEvent) => {
+      if (closeButtonRef.current) {
+        const dialog = closeButtonRef.current.closest('[role="dialog"]');
+        if (dialog && !dialog.contains(e.target as Node)) {
+          setTimeout(() => closeButtonRef.current?.focus(), 0);
+        }
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    document.addEventListener('focus', handleFocus, true);
+    
+    setTimeout(() => closeButtonRef.current?.focus(), 0);
+
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+      document.removeEventListener('focus', handleFocus, true);
+      setTimeout(() => previousFocus?.focus(), 0);
+    };
+  }, [selectedVideo]);
 
   useEffect(() => {
     async function fetchItems() {
@@ -43,28 +81,18 @@ export default function KnowledgeHub() {
           .select('*')
           .order('created_at', { ascending: false });
         if (error) throw error;
+
         setItems(data || []);
         setFilteredItems(data || []);
       } catch (err) {
         console.error('Error fetching hub content:', err);
+        setError(true);
       } finally {
         setLoading(false);
       }
     }
     fetchItems();
   }, []);
-
-  useEffect(() => {
-    if (!selectedVideo) return;
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') setSelectedVideo(null);
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    
-    setTimeout(() => closeButtonRef.current?.focus(), 10);
-    
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [selectedVideo]);
 
   useEffect(() => {
     let filtered = items;
@@ -96,6 +124,7 @@ export default function KnowledgeHub() {
       <PageHero
         eyebrow="Ecosystem Nodes"
         title="Knowledge Hub"
+        illustration={editorialIllustrations.knowledge}
         description="Access elite technical tutorials, educational webinars, and expert podcasts compiled to accelerate your academic and skill roadmap."
       />
 
@@ -104,12 +133,17 @@ export default function KnowledgeHub() {
 
         {/* Controls row — text link tabs + plain search input */}
         <div className="flex flex-col md:flex-row gap-6 justify-between items-start md:items-center mb-12">
-          <div className="flex gap-6 border-b border-border/50 w-full md:w-auto">
+          <div
+            className="flex gap-6 border-b border-border/50 w-full md:w-auto"
+            role="group"
+            aria-label="Filter resources by category"
+          >
             {CATEGORY_TABS.map((tab) => (
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
-                className={`pb-3 text-[14px] font-medium whitespace-nowrap transition-colors duration-150 border-b-2 -mb-px ${
+                aria-pressed={activeTab === tab}
+                className={`pb-3 text-[14px] font-medium whitespace-nowrap transition-colors duration-150 border-b-2 -mb-px ${FOCUS_RING_CLASSES} ${
                   activeTab === tab
                     ? 'border-primary text-foreground'
                     : 'border-transparent text-muted-foreground hover:text-foreground'
@@ -135,9 +169,22 @@ export default function KnowledgeHub() {
           <div className="py-20 text-center text-[14px] text-muted-foreground">
             Loading resources...
           </div>
+        ) : error ? (
+          <div role="alert" className="py-20 text-center text-[14px] text-destructive">
+            We could not load resources right now. Please try again later.
+          </div>
+        ) : items.length === 0 ? (
+          <div className="flex flex-col items-center py-20 text-center text-[14px] text-muted-foreground">
+            <EditorialMedia
+              asset={editorialIllustrations.knowledgeEmpty}
+              decorative
+              frameClassName="mb-8 max-w-[240px]"
+            />
+            <p>Resources are being prepared. Please check back soon.</p>
+          </div>
         ) : filteredItems.length === 0 ? (
-          <div className="py-20 text-center text-[14px] text-muted-foreground">
-            No resources match your query.
+          <div className="flex flex-col items-center py-20 text-center text-[14px] text-muted-foreground">
+            <p>No resources match your query.</p>
           </div>
         ) : (
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-16">
@@ -178,7 +225,7 @@ export default function KnowledgeHub() {
                     {isYoutube ? (
                       <button
                         onClick={() => setSelectedVideo(item.url)}
-                        className="text-[14px] font-medium text-primary hover:underline"
+                        className={`text-[14px] font-medium text-primary hover:underline ${FOCUS_RING_CLASSES}`}
                       >
                         Watch &rarr;
                       </button>
@@ -187,7 +234,7 @@ export default function KnowledgeHub() {
                         href={item.url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-[14px] font-medium text-primary hover:underline"
+                        className={`text-[14px] font-medium text-primary hover:underline ${FOCUS_RING_CLASSES}`}
                         /* ui-ignore */
                       >
                         Open resource &rarr;
@@ -215,7 +262,7 @@ export default function KnowledgeHub() {
               <button
                 ref={closeButtonRef}
                 onClick={() => setSelectedVideo(null)}
-                className="text-muted-foreground hover:text-foreground transition-colors"
+                className={`text-muted-foreground hover:text-foreground transition-colors ${FOCUS_RING_CLASSES}`}
                 aria-label="Close video"
               >
                 <X className="size-4" />

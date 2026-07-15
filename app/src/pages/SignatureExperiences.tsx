@@ -3,6 +3,8 @@ import { Link } from 'react-router';
 import { Button } from '@/components/ui/button';
 import { PageHero } from '@/components/ui/page-hero';
 import { BulletList, BulletItem } from '@/components/ui/bullet-list';
+import { editorialIllustrations } from '@/lib/editorialIllustrations';
+import { FOCUS_RING_CLASSES } from '@/lib/utils';
 
 const EVENTS = [
   {
@@ -105,6 +107,7 @@ export default function SignatureExperiences() {
         eyebrow="Flagship Events"
         title="Signature Experiences"
         description="Curated events that bring energy, community, and real-world exposure into the learning experience — connecting students, educators, and industry experts."
+        illustration={editorialIllustrations.events}
       />
 
       {/* ── Events: horizontal list with 1px top border dividers ── */}
@@ -170,7 +173,7 @@ export default function SignatureExperiences() {
                     <button
                       onClick={() => setOpenFaq(isOpen ? null : key)}
                       aria-expanded={isOpen}
-                      className="w-full flex items-center justify-between py-5 text-left gap-8 group"
+                      className={`w-full flex items-center justify-between py-5 text-left gap-8 group ${FOCUS_RING_CLASSES}`}
                     >
                       <span className="text-[15px] font-medium text-foreground group-hover:text-primary transition-colors duration-150">
                         {item.q}

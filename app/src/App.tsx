@@ -116,6 +116,7 @@ function App() {
                     <Route path="/council" element={<Council />} />
                     <Route path="/guidance" element={<Guidance />} />
                     <Route path="/news" element={<News />} />
+                    <Route path="/news/:slug" element={<News />} />
                     <Route path="/contact" element={<Contact />} />
                     <Route path="/knowledge-hub" element={<KnowledgeHub />} />
                     <Route path="/login" element={<Login />} />

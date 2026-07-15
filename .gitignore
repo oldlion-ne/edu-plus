@@ -44,3 +44,6 @@ Thumbs.db
 app/extract.cjs
 app/extract.js
 
+# Image-generation working masters
+tmp/imagegen/
+

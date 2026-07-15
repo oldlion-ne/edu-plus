@@ -8,7 +8,7 @@ Welcome to the comprehensive system documentation for **Edu+ Skills**, a next-ge
 
 **Edu+ Skills** is an innovation-led, hybrid (online and offline) platform that bridges classrooms and the real world. It supports learners across their entire educational lifecycle—from school stream selection and life skills to college admissions prep, industry mentorship, job placement, and educator training.
 
-The codebase is structured under `C:\edu-plus\app-v2`, utilizing a futuristic, high-tech, HUD-style user interface built for premium visuals and structured data display.
+The codebase is structured under `C:\edu-plus\app-v2`, utilizing a strict **Nordic Lagom** design system, focused on minimalist, ultra-clean UI, extreme whitespace, straight edges, and serene data display.
 
 ---
 
@@ -96,8 +96,8 @@ app-v2/
 ├── src/
 │   ├── components/         # Reusable UI widgets and layout modules
 │   │   ├── ui/             # Shadcn-generated components (Button, Input, Dialog, etc.)
-│   │   ├── effects/        # Custom animations (ImmersiveHero, TypeScramble, Spotlight)
-│   │   ├── magicui/        # Scrolling Marquee wrapper
+│   │   ├── effects/        # Custom animations and Hero layouts
+│   │   ├── magicui/        # Component wrappers (e.g., Marquee)
 │   │   └── svgs/           # SVG icons for third-party integrations
 │   ├── hooks/              # Custom React state hooks
 │   ├── lib/                # Context providers, Supabase clients, API services
@@ -223,13 +223,13 @@ Logs contact and inquiry submissions.
 The routing registry inside `src/App.tsx` maps eleven distinct view page URLs:
 
 ### 1. Home Page (`/`)
-The main landing page designed with an immersive background loop video (`/assets/hero-bg-new.mp4`), structured overlays, and the following sections:
-- **Hero:** Main branding layout showcasing the tagline *"Elevate Tomorrow"* alongside platform statistics.
-- **PartnerMarquee:** Infinite scrolling brand loop containing names of collaborating corporate, academic, and research organizations.
-- **TelemetryStats:** An interactive statistics panel showing global learner timezone reach (dotted SVG map using `dotted-map`), simulated chat modules, and key platform milestones.
-- **Vision:** An interactive text reveal panel displaying the core mission and values of the platform.
+The main landing page designed with strict Nordic minimalist layouts and generous whitespace, featuring the following sections:
+- **Hero:** Clean, split-screen branding layout showcasing the tagline *"Elevate Tomorrow"* alongside highly constrained, static hero imagery.
+- **PartnerMarquee:** Subtle scrolling brand loop containing names of collaborating corporate, academic, and research organizations.
+- **TelemetryStats:** A clean, static statistics panel showing global learner timezone reach (dotted SVG map using `dotted-map`), and key platform milestones.
+- **Vision:** A static, typography-focused grid layout displaying the core mission and values of the platform using extreme tracking and elegant spacing.
 - **PathwaySimulator (Integrations):** A grid displaying external platform connections (OpenAI, GitHub, Zoom, LinkedIn, etc.) that sync learner progress.
-- **ServicesMatrix:** A radial-masked infinite marquee displaying the 6 flagship programs floating around a central branding node.
+- **ServicesMatrix:** A clean grid matrix displaying the 6 flagship programs, emphasizing sharp edges and minimalist composition.
 - **PedigreeShowcase:** Clean, straight-edged grid detailing strategic integrations, standards compliance, and advisory network scales.
 
 ### 2. About Page (`/about`)
@@ -264,7 +264,7 @@ Showcases the credentials of the 14 advisory council members:
 ### 6. One-to-One Guidance Page (`/guidance`)
 Explains personalized counseling options:
 - **Stakeholder Tabs:** Custom pathways tailored for Students, Parents, Job Seekers, and Teachers.
-- **Interactive Command Terminal:** A retro terminal console simulating command logs (e.g., `./futurepath-navigator.sh --assess`) that print live text streams for the selected stakeholder.
+- **Guidance Logs:** A clean, minimal layout simulating structured logs for the selected stakeholder, adhering to the static UI rules without aggressive text animations.
 
 ### 7. News & Insights Page (`/news`)
 Displays editorial focus columns (Grassroots, Research, Readiness) alongside a grid of recent articles with metadata, excerpt summaries, and read times.
