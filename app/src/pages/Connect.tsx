@@ -785,7 +785,7 @@ export default function Connect() {
                         required
                         value={newsletterEmail}
                         onChange={(e) => setNewsletterEmail(e.target.value)}
-                        className="flex-grow font-mono text-xs rounded-none bg-background/50 border-border h-10 px-3"
+                        className="flex-grow font-mono text-xs rounded-none bg-background/50 border-border h-9 px-3"
                         placeholder={t('placeholderEmail')}
                       />
                       <Button type="submit" variant="outline" size="md" className="rounded-none font-mono text-xs uppercase tracking-wider cursor-pointer">

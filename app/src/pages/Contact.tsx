@@ -274,7 +274,7 @@ export default function Contact() {
                       required
                       value={newsletterEmail}
                       onChange={(e) => setNewsletterEmail(e.target.value)}
-                      className="flex-grow rounded-none border-border/50 text-[14px] h-[48px]"
+                      className="flex-grow rounded-none border-border/50 text-[14px] h-9"
                       placeholder="Enter your email"
                     />
                     <Button type="submit" variant="outline" size="md" className="rounded-none border-foreground/30 hover:border-foreground transition-colors duration-200">

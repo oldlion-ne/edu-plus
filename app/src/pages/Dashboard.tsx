@@ -808,6 +808,7 @@ export default function Dashboard() {
 
             <Button
               variant="outline"
+              size="md"
               onClick={() => { localStorage.removeItem('edu_plus_onboarding_completed'); setShowTour(true); }}
               className="border border-border hover:border-primary text-foreground hover:text-primary hover:bg-primary/5 focus:outline-none px-3.5 font-sans text-xs transition-all duration-300 cursor-pointer rounded-none"
             >
