@@ -43,7 +43,7 @@ export default function Legal() {
           <h1 className="font-heading text-4xl md:text-5xl font-light text-foreground tracking-tight">
             Trust & Legal Center
           </h1>
-          <p className="mt-4 font-mono text-xs text-muted-foreground uppercase tracking-widest">
+          <p className="mt-4 font-sans text-xs text-muted-foreground uppercase tracking-widest">
             EduPlus Transparency & Compliance Platform
           </p>
         </div>
@@ -51,7 +51,7 @@ export default function Legal() {
         <div className="flex flex-col md:flex-row gap-12 items-start">
           
           {/* Sidebar Navigation */}
-          <aside className="w-full md:w-64 shrink-0 flex flex-col gap-2 relative">
+          <aside className="w-full md:w-64 shrink-0 flex flex-col gap-2 relative rounded-none" role="tablist">
             {/* Architectural decorative line */}
             <div className="absolute top-0 bottom-0 left-0 w-px bg-border hidden md:block" />
             
@@ -61,6 +61,9 @@ export default function Legal() {
               return (
                 <button
                   key={tab.id}
+                  role="tab"
+                  aria-selected={isActive}
+                  aria-controls={`tabpanel-${tab.id}`}
                   onClick={() => handleTabChange(tab.id)}
                   className={`relative w-full flex items-center gap-3 px-6 py-4 text-left transition-all duration-300 rounded-none border border-transparent focus:outline-none focus:ring-1 focus:ring-primary/50 cursor-pointer ${
                     isActive 
@@ -83,7 +86,7 @@ export default function Legal() {
           </aside>
 
           {/* Content Area */}
-          <main className="flex-1 w-full min-w-0 bg-card/30 border border-border p-8 md:p-12 relative overflow-hidden">
+          <main className="flex-1 w-full min-w-0 bg-card/30 border border-border p-8 md:p-12 relative overflow-hidden rounded-none">
             {/* Geometric Accent */}
             <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 -translate-y-1/2 translate-x-1/2 rotate-45 pointer-events-none" />
 
@@ -95,6 +98,8 @@ export default function Legal() {
                 exit={{ opacity: 0, y: -10 }}
                 transition={{ duration: 0.3, ease: 'easeOut' }}
                 className="prose prose-invert max-w-none font-sans"
+                role="tabpanel"
+                id={`tabpanel-${activeTab}`}
               >
                 {activeTab === 'terms' && (
                   <div className="space-y-8">
@@ -118,7 +123,7 @@ export default function Legal() {
                     </p>
 
                     <div className="p-6 border border-border bg-background mt-8">
-                      <p className="font-mono text-xs text-foreground uppercase tracking-wider mb-2">Legal Disclaimer</p>
+                      <p className="font-sans text-xs text-foreground uppercase tracking-wider mb-2">Legal Disclaimer</p>
                       <p className="text-muted-foreground text-[11px] leading-relaxed m-0">
                         The materials on EduPlus's website are provided on an 'as is' basis. EduPlus makes no warranties, expressed or implied, and hereby disclaims and negates all other warranties including, without limitation, implied warranties or conditions of merchantability, fitness for a particular purpose, or non-infringement of intellectual property or other violation of rights.
                       </p>
@@ -142,6 +147,10 @@ export default function Legal() {
                       <li className="flex items-start gap-3">
                         <span className="text-primary mt-1">■</span>
                         <span><strong>Account Information:</strong> When you register, we collect your name, email address, and role designation.</span>
+                      </li>
+                      <li className="flex items-start gap-3">
+                        <span className="text-primary mt-1">■</span>
+                        <span><strong>AI Chat Integration:</strong> When using the AI chat feature, we store a persistent conversation ID in your browser's <code>localStorage</code> to maintain session continuity, and we save chat messages in our Supabase infrastructure to provide context-aware responses and improve our services.</span>
                       </li>
                       <li className="flex items-start gap-3">
                         <span className="text-primary mt-1">■</span>
@@ -182,7 +191,7 @@ export default function Legal() {
                     </p>
                     
                     <div className="mt-8 p-5 bg-background border border-border border-l-2 border-l-primary flex flex-col gap-2">
-                      <span className="font-mono text-xs uppercase tracking-wider text-foreground">Manage Preferences</span>
+                      <span className="font-sans text-xs uppercase tracking-wider text-foreground">Manage Preferences</span>
                       <p className="text-[11px] text-muted-foreground">
                         You can choose to have your computer warn you each time a cookie is being sent, or you can choose to turn off all cookies via your browser settings.
                       </p>

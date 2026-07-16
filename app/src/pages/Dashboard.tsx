@@ -422,14 +422,21 @@ export default function Dashboard() {
       setCoverPreviewUrl('');
 
       fetchData();
-    } catch (err) {
-      console.error(err);
+    } catch (err: any) {
+      console.error('Content Upload Station Error:', err);
       if (uploadedPaths.length > 0) {
-        // Cleanup orphaned uploads on failure
-        supabase.storage.from('resources').remove(uploadedPaths).catch(console.error);
+        // Robust cleanup of orphaned uploads if database insert fails
+        supabase.storage.from('resources').remove(uploadedPaths)
+          .then(({ error: cleanupErr }) => {
+            if (cleanupErr) console.error('Failed to cleanup orphaned files:', cleanupErr);
+          })
+          .catch(console.error);
       }
+      
+      const errorMessage = err?.message || err?.error_description || err?.toString() || 'An unexpected error occurred during upload.';
+      
       toast.error('Upload Failed', {
-        description: 'Unauthorized role or empty input variables.',
+        description: errorMessage,
         style: { background: 'oklch(var(--card))', border: '1px solid oklch(var(--destructive)/0.3)', color: 'oklch(var(--foreground))', borderRadius: '0px' }
       });
     } finally {

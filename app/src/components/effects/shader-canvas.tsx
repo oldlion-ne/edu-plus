@@ -115,6 +115,7 @@ export default function ShaderCanvas({ fragmentShader, className, dpr = 1 }: Sha
     const resolutionLocation = gl.getUniformLocation(program, "resolution");
 
     let animationFrameId: number;
+    let isVisible = false;
     const startTime = performance.now();
 
     const resize = () => {
@@ -128,17 +129,34 @@ export default function ShaderCanvas({ fragmentShader, className, dpr = 1 }: Sha
     };
 
     const render = () => {
+      if (!isVisible || canvas.clientWidth === 0) return;
+      
       resize();
       gl.useProgram(program);
       gl.uniform1f(timeLocation, (performance.now() - startTime) / 1000.0);
       gl.uniform2f(resolutionLocation, canvas.width, canvas.height);
       gl.drawArrays(gl.TRIANGLES, 0, 6);
+      
       animationFrameId = requestAnimationFrame(render);
     };
 
-    render();
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        const currentlyVisible = entry.isIntersecting;
+        if (currentlyVisible && !isVisible) {
+          isVisible = true;
+          render();
+        } else {
+          isVisible = currentlyVisible;
+        }
+      },
+      { threshold: 0 }
+    );
+
+    observer.observe(canvas);
 
     return () => {
+      observer.disconnect();
       cancelAnimationFrame(animationFrameId);
       gl.deleteProgram(program);
       gl.deleteShader(vs);
@@ -147,5 +165,5 @@ export default function ShaderCanvas({ fragmentShader, className, dpr = 1 }: Sha
     };
   }, [fragmentShader, dpr]);
 
-  return <canvas ref={canvasRef} className={className} style={{ display: "block" }} />;
+  return <canvas ref={canvasRef} className={`block ${className || ""}`.trim()} />;
 }
