@@ -41,7 +41,7 @@ export function PageHero({
         }
       >
         <div
-          className={`flex w-full flex-col justify-center px-8 py-16 md:px-12 lg:px-24 lg:py-24 ${illustration ? '' : 'items-center text-center'}`}
+          className={`flex w-full flex-col justify-start px-8 pt-10 pb-16 md:px-12 lg:px-24 lg:pt-16 lg:pb-24 ${illustration ? '' : 'items-center text-center'}`}
         >
           <div className={`max-w-lg ${illustration ? '' : 'mx-auto'}`}>
             <FadeIn delay={0.1}>
