@@ -20,13 +20,21 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [loading, setLoading] = useState(true);
   const [isSimulated, setIsSimulated] = useState(false);
 
-  // Track which user ID has already had its role fetched to prevent
-  // the onAuthStateChange listener from firing a redundant DB call
-  // immediately after getSession resolves (eliminating 4→2 network calls).
   const roleFetchedForRef = useRef<string | null>(null);
 
+  // ─── Role fetch via SECURITY DEFINER RPC (bypasses RLS entirely) ─────────────
   async function fetchUserRole(userId: string): Promise<boolean> {
     try {
+      // Primary: use SECURITY DEFINER function — auth.uid() is always correct here
+      const { data: rpcRole, error: rpcError } = await supabase.rpc('get_my_role');
+
+      if (!rpcError && rpcRole && rpcRole !== 'none') {
+        setRole(rpcRole as any);
+        roleFetchedForRef.current = userId;
+        return true;
+      }
+
+      // Fallback: direct table query
       const { data, error } = await supabase
         .from('user_roles')
         .select('role')
@@ -37,13 +45,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         setRole(data.role as any);
         roleFetchedForRef.current = userId;
         return true;
-      } else {
-        // Log the actual error so we can diagnose issues
-        console.warn('[AuthContext] fetchUserRole: no role row found or error', { userId, error });
-        setRole('none');
-        roleFetchedForRef.current = userId;
-        return false;
       }
+
+      console.warn('[AuthContext] fetchUserRole: no role found', { userId, rpcError, error });
+      setRole('none');
+      roleFetchedForRef.current = userId;
+      return false;
     } catch (err) {
       console.error('[AuthContext] fetchUserRole: unexpected error', err);
       setRole('none');
@@ -51,6 +58,22 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       return false;
     }
   }
+
+  // ─── Auto-retry when role lands as 'none' for a real authenticated user ──────
+  // This handles the case where HMR hot-reloaded the module while the user was
+  // already logged in, or where the initial fetch lost a timing race.
+  useEffect(() => {
+    if (!user || isSimulated || role !== 'none') return;
+
+    const timer = setTimeout(async () => {
+      console.info('[AuthContext] Role is "none" for authenticated user — retrying fetch...');
+      roleFetchedForRef.current = null; // allow fresh fetch
+      await fetchUserRole(user.id);
+    }, 1200);
+
+    return () => clearTimeout(timer);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user?.id, role, isSimulated]);
 
   useEffect(() => {
     // 1. Check simulated session in localStorage — resolves instantly, no network
@@ -76,7 +99,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
         if (session?.user) {
           setUser(session.user);
-          // Always fetch role fresh — don't rely on ref to deduplicate here
           await fetchUserRole(session.user.id);
         } else {
           setUser(null);
@@ -93,7 +115,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     // Race against a 5s timeout so the loading screen never hangs forever
     const timeout = new Promise<void>((resolve) => setTimeout(() => {
-      console.warn('Auth initialization timed out — forcing loading=false');
+      console.warn('Auth initialization timed out - forcing loading=false');
       setLoading(false);
       resolve();
     }, 5000));
@@ -124,7 +146,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const signIn = async (email: string, password: string) => {
     localStorage.removeItem('edu_plus_sim_session');
-    roleFetchedForRef.current = null; // Reset so next auth event fetches fresh role
+    roleFetchedForRef.current = null;
     const { data, error } = await supabase.auth.signInWithPassword({ email, password });
     // Explicitly fetch role after sign-in so we don't rely solely on the async
     // onAuthStateChange event which can arrive before state is fully settled.
