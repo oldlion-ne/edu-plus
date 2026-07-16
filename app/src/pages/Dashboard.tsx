@@ -695,13 +695,13 @@ export default function Dashboard() {
 
               {/* Actions */}
               <div className="flex gap-2 pt-2 border-t border-border">
-                <Button type="submit" className="flex-grow py-2 bg-primary text-primary-foreground hover:bg-foreground hover:text-background focus:outline-none focus:ring-1 focus:ring-primary/70 transition-all font-mono text-[9px] font-bold tracking-wider uppercase cursor-pointer rounded-none h-9">
+                <Button type="submit" size="lg" className="flex-grow bg-primary text-primary-foreground hover:bg-foreground hover:text-background focus:outline-none focus:ring-1 focus:ring-primary/70 transition-all font-mono text-[9px] font-bold tracking-wider uppercase cursor-pointer rounded-none">
                   Save Changes
                 </Button>
-                <Button type="button" variant="outline" onClick={() => setIsSettingsOpen(false)} className="px-4 py-2 border border-border hover:border-foreground focus:outline-none focus:ring-1 focus:ring-primary/70 font-mono text-[9px] uppercase tracking-wider transition-all rounded-none h-9 cursor-pointer">
+                <Button type="button" size="lg" variant="outline" onClick={() => setIsSettingsOpen(false)} className="px-4 border border-border hover:border-foreground focus:outline-none focus:ring-1 focus:ring-primary/70 font-mono text-[9px] uppercase tracking-wider transition-all rounded-none cursor-pointer">
                   Close
                 </Button>
-                <Button type="button" variant="destructive" onClick={() => { setIsSettingsOpen(false); handleLogout(); }} className="px-4 py-2 border border-destructive/30 hover:border-destructive hover:bg-destructive/10 bg-destructive/5 text-destructive focus:outline-none focus:ring-1 focus:ring-destructive font-mono text-[9px] uppercase tracking-wider transition-all cursor-pointer rounded-none h-9">
+                <Button type="button" size="lg" variant="destructive" onClick={() => { setIsSettingsOpen(false); handleLogout(); }} className="px-4 border border-destructive/30 hover:border-destructive hover:bg-destructive/10 bg-destructive/5 text-destructive focus:outline-none focus:ring-1 focus:ring-destructive font-mono text-[9px] uppercase tracking-wider transition-all cursor-pointer rounded-none">
                   Logout
                 </Button>
               </div>
@@ -809,9 +809,9 @@ export default function Dashboard() {
             <Button
               variant="outline"
               onClick={() => { localStorage.removeItem('edu_plus_onboarding_completed'); setShowTour(true); }}
-              className="border border-border hover:border-primary text-foreground hover:text-primary hover:bg-primary/5 focus:outline-none px-3.5 py-1.5 font-sans text-xs transition-all duration-300 cursor-pointer rounded-none h-8"
+              className="border border-border hover:border-primary text-foreground hover:text-primary hover:bg-primary/5 focus:outline-none px-3.5 font-sans text-xs transition-all duration-300 cursor-pointer rounded-none"
             >
-              Tutorial Tour
+              Tour
             </Button>
           </div>
         </header>
@@ -1011,7 +1011,7 @@ export default function Dashboard() {
                             onClick={() => { setCoverFile(null); setCoverPreviewUrl(''); }}
                             className="absolute top-2 right-2 px-2.5 py-1 text-[9px] font-mono rounded-none uppercase h-7 cursor-pointer border border-destructive/30"
                           >
-                            Remove Cover
+                            Remove
                           </Button>
                         </div>
                       ) : (
@@ -1152,8 +1152,8 @@ export default function Dashboard() {
                       />
                     </div>
 
-                    <Button type="submit" disabled={isUploading} className="px-6 py-3 bg-primary text-primary-foreground hover:bg-foreground hover:text-background focus:outline-none focus:ring-1 focus:ring-primary transition-all duration-300 font-mono text-[10px] font-bold tracking-widest uppercase cursor-pointer rounded-none h-10 disabled:opacity-50 disabled:cursor-not-allowed">
-                      {isUploading ? 'UPLOADING...' : 'PUBLISH RESOURCE'}
+                    <Button type="submit" disabled={isUploading} size="md" className="bg-primary text-primary-foreground hover:bg-foreground hover:text-background focus:outline-none focus:ring-1 focus:ring-primary transition-all duration-300 font-mono text-[10px] font-bold tracking-widest uppercase cursor-pointer rounded-none disabled:opacity-50 disabled:cursor-not-allowed">
+                      {isUploading ? 'UPLOADING...' : 'PUBLISH'}
                     </Button>
                   </form>
                 ) : isRoleResolving ? (
@@ -1199,8 +1199,8 @@ export default function Dashboard() {
                           className="w-full bg-background border border-border text-xs px-4 py-2 outline-none focus:border-primary rounded-none text-foreground font-sans resize-none min-h-20"
                         />
                       </div>
-                      <Button type="submit" className="px-4 py-2 bg-primary/10 border border-primary/30 text-primary hover:bg-primary hover:text-primary-foreground focus:outline-none focus:ring-1 focus:ring-primary transition-all duration-300 font-mono text-[9px] font-bold tracking-wider rounded-none cursor-pointer h-9">
-                        ADD GUIDELINE
+                      <Button type="submit" size="lg" className="px-4 bg-primary/10 border border-primary/30 text-primary hover:bg-primary hover:text-primary-foreground focus:outline-none focus:ring-1 focus:ring-primary transition-all duration-300 font-mono text-[9px] font-bold tracking-wider rounded-none cursor-pointer">
+                        ADD
                       </Button>
                     </form>
 
@@ -1283,7 +1283,7 @@ export default function Dashboard() {
                                   onClick={() => handleMarkMessageRead(msg.id)}
                                   className="px-2.5 py-0.5 bg-primary hover:bg-foreground hover:text-background text-primary-foreground transition-colors font-mono text-[8px] font-bold tracking-wider uppercase rounded-none cursor-pointer h-6"
                                 >
-                                  Mark Read
+                                  Read
                                 </Button>
                               )}
                             </div>

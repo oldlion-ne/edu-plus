@@ -11,7 +11,7 @@ const TABS = [
     label: 'For Students',
     title: 'Chart Your Personal Academic & Career Path',
     desc: 'Navigate academic choices, discover your passions, and understand how your strengths connect to real-world opportunities. From subject selection and career mapping to entrance exam strategies and higher studies planning, you receive a personal roadmap — not generic advice.',
-    cta: 'Schedule Student Advisory',
+    cta: 'Student Advisory',
     outcomes: [
       'Core strengths & passion discovery',
       'Customized subject & stream selection',
@@ -24,7 +24,7 @@ const TABS = [
     label: 'For Parents',
     title: 'Empower Your Child Without the Pressure',
     desc: 'Equip yourself with tools, frameworks, and information to support your child\'s professional and personal growth. Our sessions help you decode rapidly changing education and career landscapes so you can guide — not pressure — your child toward realistic, fulfilling paths.',
-    cta: 'Schedule Parent Consultation',
+    cta: 'Parent Consultation',
     outcomes: [
       'Understanding psychometric results',
       'Mapping academic options objectively',
@@ -37,7 +37,7 @@ const TABS = [
     label: 'For Job Seekers',
     title: 'Bridge the Gap Between Learning & Placement',
     desc: 'Support your professional transition with structured career counselling, profile building, and targeted upskilling recommendations. Gain clarity on your core strengths, international options, and the actions required to move forward.',
-    cta: 'Launch Placement Pathway',
+    cta: 'Placement Pathway',
     outcomes: [
       'Resume & LinkedIn optimisation',
       'Interview coaching & mock sessions',
@@ -50,7 +50,7 @@ const TABS = [
     label: 'For Teachers',
     title: 'Evolve From Instructors Into Mentors',
     desc: 'Enhance your classroom impact, mentorship capabilities, and academic leadership profile. Through reflective coaching, modern pedagogy training, and technology integration workshops, learn how to guide students to life readiness.',
-    cta: 'Register for Educator Mentorship',
+    cta: 'Educator Mentorship',
     outcomes: [
       'Modern pedagogy training',
       'AI-integration in classrooms',
@@ -101,8 +101,8 @@ export default function Guidance() {
         illustration={editorialIllustrations.guidance}
         description="Dedicated, one-on-one support tailored to every stakeholder in the education ecosystem — students, parents, job seekers, and educators."
       >
-        <Button asChild className="rounded-none h-[52px] px-[28px] bg-foreground text-background hover:bg-primary transition-colors duration-200">
-          <Link to="/contact" /* ui-ignore */>Book a Consultation</Link>
+        <Button asChild size="md" className="rounded-none bg-foreground text-background hover:bg-primary transition-colors duration-200">
+          <Link to="/contact" /* ui-ignore */>Book</Link>
         </Button>
       </PageHero>
 
@@ -151,7 +151,7 @@ export default function Guidance() {
             <div>
               <h2 className="text-[28px] font-medium text-foreground mb-6 leading-snug">{audience.title}</h2>
               <p className="text-[16px] text-muted-foreground leading-relaxed mb-10 max-w-[55ch]">{audience.desc}</p>
-              <Button asChild className="rounded-none h-[52px] px-[28px] bg-foreground text-background hover:bg-primary transition-colors duration-200">
+              <Button asChild size="md" className="rounded-none bg-foreground text-background hover:bg-primary transition-colors duration-200">
                 <Link to="/contact" /* ui-ignore */>{audience.cta}</Link>
               </Button>
             </div>
@@ -206,8 +206,8 @@ export default function Guidance() {
                   Alignment with global internships & programmes
                 </li>
               </ul>
-              <Button asChild className="w-full rounded-none h-[52px] bg-foreground text-background hover:bg-primary transition-colors duration-200">
-                <Link to="/contact" /* ui-ignore */>Book Free Advisory Consult</Link>
+              <Button asChild size="md" className="w-full rounded-none bg-foreground text-background hover:bg-primary transition-colors duration-200">
+                <Link to="/contact" /* ui-ignore */>Book Free Session</Link>
               </Button>
             </div>
           </div>

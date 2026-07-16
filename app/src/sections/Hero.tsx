@@ -25,16 +25,18 @@ export default function Hero() {
     >
       <Button
         asChild
-        className="h-[44px] rounded-none bg-foreground px-8 text-sm text-background transition-colors duration-200 hover:bg-primary hover:text-primary-foreground"
+        size="md"
+        className="rounded-none bg-foreground text-background transition-colors duration-200 hover:bg-primary hover:text-primary-foreground"
       >
-        <Link to="/contact">Start Your Pathway</Link>
+        <Link to="/contact">Start</Link>
       </Button>
       <Button
         asChild
+        size="md"
         variant="outline"
-        className="h-[44px] rounded-none border-foreground bg-transparent px-8 text-sm text-foreground transition-colors duration-200 hover:bg-foreground hover:text-background"
+        className="rounded-none border-foreground bg-transparent text-foreground transition-colors duration-200 hover:bg-foreground hover:text-background"
       >
-        <Link to="/about">Explore Network</Link>
+        <Link to="/about">Explore</Link>
       </Button>
     </PageHero>
   );

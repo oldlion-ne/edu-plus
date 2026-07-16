@@ -160,7 +160,8 @@ export default function Login() {
           {/* Submit */}
           <Button
             type="submit"
-            className="w-full h-10 mt-1 font-mono text-xs tracking-widest uppercase"
+            size="md"
+            className="w-full mt-1 font-mono text-xs tracking-widest uppercase"
             disabled={submitting}
           >
             {submitting ? t('signingIn') : t('signIn')}
