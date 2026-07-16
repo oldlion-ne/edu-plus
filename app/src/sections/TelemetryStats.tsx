@@ -12,7 +12,7 @@ export default function TelemetryStats() {
   return (
     <section
       id="telemetry"
-      className="relative w-full py-40 bg-background border-t border-border/50"
+      className="relative w-full py-16 bg-background border-t border-border/50"
     >
       <div className="mx-auto max-w-5xl px-6 md:px-12">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-12 md:gap-0 items-start">

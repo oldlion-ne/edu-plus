@@ -32,12 +32,12 @@ export function PageHero({
   const titlePrefix = hasValidSuffixWords && hasValidPrefix ? titleWords.slice(0, -1).join(' ') : null;
 
   return (
-    <section className="w-full border-b border-border/50 bg-background pt-12">
+    <section className="w-full border-b border-border/50 bg-background pt-8">
       <div
         className={
           illustration
-            ? 'grid min-h-[75vh] lg:grid-cols-[55fr_45fr]'
-            : 'mx-auto flex min-h-[65vh] max-w-4xl items-center justify-center'
+            ? 'grid min-h-[55vh] lg:grid-cols-[55fr_45fr]'
+            : 'mx-auto flex min-h-[50vh] max-w-4xl items-center justify-center'
         }
       >
         <div
