@@ -28,7 +28,7 @@ const translations = {
   heroDesc: "Explore our archive of technical tutorials, podcasts, webinars, and editorial news highlighting the intersection of learning, research, and career paths.",
   
   // News translations
-  readArticleLabel: "Read Article \u2192",
+  readArticleLabel: "Read \u2192",
   editorialHeader: "Editorial Focus & Columns",
   editorialDesc: "Our news stream covers the intersection of grassroots learning, academic research, and career preparedness.",
   col1Title: "Grassroots Impact",
@@ -69,8 +69,8 @@ const translations = {
   srcPrefix: "SRC // ",
   noSupplementaryData: "No supplementary data available.",
   nodePrefix: "NODE: ",
-  launchPlayback: "LAUNCH PLAYBACK",
-  openLink: "OPEN LINK",
+  launchPlayback: "PLAY",
+  openLink: "OPEN",
   videoPlayback: "VIDEO PLAYBACK"
 };
 

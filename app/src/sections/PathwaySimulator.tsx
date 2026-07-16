@@ -36,9 +36,9 @@ export default function PathwaySimulator() {
           <p className="mt-5 text-[16px] text-muted-foreground leading-relaxed max-w-lg">
             EduPlus plugs into the platforms your learners and institutions already trust — syncing progress, credentials, and communication in one intelligent network.
           </p>
-          <Button asChild variant="outline" size="sm" className="mt-8 rounded-none h-[44px] px-6 border-foreground/30 text-foreground hover:border-foreground transition-colors duration-200">
+          <Button asChild variant="outline" size="md" className="mt-8 rounded-none border-foreground/30 text-foreground hover:border-foreground transition-colors duration-200">
             <Link to="/contact" /* ui-ignore */>
-              Request Integration
+              Integrate
             </Link>
           </Button>
         </div>

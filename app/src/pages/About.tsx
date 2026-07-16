@@ -67,8 +67,8 @@ export default function About() {
         description="EduPlus Skills is an innovation-led skills and career platform that seamlessly combines education, training, and employment enablement — operating both online and offline across regions from Manipur to global career pathways."
         illustration={editorialIllustrations.about}
       >
-        <Button asChild className="rounded-none h-[52px] px-[28px] bg-foreground text-background hover:bg-primary transition-colors duration-200">
-          <Link to="/contact" /* ui-ignore */>Get in Touch</Link>
+        <Button asChild size="md" className="rounded-none bg-foreground text-background hover:bg-primary transition-colors duration-200">
+          <Link to="/contact" /* ui-ignore */>Contact</Link>
         </Button>
       </PageHero>
 

@@ -246,10 +246,11 @@ export default function Contact() {
 
                     <Button
                       type="submit"
+                      size="md"
                       disabled={isSubmitting}
-                      className="w-full rounded-none h-[52px] bg-foreground text-background hover:bg-primary transition-colors duration-200 disabled:opacity-60 disabled:cursor-not-allowed"
+                      className="w-full rounded-none bg-foreground text-background hover:bg-primary transition-colors duration-200 disabled:opacity-60 disabled:cursor-not-allowed"
                     >
-                      {isSubmitting ? 'Sending...' : 'Submit Advisory Request'}
+                      {isSubmitting ? 'Sending...' : 'Submit'}
                     </Button>
                   </form>
                 )}
@@ -273,10 +274,10 @@ export default function Contact() {
                       required
                       value={newsletterEmail}
                       onChange={(e) => setNewsletterEmail(e.target.value)}
-                      className="flex-grow rounded-none border-border/50 text-[14px] h-[48px]"
+                      className="flex-grow rounded-none border-border/50 text-[14px] h-9"
                       placeholder="Enter your email"
                     />
-                    <Button type="submit" variant="outline" className="rounded-none h-[48px] px-6 border-foreground/30 hover:border-foreground transition-colors duration-200">
+                    <Button type="submit" variant="outline" size="md" className="rounded-none border-foreground/30 hover:border-foreground transition-colors duration-200">
                       Subscribe
                     </Button>
                   </form>

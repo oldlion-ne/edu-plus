@@ -72,7 +72,7 @@ const STUDENT_PLANS: Plan[] = [
       { text: "Career Launchpad & placements portal", included: false },
     ],
     popular: false,
-    ctaText: "Start for Free",
+    ctaText: "Free",
     ctaLink: "/connect"
   },
   {
@@ -91,7 +91,7 @@ const STUDENT_PLANS: Plan[] = [
       { text: "Career Launchpad & resume optimizer", included: false },
     ],
     popular: false,
-    ctaText: "Enroll in Scholar",
+    ctaText: "Enroll",
     ctaLink: "/connect"
   },
   {
@@ -110,7 +110,7 @@ const STUDENT_PLANS: Plan[] = [
       { text: "Admissions scholarship matching assistance", included: true },
     ],
     popular: true,
-    ctaText: "Become a Champion",
+    ctaText: "Champion",
     ctaLink: "/connect"
   }
 ];
@@ -132,7 +132,7 @@ const INSTITUTE_PLANS: Plan[] = [
       { text: "Educator Academy teacher training tracks", included: false },
     ],
     popular: false,
-    ctaText: "Deploy Starter",
+    ctaText: "Starter",
     ctaLink: "/connect"
   },
   {
@@ -151,7 +151,7 @@ const INSTITUTE_PLANS: Plan[] = [
       { text: "Educator Academy certification slots (5 teachers)", included: true },
     ],
     popular: true,
-    ctaText: "Deploy Professional",
+    ctaText: "Professional",
     ctaLink: "/connect"
   },
   {
@@ -170,7 +170,7 @@ const INSTITUTE_PLANS: Plan[] = [
       { text: "Priority VIP admission fair university representation", included: true },
     ],
     popular: false,
-    ctaText: "Request Advisory",
+    ctaText: "Advisory",
     ctaLink: "/connect"
   }
 ];
@@ -364,6 +364,7 @@ export default function Pricing() {
                 <div className="border-t border-border/50 pt-6 mt-8">
                   <Button
                     asChild
+                    size="md"
                     variant={plan.popular ? "default" : "outline"}
                     className="w-full font-mono text-[10px] uppercase tracking-widest rounded-none"
                   >

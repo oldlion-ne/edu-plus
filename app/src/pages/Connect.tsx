@@ -82,7 +82,7 @@ const translations = {
   ctaStartingAt: "Starting at",
   ctaFreeLabel: "Discovery Call",
   ctaFreeSubText: "Free forever for initial discovery sessions",
-  ctaButtonText: "Book Free Advisory Consult",
+  ctaButtonText: "Book Free Session",
   
   // Tabs
   studentsLabel: "For Students",
@@ -93,22 +93,22 @@ const translations = {
   // Student data
   studentsTitle: "Chart Your Personal Academic & Career Path",
   studentsDesc: "Navigate academic choices, discover your passions, and understand how your strengths connect to real-world opportunities. From subject selection and career mapping to entrance exam strategies and higher studies planning, you gain a personal roadmap instead of generic advice.",
-  studentsCta: "Schedule Student Advisory",
+  studentsCta: "Student Advisory",
   
   // Parents data
   parentsTitle: "Empower Your Child Without the Pressure",
   parentsDesc: "Equip yourself with the tools, frameworks, and information needed to support your child's professional and personal growth. Our sessions help you decode rapidly changing education and career landscapes so that you can guide-not pressure-your child toward realistic, fulfilling paths.",
-  parentsCta: "Schedule Parent Consultation",
+  parentsCta: "Parent Consultation",
   
   // Seekers data
   seekersTitle: "Bridge the Gap Between Learning & Placement",
   seekersDesc: "Support your professional transition with structured career counseling, profile building, and targeted upskilling recommendations. Gain absolute clarity on your core strengths, international options, and the actions required to move from where you are to where you want to be.",
-  seekersCta: "Launch Placement Pathway",
+  seekersCta: "Placement Pathway",
   
   // Teachers data
   teachersTitle: "Evolve From Instructors Into Mentors",
   teachersDesc: "Enhance your classroom impact, mentorship capabilities, and academic leadership profile. Through reflective coaching, modern pedagogy training, and technology integration workshops, learn how to guide students not only to test success but to life readiness.",
-  teachersCta: "Register for Educator Mentorship",
+  teachersCta: "Educator Mentorship",
   
   // Roadmap milestones
   studentMilestone1: "Core Strengths & Passion Discovery",
@@ -541,7 +541,8 @@ export default function Connect() {
                           setSelectedAdvisor(defaultAdvisor || ADVISORS[0]);
                           handleBookAdvisory();
                         }}
-                        className="cursor-pointer rounded-none font-mono text-xs uppercase tracking-wider h-10 px-6"
+                        size="md"
+                        className="cursor-pointer rounded-none font-mono text-xs uppercase tracking-wider"
                       >
                         {t(stakeholder.ctaTextKey)}
                       </Button>
@@ -595,7 +596,8 @@ export default function Connect() {
                     setSelectedAdvisor(ADVISORS[0]);
                     handleBookAdvisory();
                   }}
-                  className="mt-6 gap-2 rounded-none font-mono text-xs uppercase tracking-wider h-10 w-full cursor-pointer"
+                  size="md"
+                  className="mt-6 gap-2 rounded-none font-mono text-xs uppercase tracking-wider w-full cursor-pointer"
                 >
                   {t('ctaButtonText')}
                   <ArrowRight className="size-4" />
@@ -674,9 +676,10 @@ export default function Connect() {
                       setSelectedAdvisor(ADVISORS[0]);
                       handleBookAdvisory();
                     }}
-                    className="font-mono text-xs uppercase tracking-wider h-9 px-4 shrink-0 rounded-none cursor-pointer"
+                    size="md"
+                    className="font-mono text-xs uppercase tracking-wider shrink-0 rounded-none cursor-pointer"
                   >
-                    Book Slot Now
+                    Book Slot
                   </Button>
                 </div>
 
@@ -752,7 +755,7 @@ export default function Connect() {
                       />
                     </div>
 
-                    <Button type="submit" disabled={isSubmitting} className="w-full rounded-none font-mono text-xs uppercase tracking-wider h-10 cursor-pointer">
+                    <Button type="submit" disabled={isSubmitting} size="md" className="w-full rounded-none font-mono text-xs uppercase tracking-wider cursor-pointer">
                       {isSubmitting ? 'Sending...' : t('submitButton')}
                     </Button>
                   </form>
@@ -782,10 +785,10 @@ export default function Connect() {
                         required
                         value={newsletterEmail}
                         onChange={(e) => setNewsletterEmail(e.target.value)}
-                        className="flex-grow font-mono text-xs rounded-none bg-background/50 border-border h-10 px-3"
+                        className="flex-grow font-mono text-xs rounded-none bg-background/50 border-border h-9 px-3"
                         placeholder={t('placeholderEmail')}
                       />
-                      <Button type="submit" variant="outline" className="rounded-none font-mono text-xs uppercase tracking-wider h-10 px-6 cursor-pointer">
+                      <Button type="submit" variant="outline" size="md" className="rounded-none font-mono text-xs uppercase tracking-wider cursor-pointer">
                         {t('subscribeButton')}
                       </Button>
                     </form>
@@ -946,9 +949,10 @@ export default function Connect() {
                 <Button
                   type="submit"
                   disabled={!selectedAdvisor || !selectedDate || !selectedTime}
-                  className="w-full rounded-none font-mono text-[10px] uppercase tracking-wider h-10 mt-2 cursor-pointer"
+                  size="md"
+                  className="w-full rounded-none font-mono text-[10px] uppercase tracking-wider mt-2 cursor-pointer"
                 >
-                  Confirm Booking
+                  Confirm
                 </Button>
               </div>
             </form>

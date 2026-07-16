@@ -196,8 +196,8 @@ export default function Programs() {
                   </BulletList>
                 </div>
 
-                <Button asChild className="rounded-none h-[52px] px-[28px] bg-foreground text-background hover:bg-primary transition-colors duration-200">
-                  <Link to="/contact" /* ui-ignore */>Request Advisory Consult</Link>
+                <Button asChild size="md" className="rounded-none bg-foreground text-background hover:bg-primary transition-colors duration-200">
+                  <Link to="/contact" /* ui-ignore */>Advisory</Link>
                 </Button>
                 </MagicCard>
               </div>

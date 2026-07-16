@@ -136,8 +136,8 @@ export default function SignatureExperiences() {
                   ))}
                 </BulletList>
                 {evt.active && (
-                  <Button asChild className="rounded-none h-[44px] px-6 bg-foreground text-background hover:bg-primary transition-colors duration-200">
-                    <Link to="/contact" /* ui-ignore */>Register Now</Link>
+                  <Button asChild size="md" className="rounded-none bg-foreground text-background hover:bg-primary transition-colors duration-200">
+                    <Link to="/contact" /* ui-ignore */>Register</Link>
                   </Button>
                 )}
               </div>
