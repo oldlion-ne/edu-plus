@@ -487,6 +487,10 @@ export default function Dashboard() {
     return allowed.includes(selectedRole || 'none');
   };
 
+  // True while we know a real user is logged in but the role hasn't been fetched yet.
+  // Use this to show a loading skeleton instead of "Access Restricted".
+  const isRoleResolving = !!user && !isSimulated && selectedRole === null;
+
   const filteredData = chartData.filter((item) => {
     const date = new Date(item.date)
     const referenceDate = new Date("2024-06-30")
@@ -672,7 +676,7 @@ export default function Dashboard() {
                 />
               </div>
 
-              {/* Dev role switcher — simulated sessions only */}
+              {/* Dev role switcher â simulated sessions only */}
               {isSimulated && (
                 <div className="border border-primary/20 bg-primary/5 p-3 rounded-none text-left space-y-2">
                   <span className="font-mono text-[9px] text-primary tracking-wider uppercase block font-bold">// DEV: Switch Role</span>
@@ -992,7 +996,7 @@ export default function Dashboard() {
                 {hasPermission(['admin', 'educator', 'resource_person']) ? (
                   <form onSubmit={handleCreateHubItem} className="space-y-5">
 
-                    {/* Cover Image Banner Uploader — 16:9, full width */}
+                    {/* Cover Image Banner Uploader â 16:9, full width */}
                     <div className="space-y-2">
                       <Label className="text-[10px] font-mono text-muted-foreground uppercase tracking-wider block">Heading Cover Image</Label>
                       {coverPreviewUrl ? (
@@ -1015,7 +1019,7 @@ export default function Dashboard() {
                         >
                           <UploadCloud className="size-7 text-muted-foreground/50" />
                           <span className="font-mono text-[9px] text-primary tracking-wider uppercase font-bold mt-1">Upload Cover Image (16:9)</span>
-                          <span className="text-[8px] text-muted-foreground">Recommended: 1200�-675px — JPEG, PNG, WEBP</span>
+                          <span className="text-[8px] text-muted-foreground">Recommended: 1200Ã-675px â JPEG, PNG, WEBP</span>
                           <input
                             id="cover-file-input"
                             type="file"
@@ -1142,6 +1146,10 @@ export default function Dashboard() {
                       {isUploading ? 'UPLOADING...' : 'PUBLISH RESOURCE'}
                     </Button>
                   </form>
+                ) : isRoleResolving ? (
+                  <div className="flex items-center justify-center py-16">
+                    <span className="font-mono text-[10px] text-muted-foreground tracking-widest uppercase animate-pulse">Verifying permissions...</span>
+                  </div>
                 ) : (
                   <Card className="p-8 text-center font-mono text-xs border border-border bg-card/30 rounded-none flex flex-col gap-2 py-8">
                     <span className="text-foreground font-semibold text-sm">Access Restricted</span>
@@ -1216,6 +1224,10 @@ export default function Dashboard() {
                       )}
                     </div>
                   </div>
+                ) : isRoleResolving ? (
+                  <div className="flex items-center justify-center py-16">
+                    <span className="font-mono text-[10px] text-muted-foreground tracking-widest uppercase animate-pulse">Verifying permissions...</span>
+                  </div>
                 ) : (
                   <Card className="p-8 text-center font-mono text-xs border border-border bg-card/30 rounded-none flex flex-col gap-2 py-8">
                     <span className="text-foreground font-semibold text-sm">Access Restricted</span>
@@ -1272,6 +1284,10 @@ export default function Dashboard() {
                         ))}
                       </div>
                     )}
+                  </div>
+                ) : isRoleResolving ? (
+                  <div className="flex items-center justify-center py-16">
+                    <span className="font-mono text-[10px] text-muted-foreground tracking-widest uppercase animate-pulse">Verifying permissions...</span>
                   </div>
                 ) : (
                   <Card className="p-8 text-center font-mono text-xs border border-border bg-card/30 rounded-none flex flex-col gap-2 py-8">

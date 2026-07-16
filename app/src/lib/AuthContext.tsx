@@ -38,11 +38,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         roleFetchedForRef.current = userId;
         return true;
       } else {
+        // Log the actual error so we can diagnose issues
+        console.warn('[AuthContext] fetchUserRole: no role row found or error', { userId, error });
         setRole('none');
         roleFetchedForRef.current = userId;
         return false;
       }
     } catch (err) {
+      console.error('[AuthContext] fetchUserRole: unexpected error', err);
       setRole('none');
       roleFetchedForRef.current = userId;
       return false;
@@ -122,7 +125,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const signIn = async (email: string, password: string) => {
     localStorage.removeItem('edu_plus_sim_session');
     roleFetchedForRef.current = null; // Reset so next auth event fetches fresh role
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+    // Explicitly fetch role after sign-in so we don't rely solely on the async
+    // onAuthStateChange event which can arrive before state is fully settled.
+    if (data?.user && !error) {
+      await fetchUserRole(data.user.id);
+    }
     return { error };
   };
 
