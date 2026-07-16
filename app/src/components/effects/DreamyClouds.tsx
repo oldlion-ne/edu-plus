@@ -30,24 +30,24 @@ const FRAGMENT_SHADER = /* glsl */ `
         
         // Layer 1: Wide, slow moving background structural bands
         float d1 = fract((rp.x + time * 0.05) * 2.0);
-        float band1 = step(0.6, d1);
+        float band1 = smoothstep(0.58, 0.62, d1);
         col = mix(col, bg * 1.5, band1 * 0.5); 
         
         // Layer 2: Mid-ground intersecting amber tinted geometric blocks
         float d2 = fract((rp.x + rp.y * 0.2 - time * 0.1) * 4.0);
-        float band2 = step(0.8, d2);
+        float band2 = smoothstep(0.78, 0.82, d2);
         col = mix(col, mix(bg, accent, 0.3), band2 * 0.6);
         
         // Layer 3: Foreground sharp amber accent lines
         float d3 = fract((rp.y * 0.5 - rp.x + time * 0.15) * 3.0);
-        float band3 = step(0.9, d3);
-        float edge3 = step(0.88, d3) - band3; // create a sharp highlight edge adjacent to band3
+        float band3 = smoothstep(0.88, 0.92, d3);
+        float edge3 = smoothstep(0.86, 0.90, d3) - band3; // create a sharp highlight edge adjacent to band3
         
         col = mix(col, accent, band3);
-        col = mix(col, lightEdge, edge3);
+        col = mix(col, lightEdge, max(0.0, edge3));
         
         // Layer 4: Vertical architectural pillars moving across
-        float pillar = step(0.85, fract((p.x - time * 0.08) * 1.5));
+        float pillar = smoothstep(0.83, 0.87, fract((p.x - time * 0.08) * 1.5));
         col = mix(col, bg * 0.8, pillar * 0.4); 
         
         gl_FragColor = vec4(col, 1.0);

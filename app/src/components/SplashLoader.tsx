@@ -36,10 +36,10 @@ const PageFlipBook = () => {
           {/* the turning page (now just a subtle entrance fade/slide) */}
           <motion.div
             className="absolute inset-y-0 right-0 w-1/2 [transform-origin:left_center] [transform-style:preserve-3d]"
-            initial={{ opacity: 0, y: 10 }}
-            animate={shouldReduceMotion ? { opacity: 1, y: 0 } : { opacity: 1, y: 0 }}
+            initial={shouldReduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
             transition={{
-              duration: 1.0,
+              duration: shouldReduceMotion ? 0 : 1.0,
               ease: "easeOut",
             }}
           >
