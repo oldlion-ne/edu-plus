@@ -96,7 +96,9 @@ const t = (key: keyof typeof translations) => translationMap.get(key) || '';
 /** A single item inside the desktop mega-panel */
 function PanelLink({ label, path, description }: { label: string; path: string; description: string }) {
   const location = useLocation();
-  const isActive = location.pathname.startsWith(path) && (path !== '/' || location.pathname === '/');
+  const isActive = path === '/' 
+    ? location.pathname === '/' 
+    : location.pathname === path || location.pathname.startsWith(`${path}/`);
 
   return (
     <NavLink

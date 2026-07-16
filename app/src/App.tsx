@@ -43,17 +43,24 @@ function App() {
     const hide = () => mounted && setShowSplash(false);
     
     // Safety fallback timeout
-    const timer = setTimeout(hide, 2000);
+    const fallbackTimer = setTimeout(hide, 2000);
+    let loadTimer: number | NodeJS.Timeout;
+
+    const handleLoad = () => {
+      loadTimer = setTimeout(hide, 800);
+    };
 
     if (document.readyState === 'complete') {
-      setTimeout(hide, 800);
+      handleLoad();
     } else {
-      window.addEventListener('load', () => setTimeout(hide, 800));
+      window.addEventListener('load', handleLoad);
     }
 
     return () => {
       mounted = false;
-      clearTimeout(timer);
+      clearTimeout(fallbackTimer);
+      clearTimeout(loadTimer);
+      window.removeEventListener('load', handleLoad);
     };
   }, []);
 
