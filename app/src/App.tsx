@@ -7,6 +7,7 @@ import AIChatAgent from './components/AIChatAgent';
 import { AuthProvider } from './lib/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import { ScrollContext } from './lib/ScrollContext';
+import { Toaster } from './components/ui/sonner';
 
 // Lazy-load all page components — each is only downloaded when its route is visited.
 // Dashboard (with Recharts) is never loaded until the user navigates to /dashboard.
@@ -18,9 +19,11 @@ const Council = lazy(() => import('./pages/Council'));
 const Guidance = lazy(() => import('./pages/Guidance'));
 const News = lazy(() => import('./pages/News'));
 const Contact = lazy(() => import('./pages/Contact'));
+const Connect = lazy(() => import('./pages/Connect'));
 const KnowledgeHub = lazy(() => import('./pages/KnowledgeHub'));
 const Dashboard = lazy(() => import('./pages/Dashboard'));
 const Login = lazy(() => import('./pages/Login'));
+const Pricing = lazy(() => import('./pages/Pricing'));
 
 // Minimal inline fallback — renders instantly, no layout shift
 const PageLoader = () => (
@@ -75,6 +78,7 @@ function App() {
   if (isDashboard) {
     return (
       <AuthProvider>
+        <Toaster position="top-right" richColors closeButton />
         <div className="relative h-[100dvh] w-full bg-background overflow-hidden [touch-action:none]">
           <Suspense fallback={<PageLoader />}>
             <Routes>
@@ -95,6 +99,7 @@ function App() {
 
   return (
     <AuthProvider>
+      <Toaster position="top-right" richColors closeButton />
       <ScrollContext.Provider value={{ scrollContainerRef }}>
         <div className="relative h-[100dvh] w-full bg-background flex flex-col overflow-hidden [touch-action:none]">
           {showChatAgent && <AIChatAgent />}
@@ -118,7 +123,9 @@ function App() {
                     <Route path="/news" element={<News />} />
                     <Route path="/news/:slug" element={<News />} />
                     <Route path="/contact" element={<Contact />} />
+                    <Route path="/connect" element={<Connect />} />
                     <Route path="/knowledge-hub" element={<KnowledgeHub />} />
+                    <Route path="/pricing" element={<Pricing />} />
                     <Route path="/login" element={<Login />} />
                   </Routes>
                 )}

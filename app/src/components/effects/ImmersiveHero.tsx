@@ -37,12 +37,14 @@ export default function ImmersiveHero({
     >
       {/* Parallax Background Layer (Subtle Gradient / Image) */}
       <motion.div
-        className="absolute inset-0 w-full h-full z-0 pointer-events-none transition-transform group-hover:scale-[1.03] duration-[1600ms] ease-[cubic-bezier(0.16,1,0.3,1)]"
+        className="absolute inset-0 w-full h-full z-0 pointer-events-none transition-transform group-hover:scale-[1.03]"
         style={{
            y: ySmooth,
            backgroundImage: bgImage ? `url(${bgImage})` : 'none',
-           backgroundPosition: bgPosition || 'center',
            backgroundSize: 'cover',
+           backgroundPosition: bgPosition || 'center',
+           transitionDuration: '1600ms',
+           transitionTimingFunction: 'cubic-bezier(0.16,1,0.3,1)'
         }}
       >
         {/* Very subtle ambient glow */}

@@ -1,18 +1,6 @@
-import React, { createContext, useContext, useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { supabase } from './supabaseClient';
-
-interface AuthContextType {
-  user: any | null;
-  role: 'admin' | 'educator' | 'resource_person' | 'none' | null;
-  loading: boolean;
-  isSimulated: boolean;
-  signIn: (email: string, password: string) => Promise<{ error: any }>;
-  signUp: (email: string, password: string, role: string) => Promise<{ error: any }>;
-  signOut: () => Promise<void>;
-  signInSimulated: (role: 'admin' | 'educator' | 'resource_person') => void;
-}
-
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
+import { AuthContext } from './useAuth';
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<any | null>(null);
@@ -21,40 +9,100 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [isSimulated, setIsSimulated] = useState(false);
 
   const roleFetchedForRef = useRef<string | null>(null);
+  const roleFetchGenerationRef = useRef<number>(0);
 
   // ─── Role fetch via SECURITY DEFINER RPC (bypasses RLS entirely) ─────────────
-  async function fetchUserRole(userId: string): Promise<boolean> {
+  async function fetchUserRole(userId: string, token?: string): Promise<boolean> {
+    const currentGeneration = ++roleFetchGenerationRef.current;
     try {
-      // Primary: use SECURITY DEFINER function — auth.uid() is always correct here
-      const { data: rpcRole, error: rpcError } = await supabase.rpc('get_my_role');
+      const fetchPromise = (async () => {
+        let accessToken = token;
+        if (!accessToken) {
+          try {
+            const authItem = localStorage.getItem('edu_plus_auth');
+            if (authItem) {
+              const parsed = JSON.parse(authItem);
+              accessToken = parsed.access_token;
+            }
+          } catch(e) {}
+        }
+        const headers: Record<string, string> = {
+          'apikey': import.meta.env.VITE_SUPABASE_ANON_PUBLIC_KEY,
+          'Content-Type': 'application/json'
+        };
+        if (accessToken) {
+          headers['Authorization'] = `Bearer ${accessToken}`;
+        }
 
-      if (!rpcError && rpcRole && rpcRole !== 'none') {
-        setRole(rpcRole as any);
-        roleFetchedForRef.current = userId;
-        return true;
-      }
+        // Primary: use SECURITY DEFINER function via REST API
+        try {
+          const rpcRes = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/rest/v1/rpc/get_my_role`, {
+            method: 'POST',
+            headers
+          });
+          if (rpcRes.ok) {
+            const rpcRole = await rpcRes.json();
+            if (rpcRole && rpcRole !== 'none') {
+              if (roleFetchGenerationRef.current === currentGeneration) {
+                setRole(rpcRole as any);
+                roleFetchedForRef.current = userId;
+              }
+              return true;
+            }
+          }
+        } catch (e) {
+          console.warn('RPC fetch failed', e);
+        }
 
-      // Fallback: direct table query
-      const { data, error } = await supabase
-        .from('user_roles')
-        .select('role')
-        .eq('id', userId)
-        .single();
+        // Fallback: direct table query via REST API
+        try {
+          const tableRes = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/rest/v1/user_roles?id=eq.${userId}&select=role`, {
+            method: 'GET',
+            headers
+          });
+          if (tableRes.ok) {
+            const tableData = await tableRes.json();
+            if (tableData && tableData.length > 0) {
+              if (roleFetchGenerationRef.current === currentGeneration) {
+                setRole(tableData[0].role as any);
+                roleFetchedForRef.current = userId;
+              }
+              return true;
+            }
+          }
+        } catch (e) {
+          console.warn('Table fetch failed', e);
+        }
 
-      if (data && !error) {
-        setRole(data.role as any);
-        roleFetchedForRef.current = userId;
-        return true;
-      }
+        if (roleFetchGenerationRef.current === currentGeneration) {
+          console.warn('[AuthContext] fetchUserRole: no role found');
+          setRole('none');
+          roleFetchedForRef.current = userId;
+        }
+        return false;
+      })();
 
-      console.warn('[AuthContext] fetchUserRole: no role found', { userId, rpcError, error });
-      setRole('none');
-      roleFetchedForRef.current = userId;
-      return false;
+      let timeoutId: NodeJS.Timeout;
+      const timeoutPromise = new Promise<boolean>((resolve) => {
+        timeoutId = setTimeout(() => {
+          if (roleFetchGenerationRef.current === currentGeneration) {
+            console.warn('[AuthContext] fetchUserRole: timeout reached, assuming none');
+            setRole('none');
+            roleFetchedForRef.current = userId;
+          }
+          resolve(false);
+        }, 5000);
+      });
+
+      const result = await Promise.race([fetchPromise, timeoutPromise]);
+      clearTimeout(timeoutId!);
+      return result;
     } catch (err) {
       console.error('[AuthContext] fetchUserRole: unexpected error', err);
-      setRole('none');
-      roleFetchedForRef.current = userId;
+      if (roleFetchGenerationRef.current === currentGeneration) {
+        setRole('none');
+        roleFetchedForRef.current = userId;
+      }
       return false;
     }
   }
@@ -99,7 +147,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
         if (session?.user) {
           setUser(session.user);
-          await fetchUserRole(session.user.id);
+          await fetchUserRole(session.user.id, session.access_token);
         } else {
           setUser(null);
           setRole(null);
@@ -113,12 +161,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
     };
 
-    // Race against a 5s timeout so the loading screen never hangs forever
+    // Race against a 2.5s timeout so the loading screen never hangs forever
     const timeout = new Promise<void>((resolve) => setTimeout(() => {
-      console.warn('Auth initialization timed out - forcing loading=false');
+      console.info('[AuthContext] Auth initialization timed out - forcing loading=false');
       setLoading(false);
       resolve();
-    }, 5000));
+    }, 2500));
 
     Promise.race([initializeAuth(), timeout]);
 
@@ -130,7 +178,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         setUser(session.user);
         // Only refetch if this is a different user or role hasn't been fetched yet
         if (roleFetchedForRef.current !== session.user.id) {
-          await fetchUserRole(session.user.id);
+          await fetchUserRole(session.user.id, session.access_token);
         }
       } else {
         setUser(null);
@@ -151,7 +199,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     // Explicitly fetch role after sign-in so we don't rely solely on the async
     // onAuthStateChange event which can arrive before state is fully settled.
     if (data?.user && !error) {
-      await fetchUserRole(data.user.id);
+      await fetchUserRole(data.user.id, data.session?.access_token);
     }
     return { error };
   };
@@ -198,10 +246,4 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       {children}
     </AuthContext.Provider>
   );
-};
-
-export const useAuth = () => {
-  const context = useContext(AuthContext);
-  if (!context) throw new Error('useAuth must be used within AuthProvider');
-  return context;
 };

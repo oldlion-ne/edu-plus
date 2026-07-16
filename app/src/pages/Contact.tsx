@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { supabase } from '../lib/supabaseClient';
+import { toast } from 'sonner';
 import { PageHero } from '../components/ui/page-hero';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
@@ -15,10 +15,13 @@ import {
   SelectValue,
 } from '../components/ui/select';
 
+const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL as string;
+const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_PUBLIC_KEY as string;
+const REST_TIMEOUT_MS = 10000;
+
 export default function Contact() {
   const [submitted, setSubmitted] = useState(false);
   const [subscribed, setSubscribed] = useState(false);
-  const [submitError, setSubmitError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
@@ -30,38 +33,82 @@ export default function Contact() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSubmitError(null);
     setIsSubmitting(true);
+    const toastId = toast.loading('Sending your inquiry...');
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), REST_TIMEOUT_MS);
     try {
-      const { error } = await supabase.from('contact_messages').insert({
-        name: formData.name,
-        email: formData.email,
-        profile: formData.profile,
-        message: formData.message,
-        status: 'unread',
+      // Use direct fetch to avoid Supabase auth-init delay on unauthenticated pages
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/contact_messages`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'apikey': SUPABASE_ANON_KEY,
+          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+          'Prefer': 'return=minimal',
+        },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          profile: formData.profile,
+          message: formData.message,
+          status: 'unread',
+        }),
+        signal: controller.signal,
       });
-      if (error) throw error;
+      if (!res.ok) {
+        const errBody = await res.text();
+        console.error('[Contact] Supabase error:', errBody);
+        throw new Error(`Submission failed (HTTP ${res.status})`);
+      }
+      toast.success('Inquiry sent! We\'ll be in touch within 24 hours.', { id: toastId });
       setSubmitted(true);
       setFormData({ name: '', email: '', profile: 'student', message: '' });
       setTimeout(() => setSubmitted(false), 6000);
     } catch (err: any) {
-      console.error('Error sending message to Supabase database:', err);
-      setSubmitError(err?.message || 'Failed to send message. Please try again or email us directly.');
+      console.error('[Contact] Submit error:', err);
+      const isTimeout = err.name === 'AbortError';
+      const msg = isTimeout ? 'Request timed out. Please try again.' : 'Failed to send. Please email us directly.';
+      toast.error(msg, { id: toastId });
     } finally {
+      clearTimeout(timeoutId);
       setIsSubmitting(false);
     }
   };
 
   const handleSubscribe = async (e: React.FormEvent) => {
     e.preventDefault();
+    const toastId = toast.loading('Subscribing...');
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), REST_TIMEOUT_MS);
     try {
-      const { error } = await supabase.from('newsletter_subscribers').insert({ email: newsletterEmail });
-      if (error) throw error;
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/newsletter_subscribers`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'apikey': SUPABASE_ANON_KEY,
+          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+          'Prefer': 'return=minimal',
+        },
+        body: JSON.stringify({ email: newsletterEmail }),
+        signal: controller.signal,
+      });
+      if (!res.ok && res.status !== 409) { // 409 = already subscribed
+        const errBody = await res.text();
+        console.error('[Contact] Subscribe error from Supabase:', errBody);
+        throw new Error(`Subscription failed (HTTP ${res.status})`);
+      }
+      toast.success('Subscribed! Welcome to our learning ecosystem.', { id: toastId });
       setSubscribed(true);
       setNewsletterEmail('');
       setTimeout(() => setSubscribed(false), 5000);
-    } catch (err) {
-      console.error('Error saving newsletter email:', err);
+    } catch (err: any) {
+      console.error('[Contact] Subscribe error:', err);
+      const isTimeout = err.name === 'AbortError';
+      const msg = isTimeout ? 'Request timed out. Please try again.' : 'Subscription failed. Please try again.';
+      toast.error(msg, { id: toastId });
+    } finally {
+      clearTimeout(timeoutId);
     }
   };
 
@@ -73,7 +120,7 @@ export default function Contact() {
         eyebrow="Connect With Us"
         title="Contact &amp; Locations"
         illustration={editorialIllustrations.contact}
-        description="Whether you seek strategic collaboration, student enrollment, counselor support, or training resources — we are here to support you."
+        description="Whether you seek strategic collaboration, student enrollment, counselor support, or training resources - we are here to support you."
       />
 
       {/* ── Contact Info & Form Grid ── */}
@@ -131,11 +178,6 @@ export default function Contact() {
                   </div>
                 ) : (
                   <form onSubmit={handleSubmit} className="space-y-6">
-                    {submitError && (
-                      <div className="text-[13px] text-destructive bg-destructive/5 p-4 border border-destructive/20">
-                        {submitError}
-                      </div>
-                    )}
                     <div className="grid md:grid-cols-2 gap-6">
                       <div className="space-y-2">
                         <Label htmlFor="contact-name" className="text-[13px] font-medium text-muted-foreground">
