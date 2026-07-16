@@ -169,15 +169,15 @@ export default function KnowledgeHub() {
         {loading ? (
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-16">
             {[1, 2, 3, 4, 5, 6].map((i) => (
-              <div key={i} className="flex flex-col gap-4 p-8 border border-border/30">
-                <div className="aspect-[3/2] w-full bg-secondary/50 animate-pulse"></div>
+              <div key={i} className="flex flex-col gap-4 p-8 border border-border/30 rounded-none">
+                <div className="aspect-[3/2] w-full bg-secondary/50"></div>
                 <div className="flex-1 flex flex-col gap-3 mt-2">
-                  <div className="w-1/4 h-3 bg-secondary animate-pulse"></div>
-                  <div className="w-3/4 h-5 bg-secondary animate-pulse mt-1"></div>
-                  <div className="w-full h-4 bg-secondary animate-pulse mt-2"></div>
-                  <div className="w-2/3 h-4 bg-secondary animate-pulse"></div>
+                  <div className="w-1/4 h-3 bg-secondary"></div>
+                  <div className="w-3/4 h-5 bg-secondary mt-1"></div>
+                  <div className="w-full h-4 bg-secondary mt-2"></div>
+                  <div className="w-2/3 h-4 bg-secondary"></div>
                 </div>
-                <div className="w-24 h-4 bg-secondary animate-pulse mt-4"></div>
+                <div className="w-24 h-4 bg-secondary mt-4"></div>
               </div>
             ))}
           </div>
@@ -214,6 +214,14 @@ export default function KnowledgeHub() {
                     <div className="aspect-[3/2] w-full overflow-hidden bg-border/30">
                       <img
                         src={`https://img.youtube.com/vi/${youtubeId}/mqdefault.jpg`}
+                        alt={item.title}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                  ) : item.cover_image_url ? (
+                    <div className="aspect-[3/2] w-full overflow-hidden bg-border/30">
+                      <img
+                        src={item.cover_image_url}
                         alt={item.title}
                         className="w-full h-full object-cover"
                       />
