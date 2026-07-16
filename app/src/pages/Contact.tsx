@@ -18,6 +18,8 @@ import {
 export default function Contact() {
   const [submitted, setSubmitted] = useState(false);
   const [subscribed, setSubscribed] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -28,6 +30,8 @@ export default function Contact() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setSubmitError(null);
+    setIsSubmitting(true);
     try {
       const { error } = await supabase.from('contact_messages').insert({
         name: formData.name,
@@ -39,9 +43,12 @@ export default function Contact() {
       if (error) throw error;
       setSubmitted(true);
       setFormData({ name: '', email: '', profile: 'student', message: '' });
-      setTimeout(() => setSubmitted(false), 5000);
-    } catch (err) {
+      setTimeout(() => setSubmitted(false), 6000);
+    } catch (err: any) {
       console.error('Error sending message to Supabase database:', err);
+      setSubmitError(err?.message || 'Failed to send message. Please try again or email us directly.');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -124,6 +131,11 @@ export default function Contact() {
                   </div>
                 ) : (
                   <form onSubmit={handleSubmit} className="space-y-6">
+                    {submitError && (
+                      <div className="text-[13px] text-destructive bg-destructive/5 p-4 border border-destructive/20">
+                        {submitError}
+                      </div>
+                    )}
                     <div className="grid md:grid-cols-2 gap-6">
                       <div className="space-y-2">
                         <Label htmlFor="contact-name" className="text-[13px] font-medium text-muted-foreground">
@@ -190,8 +202,12 @@ export default function Contact() {
                       />
                     </div>
 
-                    <Button type="submit" className="w-full rounded-none h-[52px] bg-foreground text-background hover:bg-primary transition-colors duration-200">
-                      Submit Advisory Request
+                    <Button
+                      type="submit"
+                      disabled={isSubmitting}
+                      className="w-full rounded-none h-[52px] bg-foreground text-background hover:bg-primary transition-colors duration-200 disabled:opacity-60 disabled:cursor-not-allowed"
+                    >
+                      {isSubmitting ? 'Sending...' : 'Submit Advisory Request'}
                     </Button>
                   </form>
                 )}
