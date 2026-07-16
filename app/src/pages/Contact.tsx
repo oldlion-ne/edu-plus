@@ -17,6 +17,7 @@ import {
 
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL as string;
 const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_PUBLIC_KEY as string;
+const REST_TIMEOUT_MS = 10000;
 
 export default function Contact() {
   const [submitted, setSubmitted] = useState(false);
@@ -34,6 +35,8 @@ export default function Contact() {
     e.preventDefault();
     setIsSubmitting(true);
     const toastId = toast.loading('Sending your inquiry...');
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), REST_TIMEOUT_MS);
     try {
       // Use direct fetch to avoid Supabase auth-init delay on unauthenticated pages
       const res = await fetch(`${SUPABASE_URL}/rest/v1/contact_messages`, {
@@ -51,10 +54,12 @@ export default function Contact() {
           message: formData.message,
           status: 'unread',
         }),
+        signal: controller.signal,
       });
       if (!res.ok) {
         const errBody = await res.text();
-        throw new Error(errBody || `HTTP ${res.status}`);
+        console.error('[Contact] Supabase error:', errBody);
+        throw new Error(`Submission failed (HTTP ${res.status})`);
       }
       toast.success('Inquiry sent! We\'ll be in touch within 24 hours.', { id: toastId });
       setSubmitted(true);
@@ -62,8 +67,11 @@ export default function Contact() {
       setTimeout(() => setSubmitted(false), 6000);
     } catch (err: any) {
       console.error('[Contact] Submit error:', err);
-      toast.error(err?.message || 'Failed to send. Please email us directly.', { id: toastId });
+      const isTimeout = err.name === 'AbortError';
+      const msg = isTimeout ? 'Request timed out. Please try again.' : 'Failed to send. Please email us directly.';
+      toast.error(msg, { id: toastId });
     } finally {
+      clearTimeout(timeoutId);
       setIsSubmitting(false);
     }
   };
@@ -71,6 +79,8 @@ export default function Contact() {
   const handleSubscribe = async (e: React.FormEvent) => {
     e.preventDefault();
     const toastId = toast.loading('Subscribing...');
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), REST_TIMEOUT_MS);
     try {
       const res = await fetch(`${SUPABASE_URL}/rest/v1/newsletter_subscribers`, {
         method: 'POST',
@@ -81,10 +91,12 @@ export default function Contact() {
           'Prefer': 'return=minimal',
         },
         body: JSON.stringify({ email: newsletterEmail }),
+        signal: controller.signal,
       });
       if (!res.ok && res.status !== 409) { // 409 = already subscribed
         const errBody = await res.text();
-        throw new Error(errBody || `HTTP ${res.status}`);
+        console.error('[Contact] Subscribe error from Supabase:', errBody);
+        throw new Error(`Subscription failed (HTTP ${res.status})`);
       }
       toast.success('Subscribed! Welcome to our learning ecosystem.', { id: toastId });
       setSubscribed(true);
@@ -92,7 +104,11 @@ export default function Contact() {
       setTimeout(() => setSubscribed(false), 5000);
     } catch (err: any) {
       console.error('[Contact] Subscribe error:', err);
-      toast.error(err?.message || 'Subscription failed. Please try again.', { id: toastId });
+      const isTimeout = err.name === 'AbortError';
+      const msg = isTimeout ? 'Request timed out. Please try again.' : 'Subscription failed. Please try again.';
+      toast.error(msg, { id: toastId });
+    } finally {
+      clearTimeout(timeoutId);
     }
   };
 

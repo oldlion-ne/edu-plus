@@ -9,9 +9,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [isSimulated, setIsSimulated] = useState(false);
 
   const roleFetchedForRef = useRef<string | null>(null);
+  const roleFetchGenerationRef = useRef<number>(0);
 
   // ─── Role fetch via SECURITY DEFINER RPC (bypasses RLS entirely) ─────────────
   async function fetchUserRole(userId: string, token?: string): Promise<boolean> {
+    const currentGeneration = ++roleFetchGenerationRef.current;
     try {
       const fetchPromise = (async () => {
         let accessToken = token;
@@ -41,8 +43,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           if (rpcRes.ok) {
             const rpcRole = await rpcRes.json();
             if (rpcRole && rpcRole !== 'none') {
-              setRole(rpcRole as any);
-              roleFetchedForRef.current = userId;
+              if (roleFetchGenerationRef.current === currentGeneration) {
+                setRole(rpcRole as any);
+                roleFetchedForRef.current = userId;
+              }
               return true;
             }
           }
@@ -59,8 +63,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           if (tableRes.ok) {
             const tableData = await tableRes.json();
             if (tableData && tableData.length > 0) {
-              setRole(tableData[0].role as any);
-              roleFetchedForRef.current = userId;
+              if (roleFetchGenerationRef.current === currentGeneration) {
+                setRole(tableData[0].role as any);
+                roleFetchedForRef.current = userId;
+              }
               return true;
             }
           }
@@ -68,18 +74,22 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           console.warn('Table fetch failed', e);
         }
 
-        console.warn('[AuthContext] fetchUserRole: no role found');
-        setRole('none');
-        roleFetchedForRef.current = userId;
+        if (roleFetchGenerationRef.current === currentGeneration) {
+          console.warn('[AuthContext] fetchUserRole: no role found');
+          setRole('none');
+          roleFetchedForRef.current = userId;
+        }
         return false;
       })();
 
       let timeoutId: NodeJS.Timeout;
       const timeoutPromise = new Promise<boolean>((resolve) => {
         timeoutId = setTimeout(() => {
-          console.warn('[AuthContext] fetchUserRole: timeout reached, assuming none');
-          setRole('none');
-          roleFetchedForRef.current = userId;
+          if (roleFetchGenerationRef.current === currentGeneration) {
+            console.warn('[AuthContext] fetchUserRole: timeout reached, assuming none');
+            setRole('none');
+            roleFetchedForRef.current = userId;
+          }
           resolve(false);
         }, 5000);
       });
@@ -89,8 +99,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       return result;
     } catch (err) {
       console.error('[AuthContext] fetchUserRole: unexpected error', err);
-      setRole('none');
-      roleFetchedForRef.current = userId;
+      if (roleFetchGenerationRef.current === currentGeneration) {
+        setRole('none');
+        roleFetchedForRef.current = userId;
+      }
       return false;
     }
   }

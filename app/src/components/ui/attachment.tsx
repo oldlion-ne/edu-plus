@@ -16,10 +16,22 @@ function Attachment({
   file,
   onRemove,
   isUploading,
-  progress = 0,
+  progress,
   ...props
 }: AttachmentProps) {
   const isImage = file.type?.startsWith("image/")
+
+  const [previewUrl, setPreviewUrl] = React.useState<string | null>(null)
+
+  React.useEffect(() => {
+    if (isImage && file instanceof File) {
+      const url = URL.createObjectURL(file)
+      setPreviewUrl(url)
+      return () => URL.revokeObjectURL(url)
+    } else if (isImage && !(file instanceof File) && file.url) {
+      setPreviewUrl(file.url)
+    }
+  }, [file, isImage])
 
   return (
     <div
@@ -32,15 +44,12 @@ function Attachment({
     >
       <div className="flex h-10 w-10 shrink-0 items-center justify-center bg-muted text-muted-foreground border border-border/50">
         {isImage ? (
-          file instanceof File ? (
+          previewUrl ? (
             <img 
-              src={URL.createObjectURL(file)} 
+              src={previewUrl} 
               alt={file.name} 
               className="h-full w-full object-cover" 
-              onLoad={(e) => URL.revokeObjectURL((e.target as HTMLImageElement).src)}
             />
-          ) : file.url ? (
-            <img src={file.url} alt={file.name} className="h-full w-full object-cover" />
           ) : (
             <HugeiconsIcon icon={Image01Icon} strokeWidth={1.5} className="size-5" />
           )
@@ -58,13 +67,16 @@ function Attachment({
             {(file.size / 1024 / 1024).toFixed(2)} MB
           </span>
         )}
-        {isUploading && (
+        {isUploading && typeof progress === "number" && (
           <div className="h-1 w-full bg-muted mt-1 overflow-hidden">
             <div 
-              className="h-full bg-primary transition-all duration-300"
-              style={{ width: `${progress}%` }}
+              className="h-full bg-primary transition-[width] duration-300"
+              style={{ width: `${Math.min(100, Math.max(0, progress))}%` }}
             />
           </div>
+        )}
+        {isUploading && progress === undefined && (
+          <span className="text-[10px] text-muted-foreground mt-1">Uploading...</span>
         )}
       </div>
 
@@ -72,7 +84,7 @@ function Attachment({
         <button
           type="button"
           onClick={onRemove}
-          className="absolute -right-2 -top-2 flex h-5 w-5 items-center justify-center bg-background border border-border text-muted-foreground opacity-0 transition-opacity hover:text-foreground group-hover:opacity-100 focus:opacity-100"
+          className="absolute -right-2 -top-2 flex h-5 w-5 items-center justify-center bg-background border border-border text-muted-foreground transition-colors hover:text-foreground"
           aria-label="Remove attachment"
         >
           <HugeiconsIcon icon={Cancel01Icon} strokeWidth={2} className="size-3" />

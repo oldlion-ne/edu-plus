@@ -591,7 +591,7 @@ export default function Dashboard() {
             <button className="w-full flex items-center gap-3 p-3 border border-border hover:border-primary/30 bg-card hover:bg-primary/5 focus:outline-none focus:ring-1 focus:ring-primary/70 focus:border-primary/30 transition-all duration-300 text-left cursor-pointer rounded-none group">
               <Avatar className="border border-primary/20 group-hover:border-primary shadow-[0_0_8px_oklch(var(--primary)/0.05)] rounded-none shrink-0 relative">
                 <AvatarImage src={user?.user_metadata?.avatar_url} className="rounded-none object-cover" />
-                <AvatarFallback className="bg-background text-primary font-mono font-bold text-xs rounded-none flex items-center justify-center">
+                <AvatarFallback className="bg-background text-primary font-sans font-bold text-xs rounded-none flex items-center justify-center">
                   {profileName.substring(0, 2).toUpperCase() || 'AD'}
                 </AvatarFallback>
                 <AvatarBadge className="bg-[#4ADE80] ring-card" />
@@ -1116,7 +1116,7 @@ export default function Dashboard() {
                                   setSelectedFile(e.target.files[0]);
                                 }
                               }}
-                              className="w-full bg-background border border-border text-xs px-4 py-1.5 outline-none focus:border-primary rounded-none text-foreground font-mono h-9 file:mr-4 file:py-1 file:px-2 file:rounded-none file:border-0 file:text-[10px] file:font-mono file:bg-primary file:text-primary-foreground hover:file:bg-foreground hover:file:text-background"
+                              className="w-full bg-background border border-border text-xs px-4 py-1.5 outline-none focus:border-primary rounded-none text-foreground font-sans h-9 file:mr-4 file:py-1 file:px-2 file:rounded-none file:border-0 file:text-[10px] file:font-sans file:bg-primary file:text-primary-foreground hover:file:bg-foreground hover:file:text-background"
                             />
                           </div>
                         ) : (
@@ -1292,7 +1292,7 @@ export default function Dashboard() {
                             </p>
                             {(msg as any).attachment_name && (
                               <div className="mt-4 pt-4 border-t border-border">
-                                <span className="font-mono text-[9px] text-muted-foreground uppercase tracking-wider block mb-2">Attached Document</span>
+                                <span className="font-sans text-[9px] text-muted-foreground uppercase tracking-wider block mb-2">Attached Document</span>
                                 <Attachment 
                                   file={{
                                     name: (msg as any).attachment_name,

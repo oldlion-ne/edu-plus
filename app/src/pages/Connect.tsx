@@ -28,21 +28,36 @@ import { ArrowRight, Check, MapPin, Phone, Mail } from 'lucide-react';
 
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL as string;
 const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_PUBLIC_KEY as string;
+const REST_TIMEOUT_MS = 10000;
 
 async function insertContactMessage(payload: Record<string, string>) {
-  const res = await fetch(`${SUPABASE_URL}/rest/v1/contact_messages`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'apikey': SUPABASE_ANON_KEY,
-      'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
-      'Prefer': 'return=minimal',
-    },
-    body: JSON.stringify(payload),
-  });
-  if (!res.ok) {
-    const errBody = await res.text();
-    throw new Error(errBody || `HTTP ${res.status}`);
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), REST_TIMEOUT_MS);
+  
+  try {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/contact_messages`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'apikey': SUPABASE_ANON_KEY,
+        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+        'Prefer': 'return=minimal',
+      },
+      body: JSON.stringify(payload),
+      signal: controller.signal,
+    });
+    if (!res.ok) {
+      const errBody = await res.text();
+      console.error('Supabase REST Error:', errBody);
+      throw new Error(`Submission failed (HTTP ${res.status}). Please try again later.`);
+    }
+  } catch (err: any) {
+    if (err.name === 'AbortError') {
+      throw new Error('Request timed out. Please check your connection and try again.');
+    }
+    throw err;
+  } finally {
+    clearTimeout(timeoutId);
   }
 }
 
@@ -344,9 +359,12 @@ export default function Connect() {
     message: ''
   });
   const [newsletterEmail, setNewsletterEmail] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (isSubmitting) return;
+    setIsSubmitting(true);
     const toastId = toast.loading('Sending your inquiry...');
     try {
       await insertContactMessage({
@@ -363,6 +381,8 @@ export default function Connect() {
     } catch (err: any) {
       console.error('Error sending message:', err);
       toast.error(err?.message || 'Failed to send. Please try again.', { id: toastId });
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -390,10 +410,10 @@ export default function Connect() {
         name: bookingName,
         email: bookingEmail,
         profile: mapStakeholderToProfile(activeTab),
-        message: `[SCHEDULED APPOINTMENT] Advisor: ${selectedAdvisor.name} | Date: ${selectedDate.toLocaleDateString('en-IN')} | Time: ${selectedTime} IST. Topic/Message: ${bookingMessage}`,
+        message: `[BOOKING REQUEST] Advisor: ${selectedAdvisor.name} | Date: ${selectedDate.toLocaleDateString('en-IN')} | Time: ${selectedTime} IST. Topic/Message: ${bookingMessage}`,
         status: 'unread',
       });
-      toast.success('Appointment scheduled!', { id: toastId, description: `${selectedAdvisor.name} on ${selectedDate.toLocaleDateString('en-IN')} at ${selectedTime}` });
+      toast.success('Booking request sent!', { id: toastId, description: `Awaiting confirmation for ${selectedAdvisor.name} on ${selectedDate.toLocaleDateString('en-IN')}` });
       setBookingSuccess(true);
       setTimeout(() => {
         setIsSchedulerOpen(false);
@@ -732,8 +752,8 @@ export default function Connect() {
                       />
                     </div>
 
-                    <Button type="submit" className="w-full rounded-none font-mono text-xs uppercase tracking-wider h-10 cursor-pointer">
-                      {t('submitButton')}
+                    <Button type="submit" disabled={isSubmitting} className="w-full rounded-none font-mono text-xs uppercase tracking-wider h-10 cursor-pointer">
+                      {isSubmitting ? 'Sending...' : t('submitButton')}
                     </Button>
                   </form>
                 )}

@@ -42,18 +42,17 @@ const Toaster = ({ ...props }: ToasterProps) => {
           "--error-text": "var(--card-foreground)",
           "--error-border": "var(--destructive)",
           "--border-radius": "0px",
-          fontFamily: "var(--font-mono, ui-monospace)",
           fontSize: "12px",
           letterSpacing: "0.03em",
         } as React.CSSProperties
       }
       toastOptions={{
         classNames: {
-          toast: "cn-toast font-mono text-xs rounded-none border shadow-none",
-          title: "font-mono text-xs font-medium tracking-wide",
+          toast: "cn-toast font-sans text-xs rounded-none border shadow-none",
+          title: "font-sans text-xs font-medium tracking-wide",
           description: "text-[10px] text-muted-foreground",
-          actionButton: "font-mono text-[10px] uppercase tracking-widest",
-          cancelButton: "font-mono text-[10px] uppercase tracking-widest",
+          actionButton: "font-sans text-[10px] uppercase tracking-widest",
+          cancelButton: "font-sans text-[10px] uppercase tracking-widest",
         },
       }}
       {...props}
