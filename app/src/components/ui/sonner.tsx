@@ -12,6 +12,7 @@ const Toaster = ({ ...props }: ToasterProps) => {
     <Sonner
       theme={theme as ToasterProps["theme"]}
       className="toaster group"
+      duration={4000}
       icons={{
         success: (
           <HugeiconsIcon icon={CheckmarkCircle02Icon} strokeWidth={2} className="size-4" />
@@ -31,15 +32,28 @@ const Toaster = ({ ...props }: ToasterProps) => {
       }}
       style={
         {
-          "--normal-bg": "var(--popover)",
-          "--normal-text": "var(--popover-foreground)",
+          "--normal-bg": "var(--card)",
+          "--normal-text": "var(--card-foreground)",
           "--normal-border": "var(--border)",
-          "--border-radius": "var(--radius)",
+          "--success-bg": "var(--card)",
+          "--success-text": "var(--card-foreground)",
+          "--success-border": "oklch(var(--primary) / 0.4)",
+          "--error-bg": "var(--card)",
+          "--error-text": "var(--card-foreground)",
+          "--error-border": "var(--destructive)",
+          "--border-radius": "0px",
+          fontFamily: "var(--font-mono, ui-monospace)",
+          fontSize: "12px",
+          letterSpacing: "0.03em",
         } as React.CSSProperties
       }
       toastOptions={{
         classNames: {
-          toast: "cn-toast",
+          toast: "cn-toast font-mono text-xs rounded-none border shadow-none",
+          title: "font-mono text-xs font-medium tracking-wide",
+          description: "text-[10px] text-muted-foreground",
+          actionButton: "font-mono text-[10px] uppercase tracking-widest",
+          cancelButton: "font-mono text-[10px] uppercase tracking-widest",
         },
       }}
       {...props}

@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router';
 import { useTranslation } from '../i18n/useTranslation';
 import { supabase } from '../lib/supabaseClient';
 import { toast } from 'sonner';
-import { useAuth } from '../lib/AuthContext';
+import { useAuth } from '../lib/useAuth';
 import DashboardOnboardingTour from '../components/DashboardOnboardingTour';
 import { NumberTicker } from '../components/magicui/NumberTicker';
 import {
@@ -17,7 +17,9 @@ import {
   Avatar,
   AvatarImage,
   AvatarFallback,
+  AvatarBadge,
 } from '../components/ui/avatar';
+import { Attachment } from '../components/ui/attachment';
 import { Area, AreaChart, CartesianGrid, XAxis } from 'recharts';
 
 import {
@@ -587,11 +589,12 @@ export default function Dashboard() {
         <Dialog open={isSettingsOpen} onOpenChange={setIsSettingsOpen}>
           <DialogTrigger asChild>
             <button className="w-full flex items-center gap-3 p-3 border border-border hover:border-primary/30 bg-card hover:bg-primary/5 focus:outline-none focus:ring-1 focus:ring-primary/70 focus:border-primary/30 transition-all duration-300 text-left cursor-pointer rounded-none group">
-              <Avatar className="border border-primary/20 group-hover:border-primary shadow-[0_0_8px_oklch(var(--primary)/0.05)] rounded-none shrink-0">
+              <Avatar className="border border-primary/20 group-hover:border-primary shadow-[0_0_8px_oklch(var(--primary)/0.05)] rounded-none shrink-0 relative">
                 <AvatarImage src={user?.user_metadata?.avatar_url} className="rounded-none object-cover" />
                 <AvatarFallback className="bg-background text-primary font-mono font-bold text-xs rounded-none flex items-center justify-center">
                   {profileName.substring(0, 2).toUpperCase() || 'AD'}
                 </AvatarFallback>
+                <AvatarBadge className="bg-[#4ADE80] ring-card" />
               </Avatar>
               <div className="flex-grow min-w-0">
                 <p className="font-sans text-xs font-semibold text-foreground truncate group-hover:text-primary transition-colors">
@@ -1102,19 +1105,26 @@ export default function Dashboard() {
                     {newHubItem.media_type === 'document_url' ? (
                       <div className="space-y-2">
                         <Label className="text-[10px] font-mono text-muted-foreground uppercase tracking-wider block">Document File Node</Label>
-                        <Input
-                          type="file"
-                          accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt"
-                          required={!selectedFile}
-                          onChange={e => {
-                            if (e.target.files && e.target.files[0]) {
-                              setSelectedFile(e.target.files[0]);
-                            }
-                          }}
-                          className="w-full bg-background border border-border text-xs px-4 py-1.5 outline-none focus:border-primary rounded-none text-foreground font-mono h-9 file:mr-4 file:py-1 file:px-2 file:rounded-none file:border-0 file:text-[10px] file:font-mono file:bg-primary file:text-primary-foreground hover:file:bg-foreground hover:file:text-background"
-                        />
-                        {selectedFile && (
-                          <p className="text-[10px] font-mono text-muted-foreground">Active payload: {selectedFile.name}</p>
+                        {!selectedFile ? (
+                          <div className="relative">
+                            <Input
+                              type="file"
+                              accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt"
+                              required
+                              onChange={e => {
+                                if (e.target.files && e.target.files[0]) {
+                                  setSelectedFile(e.target.files[0]);
+                                }
+                              }}
+                              className="w-full bg-background border border-border text-xs px-4 py-1.5 outline-none focus:border-primary rounded-none text-foreground font-mono h-9 file:mr-4 file:py-1 file:px-2 file:rounded-none file:border-0 file:text-[10px] file:font-mono file:bg-primary file:text-primary-foreground hover:file:bg-foreground hover:file:text-background"
+                            />
+                          </div>
+                        ) : (
+                          <Attachment 
+                            file={selectedFile} 
+                            onRemove={() => setSelectedFile(null)} 
+                            isUploading={isUploading}
+                          />
                         )}
                       </div>
                     ) : (
@@ -1280,6 +1290,20 @@ export default function Dashboard() {
                             <p className="font-sans text-xs text-muted-foreground leading-relaxed mt-4 pt-4 border-t border-border">
                               {msg.message}
                             </p>
+                            {(msg as any).attachment_name && (
+                              <div className="mt-4 pt-4 border-t border-border">
+                                <span className="font-mono text-[9px] text-muted-foreground uppercase tracking-wider block mb-2">Attached Document</span>
+                                <Attachment 
+                                  file={{
+                                    name: (msg as any).attachment_name,
+                                    url: (msg as any).attachment_url,
+                                    size: (msg as any).attachment_size || 2500000,
+                                    type: (msg as any).attachment_type || 'application/pdf'
+                                  }}
+                                  className="w-full sm:w-1/2"
+                                />
+                              </div>
+                            )}
                           </Card>
                         ))}
                       </div>

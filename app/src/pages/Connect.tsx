@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { toast } from 'sonner';
 import { AnimatedList } from '../components/magicui/AnimatedList';
 import ImmersiveHero from '../components/effects/ImmersiveHero';
 import { Button } from '../components/ui/button';
@@ -23,8 +24,27 @@ import {
   DialogTitle,
   DialogDescription,
 } from '../components/ui/dialog';
-import { supabase } from '../lib/supabaseClient';
 import { ArrowRight, Check, MapPin, Phone, Mail } from 'lucide-react';
+
+const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL as string;
+const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_PUBLIC_KEY as string;
+
+async function insertContactMessage(payload: Record<string, string>) {
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/contact_messages`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'apikey': SUPABASE_ANON_KEY,
+      'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+      'Prefer': 'return=minimal',
+    },
+    body: JSON.stringify(payload),
+  });
+  if (!res.ok) {
+    const errBody = await res.text();
+    throw new Error(errBody || `HTTP ${res.status}`);
+  }
+}
 
 const translations = {
   heroCategory: "Advisory Connect",
@@ -327,21 +347,22 @@ export default function Connect() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    const toastId = toast.loading('Sending your inquiry...');
     try {
-      const { error } = await supabase.from('contact_messages').insert({
+      await insertContactMessage({
         name: formData.name,
         email: formData.email,
         profile: formData.profile,
         message: formData.message,
-        status: 'unread'
+        status: 'unread',
       });
-      if (error) throw error;
-    } catch (err) {
-      console.error('Error sending message to Supabase database:', err);
-    } finally {
+      toast.success('Inquiry sent! We\'ll respond within 24 hours.', { id: toastId });
       setSubmitted(true);
       setFormData({ name: '', email: '', profile: 'student', message: '' });
       setTimeout(() => setSubmitted(false), 5000);
+    } catch (err: any) {
+      console.error('Error sending message:', err);
+      toast.error(err?.message || 'Failed to send. Please try again.', { id: toastId });
     }
   };
 
@@ -363,16 +384,16 @@ export default function Connect() {
   const handleScheduleConfirm = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!selectedAdvisor || !selectedDate || !selectedTime) return;
-
+    const toastId = toast.loading('Scheduling appointment...');
     try {
-      const { error } = await supabase.from('contact_messages').insert({
+      await insertContactMessage({
         name: bookingName,
         email: bookingEmail,
         profile: mapStakeholderToProfile(activeTab),
         message: `[SCHEDULED APPOINTMENT] Advisor: ${selectedAdvisor.name} | Date: ${selectedDate.toLocaleDateString('en-IN')} | Time: ${selectedTime} IST. Topic/Message: ${bookingMessage}`,
-        status: 'unread'
+        status: 'unread',
       });
-      if (error) throw error;
+      toast.success('Appointment scheduled!', { id: toastId, description: `${selectedAdvisor.name} on ${selectedDate.toLocaleDateString('en-IN')} at ${selectedTime}` });
       setBookingSuccess(true);
       setTimeout(() => {
         setIsSchedulerOpen(false);
@@ -382,8 +403,9 @@ export default function Connect() {
         setBookingMessage('');
         setSelectedTime('');
       }, 3500);
-    } catch (err) {
+    } catch (err: any) {
       console.error('Error confirming appointment:', err);
+      toast.error(err?.message || 'Failed to schedule. Please try again.', { id: toastId });
     }
   };
 
