@@ -19,6 +19,7 @@ interface KnowledgeItem {
   url: string;
   author_name: string;
   created_at: string;
+  cover_image_url?: string;
 }
 
 const CATEGORY_TABS = ['all', 'tutorial', 'podcast', 'webinar', 'study_material'] as const;
