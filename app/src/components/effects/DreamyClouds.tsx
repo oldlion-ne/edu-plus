@@ -24,9 +24,9 @@ const FRAGMENT_SHADER = /* glsl */ `
         // cool blue-grey where it falls into the underside.
         float below = cloudShape(p + vec2(0.0, -0.14));
         float lift = clamp((d - below) * 3.5 + 0.55, 0.0, 1.0);
-        // Nordic Lagom palette: charcoal shadow, soft amber/gold lit tops
-        vec3 shadowC = vec3(0.06, 0.06, 0.07);
-        vec3 litC = vec3(0.30, 0.25, 0.10);
+        // Nordic Lagom palette: deep charcoal shadow, candlelight amber lit tops
+        vec3 shadowC = vec3(0.05, 0.04, 0.03);
+        vec3 litC = vec3(0.55, 0.42, 0.10);
         return vec4(mix(shadowC, litC, lift), density);
       }
 
@@ -49,8 +49,8 @@ const FRAGMENT_SHADER = /* glsl */ `
         vec4 near = cloudLayer(uv, aspect, 2.1, 0.025, 0.50);
         col = mix(col, near.rgb, near.a);
 
-        // amber glow on cloud tops
-        col += near.a * smoothstep(0.8, 1.0, near.r) * 0.20;
+        // Candlelight bloom on bright cloud tops
+        col += near.a * smoothstep(0.75, 1.0, near.r) * 0.35;
 
         gl_FragColor = vec4(col, 1.0);
       }

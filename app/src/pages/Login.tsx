@@ -60,22 +60,13 @@ export default function Login() {
 
       {/* ── Left Brand Panel (shader + editorial text) ─────────────────── */}
       <div className="relative hidden md:flex md:w-[58%] flex-col overflow-hidden">
-        {/* Full-bleed shader */}
+        {/* Full-bleed shader — no overlay, shader itself is dark charcoal/amber */}
         <div className="absolute inset-0 z-0">
           <DreamyClouds className="w-full h-full" />
         </div>
 
-        {/* Dark gradient overlay so text is legible */}
-        <div
-          className="absolute inset-0 z-10"
-          style={{
-            background:
-              'linear-gradient(to bottom right, rgba(17,16,14,0.62) 0%, rgba(17,16,14,0.30) 60%, rgba(17,16,14,0.10) 100%)',
-          }}
-        />
-
-        {/* Content */}
-        <div className="relative z-20 flex flex-col h-full px-12 py-10">
+        {/* Content — text is always white since shader is always dark */}
+        <div className="relative z-10 flex flex-col h-full px-12 py-10">
 
           {/* Logo */}
           <div className="shrink-0">
@@ -90,20 +81,22 @@ export default function Login() {
             <div className="w-8 h-[2px] bg-[#FBBF24] mb-8" />
             <h2
               className="font-heading font-bold text-5xl xl:text-6xl text-white leading-[1.08] whitespace-pre-line"
-              aria-hidden="true"
             >
               {t('taglineHeading')}
             </h2>
-            <div className="w-full h-[1px] bg-white/15 my-6" />
-            <p className="text-white/60 text-base font-sans leading-relaxed max-w-xs">
+            <div className="w-full h-[1px] bg-white/20 my-6" />
+            <p className="text-white/75 text-base font-sans leading-relaxed max-w-xs">
               {t('taglineSub')}
             </p>
           </div>
 
-          {/* Bottom system note */}
-          <p className="shrink-0 text-[10px] font-sans tracking-widest uppercase text-white/30">
-            {t('systemNote')}
-          </p>
+          {/* Bottom system note — amber accent with white text, clearly readable */}
+          <div className="shrink-0 flex items-center gap-2">
+            <div className="w-1 h-3 bg-[#FBBF24]" />
+            <p className="text-[10px] font-sans tracking-[0.25em] uppercase text-white/80 font-medium">
+              {t('systemNote')}
+            </p>
+          </div>
 
         </div>
       </div>
@@ -123,10 +116,10 @@ export default function Login() {
 
           {/* Heading */}
           <div className="mb-8">
-            <h1 className="text-2xl font-semibold text-foreground tracking-tight">
+            <h1 className="font-heading text-2xl font-semibold text-foreground tracking-tight">
               {t('signIn')}
             </h1>
-            <p className="text-sm text-muted-foreground mt-1.5">
+            <p className="font-sans text-sm text-muted-foreground mt-1.5">
               Access your staff dashboard.
             </p>
           </div>
