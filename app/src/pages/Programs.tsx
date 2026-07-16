@@ -172,7 +172,7 @@ export default function Programs() {
                 className={selected === i ? 'h-full' : 'hidden'}
               >
                 <MagicCard 
-                  className="h-full border border-border/50 p-8 md:p-12 rounded-none bg-card/30 backdrop-blur-sm"
+                  className="h-full border border-border/50 p-8 md:p-12 rounded-none bg-card/30"
                   gradientColor="oklch(var(--primary) / 0.05)"
                 >
                 <span className="text-[13px] font-medium tracking-wide uppercase text-muted-foreground mb-3 block">

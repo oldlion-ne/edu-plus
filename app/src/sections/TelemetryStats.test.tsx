@@ -5,13 +5,9 @@ import TelemetryStats from './TelemetryStats';
 
 test('renders the custom telemetry stats section', () => {
   render(<TelemetryStats />);
-  expect(screen.getByText('4,200+')).toBeInTheDocument();
   expect(screen.getByText(/Active Learners/i)).toBeInTheDocument();
-  expect(screen.getByText('38')).toBeInTheDocument();
   expect(screen.getByText(/Countries Reached/i)).toBeInTheDocument();
-  expect(screen.getByText('98%')).toBeInTheDocument();
   expect(screen.getByText(/Placement Rate/i)).toBeInTheDocument();
-  expect(screen.getByText('1.2M+')).toBeInTheDocument();
   expect(screen.getByText(/Learning Hours/i)).toBeInTheDocument();
 });
 

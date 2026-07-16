@@ -1,8 +1,7 @@
 import { Link } from 'react-router';
 
-import { GridPattern } from '@/components/magicui/GridPattern';
 
-const links = [
+const navLinks = [
   { title: 'About',       href: '/about'    },
   { title: 'Programs',    href: '/programs' },
   { title: 'Council',     href: '/council'  },
@@ -11,28 +10,63 @@ const links = [
   { title: 'Connect',     href: '/connect'  },
 ];
 
+const legalLinks = [
+  { title: 'Terms of Service', href: '/legal#terms' },
+  { title: 'Privacy Policy',   href: '/legal#privacy' },
+  { title: 'Cookie Policy',    href: '/legal#cookies' },
+];
+
 export default function Footer() {
   return (
-    <footer className="relative border-t border-border bg-background py-12 overflow-hidden">
-      <GridPattern
-        width={30}
-        height={30}
-        x={-1}
-        y={-1}
-        className="[mask-image:linear-gradient(to_bottom,white,transparent,transparent)]"
-      />
-      <div className="relative z-10 mx-auto max-w-5xl px-6">
-        <div className="flex flex-wrap justify-between gap-6">
-          <span className="text-muted-foreground order-last block text-center text-sm md:order-first">
+    <footer className="relative border-t border-border bg-background pt-16 pb-16 overflow-x-clip font-sans">
+
+      <div className="relative z-10 mx-auto max-w-6xl px-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-8">
+          
+          {/* Brand Column */}
+          <div className="flex flex-col gap-4">
+            <span className="font-heading font-bold text-2xl text-foreground tracking-tight">Edu<span className="text-primary font-light">Plus</span></span>
+            <p className="text-muted-foreground text-sm max-w-xs leading-relaxed">
+              Empowering the next generation through structured, compliant, and progressive educational frameworks.
+            </p>
+          </div>
+
+          {/* Navigation Column */}
+          <div className="flex flex-col gap-4 md:border-l md:border-border md:pl-8">
+            <h4 className="font-sans text-[10px] text-foreground uppercase tracking-widest font-bold">Platform</h4>
+            <ul className="flex flex-col gap-3 p-0 m-0 list-none">
+              {navLinks.map((link) => (
+                <li key={link.href}>
+                  <Link to={link.href} className="text-muted-foreground text-sm hover:text-primary focus:outline-none focus:text-primary transition-colors">
+                    {link.title}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Legal Column */}
+          <div className="flex flex-col gap-4 md:border-l md:border-border md:pl-8">
+            <h4 className="font-sans text-[10px] text-foreground uppercase tracking-widest font-bold">Trust & Legal</h4>
+            <ul className="flex flex-col gap-3 p-0 m-0 list-none">
+              {legalLinks.map((link) => (
+                <li key={link.href}>
+                  <Link to={link.href} className="text-muted-foreground text-sm hover:text-primary focus:outline-none focus:text-primary transition-colors">
+                    {link.title}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+        </div>
+
+        {/* Bottom Bar */}
+        <div className="mt-16 pt-8 border-t border-border flex flex-col md:flex-row items-center justify-between gap-4">
+          <span className="text-muted-foreground/60 text-xs text-center md:text-left">
             © {new Date().getFullYear()} EduPlus Skills. All rights reserved.
           </span>
-          <div className="order-first flex flex-wrap justify-center gap-6 text-sm md:order-last">
-            {links.map((link) => (
-              <Link key={link.href} to={link.href} className="text-muted-foreground hover:text-primary focus:outline-none focus:text-primary block duration-150 transition-colors">
-                {link.title}
-              </Link>
-            ))}
-          </div>
+
         </div>
       </div>
     </footer>

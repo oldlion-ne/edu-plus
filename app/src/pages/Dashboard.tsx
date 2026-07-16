@@ -307,7 +307,7 @@ export default function Dashboard() {
           setUnreadMessagesCount(c => c + 1);
 
           // Trigger Sonar notification alert
-          toast(`[ALERT // NEW INQUIRY TRANSMITTED]`, {
+          toast(`New Inquiry Received`, {
             description: `Sender: ${newMsg.name} (${newMsg.profile})`,
             style: {
               background: 'oklch(var(--card))',
@@ -422,14 +422,21 @@ export default function Dashboard() {
       setCoverPreviewUrl('');
 
       fetchData();
-    } catch (err) {
-      console.error(err);
+    } catch (err: any) {
+      console.error('Content Upload Station Error:', err);
       if (uploadedPaths.length > 0) {
-        // Cleanup orphaned uploads on failure
-        supabase.storage.from('resources').remove(uploadedPaths).catch(console.error);
+        // Robust cleanup of orphaned uploads if database insert fails
+        supabase.storage.from('resources').remove(uploadedPaths)
+          .then(({ error: cleanupErr }) => {
+            if (cleanupErr) console.error('Failed to cleanup orphaned files:', cleanupErr);
+          })
+          .catch(console.error);
       }
+      
+      const errorMessage = err?.message || err?.error_description || err?.toString() || 'An unexpected error occurred during upload.';
+      
       toast.error('Upload Failed', {
-        description: 'Unauthorized role or empty input variables.',
+        description: errorMessage,
         style: { background: 'oklch(var(--card))', border: '1px solid oklch(var(--destructive)/0.3)', color: 'oklch(var(--foreground))', borderRadius: '0px' }
       });
     } finally {
@@ -594,7 +601,7 @@ export default function Dashboard() {
                 <AvatarFallback className="bg-background text-primary font-sans font-bold text-xs rounded-none flex items-center justify-center">
                   {profileName.substring(0, 2).toUpperCase() || 'AD'}
                 </AvatarFallback>
-                <AvatarBadge className="bg-[#4ADE80] ring-card" />
+                <AvatarBadge className="bg-primary ring-card" />
               </Avatar>
               <div className="flex-grow min-w-0">
                 <p className="font-sans text-xs font-semibold text-foreground truncate group-hover:text-primary transition-colors">
@@ -603,13 +610,7 @@ export default function Dashboard() {
                 <p className="font-mono text-[9px] text-muted-foreground truncate">
                   {user?.email}
                 </p>
-                <span className={`inline-block mt-1 px-1.5 py-0.5 text-[7px] font-mono rounded-none uppercase border font-bold tracking-widest ${
-                  selectedRole === 'admin'
-                    ? 'border-destructive/50 bg-destructive/10 text-destructive'
-                    : selectedRole === 'educator'
-                    ? 'border-[#22C55E]/50 bg-[#22C55E]/10 text-[#4ADE80]'
-                    : 'border-primary/50 bg-primary/10 text-primary'
-                }`}>
+                <span className={`inline-block mt-1 px-1.5 py-0.5 text-[7px] font-mono rounded-none uppercase border font-bold tracking-widest border-primary/50 bg-primary/10 text-primary`}>
                   {selectedRole ? selectedRole.replace('_', ' ') : 'NONE'}
                 </span>
               </div>
@@ -628,13 +629,7 @@ export default function Dashboard() {
               <div className="flex-grow min-w-0">
                 <DialogTitle className="text-foreground font-sans font-semibold text-base tracking-tight truncate">{profileName || 'Administrator'}</DialogTitle>
                 <p className="font-mono text-[10px] text-muted-foreground mt-0.5 truncate">{user?.email}</p>
-                <span className={`inline-block mt-1.5 px-1.5 py-0.5 text-[7px] font-mono rounded-none uppercase border font-bold tracking-widest ${
-                  selectedRole === 'admin'
-                    ? 'border-destructive/50 bg-destructive/10 text-destructive'
-                    : selectedRole === 'educator'
-                    ? 'border-[#22C55E]/50 bg-[#22C55E]/10 text-[#4ADE80]'
-                    : 'border-primary/50 bg-primary/10 text-primary'
-                }`}>
+                <span className={`inline-block mt-1.5 px-1.5 py-0.5 text-[7px] font-mono rounded-none uppercase border font-bold tracking-widest border-primary/50 bg-primary/10 text-primary`}>
                   {selectedRole ? selectedRole.replace('_', ' ') : 'NONE'}
                 </span>
               </div>
@@ -682,7 +677,7 @@ export default function Dashboard() {
               {/* Dev role switcher â simulated sessions only */}
               {isSimulated && (
                 <div className="border border-primary/20 bg-primary/5 p-3 rounded-none text-left space-y-2">
-                  <span className="font-mono text-[9px] text-primary tracking-wider uppercase block font-bold">// DEV: Switch Role</span>
+                  <span className="font-mono text-[9px] text-primary tracking-wider uppercase block font-bold">Developer Options: Switch Role</span>
                   <div className="grid grid-cols-3 gap-1.5">
                     {(['admin', 'educator', 'resource_person'] as const).map(role => (
                       <Button key={role} type="button" variant="outline" onClick={() => { signInSimulated(role); toast.success(`Role set to ${role}`, { style: { background: 'oklch(var(--card))', border: '1px solid oklch(var(--primary))', color: 'oklch(var(--foreground))', borderRadius: '0px' } }); setIsSettingsOpen(false); }} className={`py-1 text-center font-mono text-[8px] uppercase tracking-wider border cursor-pointer transition-all rounded-none focus:outline-none focus:ring-1 focus:ring-primary/70 ${selectedRole === role ? 'border-primary bg-primary/10 text-primary' : 'border-transparent text-muted-foreground hover:text-foreground hover:border-border'}`}>
@@ -717,8 +712,7 @@ export default function Dashboard() {
       {/* Onboarding Tour Spotlight */}
       {showTour && <DashboardOnboardingTour onComplete={() => setShowTour(false)} />}
 
-      {/* Global HUD elements */}
-      <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-primary/3 rounded-none blur-[140px] pointer-events-none" />
+      {/* Global HUD elements removed for minimalistic aesthetic */}
 
       {/* Mobile Drawer Header */}
       <div className="md:hidden flex items-center justify-between px-6 py-4 bg-card border-b border-border z-40 w-full font-sans">
@@ -753,7 +747,7 @@ export default function Dashboard() {
           <div className="flex items-center gap-3">
             <div className="flex items-center gap-2 px-2.5 py-1 bg-primary/10 border border-primary/20 text-primary font-mono text-[9px] uppercase tracking-wider select-none">
               <span>{t('dashboard.header.linkActive')}</span>
-              <span className="w-1.5 h-1.5 bg-primary rounded-none animate-pulse"></span>
+              <span className="w-1.5 h-1.5 bg-primary rounded-none opacity-80"></span>
             </div>
             
             <span className="text-muted-foreground/20 font-mono text-[10px] hidden sm:inline">|</span>
@@ -777,14 +771,14 @@ export default function Dashboard() {
               >
                 <Bell className="size-4" />
                 {unreadMessagesCount > 0 && (
-                  <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-primary rounded-none animate-ping"></span>
+                  <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-primary rounded-none"></span>
                 )}
               </Button>
 
               {showBellDropdown && (
                 <div className="absolute right-0 mt-3 w-80 bg-card border border-border p-4 shadow-xl z-50 rounded-none text-left font-sans animate-fade-in">
                   <h4 className="font-sans text-xs font-semibold text-foreground tracking-wide border-b border-border pb-2 mb-2">
-                    Inbound Inquiry Signals
+                    Inbound Inquiries
                   </h4>
                   <div className="space-y-2.5 max-h-60 overflow-y-auto pr-1">
                     {contactMessages.filter(m => m.status === 'unread').length === 0 ? (
@@ -804,7 +798,7 @@ export default function Dashboard() {
               )}
             </div>
 
-            <AnimatedThemeToggler variant="circle" duration={400} className="text-muted-foreground hover:text-primary transition-colors cursor-pointer" />
+            <AnimatedThemeToggler variant="square" duration={400} className="text-muted-foreground hover:text-primary transition-colors cursor-pointer" />
 
             <Button
               variant="outline"
@@ -856,7 +850,7 @@ export default function Dashboard() {
                     <div className="grid flex-1 gap-1 text-left">
                       <div className="font-mono text-[11px] font-bold text-primary tracking-[0.2em] uppercase">{t('dashboard.overview.systemAnalytics')}</div>
                       <div className="text-muted-foreground/50 font-mono text-[9px] uppercase tracking-wider">
-                        Showing interactive visitor metric influx nodes
+                        Showing visitor metric data
                       </div>
                     </div>
                     <Select value={timeRange} onValueChange={setTimeRange}>
@@ -1223,8 +1217,8 @@ export default function Dashboard() {
                                 onClick={() => handleToggleKbActive(doc.id, doc.is_active)}
                                 className={`px-2 py-1 text-[8px] font-mono rounded-none uppercase transition-all duration-300 cursor-pointer h-6 border ${
                                   doc.is_active
-                                    ? 'bg-[#22C55E]/10 border-[#22C55E]/40 text-[#4ADE80] hover:bg-[#22C55E]/20'
-                                    : 'bg-destructive/10 border-destructive/40 text-destructive hover:bg-destructive/20'
+                                    ? 'bg-primary/10 border-primary/40 text-primary hover:bg-primary/20'
+                                    : 'bg-muted/10 border-muted/40 text-muted-foreground hover:bg-muted/20'
                                 }`}
                               >
                                 {doc.is_active ? 'ACTIVE' : 'DEACTIVATED'}

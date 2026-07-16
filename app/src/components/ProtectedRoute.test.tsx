@@ -3,7 +3,7 @@ import { render, screen } from '@testing-library/react';
 import ProtectedRoute from './ProtectedRoute';
 import { MemoryRouter } from 'react-router';
 
-vi.mock('../lib/AuthContext', () => ({
+vi.mock('../lib/useAuth', () => ({
   useAuth: () => ({
     user: null,
     loading: true,
@@ -20,6 +20,6 @@ describe('ProtectedRoute', () => {
         </ProtectedRoute>
       </MemoryRouter>
     );
-    expect(screen.getByText(/DECRYPTING_CREDENTIALS/i)).toBeDefined();
+    expect(screen.getByText(/Authenticating/i)).toBeDefined();
   });
 });

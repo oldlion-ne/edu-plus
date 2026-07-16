@@ -24,7 +24,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
               const parsed = JSON.parse(authItem);
               accessToken = parsed.access_token;
             }
-          } catch(e) {}
+          } catch(e) {
+            // ignore empty block
+          }
         }
         const headers: Record<string, string> = {
           'apikey': import.meta.env.VITE_SUPABASE_ANON_PUBLIC_KEY,

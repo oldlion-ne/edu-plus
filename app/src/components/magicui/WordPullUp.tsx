@@ -1,3 +1,4 @@
+
 import { motion, type Variants } from "motion/react";
 import { cn } from "@/lib/utils";
 import React from "react";
@@ -29,13 +30,14 @@ export function WordPullUp({
   className,
   as: Component = "h2",
 }: WordPullUpProps) {
-  const MotionComponent = motion.create(Component as any);
+  const MotionComponent = React.useMemo(() => motion.create(Component as any), [Component]);
   
   // Split by words and spaces so that spaces remain outside the inline-block,
   // allowing native word wrapping to function perfectly.
   const tokens = words.match(/\S+|\s+/g) || [];
 
   return (
+    // eslint-disable-next-line react-hooks/static-components
     <MotionComponent
       variants={wrapperFramerProps}
       initial="hidden"

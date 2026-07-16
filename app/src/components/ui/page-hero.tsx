@@ -50,7 +50,10 @@ export function PageHero({
               </span>
             </FadeIn>
             <FadeIn delay={0.2}>
-              <h1 className="mb-6 text-3xl font-medium leading-[1.15] tracking-tight text-foreground md:text-4xl lg:text-5xl">
+              <h1 
+                className="mb-6 text-3xl font-medium leading-[1.15] tracking-tight text-foreground md:text-4xl lg:text-5xl"
+                aria-label={title}
+              >
                 {titleSuffixWords && titlePrefix ? (
                   <>
                     {/* Line 1: static — never moves */}
