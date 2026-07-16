@@ -1,4 +1,4 @@
-/* eslint-disable */
+
 import { motion, type HTMLMotionProps } from "motion/react";
 import React from "react";
 import { cn } from "@/lib/utils";
@@ -15,9 +15,10 @@ export function AuroraText({
   as: Component = "span",
   ...props
 }: AuroraTextProps) {
-  const MotionComponent = motion.create(Component as any);
+  const MotionComponent = React.useMemo(() => motion.create(Component as any), [Component]);
 
   return (
+    // eslint-disable-next-line react-hooks/static-components
     <MotionComponent
       className={cn(
         "bg-gradient-to-r from-primary via-primary/50 to-primary bg-clip-text text-transparent animate-aurora",

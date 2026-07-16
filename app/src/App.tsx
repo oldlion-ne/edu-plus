@@ -31,7 +31,7 @@ const Legal = lazy(() => import('./pages/Legal'));
 // Minimal inline fallback — renders instantly, no layout shift
 const PageLoader = () => (
   <div className="min-h-screen bg-background flex items-center justify-center">
-    <div className="w-8 h-1 bg-primary animate-pulse" />
+    <div className="w-8 h-1 bg-primary" />
   </div>
 );
 
@@ -39,10 +39,22 @@ function App() {
   const [showSplash, setShowSplash] = useState(true);
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setShowSplash(false);
-    }, 5000);
-    return () => clearTimeout(timer);
+    let mounted = true;
+    const hide = () => mounted && setShowSplash(false);
+    
+    // Safety fallback timeout
+    const timer = setTimeout(hide, 2000);
+
+    if (document.readyState === 'complete') {
+      setTimeout(hide, 800);
+    } else {
+      window.addEventListener('load', () => setTimeout(hide, 800));
+    }
+
+    return () => {
+      mounted = false;
+      clearTimeout(timer);
+    };
   }, []);
 
   const location = useLocation();

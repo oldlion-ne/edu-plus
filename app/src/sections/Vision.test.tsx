@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import { describe, it, expect } from 'vitest';
 import '@testing-library/jest-dom';
 import Vision from './Vision';
@@ -18,12 +18,16 @@ class IntersectionObserverMock {
 globalThis.IntersectionObserver = IntersectionObserverMock as unknown as typeof IntersectionObserver;
 
 describe('Vision Component', () => {
-  it('renders the mission and vision as semantic copy', () => {
+  it('renders the mission and vision as semantic copy', async () => {
     const { container } = render(<Vision />);
 
-    expect(screen.getByText('Our Mission')).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByText('Our Mission')).toBeVisible();
+    });
     expect(container.textContent).toMatch(/To become a leading skills development platform/i);
-    expect(screen.getByText('Our Vision')).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByText('Our Vision')).toBeVisible();
+    });
     expect(container.textContent).toMatch(/To empower individuals to acquire future-ready/i);
   });
 });

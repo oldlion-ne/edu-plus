@@ -96,7 +96,7 @@ const t = (key: keyof typeof translations) => translationMap.get(key) || '';
 /** A single item inside the desktop mega-panel */
 function PanelLink({ label, path, description }: { label: string; path: string; description: string }) {
   const location = useLocation();
-  const isActive = location.pathname === path;
+  const isActive = location.pathname.startsWith(path) && (path !== '/' || location.pathname === '/');
 
   return (
     <NavLink
@@ -156,7 +156,7 @@ export default function Navigation() {
   return (
     <nav
       ref={navRef}
-      className={`sticky top-0 left-0 z-50 w-full transition-all duration-500 bg-background/95 backdrop-blur-sm ${
+      className={`sticky top-0 left-0 z-50 w-full transition-all duration-500 bg-background/95 ${
         scrolled ? 'border-b border-border/60' : ''
       }`}
     >
@@ -165,7 +165,7 @@ export default function Navigation() {
         {/* ── Logo ── */}
         <Link
           to="/"
-          className="flex items-center gap-0 shrink-0 hover:opacity-80 transition-opacity duration-200 focus:outline-none"
+          className="flex items-center gap-0 shrink-0 hover:opacity-80 transition-opacity duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
           aria-label="EduPlus home"
         >
           <span className="font-heading font-bold text-xl text-foreground tracking-tight">{t('brandName')}</span>
