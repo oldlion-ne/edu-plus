@@ -67,6 +67,16 @@ export default function Footer() {
             © {new Date().getFullYear()} EduPlus Skills. All rights reserved.
           </span>
 
+          <div className="flex flex-col md:flex-row items-center justify-center md:justify-end gap-2 text-sm text-muted-foreground mt-4 md:mt-0">
+            <span className="flex items-center gap-1.5">
+              Fueled by code & coffee <span className="text-base leading-none">☕</span>
+            </span>
+            <span className="hidden md:inline text-border font-bold mx-1">•</span>
+            <span className="flex items-center gap-1.5">
+              Crafted by <a href="https://github.com/arra-core" target="_blank" rel="noopener noreferrer" className="text-foreground font-semibold hover:text-primary transition-colors">arra-core</a>
+              <span className="text-[10px] tracking-widest uppercase text-muted-foreground/80 font-bold ml-1">(Imphal — New Delhi)</span>
+            </span>
+          </div>
         </div>
       </div>
     </footer>
