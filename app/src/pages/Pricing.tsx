@@ -1,22 +1,18 @@
 import { useEffect, useState } from 'react';
-import ImmersiveHero from '../components/effects/ImmersiveHero';
+import { PageHero } from '../components/ui/page-hero';
 import { Button } from '../components/ui/button';
-import { BorderBeam } from '../components/magicui/BorderBeam';
-import { AnimatedList } from '../components/magicui/AnimatedList';
 import { Card } from '../components/ui/card';
 import { Check, HelpCircle, ArrowRight, User, Building, ShieldCheck, Sparkles } from 'lucide-react';
 import { Link } from 'react-router';
 import { cn } from '../lib/utils';
 import { Badge } from '../components/ui/badge';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '../components/ui/accordion';
+import { editorialIllustrations } from '../lib/editorialIllustrations';
 
 const translations = {
   heroCategory: "Investment in Excellence",
-  heroTitleNormal: "Scalable",
-  heroTitleHighlighted: "Pricing Plans",
+  heroTitleNormal: "Scalable Pricing Plans",
   heroDesc: "Empower your future or scale your institution. Transparent, value-driven plans designed to deliver real-world outcomes and skill growth.",
-  telemetryLeft: "FINANCIAL_SYSTEM // ACTIVE_INR",
-  telemetryRight: "PLANS_MATRIX // COHORT_SCALES",
   studentTab: "Student / Individual",
   instituteTab: "Institute / School",
   studentSubtitle: "Personalized pathways for career discovery and academic readiness",
@@ -247,44 +243,41 @@ export default function Pricing() {
   const activePlans = planType === 'student' ? STUDENT_PLANS : INSTITUTE_PLANS;
 
   return (
-    <div className="min-h-screen bg-background text-foreground pb-32 relative overflow-hidden">
-      {/* Decorative Glows */}
-      <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-primary/5 rounded-none blur-[120px] pointer-events-none" />
-      <div className="absolute bottom-1/4 right-1/4 w-[600px] h-[600px] bg-primary/3 rounded-none blur-[150px] pointer-events-none" />
+    <div className="min-h-screen bg-background text-foreground pb-32 relative">
 
-      {/* Immersive Top Hero Viewport */}
-      <ImmersiveHero
-        category={t('heroCategory')}
-        titleNormal={t('heroTitleNormal')}
-        titleHighlighted={t('heroTitleHighlighted')}
+      {/* Typographic Hero */}
+      <PageHero
+        eyebrow={t('heroCategory')}
+        title={t('heroTitleNormal')}
         description={t('heroDesc')}
+        illustration={editorialIllustrations.programs}
       />
 
-      <div className="max-w-[1200px] mx-auto px-6 md:px-12 relative z-10 mt-16">
+      <div className="max-w-[1440px] mx-auto px-6 md:px-12 relative z-10 mt-16">
         
         {/* Plan Type Selector Toggle */}
         <div className={`flex flex-col items-center justify-center mb-16 transition-all duration-1000 transform ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-          <div className="border border-border bg-card/65 p-1 flex items-center justify-center rounded-none mb-4">
+          <div className="border border-border bg-secondary p-1 flex items-center justify-center rounded-none mb-4">
             <button /* ui-ignore */
               onClick={() => setPlanType('student')}
               className={cn(
-                "px-6 py-2.5 font-mono text-xs uppercase tracking-wider transition-all duration-300 rounded-none cursor-pointer focus:outline-none focus:ring-1 focus:ring-[#7DF9FF]",
+                "px-6 py-2.5 text-[14px] font-medium transition-all duration-300 rounded-none cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground focus-visible:ring-offset-2 focus-visible:ring-offset-background",
                 planType === 'student'
-                  ? "bg-primary text-background font-bold shadow-[0_0_12px_oklch(var(--primary)/0.3)]"
+                  ? "bg-primary text-background font-bold shadow-none"
                   : "text-muted-foreground hover:text-foreground"
               )}
             >
               <div className="flex items-center gap-1.5 justify-center">
-                <User className="size-3.5" />
+                <User className="size-4" />
                 {t('studentTab')}
               </div>
             </button>
             <button /* ui-ignore */
               onClick={() => setPlanType('institute')}
               className={cn(
-                "px-6 py-2.5 font-mono text-xs uppercase tracking-wider transition-all duration-300 rounded-none cursor-pointer focus:outline-none focus:ring-1 focus:ring-[#7DF9FF]",
+                "px-6 py-2.5 text-[14px] font-medium transition-all duration-300 rounded-none cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground focus-visible:ring-offset-2 focus-visible:ring-offset-background",
                 planType === 'institute'
-                  ? "bg-primary text-background font-bold shadow-[0_0_12px_oklch(var(--primary)/0.3)]"
+                  ? "bg-primary text-background font-bold shadow-none"
                   : "text-muted-foreground hover:text-foreground"
               )}
             >
@@ -307,12 +300,12 @@ export default function Pricing() {
                 <div>
                   {/* Badge & Popular highlights */}
                   <div className="flex items-center justify-between mb-4 border-b border-border/60 pb-3">
-                    <span className="font-mono text-[10px] tracking-[0.2em] text-primary uppercase font-bold">
+                    <span className="text-[13px] font-medium tracking-wide text-primary uppercase">
                       {plan.name}
                     </span>
                     {plan.popular && (
-                      <Badge className="bg-primary text-background hover:bg-primary border-none rounded-none font-mono text-[9px] py-0 px-2 tracking-widest uppercase flex items-center gap-1">
-                        <Sparkles className="size-2.5 fill-background text-background" />
+                      <Badge className="bg-primary text-background hover:bg-primary border-none rounded-none text-[11px] py-0 px-2 uppercase flex items-center gap-1 font-medium">
+                        <Sparkles className="size-3 fill-background text-background" />
                         {t('popular')}
                       </Badge>
                     )}
@@ -321,12 +314,12 @@ export default function Pricing() {
                   {/* Price */}
                   <div className="my-6">
                     <div className="flex items-baseline gap-1 text-foreground">
-                      <span className="font-heading text-5xl font-semibold tracking-tight">{plan.price}</span>
-                      <span className="font-mono text-xs text-muted-foreground tracking-wider uppercase">
+                      <span className="text-4xl font-light tracking-tight">{plan.price}</span>
+                      <span className="text-[13px] font-medium text-muted-foreground uppercase">
                         {plan.price !== 'Custom' && `/ ${plan.period}`}
                       </span>
                     </div>
-                    <span className="text-[10px] font-mono text-muted-foreground block mt-1.5 uppercase tracking-wider">
+                    <span className="text-[11px] font-medium text-muted-foreground block mt-1.5 uppercase tracking-wide">
                       {plan.price === 'Custom' ? 'Tailored to school scale' : t('billedMonthly')}
                     </span>
                   </div>
@@ -337,27 +330,27 @@ export default function Pricing() {
 
                   {/* Features List */}
                   <div className="space-y-4 border-t border-border/50 pt-6">
-                    <h4 className="font-mono text-[10px] uppercase tracking-widest text-foreground font-semibold flex items-center gap-1">
-                      <ShieldCheck className="size-3.5 text-primary" /> {t('featuresHeader')}
+                    <h4 className="text-[12px] font-medium uppercase tracking-wide text-foreground flex items-center gap-1">
+                      <ShieldCheck className="size-4 text-primary" /> {t('featuresHeader')}
                     </h4>
-                    <AnimatedList className="space-y-3 font-sans text-xs">
+                    <ul className="space-y-3 text-[14px]">
                       {plan.features.map((feature, fIdx) => (
-                        <div
+                        <li
                           key={fIdx}
                           className={cn(
-                            "flex items-start gap-2.5 leading-normal",
-                            feature.included ? "text-muted-foreground" : "text-muted-foreground/30 line-through"
+                            "flex items-start gap-2.5 leading-relaxed",
+                            feature.included ? "text-muted-foreground" : "text-muted-foreground/40 line-through"
                           )}
                         >
                           {feature.included ? (
-                            <Check className="size-3.5 text-primary shrink-0 mt-0.5" />
+                            <Check className="size-4 text-primary shrink-0 mt-0.5" />
                           ) : (
-                            <span className="font-mono text-primary/40 shrink-0 mt-0.5 w-3.5 text-center">&bull;</span>
+                            <span className="text-primary/40 shrink-0 mt-0.5 w-4 text-center">&bull;</span>
                           )}
                           <span>{feature.text}</span>
-                        </div>
+                        </li>
                       ))}
-                    </AnimatedList>
+                    </ul>
                   </div>
                 </div>
 
@@ -366,7 +359,7 @@ export default function Pricing() {
                     asChild
                     size="md"
                     variant={plan.popular ? "default" : "outline"}
-                    className="w-full font-mono text-[10px] uppercase tracking-widest rounded-none"
+                    className="w-full text-[13px] font-medium uppercase tracking-wide rounded-none"
                   >
                     <Link to={plan.ctaLink} /* ui-ignore */>
                       {plan.ctaText}
@@ -380,14 +373,11 @@ export default function Pricing() {
             return (
               <div key={plan.id} className="relative flex flex-col h-full">
                 {plan.popular ? (
-                  <div className="relative h-full">
-                    <Card className="border border-primary/30 bg-card/45 backdrop-blur-sm rounded-none h-full flex flex-col justify-between p-6">
-                      {CardMarkup}
-                    </Card>
-                    <BorderBeam size={250} duration={12} delay={9} />
-                  </div>
+                  <Card className="border-t-2 border-t-primary border-x border-b border-border bg-card/30 rounded-none h-full flex flex-col justify-between p-6">
+                    {CardMarkup}
+                  </Card>
                 ) : (
-                  <Card className="border border-border bg-card/45 backdrop-blur-sm rounded-none h-full flex flex-col justify-between p-6">
+                  <Card className="border border-border bg-card/30 rounded-none h-full flex flex-col justify-between p-6">
                     {CardMarkup}
                   </Card>
                 )}
@@ -399,21 +389,21 @@ export default function Pricing() {
         {/* Detailed Program Coverage Section */}
         <section className="mt-32 border-t border-border/60 pt-20">
           <div className="max-w-3xl mb-16">
-            <span className="text-xs font-mono font-medium tracking-[0.3em] uppercase text-primary block mb-2">
-              COMPARSION // DOSSIER
+            <span className="text-[13px] font-medium tracking-wide uppercase text-muted-foreground block mb-4">
+              Program Coverage
             </span>
-            <h2 className="font-heading text-3xl md:text-5xl font-semibold tracking-tight text-foreground mb-4">
+            <h2 className="text-3xl sm:text-4xl font-light tracking-tight text-foreground mb-4">
               {t('comparisonTitle')}
             </h2>
-            <p className="font-sans text-muted-foreground text-sm leading-relaxed">
+            <p className="text-[16px] text-muted-foreground leading-relaxed max-w-[55ch]">
               {t('comparisonSubtitle')}
             </p>
           </div>
 
-          <div className="border border-border bg-card/25 backdrop-blur-sm overflow-x-auto rounded-none">
-            <table className="w-full border-collapse font-sans text-xs text-left min-w-[700px]">
+          <div className="border border-border bg-card/30 overflow-x-auto rounded-none">
+            <table className="w-full border-collapse text-[14px] text-left min-w-[700px]">
               <thead>
-                <tr className="border-b border-border bg-card/60 font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
+                <tr className="border-b border-border bg-secondary text-[12px] font-medium uppercase tracking-wide text-muted-foreground">
                   <th className="p-4 w-[250px]">Core Program</th>
                   {planType === 'student' ? (
                     <>
@@ -435,13 +425,13 @@ export default function Pricing() {
                   const values = planType === 'student' ? row.student : row.institute;
                   return (
                     <tr key={idx} className="hover:bg-muted/10 transition-colors">
-                      <td className="p-4 font-semibold text-foreground border-r border-border/40">
+                      <td className="p-4 font-medium text-foreground border-r border-border/50">
                         {row.program}
                       </td>
                       <td className="p-4 text-muted-foreground">
                         {values[0]}
                       </td>
-                      <td className="p-4 text-muted-foreground border-x border-border/40">
+                      <td className="p-4 text-muted-foreground border-x border-border/50">
                         {values[1]}
                       </td>
                       <td className="p-4 text-foreground font-medium">
@@ -459,18 +449,18 @@ export default function Pricing() {
         <section className="mt-32 border-t border-border/60 pt-20">
           <div className="max-w-3xl mx-auto">
             <div className="text-center mb-12">
-              <h2 className="font-heading text-3xl font-semibold text-foreground tracking-tight">
+              <h2 className="text-3xl sm:text-4xl font-light text-foreground tracking-tight">
                 {t('faqTitle')}
               </h2>
-              <p className="text-muted-foreground mt-3 text-sm">
+              <p className="text-[16px] text-muted-foreground mt-4 leading-relaxed max-w-[55ch] mx-auto">
                 {t('faqSubtitle')}
               </p>
             </div>
 
-            <div className="border border-border bg-card/40 p-6 backdrop-blur-sm">
-              <div className="mb-4 flex items-center gap-2">
-                <HelpCircle className="text-primary size-4" />
-                <h3 className="font-heading text-base font-semibold text-foreground tracking-tight">
+            <div className="border border-border bg-card/30 p-8 rounded-none">
+              <div className="mb-6 flex items-center gap-3 border-b border-border/50 pb-4">
+                <HelpCircle className="text-primary size-5" />
+                <h3 className="text-[18px] font-medium text-foreground">
                   Pricing & Policy Queries
                 </h3>
               </div>
@@ -484,9 +474,9 @@ export default function Pricing() {
                   <AccordionItem
                     key={faq.id}
                     value={faq.id}
-                    className="border border-border/40 bg-background/30 rounded-none not-last:border-b-0"
+                    className="border-b border-border/50 bg-transparent rounded-none"
                   >
-                    <AccordionTrigger className="cursor-pointer px-4 py-3.5 text-xs font-semibold hover:no-underline font-mono uppercase tracking-wider text-left text-foreground">
+                    <AccordionTrigger className="cursor-pointer py-4 text-[15px] font-medium hover:no-underline hover:text-primary transition-colors text-left text-foreground">
                       {faq.question}
                     </AccordionTrigger>
                     <AccordionContent className="px-4 pb-4">
@@ -499,9 +489,9 @@ export default function Pricing() {
               </Accordion>
             </div>
 
-            <p className="text-muted-foreground mt-12 text-center text-xs font-mono">
+            <p className="text-muted-foreground mt-12 text-center text-[14px]">
               {t('faqContactText')}
-              <Link to="/connect" className="text-primary font-semibold hover:text-[#7DF9FF] hover:underline focus:outline-none focus:ring-1 focus:ring-[#7DF9FF]">
+              <Link to="/connect" className="text-primary font-medium hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground focus-visible:ring-offset-2 focus-visible:ring-offset-background ml-1">
                 {t('faqContactLink')}
               </Link>
             </p>

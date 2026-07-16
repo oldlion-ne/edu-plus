@@ -81,7 +81,7 @@ describe('PageHero', () => {
       'lg:border-l',
       'lg:border-t-0',
     );
-    expect(artworkArea?.className).not.toMatch(/(?:^|\s)(?:rounded|shadow)/);
+    expect(artworkArea?.className).not.toMatch(/(?:^|\s)(?:rounded(?!-none)|shadow)/);
     expect(frame).toHaveClass(
       'max-w-xl',
       'rounded-none',
@@ -111,10 +111,10 @@ describe('Home Hero', () => {
       }),
     ).toBeInTheDocument();
     expect(
-      screen.getByRole('link', { name: 'Start Your Pathway' }),
+      screen.getByRole('link', { name: 'Start' }),
     ).toHaveAttribute('href', '/contact');
     expect(
-      screen.getByRole('link', { name: 'Explore Network' }),
+      screen.getByRole('link', { name: 'Explore' }),
     ).toHaveAttribute('href', '/about');
     expect(
       screen.getByRole('img', { name: editorialIllustrations.home.alt }),

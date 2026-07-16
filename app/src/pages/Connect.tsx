@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
-import { AnimatedList } from '../components/magicui/AnimatedList';
-import ImmersiveHero from '../components/effects/ImmersiveHero';
+import { PageHero } from '../components/ui/page-hero';
 import { Button } from '../components/ui/button';
 import { FadeIn } from '@/components/effects/FadeIn';
 import { Card } from '../components/ui/card';
@@ -9,6 +8,7 @@ import { Input } from '../components/ui/input';
 import { Textarea } from '../components/ui/textarea';
 import { Label } from '../components/ui/label';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '../components/ui/tabs';
+import { editorialIllustrations } from '../lib/editorialIllustrations';
 import {
   Select,
   SelectContent,
@@ -63,14 +63,10 @@ async function insertContactMessage(payload: Record<string, string>) {
 
 const translations = {
   heroCategory: "Advisory Connect",
-  heroTitleNormal: "Connect &",
-  heroTitleHighlighted: "Guidance",
+  heroTitleNormal: "Connect & Guidance",
   heroDesc: "EduPlus Skills offers dedicated, one-on-one support tailored to students, parents, job seekers, and educators, alongside direct lines for inquiry.",
   tailoredRoadmap: "Tailored Roadmap",
   milestonesStrategy: "Milestones & Strategy:",
-  logPort: "LOG_PORT: TERMINAL_EXECUTION_DEV",
-  terminalExecSh: "EXEC_SH",
-  terminalReadyPrmpt: "READY_PRMPT",
   
   // Call to Action
   ctaTitle: "Transform Your Learning & Career Journey",
@@ -256,8 +252,6 @@ const STAKEHOLDERS: StakeholderDetails[] = [
 
 export default function Connect() {
   const [activeTab, setActiveTab] = useState('students');
-  const [terminalLogs, setTerminalLogs] = useState<string[]>([]);
-  const [isRunning, setIsRunning] = useState(false);
   const [mounted, setMounted] = useState(false);
 
   // Scheduling dialog states
@@ -273,81 +267,6 @@ export default function Connect() {
   useEffect(() => {
     setMounted(true);
   }, []);
-
-  useEffect(() => {
-    let isMounted = true;
-    setIsRunning(true);
-    setTerminalLogs([]);
-
-    const scripts = new Map<string, string[]>( [
-      ['students', [
-        '[GUEST@EDU-PLUS:~]$ ./futurepath-navigator.sh --assess',
-        '>> INITIALIZING PSYCHOMETRIC TEST ENGINE...',
-        '>> CAPTURING STRENGTHS MATRIX [COGNITIVE & CREATIVE]...',
-        '>> COMPILING APTITUDE FEEDBACK NODES...',
-        '>> RESULT:',
-        '   - STEM APTITUDE: 94.2%',
-        '   - SPATIAL INTERPRETATION: 88.6%',
-        '   - RECOMMENDATION: APPLIED SCIENCES & DEEP TECH',
-        '>> SYSTEM STATUS: READY FOR 1-ON-1 ADVISORY SESSION _'
-      ]],
-      ['parents', [
-        '[GUEST@EDU-PLUS:~]$ ./parent-consultation.sh --mitigate',
-        '>> LOADING ACADEMIC STRESS INDEX (ASI)...',
-        '>> DETECTING BOARD EXAM PRESSURE INDICES...',
-        '>> COMPUTING STRESS MITIGATION METRICS...',
-        '>> RECOMMENDATIONS GENERATED:',
-        '   - WEEKLY DISCOVERY TRACKING',
-        '   - NON-INTRUSIVE ACADEMIC PROGRESS CHECKS',
-        '   - FINANCIAL PLAN MATCHED TO ASIA GOALS',
-        '>> SYSTEM STATUS: STRATEGY SHEET READY _'
-      ]],
-      ['seekers', [
-        '[GUEST@EDU-PLUS:~]$ ./career-launchpad.sh --region "singapore"',
-        '>> RUNNING SKILLS CAPABILITY GAP ANALYSIS...',
-        '>> SCANNING RESUME FOR DIGITAL AND ANALYTICAL TOOLS...',
-        '>> MATCHING PLACEMENT PORTALS IN SE ASIA...',
-        '>> COMPILING METRICS:',
-        '   - TOOL COMPATIBILITY: 91%',
-        '   - REGIONAL FIT INDEX: 97.4%',
-        '   - GLOBAL ROUTING STATUS: PLACEMENT-READY',
-        '>> SYSTEM STATUS: RESUME OPTIMIZED FOR SG PORTAL _'
-      ]],
-      ['teachers', [
-        '[GUEST@EDU-PLUS:~]$ ./educator-academy.sh --train',
-        '>> LOADING PEDAGOGICAL METRIC DIAGNOSTICS...',
-        '>> VERIFYING ACTIVE-LEARNING MODULE RATINGS...',
-        '>> BENCHMARKING SYSTEM CLASS INTEGRATION RATIO...',
-        '>> PERFORMANCE:',
-        '   - CLASS ENGAGEMENT INDEX: +34%',
-        '   - HYBRID TECH BENCHMARK: EXCELLENT',
-        '   - OUTCOMES METRIC: 98.2/100',
-        '>> SYSTEM STATUS: REGISTRATION COMPLETED _'
-      ]]
-    ]);
-
-    const lines = scripts.get(activeTab) || [];
-    let currentLineIndex = 0;
-
-    const typeNextLine = () => {
-      if (!isMounted) return;
-      if (currentLineIndex < lines.length) {
-        const nextLine = lines[currentLineIndex];
-        setTerminalLogs(prev => [...prev, nextLine]);
-        currentLineIndex++;
-        const delay = currentLineIndex === 1 ? 400 : Math.random() * 150 + 50;
-        setTimeout(typeNextLine, delay);
-      } else {
-        setIsRunning(false);
-      }
-    };
-
-    typeNextLine();
-
-    return () => {
-      isMounted = false;
-    };
-  }, [activeTab]);
 
   // Form states
   const [submitted, setSubmitted] = useState(false);
@@ -434,20 +353,15 @@ export default function Connect() {
   };
 
   return (
-    <div className="min-h-screen bg-background text-foreground pb-32 relative overflow-hidden">
-      {/* Decorative Glows */}
-      <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-primary/5 rounded-none blur-[120px] pointer-events-none" />
-      <div className="absolute bottom-1/4 right-1/4 w-[600px] h-[600px] bg-primary/3 rounded-none blur-[150px] pointer-events-none" />
-
-      {/* Immersive Top Hero Viewport */}
-      <ImmersiveHero
-        category={t('heroCategory')}
-        titleNormal={t('heroTitleNormal')}
-        titleHighlighted={t('heroTitleHighlighted')}
+    <div className="min-h-screen bg-background text-foreground pb-32 relative">
+      <PageHero
+        eyebrow={t('heroCategory')}
+        title={t('heroTitleNormal')}
         description={t('heroDesc')}
+        illustration={editorialIllustrations.guidance}
       />
 
-      <div className="max-w-[1200px] mx-auto px-6 md:px-12 relative z-10 mt-16">
+      <div className="max-w-[1440px] mx-auto px-6 md:px-12 relative z-10 mt-16">
         
         {/* Guidance Split Panel using pure shadcn Tabs */}
         <Tabs
@@ -455,50 +369,23 @@ export default function Connect() {
           onValueChange={setActiveTab}
           className={`flex flex-col lg:flex-row gap-8 transition-all duration-1000 delay-300 transform ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
         >
-          {/* Left Navigation and Terminal Block */}
-          <div className="lg:w-1/3 flex flex-col gap-6 w-full">
+          <div className="lg:w-1/4 flex flex-col gap-6 w-full">
             {/* Tab Selectors using shadcn TabsList */}
             <TabsList className="flex flex-row lg:flex-col gap-1 overflow-x-auto lg:overflow-x-visible pb-4 lg:pb-0 border-b lg:border-b-0 lg:border-r border-border lg:pr-4 whitespace-nowrap bg-muted/20 p-2 w-full justify-start h-auto rounded-none">
               {STAKEHOLDERS.map(stakeholder => (
                 <TabsTrigger
                   key={stakeholder.id}
                   value={stakeholder.id}
-                  className="px-4 py-3 text-left font-sans text-sm tracking-wide transition-all duration-300 w-full justify-start border-l-2 border-transparent data-[state=active]:border-l-primary data-[state=active]:bg-primary/5 data-[state=active]:text-primary rounded-none cursor-pointer"
+                  className="px-4 py-3 text-left font-sans text-[14px] tracking-wide transition-all duration-300 w-full justify-start border-l-2 border-transparent data-[state=active]:border-l-primary data-[state=active]:bg-primary/5 data-[state=active]:text-primary rounded-none cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground focus-visible:ring-offset-2 focus-visible:ring-offset-background"
                 >
                   {t(stakeholder.labelKey)}
                 </TabsTrigger>
               ))}
             </TabsList>
-
-            {/* Retro Terminal Log */}
-            <div className="border border-border bg-card p-1 shadow-sm rounded-none">
-              <div className="bg-card p-4 font-mono text-[10px] leading-relaxed text-[#22C55E] dark:text-[#4ADE80] h-[220px] overflow-hidden select-none flex flex-col justify-start relative">
-                {/* Console header */}
-                <div className="flex justify-between items-center text-[8px] text-primary/60 border-b border-border pb-2 mb-3">
-                  <span>{t('logPort')}</span>
-                  <span className="flex items-center gap-1.5">
-                    <span className={`w-1.5 h-1.5 bg-[#22C55E] ${isRunning ? 'animate-ping' : ''}`} />
-                    {isRunning ? t('terminalExecSh') : t('terminalReadyPrmpt')}
-                  </span>
-                </div>
-
-                {/* Log outputs stream */}
-                <div className="space-y-1 overflow-y-auto flex-1 font-mono pr-2">
-                  {terminalLogs.map((log, idx) => {
-                    const isCmd = log.startsWith('[GUEST');
-                    return (
-                      <div key={idx} className={isCmd ? 'text-primary' : 'text-[#22C55E] dark:text-[#4ADE80]'}>
-                        {log}
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-            </div>
           </div>
 
           {/* Right Active Details Panel using shadcn TabsContent */}
-          <div className="lg:w-2/3 flex flex-col gap-6 w-full">
+          <div className="lg:w-3/4 flex flex-col gap-6 w-full">
             {STAKEHOLDERS.map(stakeholder => (
               <TabsContent key={stakeholder.id} value={stakeholder.id} className="mt-0">
                 <Card className="border border-border/50 h-auto min-h-[460px] p-6 md:p-8 bg-card rounded-none shadow-sm flex flex-col justify-between">
@@ -516,19 +403,19 @@ export default function Connect() {
 
                       {/* Milestones list */}
                       <div className="pt-6">
-                        <h4 className="font-mono text-xs text-foreground uppercase tracking-wider mb-4">
+                        <h4 className="text-[13px] font-medium text-foreground uppercase tracking-wide mb-4">
                           {t('milestonesStrategy')}
                         </h4>
-                        <AnimatedList delay={250} className="grid sm:grid-cols-2 gap-4 items-start">
+                        <ul className="grid sm:grid-cols-2 gap-4 items-start">
                           {stakeholder.roadmapKeys.map((stepKey, idx) => (
-                            <div key={stepKey} className="flex items-start gap-3 text-sm text-muted-foreground font-sans w-full">
-                              <span className="w-6 h-6 bg-primary/10 border border-primary/20 flex items-center justify-center text-xs text-primary font-medium font-heading shrink-0">
+                            <li key={stepKey} className="flex items-start gap-3 text-[14px] text-muted-foreground font-sans w-full">
+                              <span className="w-6 h-6 bg-primary/10 flex items-center justify-center text-[12px] text-primary font-medium shrink-0">
                                 {idx + 1}
                               </span>
-                              <span>{t(stepKey)}</span>
-                            </div>
+                              <span className="mt-0.5 leading-relaxed">{t(stepKey)}</span>
+                            </li>
                           ))}
-                        </AnimatedList>
+                        </ul>
                       </div>
                     </div>
 
@@ -542,7 +429,7 @@ export default function Connect() {
                           handleBookAdvisory();
                         }}
                         size="md"
-                        className="cursor-pointer rounded-none font-mono text-xs uppercase tracking-wider"
+                        className="cursor-pointer rounded-none text-[13px] font-medium uppercase tracking-wide"
                       >
                         {t(stakeholder.ctaTextKey)}
                       </Button>

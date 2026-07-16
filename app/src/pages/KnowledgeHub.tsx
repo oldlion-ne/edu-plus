@@ -167,8 +167,19 @@ export default function KnowledgeHub() {
 
         {/* Items grid */}
         {loading ? (
-          <div className="py-20 text-center text-[14px] text-muted-foreground">
-            Loading resources...
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-16">
+            {[1, 2, 3, 4, 5, 6].map((i) => (
+              <div key={i} className="flex flex-col gap-4 p-8 border border-border/30">
+                <div className="aspect-[3/2] w-full bg-secondary/50 animate-pulse"></div>
+                <div className="flex-1 flex flex-col gap-3 mt-2">
+                  <div className="w-1/4 h-3 bg-secondary animate-pulse"></div>
+                  <div className="w-3/4 h-5 bg-secondary animate-pulse mt-1"></div>
+                  <div className="w-full h-4 bg-secondary animate-pulse mt-2"></div>
+                  <div className="w-2/3 h-4 bg-secondary animate-pulse"></div>
+                </div>
+                <div className="w-24 h-4 bg-secondary animate-pulse mt-4"></div>
+              </div>
+            ))}
           </div>
         ) : error ? (
           <div role="alert" className="py-20 text-center text-[14px] text-destructive">

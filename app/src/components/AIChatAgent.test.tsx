@@ -1,4 +1,4 @@
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent, act } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import AIChatAgent from './AIChatAgent';
 
@@ -38,7 +38,10 @@ describe('AIChatAgent component', () => {
   it('opens chat window on toggle button click', async () => {
     render(<AIChatAgent />);
     const button = screen.getByRole('button', { name: /open ai chat support/i });
-    fireEvent.click(button);
+    
+    await act(async () => {
+      fireEvent.click(button);
+    });
     
     expect(screen.getByText('EDU+ AI ADVISOR')).toBeDefined();
     expect(screen.getByPlaceholderText('How can we help?')).toBeDefined();

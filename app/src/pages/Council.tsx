@@ -152,7 +152,7 @@ export default function Council() {
       <section className="py-20 border-t border-border/50 px-6 md:px-12 max-w-[1440px] mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-x-12 gap-y-16">
           {councilMembers.map((member, i) => (
-            <ScrollReveal key={member.name} delay={i * 0.1}>
+            <ScrollReveal key={member.name} delay={Math.min(i * 0.1, 0.4)}>
               <Dialog
                 open={selectedMember?.name === member.name}
               onOpenChange={(open) => setSelectedMember(open ? member : null)}

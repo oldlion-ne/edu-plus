@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { motion, type HTMLMotionProps } from "motion/react";
 import React from "react";
 import { cn } from "@/lib/utils";

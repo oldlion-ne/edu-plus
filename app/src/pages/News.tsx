@@ -57,29 +57,31 @@ export default function News() {
     }
 
     return (
-      <div className="bg-background w-full min-h-screen pt-32 px-6 pb-32">
-        <div className="max-w-3xl mx-auto">
-          <div className="mb-12">
-            <Link to="/news" className={`inline-block text-[14px] font-medium text-primary hover:underline ${FOCUS_RING_CLASSES}`}>
-              Back to News
-            </Link>
+      <div className="bg-background w-full min-h-screen">
+        <section className="py-20 max-w-[1440px] mx-auto px-6 md:px-12 mt-16">
+          <div className="max-w-3xl mx-auto">
+            <div className="mb-12">
+              <Link to="/news" className={`inline-block text-[14px] font-medium text-primary hover:underline ${FOCUS_RING_CLASSES}`}>
+                &larr; Back to News
+              </Link>
+            </div>
+            <span className="text-[12px] font-medium text-primary uppercase tracking-wide block mb-4">
+              {article.category}
+            </span>
+            <h1 className="text-4xl font-light text-foreground mb-6 leading-tight">
+              {article.title}
+            </h1>
+            <span className="text-[14px] text-muted-foreground block mb-12">
+              {article.date}
+            </span>
+            <div className="mb-12 border border-border/50">
+              <EditorialMedia asset={article.illustration} />
+            </div>
+            <p className="text-[16px] text-foreground leading-relaxed">
+              {article.desc}
+            </p>
           </div>
-          <span className="text-[12px] font-medium text-primary uppercase tracking-wide block mb-4">
-            {article.category}
-          </span>
-          <h1 className="text-4xl font-medium text-foreground mb-6 leading-tight">
-            {article.title}
-          </h1>
-          <span className="text-[14px] text-muted-foreground block mb-12">
-            {article.date}
-          </span>
-          <div className="mb-12">
-            <EditorialMedia asset={article.illustration} />
-          </div>
-          <p className="text-lg text-foreground leading-relaxed">
-            {article.desc}
-          </p>
-        </div>
+        </section>
       </div>
     );
   }

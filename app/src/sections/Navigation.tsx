@@ -1,37 +1,119 @@
 import { useEffect, useRef, useState } from 'react';
-import { NavLink, Link, useNavigate } from 'react-router';
+import { NavLink, Link, useNavigate, useLocation } from 'react-router';
 import { useScrollContainer } from '../lib/ScrollContext';
 import { useAuth } from '../lib/useAuth';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger, SheetTitle, SheetDescription } from '@/components/ui/sheet';
-import { Menu, X } from 'lucide-react';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import {
+  NavigationMenu,
+  NavigationMenuContent,
+  NavigationMenuItem,
+  NavigationMenuList,
+  NavigationMenuTrigger,
+} from '@/components/ui/navigation-menu';
+import { Menu, X, ChevronDown, User } from 'lucide-react';
 import { AnimatedThemeToggler } from '@/components/ui/animated-theme-toggler';
 
-const NAV_LINKS = [
+// ─── Data ──────────────────────────────────────────────────────────────────
+
+
+const PLATFORM_LINKS = [
+  {
+    label: 'Programs',
+    path: '/programs',
+    description: 'Explore structured learning tracks and certifications.',
+  },
+  {
+    label: 'Knowledge Hub',
+    path: '/knowledge-hub',
+    description: 'Articles, guides, and curated research resources.',
+  },
+  {
+    label: 'Guidance',
+    path: '/guidance',
+    description: 'Expert advice and personalised mentoring pathways.',
+  },
+];
+
+const COMMUNITY_LINKS = [
+  {
+    label: 'Events',
+    path: '/events',
+    description: 'Workshops, webinars, and in-person gatherings.',
+  },
+  {
+    label: 'Council',
+    path: '/council',
+    description: 'Meet the leaders and advisory board shaping EduPlus.',
+  },
+  {
+    label: 'News',
+    path: '/news',
+    description: 'Latest announcements, press releases, and updates.',
+  },
+];
+
+// Flat list used by the mobile drawer
+const ALL_MOBILE_LINKS = [
   { label: 'About', path: '/about' },
   { label: 'Programs', path: '/programs' },
   { label: 'Knowledge Hub', path: '/knowledge-hub' },
+  { label: 'Guidance', path: '/guidance' },
   { label: 'Events', path: '/events' },
   { label: 'Council', path: '/council' },
-  { label: 'Guidance', path: '/guidance' },
   { label: 'News', path: '/news' },
+  { label: 'Pricing', path: '/pricing' },
 ];
 
 const translations = {
-  brandName: "Edu",
-  brandPlus: "+",
-  dashboard: "Dashboard",
-  logout: "Logout",
-  login: "Login",
-  connect: "Connect",
-  themeLabel: "Theme",
-  menuTitle: "Navigation Menu",
-  menuDesc: "Access site sections and pages.",
+  brandName: 'Edu',
+  brandPlus: '+',
+  platform: 'Platform',
+  community: 'Community',
+  dashboard: 'Dashboard',
+  account: 'Account',
+  logout: 'Logout',
+  login: 'Login',
+  connect: 'Connect',
+  themeLabel: 'Theme',
+  menuTitle: 'Navigation Menu',
+  menuDesc: 'Access site sections and pages.',
 };
 
 const translationMap = new Map<string, string>(Object.entries(translations));
 const t = (key: keyof typeof translations) => translationMap.get(key) || '';
+
+// ─── Sub-components ─────────────────────────────────────────────────────────
+
+/** A single item inside the desktop mega-panel */
+function PanelLink({ label, path, description }: { label: string; path: string; description: string }) {
+  const location = useLocation();
+  const isActive = location.pathname === path;
+
+  return (
+    <NavLink
+      to={path}
+      className={`group block px-4 py-3 transition-colors duration-200 border-l-2 ${
+        isActive
+          ? 'border-primary text-primary bg-primary/5'
+          : 'border-transparent text-foreground hover:border-primary hover:text-primary hover:bg-muted/50'
+      }`}
+    >
+      <span className="block text-sm font-medium leading-tight">{label}</span>
+      <span className="block text-xs text-muted-foreground mt-0.5 leading-relaxed">{description}</span>
+    </NavLink>
+  );
+}
+
+// ─── Main Component ─────────────────────────────────────────────────────────
 
 export default function Navigation() {
   const { user, signOut } = useAuth();
@@ -43,7 +125,7 @@ export default function Navigation() {
 
   useEffect(() => {
     const el = scrollContext?.scrollContainerRef.current;
-    
+
     const handleScroll = () => {
       if (el) {
         setScrolled(el.scrollTop > 50);
@@ -74,78 +156,151 @@ export default function Navigation() {
   return (
     <nav
       ref={navRef}
-      className={`fixed top-0 left-0 z-50 transition-all duration-500 bg-background/95 backdrop-blur-md ${
-        scrolled ? 'shadow-sm border-b border-border' : ''
+      className={`sticky top-0 left-0 z-50 w-full transition-all duration-500 bg-background/95 backdrop-blur-sm ${
+        scrolled ? 'border-b border-border/60' : ''
       }`}
-      style={{ width: 'calc(100% - var(--scrollbar-width, 0px))' }}
     >
-      <div className="max-w-[1440px] mx-auto flex items-center justify-between px-6 md:px-12 py-4">
-        {/* Logo */}
-        <Link to="/" className="flex items-center gap-0 hover:text-primary focus:outline-none focus:text-primary">
-          <span className="font-heading font-bold text-2xl text-foreground">{t('brandName')}</span>
-          <span className="text-primary font-light text-2xl">{t('brandPlus')}</span>
+      <div className="max-w-[1440px] mx-auto flex items-center justify-between px-8 md:px-14 py-4">
+
+        {/* ── Logo ── */}
+        <Link
+          to="/"
+          className="flex items-center gap-0 shrink-0 hover:opacity-80 transition-opacity duration-200 focus:outline-none"
+          aria-label="EduPlus home"
+        >
+          <span className="font-heading font-bold text-xl text-foreground tracking-tight">{t('brandName')}</span>
+          <span className="text-primary font-light text-xl">{t('brandPlus')}</span>
         </Link>
 
-        {/* Center Nav Links */}
-        <div className="hidden xl:flex items-center gap-8">
-          {NAV_LINKS.map((link) => (
-            <NavLink /* ui-ignore */
-              key={link.label}
-              to={link.path}
-              className={({ isActive }) =>
-                `text-sm font-sans whitespace-nowrap transition-colors duration-300 relative group ${
-                  isActive ? 'text-primary' : 'text-foreground hover:text-primary'
-                }`
-              }
-            >
-              {link.label}
-              <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-primary transition-all duration-300 group-hover:w-full" />
-            </NavLink>
-          ))}
+        {/* ── Desktop Navigation ── */}
+        <div className="hidden xl:flex items-center gap-1">
+          <NavigationMenu viewport={false}>
+            <NavigationMenuList className="gap-0">
+
+              {/* About */}
+              <NavigationMenuItem>
+                <NavLink
+                  to="/about"
+                  className={({ isActive }) =>
+                    `inline-flex h-9 items-center px-4 text-sm transition-colors duration-200 ${
+                      isActive ? 'text-primary' : 'text-foreground/80 hover:text-foreground'
+                    }`
+                  }
+                >
+                  About
+                </NavLink>
+              </NavigationMenuItem>
+
+              {/* Platform dropdown */}
+              <NavigationMenuItem>
+                <NavigationMenuTrigger
+                  className="h-9 px-4 text-sm font-normal text-foreground/80 hover:text-foreground bg-transparent hover:bg-transparent data-popup-open:bg-transparent data-open:bg-transparent data-open:text-foreground"
+                >
+                  {t('platform')}
+                </NavigationMenuTrigger>
+                <NavigationMenuContent className="min-w-[280px] p-2">
+                  <div className="flex flex-col gap-0.5">
+                    {PLATFORM_LINKS.map((link) => (
+                      <PanelLink key={link.path} {...link} />
+                    ))}
+                  </div>
+                </NavigationMenuContent>
+              </NavigationMenuItem>
+
+              {/* Community dropdown */}
+              <NavigationMenuItem>
+                <NavigationMenuTrigger
+                  className="h-9 px-4 text-sm font-normal text-foreground/80 hover:text-foreground bg-transparent hover:bg-transparent data-popup-open:bg-transparent data-open:bg-transparent data-open:text-foreground"
+                >
+                  {t('community')}
+                </NavigationMenuTrigger>
+                <NavigationMenuContent className="min-w-[280px] p-2">
+                  <div className="flex flex-col gap-0.5">
+                    {COMMUNITY_LINKS.map((link) => (
+                      <PanelLink key={link.path} {...link} />
+                    ))}
+                  </div>
+                </NavigationMenuContent>
+              </NavigationMenuItem>
+
+              {/* Pricing */}
+              <NavigationMenuItem>
+                <NavLink
+                  to="/pricing"
+                  className={({ isActive }) =>
+                    `inline-flex h-9 items-center px-4 text-sm transition-colors duration-200 ${
+                      isActive ? 'text-primary' : 'text-foreground/80 hover:text-foreground'
+                    }`
+                  }
+                >
+                  Pricing
+                </NavLink>
+              </NavigationMenuItem>
+
+            </NavigationMenuList>
+          </NavigationMenu>
         </div>
 
-        {/* CTA & Auth Area */}
-        <div className="hidden xl:flex items-center gap-6">
-          {user && (
-            <NavLink /* ui-ignore */
-              to="/dashboard"
-              className={({ isActive }) =>
-                `font-sans font-medium text-xs whitespace-nowrap tracking-wider uppercase transition-all duration-300 ${
-                  isActive ? 'text-primary' : 'text-foreground hover:text-primary'
-                }`
-              }
-            >
-              {t('dashboard')}
-            </NavLink>
-          )}
+        {/* ── Right-side Actions ── */}
+        <div className="hidden xl:flex items-center gap-3">
 
+          {/* Theme Toggle */}
+          <AnimatedThemeToggler />
+
+          {/* Auth: unified account dropdown or login */}
           {user ? (
-            <Button
-              variant="ghost"
-              onClick={handleLogout}
-              className="text-xs font-sans font-medium tracking-wider uppercase text-destructive hover:text-destructive hover:bg-destructive/10 h-auto p-0"
-            >
-              {t('logout')}
-            </Button>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="ghost"
+                  className="flex items-center gap-1.5 h-9 px-3 text-sm text-foreground/80 hover:text-foreground hover:bg-muted/60 font-normal"
+                  aria-label="Account menu"
+                >
+                  <User className="size-4 shrink-0" />
+                  <span className="text-sm">{t('account')}</span>
+                  <ChevronDown className="size-3 ml-0.5 text-muted-foreground" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="min-w-[160px]">
+                <DropdownMenuItem asChild>
+                  <Link to="/dashboard" className="cursor-pointer w-full">
+                    {t('dashboard')}
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem
+                  variant="destructive"
+                  className="cursor-pointer"
+                  onClick={handleLogout}
+                >
+                  {t('logout')}
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           ) : (
             <Button
               asChild
               variant="ghost"
-              className="text-xs font-sans font-medium tracking-wider uppercase text-primary hover:text-primary hover:bg-primary/10 h-auto p-0"
+              className="h-9 px-3 text-sm font-normal text-foreground/80 hover:text-foreground hover:bg-muted/60"
             >
-              <Link to="/login" /* ui-ignore */>{t('login')}</Link>
+              <Link to="/login">{t('login')}</Link>
             </Button>
           )}
 
-          <AnimatedThemeToggler />
-
-          <Button asChild variant="outline" className="font-sans px-5 py-2 text-sm h-auto whitespace-nowrap">
-            <Link to="/contact" /* ui-ignore */>{t('connect')}</Link>
+          {/* Primary CTA */}
+          <Button
+            asChild
+            variant="outline"
+            className="h-9 px-5 text-sm font-medium whitespace-nowrap"
+          >
+            <Link to="/contact">{t('connect')}</Link>
           </Button>
+
         </div>
 
-        {/* Mobile Menu via Sheet */}
-        <div className="xl:hidden">
+        {/* ── Mobile Hamburger ── */}
+        <div className="xl:hidden flex items-center gap-2">
+          <AnimatedThemeToggler />
           <Sheet open={isOpen} onOpenChange={setIsOpen}>
             <SheetTrigger asChild>
               <Button
@@ -153,80 +308,84 @@ export default function Navigation() {
                 className="p-2 h-auto"
                 aria-label="Toggle menu"
               >
-                {isOpen ? <X className="size-6" /> : <Menu className="size-6" />}
+                {isOpen ? <X className="size-5" /> : <Menu className="size-5" />}
               </Button>
             </SheetTrigger>
             <SheetContent
               side="top"
-              className="bg-background border-b border-border pt-[80px] pb-8 px-8 flex flex-col gap-4 text-left w-full"
+              className="bg-background border-b border-border pt-[72px] pb-8 px-8 flex flex-col gap-0 text-left w-full"
             >
               <SheetTitle className="sr-only">{t('menuTitle')}</SheetTitle>
               <SheetDescription className="sr-only">{t('menuDesc')}</SheetDescription>
-              {NAV_LINKS.map((link) => (
-                <NavLink /* ui-ignore */
-                  key={link.label}
-                  to={link.path}
-                  onClick={() => setIsOpen(false)}
-                  className={({ isActive }) =>
-                    `text-lg font-sans transition-colors duration-300 ${
-                      isActive ? 'text-primary font-medium' : 'text-foreground'
-                    }`
-                  }
-                >
-                  {link.label}
-                </NavLink>
-              ))}
 
-              {user && (
-                <NavLink /* ui-ignore */
-                  to="/dashboard"
-                  onClick={() => setIsOpen(false)}
-                  className={({ isActive }) =>
-                    `text-lg font-sans tracking-wide uppercase transition-colors duration-300 ${
-                      isActive ? 'text-primary font-medium' : 'text-muted-foreground'
-                    }`
-                  }
-                >
-                  {t('dashboard')}
-                </NavLink>
-              )}
+              {/* Grouped mobile links */}
+              <div className="flex flex-col gap-0 mb-4">
+                <p className="text-[10px] font-medium tracking-widest uppercase text-muted-foreground mb-2">
+                  Navigation
+                </p>
+                {ALL_MOBILE_LINKS.map((link) => (
+                  <NavLink
+                    key={link.label}
+                    to={link.path}
+                    onClick={() => setIsOpen(false)}
+                    className={({ isActive }) =>
+                      `py-2.5 text-base font-sans border-b border-border/30 last:border-b-0 transition-colors duration-200 ${
+                        isActive ? 'text-primary font-medium' : 'text-foreground'
+                      }`
+                    }
+                  >
+                    {link.label}
+                  </NavLink>
+                ))}
+              </div>
 
-              {user ? (
-                <Button
-                  variant="ghost"
-                  onClick={() => {
-                    setIsOpen(false);
-                    handleLogout();
-                  }}
-                  className="justify-start p-0 h-auto text-left font-sans text-lg tracking-wide uppercase text-destructive hover:text-destructive hover:bg-transparent"
-                >
-                  {t('logout')}
-                </Button>
-              ) : (
+              {/* Auth section */}
+              <div className="flex flex-col gap-2 pt-4 border-t border-border/40">
+                {user ? (
+                  <>
+                    <NavLink
+                      to="/dashboard"
+                      onClick={() => setIsOpen(false)}
+                      className={({ isActive }) =>
+                        `py-2 text-sm font-sans transition-colors duration-200 ${
+                          isActive ? 'text-primary' : 'text-muted-foreground hover:text-foreground'
+                        }`
+                      }
+                    >
+                      {t('dashboard')}
+                    </NavLink>
+                    <button
+                      onClick={() => { setIsOpen(false); handleLogout(); }}
+                      className="py-2 text-sm font-sans text-left text-muted-foreground hover:text-destructive transition-colors duration-200"
+                    >
+                      {t('logout')}
+                    </button>
+                  </>
+                ) : (
+                  <Link
+                    to="/login"
+                    onClick={() => setIsOpen(false)}
+                    className="py-2 text-sm font-sans text-muted-foreground hover:text-foreground transition-colors duration-200"
+                  >
+                    {t('login')}
+                  </Link>
+                )}
+
                 <Button
                   asChild
-                  variant="ghost"
-                  className="justify-start p-0 h-auto text-left font-sans text-lg tracking-wide uppercase text-primary hover:text-primary hover:bg-transparent"
+                  variant="outline"
+                  className="mt-2 text-sm h-10 w-full font-medium"
                 >
-                  <Link to="/login" onClick={() => setIsOpen(false)} /* ui-ignore */>{t('login')}</Link>
+                  <Link to="/contact" onClick={() => setIsOpen(false)}>
+                    {t('connect')}
+                  </Link>
                 </Button>
-              )}
-
-              <Button
-                asChild
-                variant="outline"
-                className="font-sans py-2.5 text-center text-sm w-full mt-2 h-auto"
-              >
-                <Link to="/contact" onClick={() => setIsOpen(false)} /* ui-ignore */>{t('connect')}</Link>
-              </Button>
-
-              <div className="flex items-center justify-between pt-4 border-t border-border/40 mt-2">
-                <span className="text-sm text-muted-foreground font-sans">{t('themeLabel')}</span>
-                <AnimatedThemeToggler />
               </div>
+
             </SheetContent>
           </Sheet>
         </div>
+
       </div>
     </nav>
   );
