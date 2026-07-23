@@ -7,7 +7,12 @@ if (!supabaseUrl || !supabaseAnonKey) {
   console.warn('Supabase credentials missing in env variables.');
 }
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+// Use placeholder values in CI/test so createClient doesn't throw at module load time.
+// All network calls will still fail gracefully without real credentials.
+export const supabase = createClient(
+  supabaseUrl || 'https://placeholder.supabase.co',
+  supabaseAnonKey || 'placeholder-anon-key',
+  {
   auth: {
     persistSession: true,
     autoRefreshToken: true,
