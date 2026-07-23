@@ -3,7 +3,7 @@ import { Link } from 'react-router';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { PageHero } from '@/components/ui/page-hero';
-import { BulletList, BulletItem } from '@/components/ui/bullet-list';
+import { BulletList } from '@/components/ui/bullet-list';
 import { editorialIllustrations } from '@/lib/editorialIllustrations';
 import { MagicCard } from '@/components/magicui/MagicCard';
 
@@ -162,8 +162,8 @@ export default function Programs() {
                     transition={{ type: 'tween', ease: [0.16, 1, 0.3, 1], duration: 0.5 }}
                   />
                 )}
-                <span className="relative z-10 text-[11px] font-semibold text-primary/70 mt-0.5 shrink-0">{p.num}</span>
-                <span className="relative z-10 text-[15px] font-medium leading-snug">{p.title}</span>
+                <span className="relative z-10 font-sans text-[11px] font-semibold text-primary/70 mt-0.5 shrink-0">{p.num}</span>
+                <span className="relative z-10 font-sans text-[15px] font-medium leading-snug">{p.title}</span>
               </button>
             ))}
           </div>
@@ -192,42 +192,44 @@ export default function Programs() {
                     >
                     <motion.span 
                       initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.1 }}
-                      className="text-[13px] font-medium tracking-wide uppercase text-muted-foreground mb-3 block">
+                      className="font-sans text-[13px] font-medium tracking-wide uppercase text-muted-foreground mb-3 block">
                       {program.tag}
                     </motion.span>
                     <motion.h2 
                       initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.15 }}
-                      className="text-[32px] font-medium text-foreground mb-6 leading-snug">
+                      className="font-heading text-[32px] font-medium text-foreground mb-6 leading-snug">
                       {program.title}
                     </motion.h2>
                     <motion.p 
                       initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }}
-                      className="text-[16px] text-muted-foreground leading-relaxed mb-12 max-w-[55ch]">
+                      className="font-sans text-[16px] text-muted-foreground leading-relaxed mb-12 max-w-[55ch]">
                       {program.desc}
                     </motion.p>
 
                     <div className="mb-12">
                       <motion.span 
                         initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.25 }}
-                        className="text-[13px] font-medium uppercase tracking-wide text-muted-foreground mb-6 block">
+                        className="font-sans text-[13px] font-medium uppercase tracking-wide text-muted-foreground mb-6 block">
                         Core Outcomes
                       </motion.span>
                       <BulletList>
                         {program.outcomes.map((outcome, idx) => (
-                          <motion.div
+                          <motion.li
                             key={outcome}
+                            className="font-sans text-[15px] text-foreground flex items-start gap-3"
                             initial={{ opacity: 0, x: -10 }}
                             animate={{ opacity: 1, x: 0 }}
                             transition={{ delay: 0.3 + idx * 0.05, type: 'tween', ease: [0.16, 1, 0.3, 1], duration: 0.4 }}
                           >
-                            <BulletItem>{outcome}</BulletItem>
-                          </motion.div>
+                            <span className="mt-2 w-1 h-1 bg-primary rounded-none shrink-0" />
+                            {outcome}
+                          </motion.li>
                         ))}
                       </BulletList>
                     </div>
 
                     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }}>
-                      <Button asChild size="md" className="rounded-none bg-foreground text-background hover:bg-primary transition-colors duration-200">
+                      <Button asChild size="md" className="font-sans rounded-none bg-foreground text-background hover:bg-primary transition-colors duration-200">
                         <Link to="/contact" /* ui-ignore */>Advisory</Link>
                       </Button>
                     </motion.div>

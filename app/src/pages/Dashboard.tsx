@@ -770,7 +770,7 @@ export default function Dashboard() {
         <header className="bg-card border-b border-border px-6 md:px-12 py-4 flex flex-col sm:flex-row gap-4 justify-between items-center z-30">
           <div className="flex items-center gap-3">
             <div className="flex items-center gap-2 px-3 py-1 bg-muted/30 border border-border text-foreground font-sans text-xs font-medium select-none">
-              <span className="w-1.5 h-1.5 bg-primary rounded-none shadow-[0_0_4px_oklch(var(--primary)/0.6)]"></span>
+              <span className="w-1.5 h-1.5 bg-primary rounded-none"></span>
               <span>System Active</span>
             </div>
             
@@ -996,7 +996,7 @@ export default function Dashboard() {
                           <div className="w-full bg-background h-2 border border-border rounded-none">
                             <div
                               style={{ width: `${percent}%` }}
-                              className="h-full bg-primary shadow-[0_0_8px_oklch(var(--primary))] rounded-none"
+                              className="h-full bg-primary rounded-none"
                             ></div>
                           </div>
                         </div>

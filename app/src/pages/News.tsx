@@ -63,7 +63,7 @@ export default function News() {
             category: item.category,
             desc: item.body || item.excerpt,
             slug: item.slug,
-            illustration: item.cover_image ? null : editorialIllustrations.newsCommunity,
+            illustration: editorialIllustrations.newsCommunity,
             cover_image: item.cover_image
           }));
           setArticles(dbArticles);
@@ -110,7 +110,11 @@ export default function News() {
               {article.date}
             </span>
             <div className="mb-12 border border-border/50">
-              <EditorialMedia asset={article.illustration} />
+              {article.cover_image ? (
+                <img src={article.cover_image} alt={article.title} className="w-full object-cover" />
+              ) : (
+                <EditorialMedia asset={article.illustration} />
+              )}
             </div>
             <p className="text-[16px] text-foreground leading-relaxed">
               {article.desc}
