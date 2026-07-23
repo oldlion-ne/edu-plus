@@ -6,7 +6,6 @@ import { FadeIn } from '@/components/effects/FadeIn';
 import { TypingAnimation } from '@/components/effects/TypingAnimation';
 
 import { EditorialMedia } from './editorial-media';
-import { Particles } from './particles';
 
 interface PageHeroProps {
   eyebrow: string;
@@ -34,13 +33,6 @@ export function PageHero({
 
   return (
     <section className="relative w-full overflow-hidden border-b border-border/50 bg-background pt-8">
-      <Particles
-        className="absolute inset-0 z-0"
-        quantity={60}
-        ease={80}
-        color="#f59e0b"
-        refresh
-      />
       <div
         className={
           illustration

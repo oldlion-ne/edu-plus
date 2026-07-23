@@ -39,7 +39,7 @@ export const TextReveal: FC<TextRevealProps> = ({ children, eyebrow, className }
         }
       >
         {eyebrow && (
-          <span className="text-[10px] font-mono tracking-[0.3em] uppercase text-primary mb-8 md:mb-12 block">
+          <span className="text-[10px] font-sans font-medium tracking-[0.3em] uppercase text-primary mb-8 md:mb-12 block">
             {eyebrow}
           </span>
         )}

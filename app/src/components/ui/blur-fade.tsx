@@ -23,11 +23,8 @@ interface BlurFadeProps extends MotionProps {
   direction?: "up" | "down" | "left" | "right"
   inView?: boolean
   inViewMargin?: MarginType
-  blur?: string
+  blur?: string // kept for backwards compatibility of props, but ignored
 }
-
-const getFilter = (v: Variants[string]) =>
-  typeof v === "function" ? undefined : v.filter
 
 export function BlurFade({
   children,
@@ -50,23 +47,13 @@ export function BlurFade({
       [direction === "left" || direction === "right" ? "x" : "y"]:
         direction === "right" || direction === "down" ? -offset : offset,
       opacity: 0,
-      filter: `blur(${blur})`,
     },
     visible: {
       [direction === "left" || direction === "right" ? "x" : "y"]: 0,
       opacity: 1,
-      filter: `blur(0px)`,
     },
   }
   const combinedVariants = variant ?? defaultVariants
-
-  const hiddenFilter = getFilter(combinedVariants.hidden)
-  const visibleFilter = getFilter(combinedVariants.visible)
-
-  const shouldTransitionFilter =
-    hiddenFilter != null &&
-    visibleFilter != null &&
-    hiddenFilter !== visibleFilter
 
   return (
     <AnimatePresence>
@@ -80,7 +67,6 @@ export function BlurFade({
           delay: 0.04 + delay,
           duration,
           ease: "easeOut",
-          ...(shouldTransitionFilter ? { filter: { duration } } : {}),
         }}
         className={className}
         {...props}

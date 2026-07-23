@@ -1,13 +1,12 @@
 "use client"
 
-import React, { useCallback, useEffect, useMemo, useRef, useState } from "react"
+import React, { useCallback, useEffect, useRef } from "react"
 import {
   motion,
   useMotionTemplate,
   useMotionValue,
   useSpring,
 } from "motion/react"
-import { useTheme } from "next-themes"
 
 import { cn } from "@/lib/utils"
 
@@ -66,28 +65,13 @@ export function MagicCard(props: MagicCardProps) {
     mode = "gradient",
   } = props
 
-  const glowFrom = isOrbMode(props) ? (props.glowFrom ?? "#ee4f27") : "#ee4f27"
-  const glowTo = isOrbMode(props) ? (props.glowTo ?? "#6b21ef") : "#6b21ef"
-  const glowAngle = isOrbMode(props) ? (props.glowAngle ?? 90) : 90
-  const glowSize = isOrbMode(props) ? (props.glowSize ?? 420) : 420
-  const glowBlur = isOrbMode(props) ? (props.glowBlur ?? 60) : 60
   const glowOpacity = isOrbMode(props) ? (props.glowOpacity ?? 0.9) : 0.9
-  const { theme, systemTheme } = useTheme()
-  const [mounted, setMounted] = useState(false)
-
-  useEffect(() => setMounted(true), [])
-
-  const isDarkTheme = useMemo(() => {
-    if (!mounted) return true
-    const currentTheme = theme === "system" ? systemTheme : theme
-    return currentTheme === "dark"
-  }, [theme, systemTheme, mounted])
+  // isDarkTheme removed
 
   const mouseX = useMotionValue(-gradientSize)
   const mouseY = useMotionValue(-gradientSize)
 
-  const orbX = useSpring(mouseX, { stiffness: 250, damping: 30, mass: 0.6 })
-  const orbY = useSpring(mouseY, { stiffness: 250, damping: 30, mass: 0.6 })
+  // orbX and orbY removed
   const orbVisible = useSpring(0, { stiffness: 300, damping: 35 })
 
   const modeRef = useRef(mode)
@@ -159,7 +143,7 @@ export function MagicCard(props: MagicCardProps) {
   return (
     <motion.div
       className={cn(
-        "group relative isolate overflow-hidden rounded-[inherit] border border-transparent",
+        "group relative isolate overflow-hidden rounded-none border border-transparent",
         className
       )}
       onPointerMove={handlePointerMove}
@@ -176,12 +160,12 @@ export function MagicCard(props: MagicCardProps) {
         `,
       }}
     >
-      <div className="bg-background absolute inset-px z-20 rounded-[inherit]" />
+      <div className="bg-background absolute inset-px z-20 rounded-none" />
 
       {mode === "gradient" && (
         <motion.div
           suppressHydrationWarning
-          className="pointer-events-none absolute inset-px z-30 rounded-[inherit] opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+          className="pointer-events-none absolute inset-px z-30 rounded-none opacity-0 transition-opacity duration-300 group-hover:opacity-100"
           style={{
             background: useMotionTemplate`
               radial-gradient(${gradientSize}px circle at ${mouseX}px ${mouseY}px,
@@ -194,28 +178,7 @@ export function MagicCard(props: MagicCardProps) {
         />
       )}
 
-      {mode === "orb" && (
-        <motion.div
-          suppressHydrationWarning
-          aria-hidden="true"
-          className="pointer-events-none absolute z-30"
-          style={{
-            width: glowSize,
-            height: glowSize,
-            x: orbX,
-            y: orbY,
-            translateX: "-50%",
-            translateY: "-50%",
-            borderRadius: 9999,
-            filter: `blur(${glowBlur}px)`,
-            opacity: orbVisible,
-            background: `linear-gradient(${glowAngle}deg, ${glowFrom}, ${glowTo})`,
-
-            mixBlendMode: isDarkTheme ? "screen" : "multiply",
-            willChange: "transform, opacity",
-          }}
-        />
-      )}
+      {/* Orb mode removed to comply with Nordic Lagom rules */}
       <div className="relative z-40">{children}</div>
     </motion.div>
   )
