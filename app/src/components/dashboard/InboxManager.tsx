@@ -56,13 +56,14 @@ export default function InboxManager() {
         supabase.from('conversations').select('*').order('updated_at', { ascending: false })
       ]);
 
-      if (msgRes.error) throw msgRes.error;
-      if (subRes.error) throw subRes.error;
-      if (convRes.error) throw convRes.error;
+      if (msgRes.error) toast.error('Failed to load contact messages: ' + msgRes.error.message);
+      else if (msgRes.data) setContactMessages(msgRes.data);
 
-      if (msgRes.data) setContactMessages(msgRes.data);
-      if (subRes.data) setSubscribers(subRes.data);
-      if (convRes.data) setConversations(convRes.data);
+      if (subRes.error) toast.error('Failed to load subscribers: ' + subRes.error.message);
+      else if (subRes.data) setSubscribers(subRes.data);
+
+      if (convRes.error) toast.error('Failed to load AI chats: ' + convRes.error.message);
+      else if (convRes.data) setConversations(convRes.data);
     } catch (err: any) {
       toast.error(err.message || 'Failed to load inbox');
     } finally {
@@ -257,7 +258,7 @@ export default function InboxManager() {
               ) : (
                 subscribers.map(sub => (
                   <tr key={sub.id} className="hover:bg-muted/10 transition-colors">
-                    <td className="p-3 pl-4 font-mono text-foreground">{sub.email}</td>
+                    <td className="p-3 pl-4 font-sans text-foreground">{sub.email}</td>
                     <td className="p-3 text-muted-foreground">
                       {new Date(sub.subscribed_at).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' })}
                     </td>

@@ -101,7 +101,7 @@ export default function UserManagement() {
       if (!data?.success) throw new Error(data?.error);
 
       toast.success(isCurrentlyBanned ? 'User unbanned' : 'User banned');
-      setUsers(prev => prev.map(u => u.id === userId ? { ...u, banned_until: !isCurrentlyBanned ? new Date(9999, 11, 31).toISOString() : null } : u));
+      await fetchUsers();
     } catch (err: any) {
       toast.error(err.message || 'Failed to toggle ban status');
     }
@@ -218,7 +218,7 @@ export default function UserManagement() {
                   const isBanned = Boolean(userItem.banned_until);
                   return (
                     <tr key={userItem.id} className="hover:bg-muted/10 transition-colors">
-                      <td className="p-3 pl-4 font-mono font-medium text-foreground">
+                      <td className="p-3 pl-4 font-sans font-medium text-foreground">
                         {userItem.email}
                       </td>
                       <td className="p-3">

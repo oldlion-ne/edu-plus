@@ -98,21 +98,27 @@ function App() {
   const showPublicNav = !isDashboard;
   const showPublicFooter = !isDashboard;
 
+  const sharedGlobals = (
+    <>
+      <CookieConsentBanner />
+      <Toaster position="top-right" richColors closeButton />
+      {hasConsent && (
+        <>
+          <Analytics />
+          <SpeedInsights />
+        </>
+      )}
+      <AnimatePresence>
+        {showSplash && <SplashLoader key="splash" />}
+      </AnimatePresence>
+    </>
+  );
+
   if (isDashboard) {
     return (
       <AuthProvider>
         <MotionConfig reducedMotion="user">
-          <CookieConsentBanner />
-          <Toaster position="top-right" richColors closeButton />
-          {hasConsent && (
-            <>
-              <Analytics />
-              <SpeedInsights />
-            </>
-          )}
-          <AnimatePresence>
-            {showSplash && <SplashLoader key="splash" />}
-          </AnimatePresence>
+          {sharedGlobals}
           <div className="relative h-[100dvh] w-full bg-background overflow-hidden [touch-action:none]">
             <Suspense fallback={<PageLoader />}>
               <Routes>
@@ -135,17 +141,7 @@ function App() {
   return (
     <AuthProvider>
       <MotionConfig reducedMotion="user">
-        <CookieConsentBanner />
-        <Toaster position="top-right" richColors closeButton />
-        {hasConsent && (
-          <>
-            <Analytics />
-            <SpeedInsights />
-          </>
-        )}
-        <AnimatePresence>
-          {showSplash && <SplashLoader key="splash" />}
-        </AnimatePresence>
+        {sharedGlobals}
         <ScrollContext.Provider value={{ scrollContainerRef }}>
           <div className="relative h-[100dvh] w-full bg-background flex flex-col overflow-hidden [touch-action:none]">
             {showChatAgent && <AIChatAgent />}

@@ -99,6 +99,7 @@ export default function FadingVideo({
         cancelAnimationFrame(rafIdRef.current);
       }
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

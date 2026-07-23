@@ -42,22 +42,30 @@ export default function Login() {
 
   React.useEffect(() => {
     if (user && !mfaRequired) {
-      // Check MFA asynchronously just in case user object was loaded from session
-      supabase.auth.mfa.getAuthenticatorAssuranceLevel().then(({ data }) => {
-        if (data && data.nextLevel === 'aal2' && data.currentLevel === 'aal1') {
-          supabase.auth.mfa.listFactors().then(({ data: factorsData }) => {
+      const checkMfa = async () => {
+        try {
+          const { data, error } = await supabase.auth.mfa.getAuthenticatorAssuranceLevel();
+          if (error) throw error;
+          
+          if (data && data.nextLevel === 'aal2' && data.currentLevel === 'aal1') {
+            const { data: factorsData, error: factorsError } = await supabase.auth.mfa.listFactors();
+            if (factorsError) throw factorsError;
+            
             const totpFactor = factorsData?.totp.find(f => f.status === 'verified');
             if (totpFactor) {
               setMfaFactorId(totpFactor.id);
               setMfaRequired(true);
-            } else {
-              navigate(from, { replace: true });
+              return;
             }
-          });
-        } else {
+          }
+          navigate(from, { replace: true });
+        } catch (err) {
+          console.error("MFA check failed:", err);
           navigate(from, { replace: true });
         }
-      });
+      };
+      
+      checkMfa();
     }
   }, [user, navigate, from, mfaRequired]);
 

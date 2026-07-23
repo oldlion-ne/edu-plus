@@ -45,6 +45,7 @@ export function ScrollScrubVideo({ src, className = '', scrollFactor = 1.5, chil
         URL.revokeObjectURL(videoUrl);
       }
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [src]);
 
   // Scroll listener and RequestAnimationFrame lerp loop
@@ -110,6 +111,7 @@ export function ScrollScrubVideo({ src, className = '', scrollFactor = 1.5, chil
       window.removeEventListener('resize', handleScroll);
       cancelAnimationFrame(animId);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [videoUrl, scrollContext?.scrollContainerRef?.current]);
 
   // Prime video on iOS touch events to avoid blank frames

@@ -215,7 +215,7 @@ export function ResourceManager() {
         <div className="flex justify-between items-center border-b border-border pb-4">
           <div>
             <h2 className="font-heading text-2xl font-light text-foreground">{editingId ? 'Edit Resource' : t('dashboard.uploader.heading')}</h2>
-            <p className="font-mono text-xs text-muted-foreground mt-1">{t('dashboard.uploader.subheading')}</p>
+            <p className="font-sans text-xs text-muted-foreground mt-1">{t('dashboard.uploader.subheading')}</p>
           </div>
           <Button variant="ghost" size="sm" onClick={resetForm} className="rounded-none">
             <X className="size-4 mr-2" /> Cancel
@@ -407,7 +407,7 @@ export function ResourceManager() {
 
       {loading ? (
         <div className="py-12 flex justify-center">
-          <span className="font-mono text-[10px] text-muted-foreground uppercase tracking-widest animate-pulse">Loading resources...</span>
+          <span className="font-sans text-[10px] text-muted-foreground uppercase tracking-widest animate-pulse">Loading resources...</span>
         </div>
       ) : items.length === 0 ? (
         <div className="text-center py-12 border border-border bg-card/30">
@@ -433,10 +433,10 @@ export function ResourceManager() {
                   </div>
                   <p className="font-sans text-xs text-muted-foreground truncate mt-1">{item.description}</p>
                   <div className="flex items-center gap-3 mt-2">
-                    <span className="font-mono text-[9px] uppercase tracking-wider text-primary bg-primary/10 px-1.5 py-0.5">
+                    <span className="font-sans text-[9px] uppercase tracking-wider text-primary bg-primary/10 px-1.5 py-0.5">
                       {item.category}
                     </span>
-                    <span className="font-mono text-[9px] uppercase tracking-wider text-muted-foreground flex items-center gap-1">
+                    <span className="font-sans text-[9px] uppercase tracking-wider text-muted-foreground flex items-center gap-1">
                       {item.media_type === 'video_embed' && <Video className="size-3" />}
                       {item.media_type === 'document_url' && <FileText className="size-3" />}
                       {item.media_type === 'external_link' && <Link className="size-3" />}

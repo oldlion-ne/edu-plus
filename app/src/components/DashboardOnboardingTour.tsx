@@ -184,7 +184,6 @@ export default function DashboardOnboardingTour({
         <div className="flex items-center gap-2 px-4 pt-4 pb-3 border-b border-border">
           <span
             className="w-1.5 h-1.5 bg-primary shrink-0"
-            style={{ boxShadow: '0 0 6px oklch(var(--primary) / 0.8)' }} /* ui-ignore */
           />
           <span className="font-heading text-sm font-semibold text-foreground leading-none">
             {currentStep.title}
