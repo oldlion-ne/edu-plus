@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from 'react';
 import { supabase } from '../lib/supabaseClient';
 import { sendChatMessage, type ChatMessage } from '../lib/openRouter';
-import { X } from 'lucide-react';
+import { X, MessageSquare } from 'lucide-react';
 
 const SYSTEM_PROMPT = `You are the Eduplus Skills AI Advisor, a highly smart, professional, and helpful site guide & academic counselor for Holistic Eduplus Skills based in Imphal, Manipur.
 Your goal is to guide visitors through Eduplus services and help students explore career/academic options.
@@ -17,7 +17,7 @@ Eduplus Services/Programs:
 Style Guidelines:
 - Sound professional, encouraging, and supportive.
 - Keep answers structured with bullet points where appropriate.
-- Be explicitly aware that Eduplus Skills is an agency operating from Mommy Complex, Nambol Bazar & Paona Bazar in Manipur, India.
+- Be explicitly aware that Eduplus Skills is an agency operating from Mommy Complex, Nambol Bazar & Wangkhei in Manipur, India.
 - Encourage the user to explore the website pages (Programs, About, Council, Contact). If they express a strong interest in registering, guide them to use the Connect page (/connect).`;
 
 const translations = {
@@ -266,21 +266,14 @@ export default function AIChatAgent() {
         <div className="fixed bottom-6 right-6 z-50 font-sans">
           <button /* ui-ignore */
             onClick={() => setIsOpen(true)}
-            className="group flex flex-col items-center justify-center h-14 w-14 bg-background border border-border text-foreground hover:border-primary transition-colors duration-300 cursor-pointer relative rounded-none"
+            className="group flex flex-col items-center justify-center h-14 w-14 bg-card border border-border hover:border-primary text-muted-foreground hover:text-primary transition-all duration-300 cursor-pointer shadow-sm rounded-none relative"
             aria-label="Open AI chat support"
           >
-            <span className="font-mono text-xs font-bold tracking-widest text-primary">
-              [AI]
+            <MessageSquare className="w-5 h-5 mb-1 transition-transform duration-300 group-hover:-translate-y-0.5" />
+            <span className="text-[9px] font-sans font-medium uppercase tracking-wider">
+              Chat
             </span>
-            <div className="flex items-center gap-1 mt-1">
-              <span className="relative flex h-1.5 w-1.5">
-                <span className="relative inline-flex rounded-none h-1.5 w-1.5 bg-primary opacity-80"></span>
-              </span>
-              <span className="font-mono text-[6px] tracking-widest text-primary uppercase font-bold">{t('statusOnline')}</span>
-            </div>
-            <svg className="absolute inset-0 w-full h-full text-primary/10 group-hover:text-primary/30 transition-colors duration-300 pointer-events-none" viewBox="0 0 100 100">
-              <rect x="4" y="4" width="92" height="92" stroke="currentColor" strokeWidth="1" strokeDasharray="4 4" fill="none" />
-            </svg>
+            <span className="absolute top-2 right-2 w-1.5 h-1.5 bg-primary shadow-[0_0_8px_rgba(var(--primary),0.5)]"></span>
           </button>
         </div>
       )}

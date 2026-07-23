@@ -1,5 +1,6 @@
 import { Link } from 'react-router';
 import { Button } from '@/components/ui/button';
+import { BlurFade } from '@/components/ui/blur-fade';
 
 import { OpenAI }          from '@/components/ui/svgs/openai';
 import { GoogleClassroom } from '@/components/ui/svgs/google-classroom';
@@ -27,35 +28,46 @@ export default function PathwaySimulator() {
 
         {/* Section header */}
         <div className="mb-20">
-          <span className="text-[13px] font-medium tracking-wide uppercase text-muted-foreground mb-4 block">
-            Integrations
-          </span>
-          <h2 className="text-3xl sm:text-4xl font-light text-foreground tracking-tight leading-[1.2] max-w-xl">
-            Connect your favourite learning tools
-          </h2>
-          <p className="mt-5 text-[16px] text-muted-foreground leading-relaxed max-w-lg">
-            EduPlus plugs into the platforms your learners and institutions already trust — syncing progress, credentials, and communication in one intelligent network.
-          </p>
-          <Button asChild variant="outline" size="md" className="mt-8 rounded-none border-foreground/30 text-foreground hover:border-foreground transition-colors duration-200">
-            <Link to="/contact" /* ui-ignore */>
-              Integrate
-            </Link>
-          </Button>
+          <BlurFade delay={0.15} inView>
+            <span className="text-[10px] font-mono tracking-[0.3em] uppercase text-primary mb-4 block">
+              Integrations
+            </span>
+          </BlurFade>
+          <BlurFade delay={0.2} inView>
+            <h2 className="text-3xl sm:text-4xl font-light text-foreground tracking-tight leading-[1.2] max-w-xl">
+              Connect your favourite learning tools
+            </h2>
+          </BlurFade>
+          <BlurFade delay={0.25} inView>
+            <p className="mt-5 text-[16px] text-muted-foreground leading-relaxed max-w-lg">
+              EduPlus plugs into the platforms your learners and institutions already trust — syncing progress, credentials, and communication in one intelligent network.
+            </p>
+          </BlurFade>
+          <BlurFade delay={0.3} inView>
+            <Button asChild variant="outline" size="md" className="mt-8 rounded-none border-foreground/30 text-foreground hover:border-foreground transition-colors duration-200">
+              <Link to="/contact" /* ui-ignore */>
+                Integrate
+              </Link>
+            </Button>
+          </BlurFade>
         </div>
 
         {/* 3-column integration grid — flat, borderless, no masks */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-x-12 gap-y-12">
-          {INTEGRATIONS.map((item) => (
-            <div
-              key={item.name}
-              className="flex flex-col gap-4 p-10 bg-transparent transition-colors duration-200 hover:bg-secondary"
-            >
-              <div className="flex items-center justify-start">{item.icon}</div>
-              <div>
-                <h3 className="text-[17px] font-medium text-foreground mb-2">{item.name}</h3>
-                <p className="text-[14px] text-muted-foreground leading-relaxed">{item.description}</p>
+          {INTEGRATIONS.map((item, idx) => (
+            <BlurFade key={item.name} delay={0.25 + idx * 0.05} inView>
+              <div
+                className="group relative flex flex-col gap-4 p-10 bg-transparent transition-colors duration-200 hover:bg-secondary overflow-hidden h-full"
+              >
+                {/* Amber accent hover line */}
+                <div className="absolute top-0 left-0 w-0 h-[2px] bg-primary group-hover:w-full transition-all duration-700 ease-out" />
+                <div className="flex items-center justify-start">{item.icon}</div>
+                <div>
+                  <h3 className="text-[17px] font-medium text-foreground mb-2">{item.name}</h3>
+                  <p className="text-[14px] text-muted-foreground leading-relaxed">{item.description}</p>
+                </div>
               </div>
-            </div>
+            </BlurFade>
           ))}
         </div>
 

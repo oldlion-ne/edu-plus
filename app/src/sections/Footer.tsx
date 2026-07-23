@@ -1,4 +1,5 @@
 import { Link } from 'react-router';
+import { motion } from 'framer-motion';
 
 
 const navLinks = [
@@ -21,7 +22,13 @@ export default function Footer() {
     <footer className="relative border-t border-border bg-background pt-16 pb-16 overflow-x-clip font-sans">
 
       <div className="relative z-10 mx-auto max-w-6xl px-6">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-8">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-80px" }}
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          className="grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-8"
+        >
           
           {/* Brand Column */}
           <div className="flex flex-col gap-4">
@@ -33,7 +40,7 @@ export default function Footer() {
 
           {/* Navigation Column */}
           <div className="flex flex-col gap-4 md:border-l md:border-border md:pl-8">
-            <h4 className="font-sans text-[10px] text-foreground uppercase tracking-widest font-bold">Platform</h4>
+            <h4 className="font-mono text-[10px] text-primary uppercase tracking-[0.3em]">Platform</h4>
             <ul className="flex flex-col gap-3 p-0 m-0 list-none">
               {navLinks.map((link) => (
                 <li key={link.href}>
@@ -47,7 +54,7 @@ export default function Footer() {
 
           {/* Legal Column */}
           <div className="flex flex-col gap-4 md:border-l md:border-border md:pl-8">
-            <h4 className="font-sans text-[10px] text-foreground uppercase tracking-widest font-bold">Trust & Legal</h4>
+            <h4 className="font-mono text-[10px] text-primary uppercase tracking-[0.3em]">Trust & Legal</h4>
             <ul className="flex flex-col gap-3 p-0 m-0 list-none">
               {legalLinks.map((link) => (
                 <li key={link.href}>
@@ -59,7 +66,7 @@ export default function Footer() {
             </ul>
           </div>
 
-        </div>
+        </motion.div>
 
         {/* Bottom Bar */}
         <div className="mt-16 pt-8 border-t border-border flex flex-col md:flex-row items-center justify-between gap-4">

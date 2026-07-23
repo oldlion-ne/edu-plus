@@ -70,7 +70,7 @@ const ALL_MOBILE_LINKS = [
   { label: 'Events', path: '/events' },
   { label: 'Council', path: '/council' },
   { label: 'News', path: '/news' },
-  { label: 'Pricing', path: '/pricing' },
+  { label: 'Tracks', path: '/pricing' },
 ];
 
 const translations = {
@@ -82,7 +82,7 @@ const translations = {
   account: 'Account',
   logout: 'Logout',
   login: 'Login',
-  connect: 'Connect',
+  connect: 'Contact',
   themeLabel: 'Theme',
   menuTitle: 'Navigation Menu',
   menuDesc: 'Access site sections and pages.',

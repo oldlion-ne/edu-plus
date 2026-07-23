@@ -92,7 +92,7 @@ export default function Guidance() {
   };
 
   return (
-    <div className="bg-background w-full min-h-screen">
+    <div className="bg-background w-full flex-1">
 
       {/* ── Typographic Hero ── */}
       <PageHero

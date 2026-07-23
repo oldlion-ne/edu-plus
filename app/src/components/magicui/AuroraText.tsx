@@ -21,12 +21,9 @@ export function AuroraText({
     // eslint-disable-next-line react-hooks/static-components
     <MotionComponent
       className={cn(
-        "bg-gradient-to-r from-primary via-primary/50 to-primary bg-clip-text text-transparent animate-aurora",
+        "text-primary font-bold tracking-tight",
         className
       )}
-      style={{
-        backgroundSize: "200% auto",
-      }}
       {...props}
     >
       {children}

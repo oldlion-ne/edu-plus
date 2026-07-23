@@ -9,7 +9,7 @@ import ProtectedRoute from './components/ProtectedRoute';
 import { ScrollContext } from './lib/ScrollContext';
 import { Toaster } from './components/ui/sonner';
 import SplashLoader from './components/SplashLoader';
-import { AnimatePresence } from 'framer-motion';
+import { AnimatePresence, MotionConfig } from 'framer-motion';
 
 // Lazy-load all page components — each is only downloaded when its route is visited.
 // Dashboard (with Recharts) is never loaded until the user navigates to /dashboard.
@@ -84,72 +84,76 @@ function App() {
   if (isDashboard) {
     return (
       <AuthProvider>
-        <Toaster position="top-right" richColors closeButton />
-        <AnimatePresence>
-          {showSplash && <SplashLoader key="splash" />}
-        </AnimatePresence>
-        <div className="relative h-[100dvh] w-full bg-background overflow-hidden [touch-action:none]">
-          <Suspense fallback={<PageLoader />}>
-            <Routes>
-              <Route
-                path="/dashboard"
-                element={
-                  <ProtectedRoute>
-                    <Dashboard />
-                  </ProtectedRoute>
-                }
-              />
-            </Routes>
-          </Suspense>
-        </div>
+        <MotionConfig reducedMotion="user">
+          <Toaster position="top-right" richColors closeButton />
+          <AnimatePresence>
+            {showSplash && <SplashLoader key="splash" />}
+          </AnimatePresence>
+          <div className="relative h-[100dvh] w-full bg-background overflow-hidden [touch-action:none]">
+            <Suspense fallback={<PageLoader />}>
+              <Routes>
+                <Route
+                  path="/dashboard"
+                  element={
+                    <ProtectedRoute>
+                      <Dashboard />
+                    </ProtectedRoute>
+                  }
+                />
+              </Routes>
+            </Suspense>
+          </div>
+        </MotionConfig>
       </AuthProvider>
     );
   }
 
   return (
     <AuthProvider>
-      <Toaster position="top-right" richColors closeButton />
-      <AnimatePresence>
-        {showSplash && <SplashLoader key="splash" />}
-      </AnimatePresence>
-      <ScrollContext.Provider value={{ scrollContainerRef }}>
-        <div className="relative h-[100dvh] w-full bg-background flex flex-col overflow-hidden [touch-action:none]">
-          {showChatAgent && <AIChatAgent />}
-          <div 
-            ref={handleScrollRef}
-            id="main-scroll-container"
-            className="flex-1 overflow-y-scroll flex flex-col min-h-0 [touch-action:pan-y_manipulation] relative [scrollbar-gutter:stable]"
-          >
-            {showPublicNav && <Navigation />}
-            <main className="flex flex-col">
-              <Suspense fallback={<PageLoader />}>
-                <ScrollToTop />
-                {scrollEl && (
-                  <Routes>
-                    <Route path="/" element={<Home />} />
-                    <Route path="/about" element={<About />} />
-                    <Route path="/programs" element={<Programs />} />
-                    <Route path="/events" element={<SignatureExperiences />} />
-                    <Route path="/council" element={<Council />} />
-                    <Route path="/guidance" element={<Guidance />} />
-                    <Route path="/news" element={<News />} />
-                    <Route path="/news/:slug" element={<News />} />
-                    <Route path="/contact" element={<Contact />} />
-                    <Route path="/connect" element={<Connect />} />
-                    <Route path="/knowledge-hub" element={<KnowledgeHub />} />
-                    <Route path="/pricing" element={<Pricing />} />
-                    <Route path="/login" element={<Login />} />
-                    <Route path="/legal" element={<Legal />} />
-                  </Routes>
-                )}
-              </Suspense>
-            </main>
-            {showPublicFooter && <Footer />}
-            {/* Scroll spacer — guarantees the scroll container can always reach the last footer pixel */}
-            <div aria-hidden="true" className="h-px w-full shrink-0" />
+      <MotionConfig reducedMotion="user">
+        <Toaster position="top-right" richColors closeButton />
+        <AnimatePresence>
+          {showSplash && <SplashLoader key="splash" />}
+        </AnimatePresence>
+        <ScrollContext.Provider value={{ scrollContainerRef }}>
+          <div className="relative h-[100dvh] w-full bg-background flex flex-col overflow-hidden [touch-action:none]">
+            {showChatAgent && <AIChatAgent />}
+            <div 
+              ref={handleScrollRef}
+              id="main-scroll-container"
+              className="flex-1 overflow-y-scroll min-h-0 [touch-action:pan-y_manipulation] relative [scrollbar-gutter:stable]"
+            >
+              <div className="flex flex-col min-h-full">
+                {showPublicNav && <Navigation />}
+                <main className="flex-1 flex flex-col">
+                  <Suspense fallback={<PageLoader />}>
+                    <ScrollToTop />
+                    {scrollEl && (
+                      <Routes>
+                        <Route path="/" element={<Home />} />
+                        <Route path="/about" element={<About />} />
+                        <Route path="/programs" element={<Programs />} />
+                        <Route path="/events" element={<SignatureExperiences />} />
+                        <Route path="/council" element={<Council />} />
+                        <Route path="/guidance" element={<Guidance />} />
+                        <Route path="/news" element={<News />} />
+                        <Route path="/news/:slug" element={<News />} />
+                        <Route path="/contact" element={<Contact />} />
+                        <Route path="/connect" element={<Connect />} />
+                        <Route path="/knowledge-hub" element={<KnowledgeHub />} />
+                        <Route path="/pricing" element={<Pricing />} />
+                        <Route path="/login" element={<Login />} />
+                        <Route path="/legal" element={<Legal />} />
+                      </Routes>
+                    )}
+                  </Suspense>
+                </main>
+                {showPublicFooter && <Footer />}
+              </div>
+            </div>
           </div>
-        </div>
-      </ScrollContext.Provider>
+        </ScrollContext.Provider>
+      </MotionConfig>
     </AuthProvider>
   );
 }

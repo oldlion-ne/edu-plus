@@ -120,7 +120,7 @@ export default function KnowledgeHub() {
   };
 
   return (
-    <div className="min-h-screen bg-background w-full">
+    <div className="flex-1 bg-background w-full">
 
       {/* ── Typographic Hero ── */}
       <PageHero

@@ -44,7 +44,7 @@ export default function News() {
     const article = ARTICLES.find(a => a.title.toLowerCase().replace(/[^a-z0-9]+/g, '-') === slug);
     if (!article) {
       return (
-        <div className="bg-background w-full min-h-screen pt-40 px-6">
+        <div className="bg-background w-full flex-1 pt-40 px-6">
           <div className="max-w-2xl mx-auto text-center">
             <h1 className="text-3xl font-medium text-foreground mb-4">Article not found</h1>
             <p className="text-muted-foreground mb-8">We could not find the news article you are looking for.</p>
@@ -57,7 +57,7 @@ export default function News() {
     }
 
     return (
-      <div className="bg-background w-full min-h-screen">
+      <div className="bg-background w-full flex-1">
         <section className="py-20 max-w-[1440px] mx-auto px-6 md:px-12 mt-16">
           <div className="max-w-3xl mx-auto">
             <div className="mb-12">
@@ -87,7 +87,7 @@ export default function News() {
   }
 
   return (
-    <div className="bg-background w-full min-h-screen">
+    <div className="bg-background w-full flex-1">
 
       {/* ── Typographic Hero ── */}
       <PageHero

@@ -6,6 +6,7 @@ import { toast } from 'sonner';
 import { useAuth } from '../lib/useAuth';
 import DashboardOnboardingTour from '../components/DashboardOnboardingTour';
 import { NumberTicker } from '../components/magicui/NumberTicker';
+import { MagicCard } from '../components/ui/magic-card';
 import {
   Dialog,
   DialogContent,
@@ -540,10 +541,10 @@ export default function Dashboard() {
             id="tab-overview"
             variant="ghost"
             onClick={() => { setActiveTab('overview'); onNavItemClick?.(); }}
-            className={`w-full justify-start gap-3 px-4 py-2.5 font-sans text-sm font-medium transition-all duration-200 rounded-none border-l-2 ${
+            className={`w-full justify-start gap-3 px-4 py-2.5 font-sans text-sm font-medium transition-all duration-200 rounded-none ${
               activeTab === 'overview'
-                ? 'border-l-primary bg-primary/10 text-primary font-semibold'
-                : 'border-l-transparent text-muted-foreground hover:text-primary hover:bg-primary/5'
+                ? 'bg-primary/10 text-primary font-semibold'
+                : 'text-muted-foreground hover:text-primary hover:bg-primary/5'
             }`}
           >
             <LayoutDashboard className="size-4 shrink-0" />
@@ -553,10 +554,10 @@ export default function Dashboard() {
             id="tab-uploader"
             variant="ghost"
             onClick={() => { setActiveTab('uploader'); onNavItemClick?.(); }}
-            className={`w-full justify-start gap-3 px-4 py-2.5 font-sans text-sm font-medium transition-all duration-200 rounded-none border-l-2 ${
+            className={`w-full justify-start gap-3 px-4 py-2.5 font-sans text-sm font-medium transition-all duration-200 rounded-none ${
               activeTab === 'uploader'
-                ? 'border-l-primary bg-primary/10 text-primary font-semibold'
-                : 'border-l-transparent text-muted-foreground hover:text-primary hover:bg-primary/5'
+                ? 'bg-primary/10 text-primary font-semibold'
+                : 'text-muted-foreground hover:text-primary hover:bg-primary/5'
             }`}
           >
             <UploadCloud className="size-4 shrink-0" />
@@ -566,10 +567,10 @@ export default function Dashboard() {
             id="tab-ai-matrix"
             variant="ghost"
             onClick={() => { setActiveTab('ai-matrix'); onNavItemClick?.(); }}
-            className={`w-full justify-start gap-3 px-4 py-2.5 font-sans text-sm font-medium transition-all duration-200 rounded-none border-l-2 ${
+            className={`w-full justify-start gap-3 px-4 py-2.5 font-sans text-sm font-medium transition-all duration-200 rounded-none ${
               activeTab === 'ai-matrix'
-                ? 'border-l-primary bg-primary/10 text-primary font-semibold'
-                : 'border-l-transparent text-muted-foreground hover:text-primary hover:bg-primary/5'
+                ? 'bg-primary/10 text-primary font-semibold'
+                : 'text-muted-foreground hover:text-primary hover:bg-primary/5'
             }`}
           >
             <Cpu className="size-4 shrink-0" />
@@ -579,10 +580,10 @@ export default function Dashboard() {
             id="tab-messages"
             variant="ghost"
             onClick={() => { setActiveTab('messages'); onNavItemClick?.(); }}
-            className={`w-full justify-start gap-3 px-4 py-2.5 font-sans text-sm font-medium transition-all duration-200 rounded-none border-l-2 ${
+            className={`w-full justify-start gap-3 px-4 py-2.5 font-sans text-sm font-medium transition-all duration-200 rounded-none ${
               activeTab === 'messages'
-                ? 'border-l-primary bg-primary/10 text-primary font-semibold'
-                : 'border-l-transparent text-muted-foreground hover:text-primary hover:bg-primary/5'
+                ? 'bg-primary/10 text-primary font-semibold'
+                : 'text-muted-foreground hover:text-primary hover:bg-primary/5'
             }`}
           >
             <Mail className="size-4 shrink-0" />
@@ -823,24 +824,24 @@ export default function Dashboard() {
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 w-full">
-                  <Card className="border border-border bg-card rounded-none text-left p-5 flex flex-col gap-0 py-5">
+                  <MagicCard className="border-border bg-card rounded-none text-left p-5 flex flex-col gap-0 py-5" gradientColor="oklch(var(--primary)/0.08)" gradientSize={150}>
                     <span className="font-mono text-[9px] text-primary tracking-wider block mb-1">{t('dashboard.overview.hubResources')}</span>
                     <span className="font-heading text-3xl font-light text-foreground">
                       <NumberTicker value={knowledgeHubItems.length} />
                     </span>
-                  </Card>
-                  <Card className="border border-border bg-card rounded-none text-left p-5 flex flex-col gap-0 py-5">
+                  </MagicCard>
+                  <MagicCard className="border-border bg-card rounded-none text-left p-5 flex flex-col gap-0 py-5" gradientColor="oklch(var(--primary)/0.08)" gradientSize={150}>
                     <span className="font-mono text-[9px] text-primary tracking-wider block mb-1">{t('dashboard.overview.aiTrainingRules')}</span>
                     <span className="font-heading text-3xl font-light text-foreground">
                       <NumberTicker value={kbDocuments.length} />
                     </span>
-                  </Card>
-                  <Card className="border border-border bg-card rounded-none text-left p-5 flex flex-col gap-0 py-5">
+                  </MagicCard>
+                  <MagicCard className="border-border bg-card rounded-none text-left p-5 flex flex-col gap-0 py-5" gradientColor="oklch(var(--primary)/0.08)" gradientSize={150}>
                     <span className="font-mono text-[9px] text-primary tracking-wider block mb-1">{t('dashboard.overview.inboundInquiries')}</span>
                     <span className="font-heading text-3xl font-light text-foreground">
                       <NumberTicker value={contactMessages.length} />
                     </span>
-                  </Card>
+                  </MagicCard>
                 </div>
 
                 {/* Interactive Area Chart */}
