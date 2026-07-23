@@ -30,8 +30,8 @@ describe('Vision Component', () => {
     // Labels are inside a Framer Motion parent that starts at opacity:0 in JSDOM —
     // toBeInTheDocument() is correct here; toBeVisible() is incompatible with
     // Framer Motion's inline initial-state styles in a no-animation-engine env.
-    expect(screen.getByText('Our Mission')).toBeInTheDocument();
-    expect(screen.getByText('Our Vision')).toBeInTheDocument();
+    expect(screen.getByText('01 / Our Mission')).toBeInTheDocument();
+    expect(screen.getByText('02 / Our Vision')).toBeInTheDocument();
 
     // Full copy verified via textContent (unaffected by CSS opacity).
     expect(container.textContent).toMatch(/To become a leading skills development platform/i);

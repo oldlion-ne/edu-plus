@@ -113,7 +113,7 @@ export const SpotLightItem = ({ children, className }: SpotlightItemProps) => {
           }}
         />
       )}
-      <div className="relative z-20 h-full w-full bg-card rounded-lg">
+      <div className="relative z-20 h-full w-full bg-card rounded-none">
         {children}
       </div>
     </div>

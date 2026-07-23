@@ -15,6 +15,7 @@ export function ScrollScrubVideo({ src, className = '', scrollFactor = 1.5, chil
   const scrollContext = useScrollContainer();
   const [videoUrl, setVideoUrl] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
+  const blobUrlRef = useRef<string | null>(null);
 
   // Math references for lerping
   const targetTimeRef = useRef(0);
@@ -30,7 +31,12 @@ export function ScrollScrubVideo({ src, className = '', scrollFactor = 1.5, chil
       })
       .then((blob) => {
         if (active) {
+          // Revoke previous URL before creating a new one
+          if (blobUrlRef.current) {
+            URL.revokeObjectURL(blobUrlRef.current);
+          }
           const url = URL.createObjectURL(blob);
+          blobUrlRef.current = url;
           setVideoUrl(url);
           setLoading(false);
         }
@@ -41,8 +47,9 @@ export function ScrollScrubVideo({ src, className = '', scrollFactor = 1.5, chil
 
     return () => {
       active = false;
-      if (videoUrl) {
-        URL.revokeObjectURL(videoUrl);
+      if (blobUrlRef.current) {
+        URL.revokeObjectURL(blobUrlRef.current);
+        blobUrlRef.current = null;
       }
     };
   }, [src]);
@@ -110,6 +117,7 @@ export function ScrollScrubVideo({ src, className = '', scrollFactor = 1.5, chil
       window.removeEventListener('resize', handleScroll);
       cancelAnimationFrame(animId);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [videoUrl, scrollContext?.scrollContainerRef?.current]);
 
   // Prime video on iOS touch events to avoid blank frames

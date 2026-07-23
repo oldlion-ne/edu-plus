@@ -19,7 +19,7 @@ const FRAGMENT_SHADER = /* glsl */ `
       vec4 cloudLayer(vec2 uv, float aspect, float scale, float spd, float cover) {
         vec2 p = vec2(uv.x * aspect, uv.y) * scale + vec2(time * spd, 0.0);
         float d = cloudShape(p);
-        float density = smoothstep(cover, cover + 0.16, d);   // soft rounded masses
+        float density = smoothstep(cover, cover + 0.16, d);   // soft spherical masses
         // self-shadow: brighter where the cloud lifts toward the light (up),
         // cool blue-grey where it falls into the underside.
         float below = cloudShape(p + vec2(0.0, -0.14));

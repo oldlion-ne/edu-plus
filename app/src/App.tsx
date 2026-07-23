@@ -1,4 +1,4 @@
-import { lazy, Suspense, useState, useRef, useEffect } from 'react';
+import { lazy, Suspense, useState, useRef, useEffect, useCallback } from 'react';
 import { Routes, Route, useLocation } from 'react-router';
 import Navigation from './sections/Navigation';
 import Footer from './sections/Footer';
@@ -10,6 +10,9 @@ import { ScrollContext } from './lib/ScrollContext';
 import { Toaster } from './components/ui/sonner';
 import SplashLoader from './components/SplashLoader';
 import { AnimatePresence, MotionConfig } from 'framer-motion';
+import CookieConsentBanner from './components/CookieConsentBanner';
+import { Analytics } from '@vercel/analytics/react';
+import { SpeedInsights } from '@vercel/speed-insights/react';
 
 // Lazy-load all page components — each is only downloaded when its route is visited.
 // Dashboard (with Recharts) is never loaded until the user navigates to /dashboard.
@@ -37,6 +40,11 @@ const PageLoader = () => (
 
 function App() {
   const [showSplash, setShowSplash] = useState(true);
+  const [hasConsent, setHasConsent] = useState(() => document.cookie.includes('eduplus_cookie_consent=true'));
+
+  const handleConsentChange = useCallback((granted: boolean) => {
+    setHasConsent(granted);
+  }, []);
 
   useEffect(() => {
     let mounted = true;
@@ -81,14 +89,27 @@ function App() {
   const showPublicNav = !isDashboard;
   const showPublicFooter = !isDashboard;
 
+  const sharedGlobals = (
+    <>
+      <CookieConsentBanner onConsentChange={handleConsentChange} />
+      <Toaster position="top-right" richColors closeButton />
+      {hasConsent && (
+        <>
+          <Analytics />
+          <SpeedInsights />
+        </>
+      )}
+      <AnimatePresence>
+        {showSplash && <SplashLoader key="splash" />}
+      </AnimatePresence>
+    </>
+  );
+
   if (isDashboard) {
     return (
       <AuthProvider>
         <MotionConfig reducedMotion="user">
-          <Toaster position="top-right" richColors closeButton />
-          <AnimatePresence>
-            {showSplash && <SplashLoader key="splash" />}
-          </AnimatePresence>
+          {sharedGlobals}
           <div className="relative h-[100dvh] w-full bg-background overflow-hidden [touch-action:none]">
             <Suspense fallback={<PageLoader />}>
               <Routes>
@@ -111,10 +132,7 @@ function App() {
   return (
     <AuthProvider>
       <MotionConfig reducedMotion="user">
-        <Toaster position="top-right" richColors closeButton />
-        <AnimatePresence>
-          {showSplash && <SplashLoader key="splash" />}
-        </AnimatePresence>
+        {sharedGlobals}
         <ScrollContext.Provider value={{ scrollContainerRef }}>
           <div className="relative h-[100dvh] w-full bg-background flex flex-col overflow-hidden [touch-action:none]">
             {showChatAgent && <AIChatAgent />}

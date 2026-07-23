@@ -9,27 +9,27 @@ interface TourStep {
 const TOUR_STEPS: TourStep[] = [
   {
     targetId: 'nav-roles',
-    title: 'TELEMETRY ACCESS MATRIX',
+    title: 'Telemetry Access Matrix',
     text: 'Switch authorized profiles instantly using this developer simulator. Explore layout access for Admin, Educator, and Resource Persons.',
   },
   {
     targetId: 'tab-overview',
-    title: 'DIAGNOSTICS & ANALYTICS',
+    title: 'Diagnostics & Analytics',
     text: 'Track real-time content volumes, load statistics, active chatbot factual matrices, and system telemetry from a high-level viewport.',
   },
   {
     targetId: 'tab-uploader',
-    title: 'CONTENT UPLOADER',
+    title: 'Content Uploader',
     text: 'Upload and categorize online webinars, tutorials, or study materials. Authorized roles can update content nodes instantly.',
   },
   {
     targetId: 'tab-ai-matrix',
-    title: 'AI COGNITIVE KNOWLEDGE GRID',
+    title: 'AI Cognitive Knowledge Grid',
     text: 'Train the Edu+ AI Cognitive Advisor. Add custom facts or specific QA points that compile dynamically into chatbot core prompts.',
   },
   {
     targetId: 'tab-messages',
-    title: 'SONAR MESSAGE TERMINAL',
+    title: 'Sonar Message Terminal',
     text: 'Sync and read messages sent from the Contact page. Real-time sonar channels alert you instantly when a new inquiry pings.',
   },
 ];
@@ -167,12 +167,9 @@ export default function DashboardOnboardingTour({
             width={rect.width}
             height={rect.height}
             fill="none"
-            stroke="oklch(76.8% 0.233 130.85)"   /* --primary value */
+            stroke="oklch(var(--primary))"
             strokeWidth="1.5"
-            rx="2"
-            style={{
-              filter: 'drop-shadow(0 0 6px oklch(76.8% 0.233 130.85 / 0.7))',
-            }}
+            rx="0"
           />
         )}
       </svg>
@@ -187,18 +184,17 @@ export default function DashboardOnboardingTour({
         <div className="flex items-center gap-2 px-4 pt-4 pb-3 border-b border-border">
           <span
             className="w-1.5 h-1.5 bg-primary shrink-0"
-            style={{ boxShadow: '0 0 6px oklch(76.8% 0.233 130.85 / 0.8)' }} /* ui-ignore */
           />
-          <span className="font-mono text-[9px] font-bold tracking-widest text-primary leading-none">
+          <span className="font-heading text-sm font-semibold text-foreground leading-none">
             {currentStep.title}
           </span>
-          <span className="ml-auto font-mono text-[9px] text-muted-foreground shrink-0">
+          <span className="ml-auto font-sans text-xs font-medium text-muted-foreground shrink-0">
             {stepIndex + 1} / {TOUR_STEPS.length}
           </span>
         </div>
 
         {/* Body */}
-        <p className="px-4 py-3 text-xs text-muted-foreground leading-relaxed min-h-[56px]">
+        <p className="px-4 py-3 text-[13px] text-muted-foreground leading-relaxed min-h-[56px]">
           {currentStep.text}
         </p>
 
@@ -210,8 +206,8 @@ export default function DashboardOnboardingTour({
               className="w-1 h-1 rounded-none transition-all duration-300"
               style={{
                 background: i === stepIndex
-                  ? 'oklch(76.8% 0.233 130.85)'
-                  : 'oklch(76.8% 0.233 130.85 / 0.25)',
+                  ? 'oklch(var(--primary))'
+                  : 'oklch(var(--primary) / 0.25)',
               }}
             />
           ))}
@@ -222,26 +218,26 @@ export default function DashboardOnboardingTour({
           <button /* ui-ignore */
             type="button"
             onClick={handleSkip}
-            className="text-[9px] font-mono text-muted-foreground hover:text-foreground transition-colors uppercase tracking-widest cursor-pointer"
+            className="text-xs font-sans font-medium text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
           >
-            [ SKIP TOUR ]
+            Skip Tour
           </button>
           <div className="flex gap-2">
             {stepIndex > 0 && (
               <button /* ui-ignore */
                 type="button"
                 onClick={handleBack}
-                className="px-3 py-1.5 border border-border hover:border-foreground hover:text-foreground transition-all text-[9px] font-mono cursor-pointer"
+                className="px-4 py-2 border border-border hover:border-foreground hover:text-foreground transition-all text-xs font-medium font-sans cursor-pointer rounded-none"
               >
-                PREV
+                Previous
               </button>
             )}
             <button /* ui-ignore */
               type="button"
               onClick={handleNext}
-              className="px-3 py-1.5 bg-primary hover:bg-primary/90 text-primary-foreground font-bold transition-all text-[9px] font-mono cursor-pointer"
+              className="px-4 py-2 bg-primary hover:bg-primary/90 text-primary-foreground font-medium transition-all text-xs font-sans cursor-pointer rounded-none"
             >
-              {stepIndex === TOUR_STEPS.length - 1 ? 'COMPLETE' : 'NEXT'}
+              {stepIndex === TOUR_STEPS.length - 1 ? 'Complete' : 'Next'}
             </button>
           </div>
         </div>

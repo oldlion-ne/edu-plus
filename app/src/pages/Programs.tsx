@@ -1,8 +1,9 @@
 import { useState, type KeyboardEvent } from 'react';
 import { Link } from 'react-router';
+import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { PageHero } from '@/components/ui/page-hero';
-import { BulletList, BulletItem } from '@/components/ui/bullet-list';
+import { BulletList } from '@/components/ui/bullet-list';
 import { editorialIllustrations } from '@/lib/editorialIllustrations';
 import { MagicCard } from '@/components/magicui/MagicCard';
 
@@ -148,14 +149,21 @@ export default function Programs() {
                 tabIndex={selected === i ? 0 : -1}
                 onClick={() => setSelected(i)}
                 onKeyDown={(event) => handleTabKeyDown(event, i)}
-                className={`text-left py-4 px-4 transition-colors duration-150 flex items-start gap-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground focus-visible:ring-offset-2 focus-visible:ring-offset-background ${
+                className={`relative text-left py-4 px-4 transition-colors duration-150 flex items-start gap-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground focus-visible:ring-offset-2 focus-visible:ring-offset-background ${
                   selected === i
-                    ? 'bg-secondary text-foreground'
+                    ? 'text-foreground'
                     : 'text-muted-foreground hover:text-foreground hover:bg-secondary/60'
                 }`}
               >
-                <span className="text-[11px] font-semibold text-primary/70 mt-0.5 shrink-0">{p.num}</span>
-                <span className="text-[15px] font-medium leading-snug">{p.title}</span>
+                {selected === i && (
+                  <motion.div
+                    layoutId="activeProgramTab"
+                    className="absolute inset-0 bg-secondary/80 border-l-[3px] border-primary z-0"
+                    transition={{ type: 'tween', ease: [0.16, 1, 0.3, 1], duration: 0.5 }}
+                  />
+                )}
+                <span className="relative z-10 font-sans text-[11px] font-semibold text-primary/70 mt-0.5 shrink-0">{p.num}</span>
+                <span className="relative z-10 font-sans text-[15px] font-medium leading-snug">{p.title}</span>
               </button>
             ))}
           </div>
@@ -171,35 +179,63 @@ export default function Programs() {
                 hidden={selected !== i}
                 className={selected === i ? 'h-full' : 'hidden'}
               >
-                <MagicCard 
-                  className="h-full border border-border/50 p-8 md:p-12 rounded-none bg-card/30"
-                  gradientColor="oklch(var(--primary) / 0.05)"
-                >
-                <span className="text-[13px] font-medium tracking-wide uppercase text-muted-foreground mb-3 block">
-                  {program.tag}
-                </span>
-                <h2 className="text-[32px] font-medium text-foreground mb-6 leading-snug">
-                  {program.title}
-                </h2>
-                <p className="text-[16px] text-muted-foreground leading-relaxed mb-12 max-w-[55ch]">
-                  {program.desc}
-                </p>
+                {selected === i && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 15 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ type: 'tween', ease: [0.16, 1, 0.3, 1], duration: 0.4 }}
+                    className="h-full"
+                  >
+                    <MagicCard 
+                      className="h-full border border-border/50 p-8 md:p-12 rounded-none bg-card/30"
+                      gradientColor="oklch(var(--primary) / 0.05)"
+                    >
+                    <motion.span 
+                      initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.1 }}
+                      className="font-sans text-[13px] font-medium tracking-wide uppercase text-muted-foreground mb-3 block">
+                      {program.tag}
+                    </motion.span>
+                    <motion.h2 
+                      initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.15 }}
+                      className="font-heading text-[32px] font-medium text-foreground mb-6 leading-snug">
+                      {program.title}
+                    </motion.h2>
+                    <motion.p 
+                      initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }}
+                      className="font-sans text-[16px] text-muted-foreground leading-relaxed mb-12 max-w-[55ch]">
+                      {program.desc}
+                    </motion.p>
 
-                <div className="mb-12">
-                  <span className="text-[13px] font-medium uppercase tracking-wide text-muted-foreground mb-6 block">
-                    Core Outcomes
-                  </span>
-                  <BulletList>
-                    {program.outcomes.map((outcome) => (
-                      <BulletItem key={outcome}>{outcome}</BulletItem>
-                    ))}
-                  </BulletList>
-                </div>
+                    <div className="mb-12">
+                      <motion.span 
+                        initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.25 }}
+                        className="font-sans text-[13px] font-medium uppercase tracking-wide text-muted-foreground mb-6 block">
+                        Core Outcomes
+                      </motion.span>
+                      <BulletList>
+                        {program.outcomes.map((outcome, idx) => (
+                          <motion.li
+                            key={outcome}
+                            className="font-sans text-[15px] text-foreground flex items-start gap-3"
+                            initial={{ opacity: 0, x: -10 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ delay: 0.3 + idx * 0.05, type: 'tween', ease: [0.16, 1, 0.3, 1], duration: 0.4 }}
+                          >
+                            <span className="mt-2 w-1 h-1 bg-primary rounded-none shrink-0" />
+                            {outcome}
+                          </motion.li>
+                        ))}
+                      </BulletList>
+                    </div>
 
-                <Button asChild size="md" className="rounded-none bg-foreground text-background hover:bg-primary transition-colors duration-200">
-                  <Link to="/contact" /* ui-ignore */>Advisory</Link>
-                </Button>
-                </MagicCard>
+                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }}>
+                      <Button asChild size="md" className="font-sans rounded-none bg-foreground text-background hover:bg-primary transition-colors duration-200">
+                        <Link to="/contact" /* ui-ignore */>Advisory</Link>
+                      </Button>
+                    </motion.div>
+                    </MagicCard>
+                  </motion.div>
+                )}
               </div>
             ))}
           </div>

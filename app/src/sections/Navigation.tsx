@@ -143,6 +143,7 @@ export default function Navigation() {
       window.addEventListener('scroll', handleScroll, { passive: true });
       return () => window.removeEventListener('scroll', handleScroll);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [scrollContext?.scrollContainerRef.current]);
 
   const handleLogout = async () => {
