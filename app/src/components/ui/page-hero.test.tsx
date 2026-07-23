@@ -23,7 +23,7 @@ describe('PageHero', () => {
     ).toBeInTheDocument();
     expect(screen.queryByRole('img')).not.toBeInTheDocument();
     expect(container.firstElementChild?.firstElementChild).toHaveClass(
-      'min-h-[65vh]',
+      'min-h-[50vh]',
     );
   });
 
@@ -54,7 +54,7 @@ describe('PageHero', () => {
     expect(eyebrow).toHaveClass('text-primary');
     expect(layout).toHaveClass(
       'grid',
-      'min-h-[75vh]',
+      'min-h-[55vh]',
       'lg:grid-cols-[55fr_45fr]',
     );
   });

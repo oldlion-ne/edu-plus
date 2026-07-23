@@ -6,7 +6,7 @@ const navLinks = [
   { title: 'About',       href: '/about'    },
   { title: 'Programs',    href: '/programs' },
   { title: 'Council',     href: '/council'  },
-  { title: 'Resources',   href: '/resources' },
+  { title: 'Knowledge Hub', href: '/knowledge-hub' },
   { title: 'Pricing',     href: '/pricing'  },
   { title: 'Connect',     href: '/connect'  },
 ];

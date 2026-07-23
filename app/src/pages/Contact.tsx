@@ -17,7 +17,7 @@ import {
   SelectValue,
 } from '../components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Link } from 'react-router';
+
 
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL as string;
 const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_PUBLIC_KEY as string;
@@ -314,7 +314,7 @@ export default function Contact() {
                         htmlFor="contact-marketing"
                         className="text-[13px] font-medium text-muted-foreground leading-snug cursor-pointer"
                       >
-                        I agree to receive marketing communications and accept the <Link to="/legal#terms" className="text-primary hover:underline" /* ui-ignore */>Terms of Service</Link>, <Link to="/legal#privacy" className="text-primary hover:underline" /* ui-ignore */>Privacy Policy</Link>, and <Link to="/legal#cookies" className="text-primary hover:underline" /* ui-ignore */>Cookie Policy</Link>.
+                        I hereby agree to receive promotional messages through WhatsApp / RCS /SMS
                       </label>
                     </div>
 
@@ -371,7 +371,7 @@ export default function Contact() {
                       htmlFor="newsletter-marketing"
                       className="text-[13px] font-medium text-muted-foreground leading-snug cursor-pointer"
                     >
-                      I agree to receive marketing communications and accept the <Link to="/legal#terms" className="text-primary hover:underline" /* ui-ignore */>Terms of Service</Link>, <Link to="/legal#privacy" className="text-primary hover:underline" /* ui-ignore */>Privacy Policy</Link>, and <Link to="/legal#cookies" className="text-primary hover:underline" /* ui-ignore */>Cookie Policy</Link>.
+                      I hereby agree to receive promotional messages through WhatsApp / RCS /SMS
                     </label>
                   </div>
                 </form>

@@ -5,8 +5,9 @@ import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
-import { Eye, EyeOff } from 'lucide-react';
+import { Eye, EyeOff, ShieldCheck } from 'lucide-react';
 import DreamyClouds from '@/components/effects/DreamyClouds';
+import { supabase } from '@/lib/supabaseClient';
 
 const translations = {
   brandName: 'Edu',
@@ -33,12 +34,24 @@ export default function Login() {
   const [password, setPassword]     = useState('');
   const [showPass, setShowPass]     = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [mfaRequired, setMfaRequired] = useState(false);
+  const [mfaCode, setMfaCode] = useState('');
+  const [mfaFactorId, setMfaFactorId] = useState('');
 
   const from = (location.state as any)?.from?.pathname || '/dashboard';
 
   React.useEffect(() => {
-    if (user) navigate(from, { replace: true });
-  }, [user, navigate, from]);
+    if (user && !mfaRequired) {
+      // Check MFA asynchronously just in case user object was loaded from session
+      supabase.auth.mfa.getAuthenticatorAssuranceLevel().then(({ data }) => {
+        if (data && data.nextLevel === 'aal2' && data.currentLevel === 'aal1') {
+          setMfaRequired(true);
+        } else {
+          navigate(from, { replace: true });
+        }
+      });
+    }
+  }, [user, navigate, from, mfaRequired]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -46,6 +59,23 @@ export default function Login() {
     try {
       const { error } = await signIn(email, password);
       if (error) throw error;
+      
+      const { data: aalData, error: aalError } = await supabase.auth.mfa.getAuthenticatorAssuranceLevel();
+      if (aalError) throw aalError;
+      
+      if (aalData.nextLevel === 'aal2' && aalData.currentLevel === 'aal1') {
+        const { data: factorsData, error: factorsError } = await supabase.auth.mfa.listFactors();
+        if (factorsError) throw factorsError;
+        
+        const totpFactor = factorsData.totp.find(f => f.status === 'verified');
+        if (totpFactor) {
+          setMfaFactorId(totpFactor.id);
+          setMfaRequired(true);
+          setSubmitting(false);
+          return; // Stop here, wait for MFA
+        }
+      }
+
       toast.success('Welcome back.');
       navigate(from, { replace: true });
     } catch (err: any) {
@@ -55,163 +85,253 @@ export default function Login() {
     }
   };
 
+  const handleMfaVerify = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSubmitting(true);
+    try {
+      const challengeRes = await supabase.auth.mfa.challenge({ factorId: mfaFactorId });
+      if (challengeRes.error) throw challengeRes.error;
+
+      const verifyRes = await supabase.auth.mfa.verify({
+        factorId: mfaFactorId,
+        challengeId: challengeRes.data.id,
+        code: mfaCode
+      });
+      if (verifyRes.error) throw verifyRes.error;
+
+      toast.success('Welcome back.');
+      setMfaRequired(false);
+      navigate(from, { replace: true });
+    } catch (err: any) {
+      toast.error(err.message || 'Invalid verification code');
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
   return (
-    <div className="flex-grow w-full flex flex-col md:flex-row min-h-[calc(100dvh-64px)]">
+    <div className="flex-grow w-full flex flex-col md:flex-row min-h-[calc(100dvh-64px)] bg-background">
 
       {/* ── Left Brand Panel (shader + editorial text) ─────────────────── */}
-      <div className="relative hidden md:flex md:w-[58%] flex-col overflow-hidden">
-        {/* Full-bleed shader — no overlay */}
+      <div className="relative hidden md:flex md:w-1/2 lg:w-[55%] flex-col overflow-hidden border-r border-border">
+        {/* Full-bleed shader — untouched as requested */}
         <div className="absolute inset-0 z-0">
           <DreamyClouds className="w-full h-full" />
         </div>
 
-        {/* Content — dark charcoal text readable on the bright pastel sky */}
-        <div className="relative z-10 flex flex-col h-full px-12 py-10">
-
+        {/* Content Overlay */}
+        <div className="relative z-10 flex flex-col h-full px-12 py-12 justify-between">
+          
           {/* Logo */}
-          <div className="shrink-0">
-            <span className="font-heading font-bold text-2xl text-[#1C1B1A] leading-none tracking-tight">
+          <div className="shrink-0 animate-in fade-in slide-in-from-bottom-4 duration-700 ease-out fill-mode-both" style={{ animationDelay: '100ms' }}>
+            <span className="font-heading font-bold text-3xl text-[#1C1B1A] leading-none tracking-tight">
               {t('brandName')}
               <span className="text-[#FBBF24] font-light">{t('brandPlus')}</span>
             </span>
           </div>
 
           {/* Central editorial statement */}
-          <div className="flex-1 flex flex-col justify-center max-w-md">
-            <h2
-              className="font-heading font-bold text-5xl xl:text-6xl text-[#1C1B1A] leading-[1.08] whitespace-pre-line"
-            >
+          <div className="flex-1 flex flex-col justify-center max-w-lg">
+            <h2 className="font-heading font-semibold text-5xl lg:text-7xl text-[#1C1B1A] leading-[1.05] whitespace-pre-line tracking-tight animate-in fade-in slide-in-from-bottom-6 duration-1000 ease-out fill-mode-both" style={{ animationDelay: '300ms' }}>
               {t('taglineHeading')}
             </h2>
-            <div className="w-full h-[1px] bg-[#1C1B1A]/20 my-6" />
-            <p className="text-[#1C1B1A]/70 text-base font-sans leading-relaxed max-w-xs">
+            <div className="w-12 h-[2px] bg-[#1C1B1A]/30 my-8 animate-in fade-in zoom-in-50 duration-700 ease-out fill-mode-both" style={{ animationDelay: '500ms' }} />
+            <p className="text-[#1C1B1A]/70 text-lg font-sans leading-relaxed max-w-sm animate-in fade-in slide-in-from-bottom-4 duration-700 ease-out fill-mode-both" style={{ animationDelay: '600ms' }}>
               {t('taglineSub')}
             </p>
           </div>
 
-          {/* Bottom system note — amber accent bar, dark text */}
-          <div className="shrink-0 flex items-center gap-2">
-            <p className="text-[10px] font-sans tracking-[0.25em] uppercase text-[#1C1B1A]/70 font-medium">
+          {/* Bottom system note */}
+          <div className="shrink-0 animate-in fade-in slide-in-from-bottom-2 duration-700 ease-out fill-mode-both" style={{ animationDelay: '800ms' }}>
+            <p className="text-xs font-sans tracking-[0.25em] uppercase text-[#1C1B1A]/60 font-semibold">
               {t('systemNote')}
             </p>
           </div>
-
         </div>
       </div>
 
       {/* ── Right Form Panel ─────────────────────────────────────────────── */}
-      <div className="flex-1 flex flex-col items-center justify-center bg-background px-8 py-12 md:py-0">
+      <div className="flex-1 flex flex-col items-center justify-center bg-background px-8 py-16 md:py-0 relative">
+        
+        {/* Subtle geometric background element (Nordic Lagom: Straight lines, strict) */}
+        <div className="absolute inset-0 pointer-events-none overflow-hidden flex justify-center items-center opacity-[0.03]">
+          <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+                <path d="M 40 0 L 0 0 0 40" fill="none" stroke="currentColor" strokeWidth="0.5"/>
+              </pattern>
+            </defs>
+            <rect width="100%" height="100%" fill="url(#grid)" />
+          </svg>
+        </div>
 
         {/* Mobile-only logo */}
-        <div className="mb-10 md:hidden">
-          <span className="font-heading font-bold text-2xl text-foreground leading-none tracking-tight">
+        <div className="mb-12 md:hidden animate-in fade-in slide-in-from-bottom-4 duration-700 ease-out fill-mode-both">
+          <span className="font-heading font-bold text-3xl text-foreground leading-none tracking-tight">
             {t('brandName')}
             <span className="text-[#FBBF24] font-light">{t('brandPlus')}</span>
           </span>
         </div>
 
-        <div className="w-full max-w-[360px]">
+        <div className="w-full max-w-[380px] relative z-10">
 
           {/* Heading */}
-          <div className="mb-8">
-            <h1 className="font-heading text-2xl font-semibold text-foreground tracking-tight">
+          <div className="mb-10 animate-in fade-in slide-in-from-bottom-4 duration-700 ease-out fill-mode-both" style={{ animationDelay: '200ms' }}>
+            <h1 className="font-heading text-3xl font-medium text-foreground tracking-tight">
               {t('signIn')}
             </h1>
-            <p className="font-sans text-sm text-muted-foreground mt-1.5">
+            <p className="font-sans text-sm text-muted-foreground mt-2">
               Access your staff dashboard.
             </p>
           </div>
 
-          {/* Amber top-rule */}
-          <div className="w-full h-[2px] bg-[#FBBF24] mb-8" />
-
-          {/* Form */}
-          <form onSubmit={handleSubmit} className="flex flex-col gap-5">
-
-            {/* Email */}
-            <div className="flex flex-col gap-1.5">
-              <Label
-                htmlFor="login-email"
-                className="text-[11px] font-sans font-medium uppercase tracking-widest text-muted-foreground"
-              >
-                {t('emailLabel')}
-              </Label>
-              <input
-                id="login-email"
-                type="email"
-                placeholder="name@eduplus.in"
-                required
-                autoComplete="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className={cn(
-                  'w-full h-11 px-3 text-sm font-sans',
-                  'bg-muted/50 text-foreground',
-                  'border border-border',
-                  'placeholder:text-muted-foreground/50',
-                  'outline-none focus:border-[#FBBF24] focus:ring-1 focus:ring-[#FBBF24]/40',
-                  'transition-colors duration-200',
-                  'rounded-none',
-                )}
-              />
-            </div>
-
-            {/* Password */}
-            <div className="flex flex-col gap-1.5">
-              <Label
-                htmlFor="login-password"
-                className="text-[11px] font-sans font-medium uppercase tracking-widest text-muted-foreground"
-              >
-                {t('passwordLabel')}
-              </Label>
-              <div className="relative">
-                <input
-                  id="login-password"
-                  type={showPass ? 'text' : 'password'}
-                  placeholder="••••••••••••"
-                  required
-                  autoComplete="current-password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className={cn(
-                    'w-full h-11 px-3 pr-10 text-sm font-sans',
-                    'bg-muted/50 text-foreground',
-                    'border border-border',
-                    'placeholder:text-muted-foreground/50',
-                    'outline-none focus:border-[#FBBF24] focus:ring-1 focus:ring-[#FBBF24]/40',
-                    'transition-colors duration-200',
-                    'rounded-none',
-                  )}
-                />
-                <button /* ui-ignore */
-                  type="button"
-                  onClick={() => setShowPass((v) => !v)}
-                  aria-label={showPass ? 'Hide password' : 'Show password'}
-                  className="absolute inset-y-0 right-0 flex items-center px-3 text-muted-foreground hover:text-foreground transition-colors"
-                >
-                  {showPass
-                    ? <EyeOff size={15} strokeWidth={1.5} />
-                    : <Eye     size={15} strokeWidth={1.5} />
-                  }
-                </button>
+          {/* Form / MFA View */}
+          {mfaRequired ? (
+            <div className="flex flex-col gap-6 animate-in fade-in slide-in-from-bottom-4 duration-500 ease-out fill-mode-both" style={{ animationDelay: '100ms' }}>
+              <div className="bg-primary/5 border border-primary/20 p-5 flex items-start gap-4 rounded-none">
+                <ShieldCheck className="text-primary shrink-0 mt-0.5" size={20} />
+                <div>
+                  <h3 className="font-heading font-medium text-foreground text-sm tracking-wide">Two-Factor Authentication</h3>
+                  <p className="font-sans text-xs text-muted-foreground mt-1.5 leading-relaxed">Please enter the 6-digit code from your authenticator app to continue.</p>
+                </div>
               </div>
+              
+              <form onSubmit={handleMfaVerify} className="flex flex-col gap-6">
+                <div className="flex flex-col gap-2 relative group">
+                  <Label htmlFor="mfa-code" className="text-[10px] font-sans font-semibold uppercase tracking-widest text-muted-foreground group-focus-within:text-foreground transition-colors duration-300">
+                    Authentication Code
+                  </Label>
+                  <div className="relative">
+                    <input
+                      id="mfa-code"
+                      type="text"
+                      required
+                      autoFocus
+                      placeholder="000000"
+                      value={mfaCode}
+                      onChange={(e) => setMfaCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
+                      className="peer w-full h-14 text-center tracking-[0.5em] text-xl font-sans bg-transparent text-foreground border-0 border-b border-border outline-none focus:ring-0 rounded-none transition-colors duration-300"
+                    />
+                    <div className="absolute bottom-0 left-0 h-[2px] bg-[#FBBF24] w-0 transition-all duration-300 peer-focus:w-full" />
+                  </div>
+                </div>
+                <div className="flex flex-col gap-3 mt-2">
+                  <Button
+                    type="submit"
+                    disabled={mfaCode.length !== 6 || submitting}
+                    className="w-full h-12 font-sans text-sm font-medium tracking-wider uppercase bg-[#FBBF24] text-[#1C1B1A] hover:bg-[#FBBF24]/90 rounded-none border-none transition-all duration-300 hover:shadow-[4px_4px_0px_0px_rgba(28,27,26,0.1)] dark:hover:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.05)] disabled:hover:shadow-none disabled:opacity-50"
+                  >
+                    {submitting ? 'Verifying...' : 'Verify & Continue'}
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    onClick={() => { setMfaRequired(false); setMfaCode(''); }}
+                    className="w-full h-12 font-sans text-xs uppercase tracking-wider text-muted-foreground hover:text-foreground hover:bg-transparent rounded-none transition-colors duration-300"
+                  >
+                    Cancel
+                  </Button>
+                </div>
+              </form>
             </div>
+          ) : (
+            <form onSubmit={handleSubmit} className="flex flex-col gap-6">
+              
+              <div className="flex flex-col gap-6 animate-in fade-in slide-in-from-bottom-4 duration-700 ease-out fill-mode-both" style={{ animationDelay: '400ms' }}>
+                {/* Email */}
+                <div className="flex flex-col gap-2 relative group">
+                  <Label
+                    htmlFor="login-email"
+                    className="text-[10px] font-sans font-semibold uppercase tracking-widest text-muted-foreground group-focus-within:text-foreground transition-colors duration-300"
+                  >
+                    {t('emailLabel')}
+                  </Label>
+                  <div className="relative">
+                    <input
+                      id="login-email"
+                      type="email"
+                      placeholder="name@eduplus.in"
+                      required
+                      autoComplete="email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      className={cn(
+                        'peer w-full h-12 px-0 text-base font-sans',
+                        'bg-transparent text-foreground',
+                        'border-0 border-b border-border',
+                        'placeholder:text-muted-foreground/30',
+                        'outline-none focus:ring-0',
+                        'transition-all duration-300',
+                        'rounded-none'
+                      )}
+                    />
+                    <div className="absolute bottom-0 left-0 h-[2px] bg-[#FBBF24] w-0 transition-all duration-300 peer-focus:w-full" />
+                  </div>
+                </div>
 
-            {/* CTA */}
-            <Button
-              type="submit"
-              className="w-full h-11 mt-2 font-sans text-sm tracking-wide bg-[#FBBF24] text-[#1C1B1A] hover:bg-[#FBBF24]/90 rounded-none border-none transition-colors duration-200"
-              disabled={submitting}
-            >
-              {submitting ? t('signingIn') : t('signIn')}
-            </Button>
+                {/* Password */}
+                <div className="flex flex-col gap-2 relative group">
+                  <Label
+                    htmlFor="login-password"
+                    className="text-[10px] font-sans font-semibold uppercase tracking-widest text-muted-foreground group-focus-within:text-foreground transition-colors duration-300"
+                  >
+                    {t('passwordLabel')}
+                  </Label>
+                  <div className="relative">
+                    <input
+                      id="login-password"
+                      type={showPass ? 'text' : 'password'}
+                      placeholder="••••••••••••"
+                      required
+                      autoComplete="current-password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      className={cn(
+                        'peer w-full h-12 px-0 pr-10 text-base font-sans',
+                        'bg-transparent text-foreground',
+                        'border-0 border-b border-border',
+                        'placeholder:text-muted-foreground/30',
+                        'outline-none focus:ring-0',
+                        'transition-all duration-300',
+                        'rounded-none'
+                      )}
+                    />
+                    <div className="absolute bottom-0 left-0 h-[2px] bg-[#FBBF24] w-0 transition-all duration-300 peer-focus:w-full" />
+                    <button
+                      type="button"
+                      onClick={() => setShowPass((v) => !v)}
+                      aria-label={showPass ? 'Hide password' : 'Show password'}
+                      className="absolute inset-y-0 right-0 flex items-center text-muted-foreground hover:text-foreground transition-colors"
+                    >
+                      {showPass
+                        ? <EyeOff size={16} strokeWidth={1.5} />
+                        : <Eye     size={16} strokeWidth={1.5} />
+                      }
+                    </button>
+                  </div>
+                </div>
+              </div>
 
-          </form>
+              {/* CTA */}
+              <div className="mt-4 animate-in fade-in slide-in-from-bottom-4 duration-700 ease-out fill-mode-both" style={{ animationDelay: '600ms' }}>
+                <Button
+                  type="submit"
+                  className="w-full h-12 font-sans text-sm font-medium tracking-wider uppercase bg-[#FBBF24] text-[#1C1B1A] hover:bg-[#FBBF24]/90 rounded-none border-none transition-all duration-300 hover:shadow-[4px_4px_0px_0px_rgba(28,27,26,0.1)] dark:hover:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.05)] disabled:hover:shadow-none disabled:opacity-50"
+                  disabled={submitting}
+                >
+                  {submitting ? t('signingIn') : t('signIn')}
+                </Button>
+              </div>
+
+            </form>
+          )}
 
           {/* Footer note */}
-          <p className="mt-6 text-center text-[11px] text-muted-foreground/60 font-sans tracking-wide">
-            {t('footerNote')}
-          </p>
+          <div className="mt-12 animate-in fade-in duration-1000 ease-out fill-mode-both" style={{ animationDelay: '800ms' }}>
+            <p className="text-center text-[10px] text-muted-foreground/60 font-sans tracking-widest uppercase font-medium">
+              {t('footerNote')}
+            </p>
+          </div>
 
         </div>
       </div>

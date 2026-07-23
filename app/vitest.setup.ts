@@ -18,3 +18,22 @@ Object.defineProperty(globalThis, 'IntersectionObserver', {
   configurable: true,
   value: mockIntersectionObserver,
 });
+
+const mockResizeObserver = class {
+  constructor() {}
+  observe() {}
+  unobserve() {}
+  disconnect() {}
+};
+
+Object.defineProperty(window, 'ResizeObserver', {
+  writable: true,
+  configurable: true,
+  value: mockResizeObserver,
+});
+
+Object.defineProperty(globalThis, 'ResizeObserver', {
+  writable: true,
+  configurable: true,
+  value: mockResizeObserver,
+});

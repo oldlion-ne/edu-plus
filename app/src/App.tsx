@@ -10,6 +10,9 @@ import { ScrollContext } from './lib/ScrollContext';
 import { Toaster } from './components/ui/sonner';
 import SplashLoader from './components/SplashLoader';
 import { AnimatePresence, MotionConfig } from 'framer-motion';
+import CookieConsentBanner from './components/CookieConsentBanner';
+import { Analytics } from '@vercel/analytics/react';
+import { SpeedInsights } from '@vercel/speed-insights/react';
 
 // Lazy-load all page components — each is only downloaded when its route is visited.
 // Dashboard (with Recharts) is never loaded until the user navigates to /dashboard.
@@ -85,7 +88,10 @@ function App() {
     return (
       <AuthProvider>
         <MotionConfig reducedMotion="user">
+          <CookieConsentBanner />
           <Toaster position="top-right" richColors closeButton />
+          <Analytics />
+          <SpeedInsights />
           <AnimatePresence>
             {showSplash && <SplashLoader key="splash" />}
           </AnimatePresence>
@@ -111,7 +117,10 @@ function App() {
   return (
     <AuthProvider>
       <MotionConfig reducedMotion="user">
+        <CookieConsentBanner />
         <Toaster position="top-right" richColors closeButton />
+        <Analytics />
+        <SpeedInsights />
         <AnimatePresence>
           {showSplash && <SplashLoader key="splash" />}
         </AnimatePresence>

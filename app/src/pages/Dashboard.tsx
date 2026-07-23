@@ -5,6 +5,7 @@ import { supabase } from '../lib/supabaseClient';
 import { toast } from 'sonner';
 import { useAuth } from '../lib/useAuth';
 import DashboardOnboardingTour from '../components/DashboardOnboardingTour';
+import SettingsHub from '../components/dashboard/SettingsHub';
 import { NumberTicker } from '../components/magicui/NumberTicker';
 import { MagicCard } from '../components/ui/magic-card';
 import {
@@ -18,9 +19,8 @@ import {
   Avatar,
   AvatarImage,
   AvatarFallback,
-  AvatarBadge,
 } from '../components/ui/avatar';
-import { Attachment } from '../components/ui/attachment';
+
 import { Area, AreaChart, CartesianGrid, XAxis } from 'recharts';
 
 import {
@@ -48,10 +48,17 @@ import {
   LayoutDashboard, 
   UploadCloud, 
   Cpu, 
-  Mail, 
   Menu, 
-  X
+  X,
+  Settings,
+  FileImage,
+  Inbox,
+  ShieldCheck
 } from 'lucide-react';
+import UserManagement from '../components/dashboard/UserManagement';
+import MediaLibrary from '../components/dashboard/MediaLibrary';
+import InboxManager from '../components/dashboard/InboxManager';
+import { ResourceManager } from '../components/dashboard/ResourceManager';
 
 type UserRole = 'admin' | 'educator' | 'resource_person' | 'none';
 
@@ -167,7 +174,9 @@ export default function Dashboard() {
   const { t } = useTranslation();
   const { user, role: selectedRole, isSimulated, signOut, signInSimulated } = useAuth();
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState<'overview' | 'uploader' | 'ai-matrix' | 'messages'>('overview');
+  const [activeTab, setActiveTab] = useState<
+    'overview' | 'users' | 'uploader' | 'ai-matrix' | 'media' | 'inbox' | 'settings'
+  >('overview');
   const [showTour, setShowTour] = useState(false);
   const [unreadMessagesCount, setUnreadMessagesCount] = useState(0);
   const [showBellDropdown, setShowBellDropdown] = useState(false);
@@ -181,6 +190,7 @@ export default function Dashboard() {
   const [profileAvatar, setProfileAvatar] = useState('');
   const [profileBio, setProfileBio] = useState('');
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const [isUploadingAvatar, setIsUploadingAvatar] = useState(false);
 
   // Sync profile metadata on user session loaded
   useEffect(() => {
@@ -238,6 +248,53 @@ export default function Dashboard() {
     }
   };
 
+  const handleAvatarUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!e.target.files || e.target.files.length === 0) return;
+    const file = e.target.files[0];
+    
+    if (isSimulated) {
+      toast.error('Disabled in simulation', {
+        description: 'Avatar upload requires a real Supabase backend connection.',
+        style: { background: 'oklch(var(--card))', border: '1px solid oklch(var(--destructive)/0.3)', color: 'oklch(var(--foreground))', borderRadius: '0px' }
+      });
+      return;
+    }
+
+    setIsUploadingAvatar(true);
+    try {
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${user?.id}-${Math.random()}.${fileExt}`;
+      const filePath = `${fileName}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from('avatars')
+        .upload(filePath, file);
+
+      if (uploadError) throw uploadError;
+
+      const { data } = supabase.storage.from('avatars').getPublicUrl(filePath);
+      
+      setProfileAvatar(data.publicUrl);
+      
+      const { error: updateError } = await supabase.auth.updateUser({
+        data: { avatar_url: data.publicUrl }
+      });
+      
+      if (updateError) throw updateError;
+      toast.success('Avatar Uploaded', {
+        description: 'Your profile picture has been updated.',
+        style: { background: 'oklch(var(--card))', border: '1px solid oklch(var(--primary)/0.3)', color: 'oklch(var(--foreground))', borderRadius: '0px' }
+      });
+    } catch (err: any) {
+      toast.error('Upload Failed', {
+        description: err.message || 'Error uploading avatar',
+        style: { background: 'oklch(var(--card))', border: '1px solid oklch(var(--destructive)/0.3)', color: 'oklch(var(--foreground))', borderRadius: '0px' }
+      });
+    } finally {
+      setIsUploadingAvatar(false);
+    }
+  };
+
   const handleLogout = async () => {
     try {
       await signOut();
@@ -260,18 +317,6 @@ export default function Dashboard() {
   const [contactMessages, setContactMessages] = useState<any[]>([]);
 
   // Form inputs
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [isUploading, setIsUploading] = useState(false);
-  const [coverFile, setCoverFile] = useState<File | null>(null);
-  const [coverPreviewUrl, setCoverPreviewUrl] = useState<string>('');
-  const [newHubItem, setNewHubItem] = useState({
-    title: '',
-    description: '',
-    category: 'tutorial',
-    media_type: 'video_embed',
-    url: '',
-    author_name: ''
-  });
 
   const [newKbDoc, setNewKbDoc] = useState({
     question: '',
@@ -280,12 +325,7 @@ export default function Dashboard() {
 
 
 
-  // Cleanup object URL for cover image previews on unmount
-  useEffect(() => {
-    return () => {
-      if (coverPreviewUrl) URL.revokeObjectURL(coverPreviewUrl);
-    };
-  }, [coverPreviewUrl]);
+
 
   useEffect(() => {
     const completed = localStorage.getItem('edu_plus_onboarding_completed');
@@ -350,100 +390,7 @@ export default function Dashboard() {
     }
   };
 
-  const handleCreateHubItem = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsUploading(true);
-    const uploadedPaths: string[] = [];
-    try {
-      let finalUrl = newHubItem.url;
 
-      // Upload cover image if provided
-      let coverImageUrl: string | null = null;
-      if (coverFile) {
-        const coverExt = coverFile.name.split('.').pop();
-        const coverName = `covers/${Date.now()}-${Math.random().toString(36).slice(2)}.${coverExt}`;
-        const { error: coverUploadError } = await supabase.storage
-          .from('resources')
-          .upload(coverName, coverFile);
-        if (coverUploadError) throw coverUploadError;
-        const { data: coverData } = supabase.storage.from('resources').getPublicUrl(coverName);
-        coverImageUrl = coverData.publicUrl;
-        uploadedPaths.push(coverName);
-      }
-
-      // Upload document file if document_url type
-      if (newHubItem.media_type === 'document_url') {
-        if (!selectedFile) {
-          toast.error('File Required', {
-            description: 'Please select a document file to upload.',
-            style: { background: 'oklch(var(--card))', border: '1px solid oklch(var(--destructive)/0.3)', color: 'oklch(var(--foreground))', borderRadius: '0px' }
-          });
-          setIsUploading(false);
-          return;
-        }
-        const fileExt = selectedFile.name.split('.').pop();
-        const fileName = `${Date.now()}-${Math.random().toString(36).slice(2)}.${fileExt}`;
-        const fp = `uploads/${fileName}`;
-        const { error: uploadError } = await supabase.storage
-          .from('resources')
-          .upload(fp, selectedFile);
-        if (uploadError) throw uploadError;
-        const { data } = supabase.storage.from('resources').getPublicUrl(fp);
-        finalUrl = data.publicUrl;
-        uploadedPaths.push(fp);
-      }
-
-      const { error } = await supabase.from('knowledge_hub').insert({
-        title: newHubItem.title,
-        description: newHubItem.description,
-        category: newHubItem.category,
-        media_type: newHubItem.media_type,
-        url: finalUrl,
-        cover_image_url: coverImageUrl,
-        author_name: newHubItem.author_name || 'Staff Advisor'
-      });
-
-      if (error) throw error;
-
-      toast.success('Resource Published', {
-        description: 'Knowledge node has been compiled to public database.',
-        style: { background: 'oklch(var(--card))', border: '1px solid oklch(var(--primary)/0.3)', color: 'oklch(var(--foreground))', borderRadius: '0px' }
-      });
-
-      setNewHubItem({
-        title: '',
-        description: '',
-        category: 'tutorial',
-        media_type: 'video_embed',
-        url: '',
-        author_name: ''
-      });
-      setSelectedFile(null);
-      setCoverFile(null);
-      setCoverPreviewUrl('');
-
-      fetchData();
-    } catch (err: any) {
-      console.error('Content Upload Station Error:', err);
-      if (uploadedPaths.length > 0) {
-        // Robust cleanup of orphaned uploads if database insert fails
-        supabase.storage.from('resources').remove(uploadedPaths)
-          .then(({ error: cleanupErr }) => {
-            if (cleanupErr) console.error('Failed to cleanup orphaned files:', cleanupErr);
-          })
-          .catch(console.error);
-      }
-      
-      const errorMessage = err?.message || err?.error_description || err?.toString() || 'An unexpected error occurred during upload.';
-      
-      toast.error('Upload Failed', {
-        description: errorMessage,
-        style: { background: 'oklch(var(--card))', border: '1px solid oklch(var(--destructive)/0.3)', color: 'oklch(var(--foreground))', borderRadius: '0px' }
-      });
-    } finally {
-      setIsUploading(false);
-    }
-  };
 
   const handleCreateKbDoc = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -481,15 +428,7 @@ export default function Dashboard() {
     }
   };
 
-  const handleMarkMessageRead = async (id: string) => {
-    try {
-      const { error } = await supabase.from('contact_messages').update({ status: 'read' }).eq('id', id);
-      if (error) throw error;
-      fetchData();
-    } catch (err) {
-      console.error('Failed to update status:', err);
-    }
-  };
+
 
   const hasPermission = (allowed: UserRole[]) => {
     // If a real user is authenticated but role is still resolving, deny access until resolved
@@ -532,107 +471,181 @@ export default function Dashboard() {
           )}
         </div>
         <div className="px-6 py-4">
-          <span className="font-mono text-[9px] text-primary tracking-[0.2em] uppercase font-bold block">{t('dashboard.workspacePortal')}</span>
+          <span className="font-heading text-xs font-semibold text-muted-foreground uppercase tracking-wider block">{t('dashboard.workspacePortal')}</span>
         </div>
 
         {/* Navigation Sidebar Tabs */}
-        <nav className="flex-grow px-4 py-2 space-y-1">
-          <Button
-            id="tab-overview"
-            variant="ghost"
-            onClick={() => { setActiveTab('overview'); onNavItemClick?.(); }}
-            className={`w-full justify-start gap-3 px-4 py-2.5 font-sans text-sm font-medium transition-all duration-200 rounded-none ${
-              activeTab === 'overview'
-                ? 'bg-primary/10 text-primary font-semibold'
-                : 'text-muted-foreground hover:text-primary hover:bg-primary/5'
-            }`}
-          >
-            <LayoutDashboard className="size-4 shrink-0" />
-            <span>{t('dashboard.nav.overview')}</span>
-          </Button>
-          <Button
-            id="tab-uploader"
-            variant="ghost"
-            onClick={() => { setActiveTab('uploader'); onNavItemClick?.(); }}
-            className={`w-full justify-start gap-3 px-4 py-2.5 font-sans text-sm font-medium transition-all duration-200 rounded-none ${
-              activeTab === 'uploader'
-                ? 'bg-primary/10 text-primary font-semibold'
-                : 'text-muted-foreground hover:text-primary hover:bg-primary/5'
-            }`}
-          >
-            <UploadCloud className="size-4 shrink-0" />
-            <span>{t('dashboard.nav.uploadStation')}</span>
-          </Button>
-          <Button
-            id="tab-ai-matrix"
-            variant="ghost"
-            onClick={() => { setActiveTab('ai-matrix'); onNavItemClick?.(); }}
-            className={`w-full justify-start gap-3 px-4 py-2.5 font-sans text-sm font-medium transition-all duration-200 rounded-none ${
-              activeTab === 'ai-matrix'
-                ? 'bg-primary/10 text-primary font-semibold'
-                : 'text-muted-foreground hover:text-primary hover:bg-primary/5'
-            }`}
-          >
-            <Cpu className="size-4 shrink-0" />
-            <span>{t('dashboard.nav.aiChatTraining')}</span>
-          </Button>
-          <Button
-            id="tab-messages"
-            variant="ghost"
-            onClick={() => { setActiveTab('messages'); onNavItemClick?.(); }}
-            className={`w-full justify-start gap-3 px-4 py-2.5 font-sans text-sm font-medium transition-all duration-200 rounded-none ${
-              activeTab === 'messages'
-                ? 'bg-primary/10 text-primary font-semibold'
-                : 'text-muted-foreground hover:text-primary hover:bg-primary/5'
-            }`}
-          >
-            <Mail className="size-4 shrink-0" />
-            <span>{t('dashboard.nav.messageHub')}</span>
-          </Button>
+        <nav className="flex-grow px-4 py-2 space-y-4 overflow-y-auto max-h-[calc(100vh-160px)]">
+          {/* Main System Group */}
+          <div className="space-y-1">
+            <span className="font-heading text-[10px] uppercase font-bold text-muted-foreground/60 px-3 block mb-1 tracking-wider">System</span>
+            <Button
+              id="tab-overview"
+              variant="ghost"
+              onClick={() => { setActiveTab('overview'); onNavItemClick?.(); }}
+              className={`w-full justify-start gap-3 px-3 py-2 font-sans text-xs font-medium transition-all duration-200 rounded-none border-l-2 ${
+                activeTab === 'overview'
+                  ? 'border-primary bg-primary/5 text-primary'
+                  : 'border-transparent text-muted-foreground hover:border-primary/30 hover:text-primary hover:bg-muted/30'
+              }`}
+            >
+              <LayoutDashboard className="size-4 shrink-0" />
+              <span>Overview</span>
+            </Button>
+            {hasPermission(['admin']) && (
+              <Button
+                id="tab-users"
+                variant="ghost"
+                onClick={() => { setActiveTab('users'); onNavItemClick?.(); }}
+                className={`w-full justify-start gap-3 px-3 py-2 font-sans text-xs font-medium transition-all duration-200 rounded-none border-l-2 ${
+                  activeTab === 'users'
+                    ? 'border-primary bg-primary/5 text-primary'
+                    : 'border-transparent text-muted-foreground hover:border-primary/30 hover:text-primary hover:bg-muted/30'
+                }`}
+              >
+                <ShieldCheck className="size-4 shrink-0 text-primary" />
+                <span>User Management</span>
+              </Button>
+            )}
+          </div>
+
+          {/* Knowledge Hub CMS Group */}
+          <div className="space-y-1">
+            <span className="font-heading text-[10px] uppercase font-bold text-muted-foreground/60 px-3 block mb-1 tracking-wider">Knowledge Hub CMS</span>
+            <Button
+              id="tab-uploader"
+              variant="ghost"
+              onClick={() => { setActiveTab('uploader'); onNavItemClick?.(); }}
+              className={`w-full justify-start gap-3 px-3 py-2 font-sans text-xs font-medium transition-all duration-200 rounded-none border-l-2 ${
+                activeTab === 'uploader'
+                  ? 'border-primary bg-primary/5 text-primary'
+                  : 'border-transparent text-muted-foreground hover:border-primary/30 hover:text-primary hover:bg-muted/30'
+              }`}
+            >
+              <UploadCloud className="size-4 shrink-0" />
+              <span>Resource Manager</span>
+            </Button>
+            <Button
+              id="tab-ai-matrix"
+              variant="ghost"
+              onClick={() => { setActiveTab('ai-matrix'); onNavItemClick?.(); }}
+              className={`w-full justify-start gap-3 px-3 py-2 font-sans text-xs font-medium transition-all duration-200 rounded-none border-l-2 ${
+                activeTab === 'ai-matrix'
+                  ? 'border-primary bg-primary/5 text-primary'
+                  : 'border-transparent text-muted-foreground hover:border-primary/30 hover:text-primary hover:bg-muted/30'
+              }`}
+            >
+              <Cpu className="size-4 shrink-0" />
+              <span>AI Guidelines</span>
+            </Button>
+          </div>
+
+          {/* Assets & Communications */}
+          <div className="space-y-1">
+            <span className="font-heading text-[10px] uppercase font-bold text-muted-foreground/60 px-3 block mb-1 tracking-wider">Assets & Inbox</span>
+            <Button
+              id="tab-media"
+              variant="ghost"
+              onClick={() => { setActiveTab('media'); onNavItemClick?.(); }}
+              className={`w-full justify-start gap-3 px-3 py-2 font-sans text-xs font-medium transition-all duration-200 rounded-none border-l-2 ${
+                activeTab === 'media'
+                  ? 'border-primary bg-primary/5 text-primary'
+                  : 'border-transparent text-muted-foreground hover:border-primary/30 hover:text-primary hover:bg-muted/30'
+              }`}
+            >
+              <FileImage className="size-4 shrink-0" />
+              <span>Media Library</span>
+            </Button>
+            <Button
+              id="tab-inbox"
+              variant="ghost"
+              onClick={() => { setActiveTab('inbox'); onNavItemClick?.(); }}
+              className={`w-full justify-start gap-3 px-3 py-2 font-sans text-xs font-medium transition-all duration-200 rounded-none border-l-2 ${
+                activeTab === 'inbox'
+                  ? 'border-primary bg-primary/5 text-primary'
+                  : 'border-transparent text-muted-foreground hover:border-primary/30 hover:text-primary hover:bg-muted/30'
+              }`}
+            >
+              <Inbox className="size-4 shrink-0" />
+              <span>Inbox & Chat Logs</span>
+            </Button>
+            <Button
+              id="tab-settings"
+              variant="ghost"
+              onClick={() => { setActiveTab('settings'); onNavItemClick?.(); }}
+              className={`w-full justify-start gap-3 px-3 py-2 font-sans text-xs font-medium transition-all duration-200 rounded-none border-l-2 ${
+                activeTab === 'settings'
+                  ? 'border-primary bg-primary/5 text-primary'
+                  : 'border-transparent text-muted-foreground hover:border-primary/30 hover:text-primary hover:bg-muted/30'
+              }`}
+            >
+              <Settings className="size-4 shrink-0" />
+              <span>Security & MFA</span>
+            </Button>
+          </div>
         </nav>
       </div>
 
       {/* Footer profile card trigger dialog */}
-      <div className="p-4 border-t border-border bg-background/50 font-sans">
+      <div className="p-4 border-t border-border bg-card font-sans relative">
         <Dialog open={isSettingsOpen} onOpenChange={setIsSettingsOpen}>
           <DialogTrigger asChild>
-            <button className="w-full flex items-center gap-3 p-3 border border-border hover:border-primary/30 bg-card hover:bg-primary/5 focus:outline-none focus:ring-1 focus:ring-primary/70 focus:border-primary/30 transition-all duration-300 text-left cursor-pointer rounded-none group">
-              <Avatar className="border border-primary/20 group-hover:border-primary shadow-[0_0_8px_oklch(var(--primary)/0.05)] rounded-none shrink-0 relative">
+            <button className="w-full flex items-center gap-3 py-3 px-2 border-none hover:bg-muted/20 focus:outline-none transition-colors duration-200 text-left cursor-pointer rounded-none group">
+              <Avatar className="size-9 border-none rounded-none shrink-0 transition-opacity duration-200 group-hover:opacity-80">
                 <AvatarImage src={user?.user_metadata?.avatar_url} className="rounded-none object-cover" />
-                <AvatarFallback className="bg-background text-primary font-sans font-bold text-xs rounded-none flex items-center justify-center">
+                <AvatarFallback className="bg-muted text-muted-foreground font-sans text-xs rounded-none flex items-center justify-center">
                   {profileName.substring(0, 2).toUpperCase() || 'AD'}
                 </AvatarFallback>
-                <AvatarBadge className="bg-primary ring-card" />
               </Avatar>
               <div className="flex-grow min-w-0">
-                <p className="font-sans text-xs font-semibold text-foreground truncate group-hover:text-primary transition-colors">
-                  {profileName}
+                <p className="font-sans text-sm text-foreground truncate transition-colors">
+                  {profileName || 'Administrator'}
                 </p>
-                <p className="font-mono text-[9px] text-muted-foreground truncate">
-                  {user?.email}
-                </p>
-                <span className={`inline-block mt-1 px-1.5 py-0.5 text-[7px] font-mono rounded-none uppercase border font-bold tracking-widest border-primary/50 bg-primary/10 text-primary`}>
-                  {selectedRole ? selectedRole.replace('_', ' ') : 'NONE'}
-                </span>
+                <div className="flex items-center gap-2 mt-0.5 opacity-60">
+                  <p className="font-sans text-[10px] truncate">
+                    {user?.email}
+                  </p>
+                </div>
               </div>
             </button>
           </DialogTrigger>
 
-          <DialogContent className="max-w-lg w-full bg-card border border-border text-foreground rounded-none p-0 shadow-2xl font-sans overflow-hidden">
+          <DialogContent className="max-w-md w-full bg-card border border-border/40 text-foreground rounded-none p-0 shadow-lg font-sans overflow-hidden max-h-[85vh] overflow-y-auto">
             {/* Profile Identity Header */}
-            <div className="flex items-center gap-4 p-6 border-b border-border bg-background/40">
-              <Avatar className="size-14 border border-primary/30 rounded-none shrink-0">
-                <AvatarImage src={profileAvatar} className="rounded-none object-cover" />
-                <AvatarFallback className="bg-primary/10 text-primary font-mono font-bold text-base rounded-none flex items-center justify-center">
-                  {profileName.substring(0, 2).toUpperCase() || 'AD'}
-                </AvatarFallback>
-              </Avatar>
-              <div className="flex-grow min-w-0">
-                <DialogTitle className="text-foreground font-sans font-semibold text-base tracking-tight truncate">{profileName || 'Administrator'}</DialogTitle>
-                <p className="font-mono text-[10px] text-muted-foreground mt-0.5 truncate">{user?.email}</p>
-                <span className={`inline-block mt-1.5 px-1.5 py-0.5 text-[7px] font-mono rounded-none uppercase border font-bold tracking-widest border-primary/50 bg-primary/10 text-primary`}>
-                  {selectedRole ? selectedRole.replace('_', ' ') : 'NONE'}
-                </span>
+            <div className="p-6 pb-2 flex flex-col items-center text-center mt-4">
+              <div className="relative group mb-4">
+                <Avatar className="size-16 border-none rounded-none shrink-0">
+                  <AvatarImage src={profileAvatar} className="rounded-none object-cover" />
+                  <AvatarFallback className="bg-muted text-muted-foreground font-sans text-lg rounded-none flex items-center justify-center">
+                    {profileName.substring(0, 2).toUpperCase() || 'AD'}
+                  </AvatarFallback>
+                </Avatar>
+                <label className="absolute inset-0 bg-background/90 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col items-center justify-center cursor-pointer border border-primary/20">
+                  {isUploadingAvatar ? (
+                    <span className="text-xs font-sans text-muted-foreground animate-pulse">Wait...</span>
+                  ) : (
+                    <>
+                      <UploadCloud size={18} className="text-muted-foreground mb-1" />
+                      <span className="text-[10px] font-sans text-muted-foreground">Upload</span>
+                      <input type="file" accept="image/*" className="hidden" onChange={handleAvatarUpload} disabled={isUploadingAvatar} />
+                    </>
+                  )}
+                </label>
+              </div>
+              
+              <DialogTitle className="text-foreground font-sans font-medium text-lg tracking-wide truncate w-full">
+                {profileName || 'Administrator'}
+              </DialogTitle>
+              <div className="flex items-center justify-center gap-2 mt-1 opacity-60">
+                <p className="font-sans text-xs truncate">{user?.email}</p>
+                {selectedRole && (
+                  <>
+                    <span className="w-1 h-1 bg-foreground/30 rounded-full" />
+                    <span className="text-[10px] font-sans capitalize">
+                      {selectedRole.replace('_', ' ')}
+                    </span>
+                  </>
+                )}
               </div>
             </div>
 
@@ -642,46 +655,37 @@ export default function Dashboard() {
             </DialogDescription>
 
             {/* Form body */}
-            <form onSubmit={handleUpdateProfile} className="p-6 space-y-4 font-sans">
+            {/* Form body */}
+            <form onSubmit={handleUpdateProfile} className="px-6 pb-6 space-y-5 font-sans">
               <div className="space-y-1.5">
-                <Label className="text-[9px] font-mono text-muted-foreground uppercase tracking-wider block">{t('dashboard.profile.displayFullName')}</Label>
+                <Label className="text-sm font-sans text-muted-foreground font-normal">Display name</Label>
                 <Input
                   type="text"
                   required
+                  autoComplete="off"
                   value={profileName}
                   onChange={e => setProfileName(e.target.value)}
-                  className="w-full bg-background border border-border text-xs px-4 py-2.5 outline-none focus:border-primary rounded-none text-foreground font-sans h-9"
+                  className="w-full bg-transparent border-0 border-b border-border px-0 py-2 outline-none focus:border-foreground focus:ring-0 rounded-none text-foreground font-sans text-base transition-colors shadow-none"
                 />
               </div>
 
               <div className="space-y-1.5">
-                <Label className="text-[9px] font-mono text-muted-foreground uppercase tracking-wider block">{t('dashboard.profile.avatarImageUrl')}</Label>
-                <Input
-                  type="url"
-                  value={profileAvatar}
-                  onChange={e => setProfileAvatar(e.target.value)}
-                  placeholder="https://images.unsplash.com/photo-..."
-                  className="w-full bg-background border border-border text-xs px-4 py-2.5 outline-none focus:border-primary rounded-none text-foreground font-mono h-9"
-                />
-              </div>
-
-              <div className="space-y-1.5">
-                <Label className="text-[9px] font-mono text-muted-foreground uppercase tracking-wider block">{t('dashboard.profile.administrativeSummary')}</Label>
+                <Label className="text-sm font-sans text-muted-foreground font-normal">About</Label>
                 <Textarea
                   value={profileBio}
                   onChange={e => setProfileBio(e.target.value)}
-                  rows={3}
-                  className="w-full bg-background border border-border text-xs px-4 py-2 outline-none focus:border-primary rounded-none text-foreground font-sans resize-none min-h-20"
+                  rows={2}
+                  className="w-full bg-transparent border-0 border-b border-border px-0 py-2 outline-none focus:border-foreground focus:ring-0 rounded-none text-foreground font-sans text-base resize-none min-h-[60px] transition-colors shadow-none"
                 />
               </div>
 
-              {/* Dev role switcher â simulated sessions only */}
+              {/* Dev role switcher — simulated sessions only */}
               {isSimulated && (
-                <div className="border border-primary/20 bg-primary/5 p-3 rounded-none text-left space-y-2">
-                  <span className="font-mono text-[9px] text-primary tracking-wider uppercase block font-bold">Developer Options: Switch Role</span>
-                  <div className="grid grid-cols-3 gap-1.5">
+                <div className="pt-4 space-y-3">
+                  <span className="font-sans text-[10px] text-muted-foreground uppercase tracking-widest block">Role Override</span>
+                  <div className="flex gap-2">
                     {(['admin', 'educator', 'resource_person'] as const).map(role => (
-                      <Button key={role} type="button" variant="outline" onClick={() => { signInSimulated(role); toast.success(`Role set to ${role}`, { style: { background: 'oklch(var(--card))', border: '1px solid oklch(var(--primary))', color: 'oklch(var(--foreground))', borderRadius: '0px' } }); setIsSettingsOpen(false); }} className={`py-1 text-center font-mono text-[8px] uppercase tracking-wider border cursor-pointer transition-all rounded-none focus:outline-none focus:ring-1 focus:ring-primary/70 ${selectedRole === role ? 'border-primary bg-primary/10 text-primary' : 'border-transparent text-muted-foreground hover:text-foreground hover:border-border'}`}>
+                      <Button key={role} type="button" variant="ghost" onClick={() => { signInSimulated(role); toast.success(`Role set to ${role}`, { style: { background: 'oklch(var(--card))', border: '1px solid oklch(var(--primary))', color: 'oklch(var(--foreground))', borderRadius: '0px' } }); setIsSettingsOpen(false); }} className={`py-1 px-3 h-auto text-center font-sans text-xs capitalize transition-colors rounded-none focus:outline-none ${selectedRole === role ? 'bg-muted text-foreground' : 'text-muted-foreground hover:bg-muted/50 hover:text-foreground'}`}>
                         {role.replace('_', ' ')}
                       </Button>
                     ))}
@@ -690,16 +694,35 @@ export default function Dashboard() {
               )}
 
               {/* Actions */}
-              <div className="flex gap-2 pt-2 border-t border-border">
-                <Button type="submit" size="lg" className="flex-grow bg-primary text-primary-foreground hover:bg-foreground hover:text-background focus:outline-none focus:ring-1 focus:ring-primary/70 transition-all font-mono text-[9px] font-bold tracking-wider uppercase cursor-pointer rounded-none">
-                  Save Changes
-                </Button>
-                <Button type="button" size="lg" variant="outline" onClick={() => setIsSettingsOpen(false)} className="px-4 border border-border hover:border-foreground focus:outline-none focus:ring-1 focus:ring-primary/70 font-mono text-[9px] uppercase tracking-wider transition-all rounded-none cursor-pointer">
-                  Close
-                </Button>
-                <Button type="button" size="lg" variant="destructive" onClick={() => { setIsSettingsOpen(false); handleLogout(); }} className="px-4 border border-destructive/30 hover:border-destructive hover:bg-destructive/10 bg-destructive/5 text-destructive focus:outline-none focus:ring-1 focus:ring-destructive font-mono text-[9px] uppercase tracking-wider transition-all cursor-pointer rounded-none">
-                  Logout
-                </Button>
+              <div className="pt-4 flex flex-col gap-5">
+                {/* Primary Form Actions */}
+                <div className="flex justify-end gap-5 items-center">
+                  <button 
+                    type="button" 
+                    onClick={() => setIsSettingsOpen(false)} 
+                    className="text-xs font-sans text-muted-foreground hover:text-foreground transition-colors focus:outline-none"
+                  >
+                    Cancel
+                  </button>
+                  <Button 
+                    type="submit" 
+                    className="px-6 bg-foreground text-background hover:bg-foreground/90 transition-colors font-sans text-[11px] font-medium cursor-pointer rounded-none h-9 shadow-none border-none tracking-wide"
+                  >
+                    Save changes
+                  </Button>
+                </div>
+                
+                {/* Delicate Separator */}
+                <div className="w-full h-px bg-gradient-to-r from-transparent via-border/60 to-transparent" />
+                
+                {/* Session Action */}
+                <button
+                  type="button"
+                  onClick={() => { setIsSettingsOpen(false); handleLogout(); }}
+                  className="text-[10px] font-sans text-muted-foreground hover:text-foreground transition-colors focus:outline-none uppercase tracking-widest text-center pb-2"
+                >
+                  Sign out of account
+                </button>
               </div>
             </form>
           </DialogContent>
@@ -746,9 +769,9 @@ export default function Dashboard() {
         {/* Topbar Telemetry Header */}
         <header className="bg-card border-b border-border px-6 md:px-12 py-4 flex flex-col sm:flex-row gap-4 justify-between items-center z-30">
           <div className="flex items-center gap-3">
-            <div className="flex items-center gap-2 px-2.5 py-1 bg-primary/10 border border-primary/20 text-primary font-mono text-[9px] uppercase tracking-wider select-none">
-              <span>{t('dashboard.header.linkActive')}</span>
-              <span className="w-1.5 h-1.5 bg-primary rounded-none opacity-80"></span>
+            <div className="flex items-center gap-2 px-3 py-1 bg-muted/30 border border-border text-foreground font-sans text-xs font-medium select-none">
+              <span className="w-1.5 h-1.5 bg-primary rounded-none shadow-[0_0_4px_oklch(var(--primary)/0.6)]"></span>
+              <span>System Active</span>
             </div>
             
             <span className="text-muted-foreground/20 font-mono text-[10px] hidden sm:inline">|</span>
@@ -825,19 +848,19 @@ export default function Dashboard() {
 
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 w-full">
                   <MagicCard className="border-border bg-card rounded-none text-left p-5 flex flex-col gap-0 py-5" gradientColor="oklch(var(--primary)/0.08)" gradientSize={150}>
-                    <span className="font-mono text-[9px] text-primary tracking-wider block mb-1">{t('dashboard.overview.hubResources')}</span>
+                    <span className="font-sans text-xs font-medium text-muted-foreground block mb-1">{t('dashboard.overview.hubResources')}</span>
                     <span className="font-heading text-3xl font-light text-foreground">
                       <NumberTicker value={knowledgeHubItems.length} />
                     </span>
                   </MagicCard>
                   <MagicCard className="border-border bg-card rounded-none text-left p-5 flex flex-col gap-0 py-5" gradientColor="oklch(var(--primary)/0.08)" gradientSize={150}>
-                    <span className="font-mono text-[9px] text-primary tracking-wider block mb-1">{t('dashboard.overview.aiTrainingRules')}</span>
+                    <span className="font-sans text-xs font-medium text-muted-foreground block mb-1">{t('dashboard.overview.aiTrainingRules')}</span>
                     <span className="font-heading text-3xl font-light text-foreground">
                       <NumberTicker value={kbDocuments.length} />
                     </span>
                   </MagicCard>
                   <MagicCard className="border-border bg-card rounded-none text-left p-5 flex flex-col gap-0 py-5" gradientColor="oklch(var(--primary)/0.08)" gradientSize={150}>
-                    <span className="font-mono text-[9px] text-primary tracking-wider block mb-1">{t('dashboard.overview.inboundInquiries')}</span>
+                    <span className="font-sans text-xs font-medium text-muted-foreground block mb-1">{t('dashboard.overview.inboundInquiries')}</span>
                     <span className="font-heading text-3xl font-light text-foreground">
                       <NumberTicker value={contactMessages.length} />
                     </span>
@@ -849,8 +872,8 @@ export default function Dashboard() {
                   {/* Chart Header */}
                   <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 border-b border-border py-5 px-6">
                     <div className="grid flex-1 gap-1 text-left">
-                      <div className="font-mono text-[11px] font-bold text-primary tracking-[0.2em] uppercase">{t('dashboard.overview.systemAnalytics')}</div>
-                      <div className="text-muted-foreground/50 font-mono text-[9px] uppercase tracking-wider">
+                      <div className="font-heading text-lg font-medium text-foreground">{t('dashboard.overview.systemAnalytics')}</div>
+                      <div className="text-muted-foreground font-sans text-xs">
                         Showing visitor metric data
                       </div>
                     </div>
@@ -959,16 +982,16 @@ export default function Dashboard() {
 
                 {/* Content Category Distribution */}
                 <Card className="border border-border p-6 bg-card rounded-none text-left flex flex-col gap-0 py-6">
-                  <h3 className="font-sans text-[10px] font-bold text-primary tracking-wider mb-4 uppercase">{t('dashboard.overview.contentCategoryDistribution')}</h3>
+                  <h3 className="font-heading text-sm font-medium text-foreground mb-4">{t('dashboard.overview.contentCategoryDistribution')}</h3>
                   <div className="space-y-4">
                     {['tutorial', 'podcast', 'webinar', 'study_material'].map(cat => {
                       const count = knowledgeHubItems.filter(i => i.category === cat).length;
                       const percent = knowledgeHubItems.length > 0 ? (count / knowledgeHubItems.length) * 100 : 0;
                       return (
                         <div key={cat} className="space-y-1">
-                          <div className="flex justify-between text-[10px] font-mono text-foreground">
-                            <span className="uppercase">{cat.replace('_', ' ')}</span>
-                            <span className="text-muted-foreground">{count} NODES ({percent.toFixed(0)}%)</span>
+                          <div className="flex justify-between text-xs font-sans text-foreground capitalize">
+                            <span>{cat.replace('_', ' ')}</span>
+                            <span className="text-muted-foreground">{count} Nodes ({percent.toFixed(0)}%)</span>
                           </div>
                           <div className="w-full bg-background h-2 border border-border rounded-none">
                             <div
@@ -986,172 +1009,9 @@ export default function Dashboard() {
 
             {/* TAB UPLOADER */}
             {activeTab === 'uploader' && (
-              <div id="view-uploader" className="space-y-6 animate-in fade-in duration-300 text-left">
-                <div className="border-b border-border pb-4">
-                  <h2 className="font-heading text-2xl font-light text-foreground">{t('dashboard.uploader.heading')}</h2>
-                  <p className="font-mono text-xs text-muted-foreground mt-1">{t('dashboard.uploader.subheading')}</p>
-                </div>
-
+              <div id="view-uploader">
                 {hasPermission(['admin', 'educator', 'resource_person']) ? (
-                  <form onSubmit={handleCreateHubItem} className="space-y-5">
-
-                    {/* Cover Image Banner Uploader â 16:9, full width */}
-                    <div className="space-y-2">
-                      <Label className="text-[10px] font-mono text-muted-foreground uppercase tracking-wider block">Heading Cover Image</Label>
-                      {coverPreviewUrl ? (
-                        <div className="relative w-full overflow-hidden border border-border bg-card/30" style={{ aspectRatio: '16/9' }}>
-                          <img src={coverPreviewUrl} alt="Cover Preview" className="w-full h-full object-cover" />
-                          <Button
-                            type="button"
-                            variant="destructive"
-                            onClick={() => { setCoverFile(null); setCoverPreviewUrl(''); }}
-                            className="absolute top-2 right-2 px-2.5 py-1 text-[9px] font-mono rounded-none uppercase h-7 cursor-pointer border border-destructive/30"
-                          >
-                            Remove
-                          </Button>
-                        </div>
-                      ) : (
-                        <button
-                          type="button"
-                          onClick={() => document.getElementById('cover-file-input')?.click()}
-                          className="w-full flex flex-col items-center justify-center border border-dashed border-border hover:border-primary/50 bg-background/30 hover:bg-primary/5 transition-all duration-300 cursor-pointer py-10 gap-2"
-                        >
-                          <UploadCloud className="size-7 text-muted-foreground/50" />
-                          <span className="font-mono text-[9px] text-primary tracking-wider uppercase font-bold mt-1">Upload Cover Image (16:9)</span>
-                          <span className="text-[8px] text-muted-foreground">Recommended: 1200Ã-675px â JPEG, PNG, WEBP</span>
-                          <input
-                            id="cover-file-input"
-                            type="file"
-                            accept="image/*"
-                            className="hidden"
-                            onChange={e => {
-                              if (e.target.files && e.target.files[0]) {
-                                const file = e.target.files[0];
-                                setCoverFile(file);
-                                if (coverPreviewUrl) URL.revokeObjectURL(coverPreviewUrl);
-                                setCoverPreviewUrl(URL.createObjectURL(file));
-                              }
-                            }}
-                          />
-                        </button>
-                      )}
-                    </div>
-
-                    <div className="grid md:grid-cols-2 gap-5">
-                      <div className="space-y-2">
-                        <Label className="text-[10px] font-mono text-muted-foreground uppercase tracking-wider block">{t('dashboard.uploader.title')}</Label>
-                        <Input
-                          type="text"
-                          required
-                          value={newHubItem.title}
-                          onChange={e => setNewHubItem(p => ({ ...p, title: e.target.value }))}
-                          placeholder="Technical Introduction to React 19..."
-                          className="w-full bg-background border border-border text-xs px-4 py-2.5 outline-none focus:border-primary rounded-none text-foreground font-sans h-9"
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <Label className="text-[10px] font-mono text-muted-foreground uppercase tracking-wider block">{t('dashboard.uploader.authorName')}</Label>
-                        <Input
-                          type="text"
-                          required
-                          value={newHubItem.author_name}
-                          onChange={e => setNewHubItem(p => ({ ...p, author_name: e.target.value }))}
-                          placeholder="e.g., Roshan Khumukcham"
-                          className="w-full bg-background border border-border text-xs px-4 py-2.5 outline-none focus:border-primary rounded-none text-foreground font-sans h-9"
-                        />
-                      </div>
-                    </div>
-
-                    <div className="grid md:grid-cols-2 gap-5">
-                      <div className="space-y-2 flex flex-col gap-1.5">
-                        <Label className="text-[10px] font-mono text-muted-foreground uppercase tracking-wider block">{t('dashboard.uploader.category')}</Label>
-                        <Select
-                          value={newHubItem.category}
-                          onValueChange={val => setNewHubItem(p => ({ ...p, category: val }))}
-                        >
-                          <SelectTrigger className="w-full bg-background border border-border text-xs px-4 py-2.5 outline-none focus:border-primary rounded-none text-foreground font-mono h-9">
-                            <SelectValue placeholder="Select Category" />
-                          </SelectTrigger>
-                          <SelectContent className="rounded-none bg-card border border-border text-foreground font-mono text-xs z-50">
-                            <SelectItem value="tutorial" className="rounded-none cursor-pointer">{t('dashboard.uploader.tutorial')}</SelectItem>
-                            <SelectItem value="podcast" className="rounded-none cursor-pointer">{t('dashboard.uploader.podcast')}</SelectItem>
-                            <SelectItem value="webinar" className="rounded-none cursor-pointer">{t('dashboard.uploader.webinar')}</SelectItem>
-                            <SelectItem value="study_material" className="rounded-none cursor-pointer">{t('dashboard.uploader.studyMaterial')}</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                      <div className="space-y-2 flex flex-col gap-1.5">
-                        <Label className="text-[10px] font-mono text-muted-foreground uppercase tracking-wider block">{t('dashboard.uploader.mediaType')}</Label>
-                        <Select
-                          value={newHubItem.media_type}
-                          onValueChange={val => setNewHubItem(p => ({ ...p, media_type: val }))}
-                        >
-                          <SelectTrigger className="w-full bg-background border border-border text-xs px-4 py-2.5 outline-none focus:border-primary rounded-none text-foreground font-mono h-9">
-                            <SelectValue placeholder="Select Media Type" />
-                          </SelectTrigger>
-                          <SelectContent className="rounded-none bg-card border border-border text-foreground font-mono text-xs z-50">
-                             <SelectItem value="video_embed" className="rounded-none cursor-pointer">{t('dashboard.uploader.videoLink')}</SelectItem>
-                             <SelectItem value="document_url" className="rounded-none cursor-pointer">{t('dashboard.uploader.pdfLink')}</SelectItem>
-                             <SelectItem value="external_link" className="rounded-none cursor-pointer">{t('dashboard.uploader.externalLink')}</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                    </div>
-
-                    {newHubItem.media_type === 'document_url' ? (
-                      <div className="space-y-2">
-                        <Label className="text-[10px] font-mono text-muted-foreground uppercase tracking-wider block">Document File Node</Label>
-                        {!selectedFile ? (
-                          <div className="relative">
-                            <Input
-                              type="file"
-                              accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt"
-                              required
-                              onChange={e => {
-                                if (e.target.files && e.target.files[0]) {
-                                  setSelectedFile(e.target.files[0]);
-                                }
-                              }}
-                              className="w-full bg-background border border-border text-xs px-4 py-1.5 outline-none focus:border-primary rounded-none text-foreground font-sans h-9 file:mr-4 file:py-1 file:px-2 file:rounded-none file:border-0 file:text-[10px] file:font-sans file:bg-primary file:text-primary-foreground hover:file:bg-foreground hover:file:text-background"
-                            />
-                          </div>
-                        ) : (
-                          <Attachment 
-                            file={selectedFile} 
-                            onRemove={() => setSelectedFile(null)} 
-                            isUploading={isUploading}
-                          />
-                        )}
-                      </div>
-                    ) : (
-                      <div className="space-y-2">
-                        <Label className="text-[10px] font-mono text-muted-foreground uppercase tracking-wider block">{t('dashboard.uploader.resourceUrl')}</Label>
-                        <Input
-                          type="url"
-                          required
-                          value={newHubItem.url}
-                          onChange={e => setNewHubItem(p => ({ ...p, url: e.target.value }))}
-                          placeholder={newHubItem.media_type === 'video_embed' ? "https://www.youtube.com/watch?v=..." : "https://example.com/..."}
-                          className="w-full bg-background border border-border text-xs px-4 py-2.5 outline-none focus:border-primary rounded-none text-foreground font-sans h-9"
-                        />
-                      </div>
-                    )}
-
-                    <div className="space-y-2">
-                      <Label className="text-[10px] font-mono text-muted-foreground uppercase tracking-wider block">{t('dashboard.uploader.briefDescription')}</Label>
-                      <Textarea
-                        value={newHubItem.description}
-                        onChange={e => setNewHubItem(p => ({ ...p, description: e.target.value }))}
-                        placeholder="A concise synopsis detailing what core concepts this resource node will cover..."
-                        rows={3}
-                        className="w-full bg-background border border-border text-xs px-4 py-2 outline-none focus:border-primary rounded-none text-foreground font-sans resize-none min-h-20"
-                      />
-                    </div>
-
-                    <Button type="submit" disabled={isUploading} size="md" className="bg-primary text-primary-foreground hover:bg-foreground hover:text-background focus:outline-none focus:ring-1 focus:ring-primary transition-all duration-300 font-mono text-[10px] font-bold tracking-widest uppercase cursor-pointer rounded-none disabled:opacity-50 disabled:cursor-not-allowed">
-                      {isUploading ? 'UPLOADING...' : 'PUBLISH'}
-                    </Button>
-                  </form>
+                  <ResourceManager />
                 ) : isRoleResolving ? (
                   <div className="flex items-center justify-center py-16">
                     <span className="font-mono text-[10px] text-muted-foreground tracking-widest uppercase animate-pulse">Verifying permissions...</span>
@@ -1159,7 +1019,7 @@ export default function Dashboard() {
                 ) : (
                   <Card className="p-8 text-center font-mono text-xs border border-border bg-card/30 rounded-none flex flex-col gap-2 py-8">
                     <span className="text-foreground font-semibold text-sm">Access Restricted</span>
-                    <span className="text-muted-foreground text-[11px]">This section requires Educator or Admin privileges. Contact your administrator to request access.</span>
+                    <span className="text-muted-foreground text-[11px]">Resource management requires Educator or Admin privileges. Contact your administrator to request access.</span>
                   </Card>
                 )}
               </div>
@@ -1176,7 +1036,7 @@ export default function Dashboard() {
                 {hasPermission(['admin', 'educator']) ? (
                   <div className="space-y-8">
                     <form onSubmit={handleCreateKbDoc} className="space-y-4 border border-border p-5 bg-card rounded-none">
-                      <h3 className="font-mono text-[10px] font-bold text-primary tracking-wider uppercase mb-2">{t('dashboard.aiMatrix.newFactualGuideline')}</h3>
+                      <h3 className="font-heading text-sm font-medium text-foreground mb-2">{t('dashboard.aiMatrix.newFactualGuideline')}</h3>
                       <div className="space-y-3">
                         <Input
                           type="text"
@@ -1195,34 +1055,34 @@ export default function Dashboard() {
                           className="w-full bg-background border border-border text-xs px-4 py-2 outline-none focus:border-primary rounded-none text-foreground font-sans resize-none min-h-20"
                         />
                       </div>
-                      <Button type="submit" size="lg" className="px-4 bg-primary/10 border border-primary/30 text-primary hover:bg-primary hover:text-primary-foreground focus:outline-none focus:ring-1 focus:ring-primary transition-all duration-300 font-mono text-[9px] font-bold tracking-wider rounded-none cursor-pointer">
-                        ADD
+                      <Button type="submit" size="lg" className="px-6 bg-primary text-primary-foreground hover:bg-foreground hover:text-background focus:outline-none focus:ring-1 focus:ring-primary transition-all duration-300 font-sans text-sm font-medium rounded-none cursor-pointer">
+                        Add Guideline
                       </Button>
                     </form>
 
                     {/* Loaded Rules */}
                     <div className="space-y-3">
-                      <h3 className="font-mono text-[10px] font-bold text-muted-foreground tracking-wider uppercase">{t('dashboard.aiMatrix.activeFactMatrix')}</h3>
+                      <h3 className="font-heading text-sm font-medium text-foreground">{t('dashboard.aiMatrix.activeFactMatrix')}</h3>
                       {kbDocuments.length === 0 ? (
-                        <p className="text-xs text-muted-foreground/30 font-mono py-4">{t('dashboard.aiMatrix.noTrainingInjections')}</p>
+                        <p className="text-sm text-muted-foreground font-sans py-4">{t('dashboard.aiMatrix.noTrainingInjections')}</p>
                       ) : (
                         <div className="space-y-2 max-h-80 overflow-y-auto">
                           {kbDocuments.map(doc => (
                             <Card key={doc.id} className="border border-border p-4 flex justify-between items-center rounded-none bg-card/30 flex-row gap-4 py-4">
                               <div className="text-left max-w-[80%]">
-                                <p className="font-mono text-[10px] text-primary">{t('dashboard.aiMatrix.topicPrefix')}{doc.question}</p>
+                                <p className="font-sans text-sm font-medium text-foreground">{doc.question}</p>
                                 <p className="text-xs text-muted-foreground mt-1">{doc.answer}</p>
                               </div>
                               <Button
                                 variant="ghost"
                                 onClick={() => handleToggleKbActive(doc.id, doc.is_active)}
-                                className={`px-2 py-1 text-[8px] font-mono rounded-none uppercase transition-all duration-300 cursor-pointer h-6 border ${
+                                className={`px-3 py-1.5 text-xs font-sans font-medium rounded-none transition-all duration-300 cursor-pointer h-8 border ${
                                   doc.is_active
-                                    ? 'bg-primary/10 border-primary/40 text-primary hover:bg-primary/20'
+                                    ? 'bg-primary/5 border-primary/20 text-primary hover:bg-primary/10'
                                     : 'bg-muted/10 border-muted/40 text-muted-foreground hover:bg-muted/20'
                                 }`}
                               >
-                                {doc.is_active ? 'ACTIVE' : 'DEACTIVATED'}
+                                {doc.is_active ? 'Active' : 'Deactivated'}
                               </Button>
                             </Card>
                           ))}
@@ -1241,80 +1101,33 @@ export default function Dashboard() {
                   </Card>
                 )}
               </div>
+              )}
+
+            {/* TAB USER MANAGEMENT */}
+            {activeTab === 'users' && (
+              <div id="view-users">
+                <UserManagement />
+              </div>
             )}
 
-            {/* TAB MESSAGES */}
-            {activeTab === 'messages' && (
-              <div id="view-message-hub" className="space-y-6 animate-in fade-in duration-300 text-left">
-                <div className="border-b border-border pb-4">
-                  <h2 className="font-heading text-2xl font-light text-foreground">{t('dashboard.messages.heading')}</h2>
-                  <p className="font-mono text-xs text-muted-foreground mt-1">{t('dashboard.messages.subheading')}</p>
-                </div>
+            {/* TAB MEDIA LIBRARY */}
+            {activeTab === 'media' && (
+              <div id="view-media">
+                <MediaLibrary />
+              </div>
+            )}
 
-                {hasPermission(['admin', 'educator']) ? (
-                  <div className="space-y-4">
-                    {contactMessages.length === 0 ? (
-                      <p className="text-center py-10 font-mono text-muted-foreground/40 text-xs uppercase">{t('dashboard.messages.noInquiries')}</p>
-                    ) : (
-                      <div className="space-y-3.5 max-h-[500px] overflow-y-auto pr-2">
-                        {contactMessages.map(msg => (
-                          <Card
-                            key={msg.id}
-                            className={`p-5 border text-left transition-colors duration-300 rounded-none flex flex-col gap-0 py-5 ${
-                              msg.status === 'unread'
-                                ? 'border-primary/40 bg-primary/5 shadow-[0_0_8px_oklch(var(--primary)/0.05)]'
-                                : 'border-border bg-card/30'
-                            }`}
-                          >
-                            <div className="flex justify-between items-start gap-4">
-                              <div>
-                                <span className="font-mono text-[9px] text-primary uppercase tracking-wider block">
-                                  {msg.profile} inquiry
-                                </span>
-                                <h4 className="font-heading text-base font-light text-foreground mt-1">{msg.name}</h4>
-                                <span className="font-mono text-[10px] text-muted-foreground block mt-0.5">{msg.email}</span>
-                              </div>
-                              {msg.status === 'unread' && (
-                                <Button
-                                  onClick={() => handleMarkMessageRead(msg.id)}
-                                  className="px-2.5 py-0.5 bg-primary hover:bg-foreground hover:text-background text-primary-foreground transition-colors font-mono text-[8px] font-bold tracking-wider uppercase rounded-none cursor-pointer h-6"
-                                >
-                                  Read
-                                </Button>
-                              )}
-                            </div>
-                            <p className="font-sans text-xs text-muted-foreground leading-relaxed mt-4 pt-4 border-t border-border">
-                              {msg.message}
-                            </p>
-                            {(msg as any).attachment_name && (
-                              <div className="mt-4 pt-4 border-t border-border">
-                                <span className="font-sans text-[9px] text-muted-foreground uppercase tracking-wider block mb-2">Attached Document</span>
-                                <Attachment 
-                                  file={{
-                                    name: (msg as any).attachment_name,
-                                    url: (msg as any).attachment_url,
-                                    size: (msg as any).attachment_size || 2500000,
-                                    type: (msg as any).attachment_type || 'application/pdf'
-                                  }}
-                                  className="w-full sm:w-1/2"
-                                />
-                              </div>
-                            )}
-                          </Card>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                ) : isRoleResolving ? (
-                  <div className="flex items-center justify-center py-16">
-                    <span className="font-mono text-[10px] text-muted-foreground tracking-widest uppercase animate-pulse">Verifying permissions...</span>
-                  </div>
-                ) : (
-                  <Card className="p-8 text-center font-mono text-xs border border-border bg-card/30 rounded-none flex flex-col gap-2 py-8">
-                    <span className="text-foreground font-semibold text-sm">Access Restricted</span>
-                    <span className="text-muted-foreground text-[11px]">Inbound Inquiries management requires Educator or Admin privileges.</span>
-                  </Card>
-                )}
+            {/* TAB INBOX & COMMUNICATIONS */}
+            {activeTab === 'inbox' && (
+              <div id="view-inbox">
+                <InboxManager />
+              </div>
+            )}
+
+            {/* TAB SETTINGS */}
+            {activeTab === 'settings' && (
+              <div id="view-settings">
+                <SettingsHub />
               </div>
             )}
           </Card>
