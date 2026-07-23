@@ -8,6 +8,7 @@ export default function ProtectedRoute({ children }: { children: React.ReactNode
   const location = useLocation();
   const [aalLoading, setAalLoading] = useState(true);
   const [needsMfa, setNeedsMfa] = useState(false);
+  const [aalError, setAalError] = useState(false);
 
   useEffect(() => {
     if (loading) return;
@@ -18,14 +19,31 @@ export default function ProtectedRoute({ children }: { children: React.ReactNode
       return;
     }
 
-    supabase.auth.mfa.getAuthenticatorAssuranceLevel().then(({ data, error }) => {
-      if (!error && data) {
-        if (data.nextLevel === 'aal2' && data.currentLevel === 'aal1') {
+    // Reset state before each check
+    let cancelled = false;
+    setAalLoading(true);
+    setNeedsMfa(false);
+    setAalError(false);
+
+    supabase.auth.mfa.getAuthenticatorAssuranceLevel()
+      .then(({ data, error }) => {
+        if (cancelled) return;
+        if (error || !data) {
+          // Fail closed: block access if we can't verify assurance level
+          setAalError(true);
+        } else if (data.nextLevel === 'aal2' && data.currentLevel === 'aal1') {
           setNeedsMfa(true);
         }
-      }
-      setAalLoading(false);
-    });
+        setAalLoading(false);
+      })
+      .catch(() => {
+        if (cancelled) return;
+        // Fail closed on network/unexpected errors
+        setAalError(true);
+        setAalLoading(false);
+      });
+
+    return () => { cancelled = true; };
   }, [user, loading, isSimulated]);
 
   if (loading || aalLoading) {
@@ -40,8 +58,8 @@ export default function ProtectedRoute({ children }: { children: React.ReactNode
     );
   }
 
-  // If user is not authenticated or needs MFA, redirect to login
-  if (!user || needsMfa) {
+  // If user is not authenticated, needs MFA, or AAL check failed — redirect to login
+  if (!user || needsMfa || aalError) {
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
 

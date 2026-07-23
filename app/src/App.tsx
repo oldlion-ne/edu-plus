@@ -1,4 +1,4 @@
-import { lazy, Suspense, useState, useRef, useEffect } from 'react';
+import { lazy, Suspense, useState, useRef, useEffect, useCallback } from 'react';
 import { Routes, Route, useLocation } from 'react-router';
 import Navigation from './sections/Navigation';
 import Footer from './sections/Footer';
@@ -42,18 +42,9 @@ function App() {
   const [showSplash, setShowSplash] = useState(true);
   const [hasConsent, setHasConsent] = useState(() => document.cookie.includes('eduplus_cookie_consent=true'));
 
-  useEffect(() => {
-    // Check periodically for cookie consent if not already granted
-    if (!hasConsent) {
-      const timer = setInterval(() => {
-        if (document.cookie.includes('eduplus_cookie_consent=true')) {
-          setHasConsent(true);
-          clearInterval(timer);
-        }
-      }, 1000);
-      return () => clearInterval(timer);
-    }
-  }, [hasConsent]);
+  const handleConsentChange = useCallback((granted: boolean) => {
+    setHasConsent(granted);
+  }, []);
 
   useEffect(() => {
     let mounted = true;
@@ -100,7 +91,7 @@ function App() {
 
   const sharedGlobals = (
     <>
-      <CookieConsentBanner />
+      <CookieConsentBanner onConsentChange={handleConsentChange} />
       <Toaster position="top-right" richColors closeButton />
       {hasConsent && (
         <>

@@ -13,7 +13,11 @@ function getOrCreateDeviceId() {
   return deviceId;
 }
 
-export default function CookieConsentBanner() {
+interface CookieConsentBannerProps {
+  onConsentChange?: (granted: boolean) => void;
+}
+
+export default function CookieConsentBanner({ onConsentChange }: CookieConsentBannerProps) {
   const [deviceId, setDeviceId] = useState<string>('');
 
   useEffect(() => {
@@ -21,6 +25,9 @@ export default function CookieConsentBanner() {
   }, []);
 
   const handleConsent = async (consentGiven: boolean) => {
+    // Notify parent immediately, regardless of persistence outcome
+    onConsentChange?.(consentGiven);
+
     if (!deviceId) return;
     try {
       const { error } = await supabase
@@ -29,8 +36,6 @@ export default function CookieConsentBanner() {
       
       if (error) {
         console.error('Error saving cookie consent:', error);
-      } else {
-        console.log(`Cookie consent (${consentGiven ? 'accepted' : 'declined'}) saved for device ${deviceId}`);
       }
     } catch (error) {
       console.error('Error in handleConsent:', error);
