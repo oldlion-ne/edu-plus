@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { useScrollContainer } from '../../lib/ScrollContext';
+import { useIsMobile } from '../../hooks/use-mobile';
 
 interface ScrollScrubVideoProps {
   src: string;
@@ -13,6 +14,7 @@ export function ScrollScrubVideo({ src, className = '', scrollFactor = 1.5, chil
   const videoRef = useRef<HTMLVideoElement>(null);
   const overlayRef = useRef<HTMLDivElement>(null);
   const scrollContext = useScrollContainer();
+  const isMobile = useIsMobile();
   const [videoUrl, setVideoUrl] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const blobUrlRef = useRef<string | null>(null);
@@ -22,8 +24,16 @@ export function ScrollScrubVideo({ src, className = '', scrollFactor = 1.5, chil
   const currentTimeRef = useRef(0);
 
   // Load video via Blob so it's fully seekable on all servers
+  // SKIPPED on mobile to prevent massive bandwidth spikes and blocked window.onload events.
   useEffect(() => {
     let active = true;
+
+    if (isMobile) {
+      setVideoUrl(src);
+      setLoading(false);
+      return;
+    }
+
     fetch(src)
       .then((r) => {
         if (!r.ok) throw new Error(`HTTP error! status: ${r.status}`);
@@ -52,10 +62,12 @@ export function ScrollScrubVideo({ src, className = '', scrollFactor = 1.5, chil
         blobUrlRef.current = null;
       }
     };
-  }, [src]);
+  }, [src, isMobile]);
 
   // Scroll listener and RequestAnimationFrame lerp loop
   useEffect(() => {
+    if (isMobile) return; // Disable scroll scrubbing on mobile
+
     const video = videoRef.current;
     const container = containerRef.current;
     if (!video || !container) return;
@@ -118,7 +130,7 @@ export function ScrollScrubVideo({ src, className = '', scrollFactor = 1.5, chil
       cancelAnimationFrame(animId);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [videoUrl, scrollContext?.scrollContainerRef?.current]);
+  }, [videoUrl, scrollContext?.scrollContainerRef?.current, isMobile]);
 
   // Prime video on iOS touch events to avoid blank frames
   useEffect(() => {
@@ -167,12 +179,15 @@ export function ScrollScrubVideo({ src, className = '', scrollFactor = 1.5, chil
               src={videoUrl || undefined}
               muted
               playsInline
+              autoPlay={isMobile}
+              loop={isMobile}
               className="w-full h-full object-cover rounded-none"
             />
             {children && (
               <div 
                 ref={overlayRef}
-                className="absolute inset-0 flex flex-col items-center justify-center z-20 pointer-events-none transition-all duration-75"
+                className={`absolute inset-0 flex flex-col items-center justify-center z-20 pointer-events-none transition-all duration-75 ${isMobile ? 'bg-black/40' : ''}`}
+                style={isMobile ? {} : undefined} // Strip dynamic styles if mobile
               >
                 {children}
               </div>
