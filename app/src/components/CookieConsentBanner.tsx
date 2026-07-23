@@ -1,12 +1,6 @@
 import { useEffect, useState } from 'react';
 import CookieConsent from 'react-cookie-consent';
-import { createClient } from '@supabase/supabase-js';
-
-const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL as string;
-const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_PUBLIC_KEY as string;
-
-// Initialize Supabase client
-const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+import { supabase } from '@/lib/supabaseClient';
 
 const DEVICE_ID_KEY = 'eduplus_device_id';
 

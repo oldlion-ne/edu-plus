@@ -56,6 +56,10 @@ export default function InboxManager() {
         supabase.from('conversations').select('*').order('updated_at', { ascending: false })
       ]);
 
+      if (msgRes.error) throw msgRes.error;
+      if (subRes.error) throw subRes.error;
+      if (convRes.error) throw convRes.error;
+
       if (msgRes.data) setContactMessages(msgRes.data);
       if (subRes.data) setSubscribers(subRes.data);
       if (convRes.data) setConversations(convRes.data);

@@ -224,7 +224,7 @@ export function ResourceManager() {
 
         <form onSubmit={handleSave} className="space-y-8 max-w-4xl border border-border p-8 bg-card rounded-none shadow-sm">
           <div className="space-y-2">
-            <Label className="text-[10px] font-mono text-muted-foreground uppercase tracking-wider block">Visual Identity</Label>
+            <Label className="text-[10px] font-sans font-semibold text-muted-foreground uppercase tracking-wider block">Visual Identity</Label>
             {coverPreviewUrl ? (
               <div className="relative aspect-video w-full max-w-md border border-border overflow-hidden bg-muted group">
                 <img src={coverPreviewUrl} alt="Cover preview" className="w-full h-full object-cover" />
@@ -268,7 +268,7 @@ export function ResourceManager() {
 
           <div className="grid md:grid-cols-2 gap-5">
             <div className="space-y-2">
-              <Label className="text-[10px] font-mono text-muted-foreground uppercase tracking-wider block">{t('dashboard.uploader.title')}</Label>
+              <Label className="text-[10px] font-sans font-semibold text-muted-foreground uppercase tracking-wider block">{t('dashboard.uploader.title')}</Label>
               <Input
                 type="text"
                 required
@@ -279,7 +279,7 @@ export function ResourceManager() {
               />
             </div>
             <div className="space-y-2">
-              <Label className="text-[10px] font-mono text-muted-foreground uppercase tracking-wider block">{t('dashboard.uploader.authorName')}</Label>
+              <Label className="text-[10px] font-sans font-semibold text-muted-foreground uppercase tracking-wider block">{t('dashboard.uploader.authorName')}</Label>
               <Input
                 type="text"
                 required
@@ -293,15 +293,15 @@ export function ResourceManager() {
 
           <div className="grid md:grid-cols-2 gap-5">
             <div className="space-y-2 flex flex-col gap-1.5">
-              <Label className="text-[10px] font-mono text-muted-foreground uppercase tracking-wider block">{t('dashboard.uploader.category')}</Label>
+              <Label className="text-[10px] font-sans font-semibold text-muted-foreground uppercase tracking-wider block">{t('dashboard.uploader.category')}</Label>
               <Select
                 value={newHubItem.category}
                 onValueChange={val => setNewHubItem(p => ({ ...p, category: val }))}
               >
-                <SelectTrigger className="w-full bg-background border border-border text-xs px-4 py-2.5 outline-none focus:border-primary rounded-none text-foreground font-mono h-9">
+                <SelectTrigger className="w-full bg-background border border-border text-xs px-4 py-2.5 outline-none focus:border-primary rounded-none text-foreground font-sans h-9">
                   <SelectValue placeholder="Select Category" />
                 </SelectTrigger>
-                <SelectContent className="rounded-none bg-card border border-border text-foreground font-mono text-xs z-50">
+                <SelectContent className="rounded-none bg-card border border-border text-foreground font-sans text-xs z-50">
                   <SelectItem value="tutorial" className="rounded-none cursor-pointer">{t('dashboard.uploader.tutorial')}</SelectItem>
                   <SelectItem value="podcast" className="rounded-none cursor-pointer">{t('dashboard.uploader.podcast')}</SelectItem>
                   <SelectItem value="webinar" className="rounded-none cursor-pointer">{t('dashboard.uploader.webinar')}</SelectItem>
@@ -310,15 +310,15 @@ export function ResourceManager() {
               </Select>
             </div>
             <div className="space-y-2 flex flex-col gap-1.5">
-              <Label className="text-[10px] font-mono text-muted-foreground uppercase tracking-wider block">{t('dashboard.uploader.mediaType')}</Label>
+              <Label className="text-[10px] font-sans font-semibold text-muted-foreground uppercase tracking-wider block">{t('dashboard.uploader.mediaType')}</Label>
               <Select
                 value={newHubItem.media_type}
                 onValueChange={val => setNewHubItem(p => ({ ...p, media_type: val }))}
               >
-                <SelectTrigger className="w-full bg-background border border-border text-xs px-4 py-2.5 outline-none focus:border-primary rounded-none text-foreground font-mono h-9">
+                <SelectTrigger className="w-full bg-background border border-border text-xs px-4 py-2.5 outline-none focus:border-primary rounded-none text-foreground font-sans h-9">
                   <SelectValue placeholder="Select Media Type" />
                 </SelectTrigger>
-                <SelectContent className="rounded-none bg-card border border-border text-foreground font-mono text-xs z-50">
+                <SelectContent className="rounded-none bg-card border border-border text-foreground font-sans text-xs z-50">
                    <SelectItem value="video_embed" className="rounded-none cursor-pointer">{t('dashboard.uploader.videoLink')}</SelectItem>
                    <SelectItem value="document_url" className="rounded-none cursor-pointer">{t('dashboard.uploader.pdfLink')}</SelectItem>
                    <SelectItem value="external_link" className="rounded-none cursor-pointer">{t('dashboard.uploader.externalLink')}</SelectItem>
@@ -329,7 +329,7 @@ export function ResourceManager() {
 
           {newHubItem.media_type === 'document_url' ? (
             <div className="space-y-2">
-              <Label className="text-[10px] font-mono text-muted-foreground uppercase tracking-wider block">Document File Node</Label>
+              <Label className="text-[10px] font-sans font-semibold text-muted-foreground uppercase tracking-wider block">Document File Node</Label>
               {!selectedFile && !newHubItem.url ? (
                 <div className="relative">
                   <Input
@@ -362,7 +362,7 @@ export function ResourceManager() {
             </div>
           ) : (
             <div className="space-y-2">
-              <Label className="text-[10px] font-mono text-muted-foreground uppercase tracking-wider block">{t('dashboard.uploader.resourceUrl')}</Label>
+              <Label className="text-[10px] font-sans font-semibold text-muted-foreground uppercase tracking-wider block">{t('dashboard.uploader.resourceUrl')}</Label>
               <Input
                 type="url"
                 required
@@ -375,7 +375,7 @@ export function ResourceManager() {
           )}
 
           <div className="space-y-2">
-            <Label className="text-[10px] font-mono text-muted-foreground uppercase tracking-wider block">{t('dashboard.uploader.briefDescription')}</Label>
+            <Label className="text-[10px] font-sans font-semibold text-muted-foreground uppercase tracking-wider block">{t('dashboard.uploader.briefDescription')}</Label>
             <Textarea
               value={newHubItem.description}
               onChange={e => setNewHubItem(p => ({ ...p, description: e.target.value }))}
@@ -398,7 +398,7 @@ export function ResourceManager() {
       <div className="flex justify-between items-center border-b border-border pb-4">
         <div>
           <h2 className="font-heading text-2xl font-light text-foreground">Resource Manager</h2>
-          <p className="font-mono text-xs text-muted-foreground mt-1">Manage and audit your Knowledge Hub library.</p>
+          <p className="font-sans text-xs text-muted-foreground mt-1">Manage and audit your Knowledge Hub library.</p>
         </div>
         <Button onClick={() => setIsFormOpen(true)} className="rounded-none bg-primary text-primary-foreground">
           + Add Resource
@@ -411,7 +411,7 @@ export function ResourceManager() {
         </div>
       ) : items.length === 0 ? (
         <div className="text-center py-12 border border-border bg-card/30">
-          <p className="font-mono text-xs text-muted-foreground">No resources found.</p>
+          <p className="font-sans text-xs text-muted-foreground">No resources found.</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

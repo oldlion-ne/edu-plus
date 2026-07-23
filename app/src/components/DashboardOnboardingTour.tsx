@@ -170,9 +170,6 @@ export default function DashboardOnboardingTour({
             stroke="oklch(var(--primary))"
             strokeWidth="1.5"
             rx="0"
-            style={{
-              filter: 'drop-shadow(0 0 6px oklch(var(--primary) / 0.7))',
-            }}
           />
         )}
       </svg>

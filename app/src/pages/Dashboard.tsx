@@ -640,7 +640,7 @@ export default function Dashboard() {
                 <p className="font-sans text-xs truncate">{user?.email}</p>
                 {selectedRole && (
                   <>
-                    <span className="w-1 h-1 bg-foreground/30 rounded-full" />
+                    <span className="w-1 h-1 bg-foreground/30 rounded-none" />
                     <span className="text-[10px] font-sans capitalize">
                       {selectedRole.replace('_', ' ')}
                     </span>

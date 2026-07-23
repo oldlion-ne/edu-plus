@@ -45,7 +45,15 @@ export default function Login() {
       // Check MFA asynchronously just in case user object was loaded from session
       supabase.auth.mfa.getAuthenticatorAssuranceLevel().then(({ data }) => {
         if (data && data.nextLevel === 'aal2' && data.currentLevel === 'aal1') {
-          setMfaRequired(true);
+          supabase.auth.mfa.listFactors().then(({ data: factorsData }) => {
+            const totpFactor = factorsData?.totp.find(f => f.status === 'verified');
+            if (totpFactor) {
+              setMfaFactorId(totpFactor.id);
+              setMfaRequired(true);
+            } else {
+              navigate(from, { replace: true });
+            }
+          });
         } else {
           navigate(from, { replace: true });
         }
@@ -123,8 +131,8 @@ export default function Login() {
         <div className="relative z-10 flex flex-col h-full px-12 py-12 justify-between">
           
           {/* Logo */}
-          <div className="shrink-0 animate-in fade-in slide-in-from-bottom-4 duration-700 ease-out fill-mode-both" style={{ animationDelay: '100ms' }}>
-            <span className="font-heading font-bold text-3xl text-[#1C1B1A] leading-none tracking-tight">
+          <div className="shrink-0 animate-in fade-in slide-in-from-bottom-4 duration-700 ease-out fill-mode-both delay-[100ms]">
+            <span className="font-heading font-bold text-3xl text-[#0E131A] leading-none tracking-tight">
               {t('brandName')}
               <span className="text-[#FBBF24] font-light">{t('brandPlus')}</span>
             </span>
@@ -132,18 +140,18 @@ export default function Login() {
 
           {/* Central editorial statement */}
           <div className="flex-1 flex flex-col justify-center max-w-lg">
-            <h2 className="font-heading font-semibold text-5xl lg:text-7xl text-[#1C1B1A] leading-[1.05] whitespace-pre-line tracking-tight animate-in fade-in slide-in-from-bottom-6 duration-1000 ease-out fill-mode-both" style={{ animationDelay: '300ms' }}>
+            <h2 className="font-heading font-semibold text-5xl lg:text-7xl text-[#0E131A] leading-[1.05] whitespace-pre-line tracking-tight animate-in fade-in slide-in-from-bottom-6 duration-1000 ease-out fill-mode-both delay-[300ms]">
               {t('taglineHeading')}
             </h2>
-            <div className="w-12 h-[2px] bg-[#1C1B1A]/30 my-8 animate-in fade-in zoom-in-50 duration-700 ease-out fill-mode-both" style={{ animationDelay: '500ms' }} />
-            <p className="text-[#1C1B1A]/70 text-lg font-sans leading-relaxed max-w-sm animate-in fade-in slide-in-from-bottom-4 duration-700 ease-out fill-mode-both" style={{ animationDelay: '600ms' }}>
+            <div className="w-12 h-[2px] bg-[#0E131A]/30 my-8 animate-in fade-in slide-in-from-bottom-2 duration-700 ease-out fill-mode-both delay-[500ms]" />
+            <p className="text-[#0E131A]/70 text-lg font-sans leading-relaxed max-w-sm animate-in fade-in slide-in-from-bottom-4 duration-700 ease-out fill-mode-both delay-[600ms]">
               {t('taglineSub')}
             </p>
           </div>
 
           {/* Bottom system note */}
-          <div className="shrink-0 animate-in fade-in slide-in-from-bottom-2 duration-700 ease-out fill-mode-both" style={{ animationDelay: '800ms' }}>
-            <p className="text-xs font-sans tracking-[0.25em] uppercase text-[#1C1B1A]/60 font-semibold">
+          <div className="shrink-0 animate-in fade-in slide-in-from-bottom-2 duration-700 ease-out fill-mode-both delay-[800ms]">
+            <p className="text-xs font-sans tracking-[0.25em] uppercase text-[#0E131A]/60 font-semibold">
               {t('systemNote')}
             </p>
           </div>
@@ -176,7 +184,7 @@ export default function Login() {
         <div className="w-full max-w-[380px] relative z-10">
 
           {/* Heading */}
-          <div className="mb-10 animate-in fade-in slide-in-from-bottom-4 duration-700 ease-out fill-mode-both" style={{ animationDelay: '200ms' }}>
+          <div className="mb-10 animate-in fade-in slide-in-from-bottom-4 duration-700 ease-out fill-mode-both delay-[200ms]">
             <h1 className="font-heading text-3xl font-medium text-foreground tracking-tight">
               {t('signIn')}
             </h1>
@@ -187,7 +195,7 @@ export default function Login() {
 
           {/* Form / MFA View */}
           {mfaRequired ? (
-            <div className="flex flex-col gap-6 animate-in fade-in slide-in-from-bottom-4 duration-500 ease-out fill-mode-both" style={{ animationDelay: '100ms' }}>
+            <div className="flex flex-col gap-6 animate-in fade-in slide-in-from-bottom-4 duration-500 ease-out fill-mode-both delay-[100ms]">
               <div className="bg-primary/5 border border-primary/20 p-5 flex items-start gap-4 rounded-none">
                 <ShieldCheck className="text-primary shrink-0 mt-0.5" size={20} />
                 <div>
@@ -219,7 +227,7 @@ export default function Login() {
                   <Button
                     type="submit"
                     disabled={mfaCode.length !== 6 || submitting}
-                    className="w-full h-12 font-sans text-sm font-medium tracking-wider uppercase bg-[#FBBF24] text-[#1C1B1A] hover:bg-[#FBBF24]/90 rounded-none border-none transition-all duration-300 hover:shadow-[4px_4px_0px_0px_rgba(28,27,26,0.1)] dark:hover:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.05)] disabled:hover:shadow-none disabled:opacity-50"
+                    className="w-full h-12 font-sans text-sm font-medium tracking-wider uppercase bg-[#FBBF24] text-[#0E131A] hover:bg-[#FBBF24]/90 rounded-none border-none transition-all duration-300 hover:shadow-[4px_4px_0px_0px_rgba(28,27,26,0.1)] dark:hover:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.05)] disabled:hover:shadow-none disabled:opacity-50"
                   >
                     {submitting ? 'Verifying...' : 'Verify & Continue'}
                   </Button>
@@ -237,7 +245,7 @@ export default function Login() {
           ) : (
             <form onSubmit={handleSubmit} className="flex flex-col gap-6">
               
-              <div className="flex flex-col gap-6 animate-in fade-in slide-in-from-bottom-4 duration-700 ease-out fill-mode-both" style={{ animationDelay: '400ms' }}>
+              <div className="flex flex-col gap-6 animate-in fade-in slide-in-from-bottom-4 duration-700 ease-out fill-mode-both delay-[400ms]">
                 {/* Email */}
                 <div className="flex flex-col gap-2 relative group">
                   <Label
@@ -313,10 +321,10 @@ export default function Login() {
               </div>
 
               {/* CTA */}
-              <div className="mt-4 animate-in fade-in slide-in-from-bottom-4 duration-700 ease-out fill-mode-both" style={{ animationDelay: '600ms' }}>
+              <div className="mt-4 animate-in fade-in slide-in-from-bottom-4 duration-700 ease-out fill-mode-both delay-[600ms]">
                 <Button
                   type="submit"
-                  className="w-full h-12 font-sans text-sm font-medium tracking-wider uppercase bg-[#FBBF24] text-[#1C1B1A] hover:bg-[#FBBF24]/90 rounded-none border-none transition-all duration-300 hover:shadow-[4px_4px_0px_0px_rgba(28,27,26,0.1)] dark:hover:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.05)] disabled:hover:shadow-none disabled:opacity-50"
+                  className="w-full h-12 font-sans text-sm font-medium tracking-wider uppercase bg-[#FBBF24] text-[#0E131A] hover:bg-[#FBBF24]/90 rounded-none border-none transition-all duration-300 hover:shadow-[4px_4px_0px_0px_rgba(28,27,26,0.1)] dark:hover:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.05)] disabled:hover:shadow-none disabled:opacity-50"
                   disabled={submitting}
                 >
                   {submitting ? t('signingIn') : t('signIn')}
@@ -327,7 +335,7 @@ export default function Login() {
           )}
 
           {/* Footer note */}
-          <div className="mt-12 animate-in fade-in duration-1000 ease-out fill-mode-both" style={{ animationDelay: '800ms' }}>
+          <div className="mt-12 animate-in fade-in duration-1000 ease-out fill-mode-both delay-[800ms]">
             <p className="text-center text-[10px] text-muted-foreground/60 font-sans tracking-widest uppercase font-medium">
               {t('footerNote')}
             </p>

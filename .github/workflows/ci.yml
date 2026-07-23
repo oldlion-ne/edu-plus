@@ -9,9 +9,13 @@ on:
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     
     steps:
     - uses: actions/checkout@v4
+      with:
+        persist-credentials: false
     
     - name: Install pnpm
       uses: pnpm/action-setup@v3

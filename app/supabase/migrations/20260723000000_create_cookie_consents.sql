@@ -10,5 +10,3 @@ ALTER TABLE public.cookie_consents ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Allow anonymous insert" ON public.cookie_consents
     FOR INSERT WITH CHECK (true);
 
-CREATE POLICY "Allow anonymous select" ON public.cookie_consents
-    FOR SELECT USING (true);

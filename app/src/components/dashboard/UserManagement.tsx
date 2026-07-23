@@ -101,7 +101,7 @@ export default function UserManagement() {
       if (!data?.success) throw new Error(data?.error);
 
       toast.success(isCurrentlyBanned ? 'User unbanned' : 'User banned');
-      setUsers(prev => prev.map(u => u.id === userId ? { ...u, banned_until: !isCurrentlyBanned ? 'banned' : null } : u));
+      setUsers(prev => prev.map(u => u.id === userId ? { ...u, banned_until: !isCurrentlyBanned ? new Date(9999, 11, 31).toISOString() : null } : u));
     } catch (err: any) {
       toast.error(err.message || 'Failed to toggle ban status');
     }

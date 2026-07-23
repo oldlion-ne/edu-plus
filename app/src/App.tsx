@@ -40,6 +40,20 @@ const PageLoader = () => (
 
 function App() {
   const [showSplash, setShowSplash] = useState(true);
+  const [hasConsent, setHasConsent] = useState(() => document.cookie.includes('eduplus_cookie_consent=true'));
+
+  useEffect(() => {
+    // Check periodically for cookie consent if not already granted
+    if (!hasConsent) {
+      const timer = setInterval(() => {
+        if (document.cookie.includes('eduplus_cookie_consent=true')) {
+          setHasConsent(true);
+          clearInterval(timer);
+        }
+      }, 1000);
+      return () => clearInterval(timer);
+    }
+  }, [hasConsent]);
 
   useEffect(() => {
     let mounted = true;
@@ -90,8 +104,12 @@ function App() {
         <MotionConfig reducedMotion="user">
           <CookieConsentBanner />
           <Toaster position="top-right" richColors closeButton />
-          <Analytics />
-          <SpeedInsights />
+          {hasConsent && (
+            <>
+              <Analytics />
+              <SpeedInsights />
+            </>
+          )}
           <AnimatePresence>
             {showSplash && <SplashLoader key="splash" />}
           </AnimatePresence>
@@ -119,8 +137,12 @@ function App() {
       <MotionConfig reducedMotion="user">
         <CookieConsentBanner />
         <Toaster position="top-right" richColors closeButton />
-        <Analytics />
-        <SpeedInsights />
+        {hasConsent && (
+          <>
+            <Analytics />
+            <SpeedInsights />
+          </>
+        )}
         <AnimatePresence>
           {showSplash && <SplashLoader key="splash" />}
         </AnimatePresence>
