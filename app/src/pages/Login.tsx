@@ -78,7 +78,6 @@ export default function Login() {
 
           {/* Central editorial statement */}
           <div className="flex-1 flex flex-col justify-center max-w-md">
-            <div className="w-8 h-[2px] bg-[#FBBF24] mb-8" />
             <h2
               className="font-heading font-bold text-5xl xl:text-6xl text-[#1C1B1A] leading-[1.08] whitespace-pre-line"
             >
@@ -92,7 +91,6 @@ export default function Login() {
 
           {/* Bottom system note — amber accent bar, dark text */}
           <div className="shrink-0 flex items-center gap-2">
-            <div className="w-1 h-3 bg-[#FBBF24]" />
             <p className="text-[10px] font-sans tracking-[0.25em] uppercase text-[#1C1B1A]/70 font-medium">
               {t('systemNote')}
             </p>

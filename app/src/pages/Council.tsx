@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { ScrollReveal } from '@/components/effects/ScrollReveal';
+import { BlurFade } from '@/components/ui/blur-fade';
 import {
   Dialog,
   DialogClose,
@@ -9,7 +10,8 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { PageHero } from '@/components/ui/page-hero';
-import { councilPortraits, editorialIllustrations } from '@/lib/editorialIllustrations';
+import { editorialIllustrations } from '@/lib/editorialIllustrations';
+import { GeometricSignature } from '@/components/ui/geometric-signature';
 
 interface CouncilMember {
   name: string;
@@ -120,25 +122,11 @@ const COUNCIL_MEMBERS = [
   }
 ] as const satisfies readonly CouncilMember[];
 
-export const COUNCIL_PORTRAIT_BY_NAME: Record<string, string> = Object.fromEntries(
-  COUNCIL_MEMBERS.map((member) => {
-    return [
-      member.name,
-      councilPortraits.find(url => url.includes(member.portraitKey)) ?? ''
-    ];
-  })
-);
-
-const councilMembers = COUNCIL_MEMBERS.map((member) => ({
-  ...member,
-  portrait: COUNCIL_PORTRAIT_BY_NAME[member.name],
-}));
-
 export default function Council() {
   const [selectedMember, setSelectedMember] = useState<CouncilMember | null>(null);
 
   return (
-    <div className="bg-background w-full min-h-screen">
+    <div className="bg-background w-full flex-1">
       
       {/* ── Typographic Hero ── */}
       <PageHero
@@ -151,7 +139,7 @@ export default function Council() {
       {/* ── 3-Column Grid of Members ── */}
       <section className="py-20 border-t border-border/50 px-6 md:px-12 max-w-[1440px] mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-x-12 gap-y-16">
-          {councilMembers.map((member, i) => (
+          {COUNCIL_MEMBERS.map((member, i) => (
             <ScrollReveal key={member.name} delay={Math.min(i * 0.1, 0.4)}>
               <Dialog
                 open={selectedMember?.name === member.name}
@@ -164,13 +152,10 @@ export default function Council() {
                   aria-label={`${member.name}, ${member.role}`}
                   className="group flex w-full cursor-pointer flex-col items-start rounded-none bg-transparent p-10 text-left transition-colors duration-200 hover:bg-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground focus-visible:ring-offset-2 focus-visible:ring-offset-background"
                 >
-                  <span className="aspect-[4/5] w-full bg-secondary flex items-center justify-center text-muted-foreground mb-6 overflow-hidden">
-                    <img
-                      src={member.portrait}
-                      alt={`${member.name}, ${member.role}`}
-                      loading="lazy"
-                      decoding="async"
-                      className="h-full w-full object-cover transition-[filter] duration-200 grayscale group-hover:grayscale-0 group-focus-visible:grayscale-0"
+                  <span className="aspect-[4/5] w-full bg-background border border-border/50 flex items-center justify-center text-muted-foreground mb-6 overflow-hidden relative">
+                    <GeometricSignature 
+                      seed={member.name} 
+                      className="opacity-70 group-hover:opacity-100 transition-opacity duration-300"
                     />
                   </span>
                   <span className="text-[20px] font-medium text-foreground mb-2 leading-snug group-hover:text-primary transition-colors">
@@ -214,15 +199,18 @@ export default function Council() {
         </div>
       </section>
 
-      {/* ── Center Testimonial Quote ── */}
       <section className="py-32 border-t border-border/50 bg-secondary px-6 md:px-12">
         <div className="max-w-3xl mx-auto text-center">
-          <blockquote className="text-2xl font-light text-foreground leading-relaxed mb-8">
-            "EduPlus Skills has been a game-changer for my career path. It bridged the gap between my local training in Imphal and global tech opportunities."
-          </blockquote>
-          <cite className="text-[14px] font-medium text-muted-foreground not-italic">
-            — Khumukcham Premkumar Singh, Software Trainee
-          </cite>
+          <BlurFade delay={0.2} inView>
+            <blockquote className="text-2xl font-light text-foreground leading-relaxed mb-8">
+              "EduPlus Skills has been a game-changer for my career path. It bridged the gap between my local training in Imphal and global tech opportunities."
+            </blockquote>
+          </BlurFade>
+          <BlurFade delay={0.3} inView>
+            <cite className="text-[14px] font-medium text-muted-foreground not-italic">
+              — Khumukcham Premkumar Singh, Software Trainee
+            </cite>
+          </BlurFade>
         </div>
       </section>
 

@@ -162,6 +162,11 @@ export default function Legal() {
                       </li>
                     </ul>
 
+                    <h3 className="font-heading text-lg text-foreground mt-8">Marketing & Communications</h3>
+                    <p className="text-muted-foreground leading-relaxed text-sm">
+                      By explicitly opting in through our contact or newsletter forms, you agree to receive digital marketing communications from EduPlus. These may include updates on new programs, camps, scholarship opportunities, and related educational services. We use your provided contact information (such as your email address) solely for these purposes. You reserve the right to unsubscribe or revoke this consent at any time.
+                    </p>
+
                     <h3 className="font-heading text-lg text-foreground mt-8">Data Protection Mechanisms</h3>
                     <p className="text-muted-foreground leading-relaxed text-sm">
                       We implement a variety of security measures to maintain the safety of your personal information when you enter, submit, or access your personal information. All sensitive data is transmitted via Secure Socket Layer (SSL) technology and encrypted into our database architecture to only be accessed by authorized personnel.
@@ -188,6 +193,11 @@ export default function Legal() {
                     <h3 className="font-heading text-lg text-foreground mt-8">Analytics & Performance</h3>
                     <p className="text-muted-foreground leading-relaxed text-sm">
                       We utilize analytics cookies to compile aggregate data about site traffic and site interaction so that we can offer better site experiences and tools in the future. These cookies collect information anonymously and report website trends without identifying individual visitors.
+                    </p>
+                    
+                    <h3 className="font-heading text-lg text-foreground mt-8">Marketing & Tracking Cookies</h3>
+                    <p className="text-muted-foreground leading-relaxed text-sm">
+                      With your consent, we may employ marketing cookies to track engagement with our digital marketing campaigns and newsletters. This helps us tailor content and measure the effectiveness of our communications.
                     </p>
                     
                     <div className="mt-8 p-5 bg-background border border-border border-l-2 border-l-primary flex flex-col gap-2">

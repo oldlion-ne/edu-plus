@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router';
-import { Button } from '@/components/ui/button';
+
 import { PageHero } from '@/components/ui/page-hero';
 import { BulletList, BulletItem } from '@/components/ui/bullet-list';
 import { editorialIllustrations } from '@/lib/editorialIllustrations';
@@ -100,7 +100,7 @@ export default function SignatureExperiences() {
   const [openFaq, setOpenFaq] = useState<string | null>(null);
 
   return (
-    <div className="min-h-screen bg-background w-full">
+    <div className="flex-1 bg-background w-full">
 
       {/* ── Typographic Hero ── */}
       <PageHero
@@ -135,11 +135,6 @@ export default function SignatureExperiences() {
                     <BulletItem key={h}>{h}</BulletItem>
                   ))}
                 </BulletList>
-                {evt.active && (
-                  <Button asChild size="md" className="rounded-none bg-foreground text-background hover:bg-primary transition-colors duration-200">
-                    <Link to="/contact" /* ui-ignore */>Register</Link>
-                  </Button>
-                )}
               </div>
             </div>
           ))}

@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import { supabase } from '../lib/supabaseClient';
 import ImmersiveHero from '../components/effects/ImmersiveHero';
 import { Button } from '../components/ui/button';
-import { NeonGradientCard } from '../components/ui/neon-gradient-card';
 import { Input } from '../components/ui/input';
 import { Badge } from '../components/ui/badge';
 import { X, Globe, BookOpen, Briefcase, ArrowRight } from 'lucide-react';
@@ -188,7 +187,7 @@ export default function Resources() {
   };
 
   return (
-    <div className="min-h-screen bg-background text-foreground pb-32 relative overflow-hidden font-sans">
+    <div className="flex-1 bg-background text-foreground relative overflow-hidden font-sans">
       {/* Decorative Glows */}
       <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-primary/5 rounded-none blur-[120px] pointer-events-none" />
       <div className="absolute bottom-1/4 right-1/4 w-[600px] h-[600px] bg-primary/3 rounded-none blur-[150px] pointer-events-none" />
@@ -275,10 +274,12 @@ export default function Resources() {
             {/* Articles Grid */}
             <div className={`grid md:grid-cols-2 gap-8 transition-all duration-1000 delay-300 transform ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
               {ARTICLES_KEYS.map((article, idx) => (
-                <NeonGradientCard
+                <div
                   key={idx}
-                  className="border border-border/50 h-auto min-h-[300px]"
+                  className="group relative flex flex-col p-6 bg-transparent transition-colors duration-200 hover:bg-secondary h-auto min-h-[300px] border border-border overflow-hidden"
                 >
+                  {/* Amber accent hover line */}
+                  <div className="absolute top-0 left-0 w-0 h-[2px] bg-primary group-hover:w-full transition-all duration-700 ease-out z-20" />
                   <div className="flex flex-col justify-between h-full space-y-4">
                     {/* Visual Top Header Box with Diorama Image */}
                     <div className="relative w-[calc(100%+3rem)] aspect-video border-b border-border/80 overflow-hidden -mx-6 -mt-6 mb-2 group/article-image">
@@ -316,7 +317,7 @@ export default function Resources() {
                       </Button>
                     </div>
                   </div>
-                </NeonGradientCard>
+                </div>
               ))}
             </div>
           </div>
@@ -369,27 +370,29 @@ export default function Resources() {
                 {filteredItems.map(item => {
                   const isYoutube = item.media_type === 'video_embed' && getYoutubeId(item.url);
                   return (
-                    <NeonGradientCard
+                    <div
                       key={item.id}
-                      className="border border-border/50 h-[300px] md:h-[320px] overflow-hidden"
+                      className="group relative flex flex-col p-8 bg-transparent transition-colors duration-200 hover:bg-secondary h-[300px] md:h-[320px] overflow-hidden border border-border"
                     >
-                      <div className="flex flex-col justify-between h-full space-y-4">
+                      {/* Amber accent hover line */}
+                      <div className="absolute top-0 left-0 w-0 h-[2px] bg-primary group-hover:w-full transition-all duration-700 ease-out" />
+                      <div className="flex flex-col justify-between h-full space-y-4 relative z-10">
                         <div>
-                          <div className="flex justify-between items-center text-[8px] font-mono text-primary tracking-widest uppercase border-b border-border/50 pb-2 mb-3">
+                          <div className="flex justify-between items-center text-[8px] font-mono text-primary tracking-[0.3em] uppercase border-b border-border/50 pb-2 mb-4">
                             <span>{t('srcPrefix')}{item.media_type.replace('_', ' ')}</span>
                             <span>{item.category.replace('_', ' ')}</span>
                           </div>
                           
-                          <h3 className="font-heading text-lg font-semibold text-foreground tracking-tight mb-2 leading-snug hover:text-primary transition-colors">
+                          <h3 className="text-[18px] font-medium text-foreground tracking-tight mb-2 leading-snug group-hover:text-primary transition-colors">
                             {item.title}
                           </h3>
-                          <p className="font-sans text-xs text-muted-foreground leading-relaxed line-clamp-3">
+                          <p className="text-[13px] text-muted-foreground leading-relaxed line-clamp-3">
                             {item.description || t('noSupplementaryData')}
                           </p>
                         </div>
 
-                        <div className="pt-4 border-t border-border flex items-center justify-between">
-                          <span className="text-[9px] font-mono text-muted-foreground uppercase">
+                        <div className="pt-4 border-t border-border/50 flex items-center justify-between">
+                          <span className="text-[9px] font-mono text-muted-foreground uppercase tracking-[0.2em]">
                             {t('nodePrefix')}{item.author_name}
                           </span>
                           {isYoutube ? (
@@ -397,7 +400,7 @@ export default function Resources() {
                               size="sm"
                               variant="secondary"
                               onClick={() => setSelectedVideo(item.url)}
-                              className="font-mono text-[9px] tracking-wider uppercase h-8 liquid-glass rounded-none"
+                              className="font-mono text-[9px] tracking-wider uppercase h-8 rounded-none bg-primary/10 text-primary hover:bg-primary hover:text-primary-foreground"
                             >
                               {t('launchPlayback')}
                             </Button>
@@ -406,16 +409,16 @@ export default function Resources() {
                               size="sm"
                               variant="outline"
                               asChild
-                              className="h-8 liquid-glass rounded-none"
+                              className="font-mono text-[9px] tracking-wider uppercase h-8 rounded-none border-foreground/30 text-foreground hover:border-foreground"
                             >
-                              <a href={item.url} target="_blank" rel="noopener noreferrer" className="font-mono text-[9px] tracking-wider uppercase" /* ui-ignore */>
+                              <a href={item.url} target="_blank" rel="noopener noreferrer" /* ui-ignore */>
                                 {t('openLink')}
                               </a>
                             </Button>
                           )}
                         </div>
                       </div>
-                    </NeonGradientCard>
+                    </div>
                   );
                 })}
               </div>

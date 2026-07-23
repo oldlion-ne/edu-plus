@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import { PageHero } from '../components/ui/page-hero';
 import { Button } from '../components/ui/button';
-import { Card } from '../components/ui/card';
+import { InvisibleCard } from '../components/ui/invisible-card';
+import { PageContainer, PageSection, AnimatedHeader } from '../components/ui/page-layout';
 import { Check, HelpCircle, ArrowRight, User, Building, ShieldCheck, Sparkles } from 'lucide-react';
 import { Link } from 'react-router';
 import { cn } from '../lib/utils';
@@ -10,24 +11,24 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '..
 import { editorialIllustrations } from '../lib/editorialIllustrations';
 
 const translations = {
-  heroCategory: "Investment in Excellence",
-  heroTitleNormal: "Scalable Pricing Plans",
-  heroDesc: "Empower your future or scale your institution. Transparent, value-driven plans designed to deliver real-world outcomes and skill growth.",
+  heroCategory: "Platform Access",
+  heroTitleNormal: "EduPlus Access Tracks",
+  heroDesc: "Join our ecosystem. We are rolling out our advanced advisory features in phases. Start for free today and secure your spot in our upcoming premium cohorts.",
   studentTab: "Student / Individual",
   instituteTab: "Institute / School",
   studentSubtitle: "Personalized pathways for career discovery and academic readiness",
   instituteSubtitle: "Enterprise solutions to scale innovation and pedagogy across cohorts",
-  perMonth: "/ month",
-  billedMonthly: "Billed monthly. Prices in Indian Rupees (INR)",
+  perMonth: "",
+  billedMonthly: "Early Access rollout pricing.",
   popular: "Most Popular",
   getStarted: "Get Started Now",
   contactSales: "Request Advisory Consult",
   featuresHeader: "Key Features Included:",
   comparisonTitle: "Detailed Program Coverage",
   comparisonSubtitle: "See how our 6 core EduPlus Skill programs align with each tier.",
-  faqTitle: "Frequently Asked Questions",
-  faqSubtitle: "Have questions about pricing, billing, or programs? Find answers below.",
-  faqContactText: "Need customized institutional pricing? ",
+  faqTitle: "Access & Rollout FAQs",
+  faqSubtitle: "Have questions about our rollout phases or beta access? Find answers below.",
+  faqContactText: "Need customized institutional access? ",
   faqContactLink: "Connect with our advisory board",
 };
 
@@ -55,8 +56,8 @@ const STUDENT_PLANS: Plan[] = [
   {
     id: "student-explorer",
     name: "Explorer",
-    price: "₹0",
-    period: "forever",
+    price: "Free",
+    period: "Open Access",
     description: "Discover your baseline strengths and explore career pathways.",
     features: [
       { text: "FuturePath Navigator psychometric scan preview", included: true },
@@ -68,14 +69,14 @@ const STUDENT_PLANS: Plan[] = [
       { text: "Career Launchpad & placements portal", included: false },
     ],
     popular: false,
-    ctaText: "Free",
+    ctaText: "Join Now",
     ctaLink: "/connect"
   },
   {
     id: "student-scholar",
     name: "Scholar",
-    price: "₹999",
-    period: "month",
+    price: "Waitlist",
+    period: "Beta Phase",
     description: "Deep dive into strengths and begin structural human capability building.",
     features: [
       { text: "Full FuturePath Navigator psychometric mapping", included: true },
@@ -87,14 +88,14 @@ const STUDENT_PLANS: Plan[] = [
       { text: "Career Launchpad & resume optimizer", included: false },
     ],
     popular: false,
-    ctaText: "Enroll",
+    ctaText: "Join Waitlist",
     ctaLink: "/connect"
   },
   {
     id: "student-champion",
     name: "Champion",
-    price: "₹2,499",
-    period: "month",
+    price: "Invite Only",
+    period: "Q1 Launch",
     description: "Complete future-ready suite for global admissions and placements.",
     features: [
       { text: "Everything in Scholar tier", included: true },
@@ -106,7 +107,7 @@ const STUDENT_PLANS: Plan[] = [
       { text: "Admissions scholarship matching assistance", included: true },
     ],
     popular: true,
-    ctaText: "Champion",
+    ctaText: "Request Invite",
     ctaLink: "/connect"
   }
 ];
@@ -115,8 +116,8 @@ const INSTITUTE_PLANS: Plan[] = [
   {
     id: "institute-starter",
     name: "Starter Cohort",
-    price: "₹9,999",
-    period: "month",
+    price: "Pilot",
+    period: "Open",
     description: "Equip small student cohorts with modern career guidance frameworks.",
     features: [
       { text: "Enroll up to 50 active students", included: true },
@@ -128,14 +129,14 @@ const INSTITUTE_PLANS: Plan[] = [
       { text: "Educator Academy teacher training tracks", included: false },
     ],
     popular: false,
-    ctaText: "Starter",
+    ctaText: "Start Pilot",
     ctaLink: "/connect"
   },
   {
     id: "institute-professional",
     name: "Professional Hub",
-    price: "₹24,999",
-    period: "month",
+    price: "Waitlist",
+    period: "Q3 Launch",
     description: "Scale future path discovery, counseling, and placements school-wide.",
     features: [
       { text: "Enroll up to 200 active students", included: true },
@@ -147,14 +148,14 @@ const INSTITUTE_PLANS: Plan[] = [
       { text: "Educator Academy certification slots (5 teachers)", included: true },
     ],
     popular: true,
-    ctaText: "Professional",
+    ctaText: "Join Waitlist",
     ctaLink: "/connect"
   },
   {
     id: "institute-enterprise",
     name: "Enterprise Core",
     price: "Custom",
-    period: "bespoke",
+    period: "Bespoke",
     description: "India's National Education Policy (NEP) 2020 implementation and custom school setups.",
     features: [
       { text: "Unlimited student enrollment", included: true },
@@ -166,7 +167,7 @@ const INSTITUTE_PLANS: Plan[] = [
       { text: "Priority VIP admission fair university representation", included: true },
     ],
     popular: false,
-    ctaText: "Advisory",
+    ctaText: "Request Audit",
     ctaLink: "/connect"
   }
 ];
@@ -207,28 +208,28 @@ const COMPARISON_ROWS = [
 const FAQS_DATA = [
   {
     id: "pricing-faq-1",
-    question: "Can we switch plans at any time?",
-    answer: "Yes, you can upgrade, downgrade, or cancel your student subscription at any time via your dashboard. For institutions, modifications are handled via your dedicated school advisor to align with academic terms."
+    question: "When will the waitlisted features launch?",
+    answer: "We are rolling out our advanced features in phases throughout the year. Waitlisted members get priority access and beta invitations as soon as cohorts open."
   },
   {
     id: "pricing-faq-2",
-    question: "What currencies do you accept?",
-    answer: "Currently, our primary pricing is in Indian Rupees (INR - ₹). For international institutions or students, we support card payments globally, automatically converted by our payment gateway."
+    question: "Is the Explorer tier truly free?",
+    answer: "Yes! Our foundational mission is to ensure every student has access to basic psychometric scans and community resources at absolutely zero cost."
   },
   {
     id: "pricing-faq-3",
-    question: "Is there a setup fee for the Institute plans?",
-    answer: "There are no setup fees for the Starter or Professional plans. For the Enterprise plan, which includes setting up physical Robotics & Innovation labs (Innovation Studio) or custom portal integrations, a custom layout and implementation cost may apply."
+    question: "How do I request an invite to the Champion tier?",
+    answer: "You can request an invite by contacting our advisory board through the Connect page. We select highly motivated students for our exclusive beta groups based on their career goals."
   },
   {
     id: "pricing-faq-4",
     question: "Do you offer demo accounts for schools?",
-    answer: "Absolutely. We offer a 14-day evaluation environment for school boards and counseling teams to inspect the psychometrics, counseling, and reporting dashboard before making a purchase."
+    answer: "Absolutely. We offer an evaluation environment for school boards and counseling teams to inspect the psychometrics, counseling, and reporting dashboard as part of a free pilot."
   },
   {
     id: "pricing-faq-5",
-    question: "What is your refund policy?",
-    answer: "For monthly subscriptions, cancellations prevent subsequent renewal. If a student is unsatisfied, they can request a refund within 7 days of initial subscription. Camps and events are governed by separate cancellation policies listed in Programs."
+    question: "What happens after the Beta phase ends?",
+    answer: "Users who join during the Open Access and Beta phases will be grandfathered into exclusive early-adopter pricing plans when the full commercial platform launches."
   }
 ];
 
@@ -243,7 +244,7 @@ export default function Pricing() {
   const activePlans = planType === 'student' ? STUDENT_PLANS : INSTITUTE_PLANS;
 
   return (
-    <div className="min-h-screen bg-background text-foreground pb-32 relative">
+    <div className="flex-1 bg-background text-foreground relative">
 
       {/* Typographic Hero */}
       <PageHero
@@ -253,10 +254,10 @@ export default function Pricing() {
         illustration={editorialIllustrations.programs}
       />
 
-      <div className="max-w-[1440px] mx-auto px-6 md:px-12 relative z-10 mt-16">
+      <PageContainer className="mt-16">
         
         {/* Plan Type Selector Toggle */}
-        <div className={`flex flex-col items-center justify-center mb-16 transition-all duration-1000 transform ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+        <div className={`flex flex-col items-center justify-center mb-16 transition-all duration-500 ease-out transform ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
           <div className="border border-border bg-secondary p-1 flex items-center justify-center rounded-none mb-4">
             <button /* ui-ignore */
               onClick={() => setPlanType('student')}
@@ -294,7 +295,7 @@ export default function Pricing() {
 
         {/* Pricing Cards Grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch">
-          {activePlans.map((plan) => {
+          {activePlans.map((plan, idx) => {
             const CardMarkup = (
               <div className="flex flex-col h-full justify-between">
                 <div>
@@ -313,7 +314,7 @@ export default function Pricing() {
 
                   {/* Price */}
                   <div className="my-6">
-                    <div className="flex items-baseline gap-1 text-foreground">
+                    <div className="flex items-baseline gap-2 text-foreground">
                       <span className="text-4xl font-light tracking-tight">{plan.price}</span>
                       <span className="text-[13px] font-medium text-muted-foreground uppercase">
                         {plan.price !== 'Custom' && `/ ${plan.period}`}
@@ -373,13 +374,19 @@ export default function Pricing() {
             return (
               <div key={plan.id} className="relative flex flex-col h-full">
                 {plan.popular ? (
-                  <Card className="border-t-2 border-t-primary border-x border-b border-border bg-card/30 rounded-none h-full flex flex-col justify-between p-6">
+                  <InvisibleCard 
+                    delay={0.2 + (idx * 0.1)}
+                    className="bg-primary/5 border-none h-full flex flex-col justify-between"
+                  >
                     {CardMarkup}
-                  </Card>
+                  </InvisibleCard>
                 ) : (
-                  <Card className="border border-border bg-card/30 rounded-none h-full flex flex-col justify-between p-6">
+                  <InvisibleCard 
+                    delay={0.2 + (idx * 0.1)}
+                    className="h-full flex flex-col justify-between"
+                  >
                     {CardMarkup}
-                  </Card>
+                  </InvisibleCard>
                 )}
               </div>
             );
@@ -387,18 +394,12 @@ export default function Pricing() {
         </div>
 
         {/* Detailed Program Coverage Section */}
-        <section className="mt-32 border-t border-border/60 pt-20">
-          <div className="max-w-3xl mb-16">
-            <span className="text-[13px] font-medium tracking-wide uppercase text-muted-foreground block mb-4">
-              Program Coverage
-            </span>
-            <h2 className="text-3xl sm:text-4xl font-light tracking-tight text-foreground mb-4">
-              {t('comparisonTitle')}
-            </h2>
-            <p className="text-[16px] text-muted-foreground leading-relaxed max-w-[55ch]">
-              {t('comparisonSubtitle')}
-            </p>
-          </div>
+        <PageSection className="mt-32 pt-20">
+          <AnimatedHeader 
+            eyebrow="Program Coverage"
+            title={t('comparisonTitle')}
+            description={t('comparisonSubtitle')}
+          />
 
           <div className="border border-border bg-card/30 overflow-x-auto rounded-none">
             <table className="w-full border-collapse text-[14px] text-left min-w-[700px]">
@@ -407,14 +408,14 @@ export default function Pricing() {
                   <th className="p-4 w-[250px]">Core Program</th>
                   {planType === 'student' ? (
                     <>
-                      <th className="p-4">Explorer (₹0)</th>
-                      <th className="p-4">Scholar (₹999)</th>
-                      <th className="p-4 text-primary">Champion (₹2,499)</th>
+                      <th className="p-4">Explorer (Free)</th>
+                      <th className="p-4">Scholar (Waitlist)</th>
+                      <th className="p-4 text-primary">Champion (Invite)</th>
                     </>
                   ) : (
                     <>
-                      <th className="p-4">Starter (₹9,999)</th>
-                      <th className="p-4 text-primary">Professional (₹24,999)</th>
+                      <th className="p-4">Starter (Pilot)</th>
+                      <th className="p-4 text-primary">Professional (Waitlist)</th>
                       <th className="p-4">Enterprise (Custom)</th>
                     </>
                   )}
@@ -443,19 +444,17 @@ export default function Pricing() {
               </tbody>
             </table>
           </div>
-        </section>
+        </PageSection>
 
         {/* FAQs Accordion */}
-        <section className="mt-32 border-t border-border/60 pt-20">
+        <PageSection className="mt-16 pt-20">
+          <AnimatedHeader 
+            title={t('faqTitle')}
+            description={t('faqSubtitle')}
+            align="center"
+          />
+
           <div className="max-w-3xl mx-auto">
-            <div className="text-center mb-12">
-              <h2 className="text-3xl sm:text-4xl font-light text-foreground tracking-tight">
-                {t('faqTitle')}
-              </h2>
-              <p className="text-[16px] text-muted-foreground mt-4 leading-relaxed max-w-[55ch] mx-auto">
-                {t('faqSubtitle')}
-              </p>
-            </div>
 
             <div className="border border-border bg-card/30 p-8 rounded-none">
               <div className="mb-6 flex items-center gap-3 border-b border-border/50 pb-4">
@@ -480,7 +479,7 @@ export default function Pricing() {
                       {faq.question}
                     </AccordionTrigger>
                     <AccordionContent className="px-4 pb-4">
-                      <p className="text-muted-foreground text-xs leading-relaxed">
+                      <p className="text-muted-foreground text-[14px] leading-relaxed">
                         {faq.answer}
                       </p>
                     </AccordionContent>
@@ -496,9 +495,9 @@ export default function Pricing() {
               </Link>
             </p>
           </div>
-        </section>
+        </PageSection>
 
-      </div>
+      </PageContainer>
     </div>
   );
 }

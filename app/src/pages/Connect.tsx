@@ -3,7 +3,8 @@ import { toast } from 'sonner';
 import { PageHero } from '../components/ui/page-hero';
 import { Button } from '../components/ui/button';
 import { FadeIn } from '@/components/effects/FadeIn';
-import { Card } from '../components/ui/card';
+import { InvisibleCard } from '../components/ui/invisible-card';
+import { PageContainer, PageSection } from '../components/ui/page-layout';
 import { Input } from '../components/ui/input';
 import { Textarea } from '../components/ui/textarea';
 import { Label } from '../components/ui/label';
@@ -16,7 +17,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '../components/ui/select';
-import { Calendar } from '../components/ui/calendar';
+import { InlineWidget } from 'react-calendly';
 import {
   Dialog,
   DialogContent,
@@ -24,7 +25,24 @@ import {
   DialogTitle,
   DialogDescription,
 } from '../components/ui/dialog';
-import { ArrowRight, Check, MapPin, Phone, Mail } from 'lucide-react';
+import { ArrowRight, Check } from 'lucide-react';
+import { Checkbox } from '../components/ui/checkbox';
+import { Link } from 'react-router';
+
+function useDarkMode() {
+  const [isDark, setIsDark] = useState(false);
+  useEffect(() => {
+    // Check initial state
+    const updateTheme = () => setIsDark(document.documentElement.classList.contains("dark"));
+    updateTheme();
+    
+    // Watch for toggles on the html element
+    const observer = new MutationObserver(updateTheme);
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
+    return () => observer.disconnect();
+  }, []);
+  return isDark;
+}
 
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL as string;
 const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_PUBLIC_KEY as string;
@@ -128,9 +146,11 @@ const translations = {
   teacherMilestone4: "Professional Leadership & Career Growth",
 
   // Contact translations
-  officeTitle: "Primary Head Office",
-  officeName: "Mommy Complex",
+  officeTitle: "Primary Head Office & Branch",
+  officeName: "Mommy Complex (Head Office)",
   officeAddress: "Nambol Bazar, Bishnupur District, Nambol 795134, Manipur, India",
+  branchName: "Wangkhei (Branch)",
+  branchAddress: "3rd Floor, T.I. Building, Andro Parking, Palace Compound, Wangkhei, Imphal, Manipur 795001",
   hotlineLabel: "Direct Advisory Hotline",
   formTitle: "Send an Inquiry",
   successMessage: "Thank you! Your message has been received. Our team will contact you within 24 hours.",
@@ -154,8 +174,9 @@ const translations = {
   placeholderName: "John Doe",
   placeholderEmailInput: "john@example.com",
   inquiriesLabel: "Inquiries & Support",
-  inquiriesEmail: "hello@eduplus.skills",
-  hotlinePhone: "+91 90895 13731"
+  inquiriesEmail: "connect@eduplusskills.in",
+  hotlinePhone1: "+91 90895 13731",
+  hotlinePhone2: "+91 70851 55262"
 };
 
 const translationMap = new Map<string, string>(Object.entries(translations));
@@ -169,31 +190,6 @@ interface StakeholderDetails {
   roadmapKeys: (keyof typeof translations)[];
   ctaTextKey: keyof typeof translations;
 }
-
-const ADVISORS = [
-  {
-    id: 'bikash',
-    name: 'Bikash Oinam',
-    role: 'Founder, EduPlus Skills',
-    avatar: 'BO',
-    desc: 'Digital transformation, global pathways, admissions & tech integrations.'
-  },
-  {
-    id: 'ronen',
-    name: 'Ronen Akoijam',
-    role: 'Co-Founder, EduPlus Skills',
-    avatar: 'RA',
-    desc: 'Pedagogy, language development, active learning & stressful test strategies.'
-  }
-];
-
-const TIME_SLOTS = [
-  "10:00 AM",
-  "11:30 AM",
-  "02:00 PM",
-  "03:30 PM",
-  "05:00 PM"
-];
 
 const STAKEHOLDERS: StakeholderDetails[] = [
   {
@@ -254,15 +250,11 @@ export default function Connect() {
   const [activeTab, setActiveTab] = useState('students');
   const [mounted, setMounted] = useState(false);
 
+  // Sync with global theme
+  const isDark = useDarkMode();
+
   // Scheduling dialog states
   const [isSchedulerOpen, setIsSchedulerOpen] = useState(false);
-  const [selectedAdvisor, setSelectedAdvisor] = useState<{ id: string, name: string, role: string, avatar: string, desc: string } | null>(null);
-  const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
-  const [selectedTime, setSelectedTime] = useState<string>('');
-  const [bookingName, setBookingName] = useState('');
-  const [bookingEmail, setBookingEmail] = useState('');
-  const [bookingMessage, setBookingMessage] = useState('');
-  const [bookingSuccess, setBookingSuccess] = useState(false);
 
   useEffect(() => {
     setMounted(true);
@@ -275,9 +267,11 @@ export default function Connect() {
     name: '',
     email: '',
     profile: 'student',
-    message: ''
+    message: '',
+    marketingConsent: false
   });
   const [newsletterEmail, setNewsletterEmail] = useState('');
+  const [newsletterConsent, setNewsletterConsent] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -293,9 +287,30 @@ export default function Connect() {
         message: formData.message,
         status: 'unread',
       });
+
+      // Invoke the Edge Function to send email notification
+      const emailRes = await fetch(`${SUPABASE_URL}/functions/v1/send-email`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'apikey': SUPABASE_ANON_KEY,
+          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+        },
+        body: JSON.stringify({
+          type: 'contact',
+          name: formData.name,
+          email: formData.email,
+          message: formData.message,
+        }),
+      });
+
+      if (!emailRes.ok) {
+        console.error('[Connect] Failed to send email via Edge Function');
+      }
+
       toast.success('Inquiry sent! We\'ll respond within 24 hours.', { id: toastId });
       setSubmitted(true);
-      setFormData({ name: '', email: '', profile: 'student', message: '' });
+      setFormData({ name: '', email: '', profile: 'student', message: '', marketingConsent: false });
       setTimeout(() => setSubmitted(false), 5000);
     } catch (err: any) {
       console.error('Error sending message:', err);
@@ -305,55 +320,46 @@ export default function Connect() {
     }
   };
 
-  const handleSubscribe = (e: React.FormEvent) => {
+  const handleSubscribe = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSubscribed(true);
-    setNewsletterEmail('');
-    setTimeout(() => setSubscribed(false), 5000);
-  };
-
-  const mapStakeholderToProfile = (id: string) => {
-    if (id === 'students') return 'student';
-    if (id === 'parents') return 'parent';
-    if (id === 'seekers') return 'student';
-    if (id === 'teachers') return 'educator';
-    return 'student';
-  };
-
-  const handleScheduleConfirm = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!selectedAdvisor || !selectedDate || !selectedTime) return;
-    const toastId = toast.loading('Scheduling appointment...');
+    const toastId = toast.loading('Subscribing...');
     try {
-      await insertContactMessage({
-        name: bookingName,
-        email: bookingEmail,
-        profile: mapStakeholderToProfile(activeTab),
-        message: `[BOOKING REQUEST] Advisor: ${selectedAdvisor.name} | Date: ${selectedDate.toLocaleDateString('en-IN')} | Time: ${selectedTime} IST. Topic/Message: ${bookingMessage}`,
-        status: 'unread',
+      // Invoke the Edge Function to send newsletter confirmation email
+      const emailRes = await fetch(`${SUPABASE_URL}/functions/v1/send-email`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'apikey': SUPABASE_ANON_KEY,
+          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+        },
+        body: JSON.stringify({
+          type: 'newsletter',
+          email: newsletterEmail,
+        }),
       });
-      toast.success('Booking request sent!', { id: toastId, description: `Awaiting confirmation for ${selectedAdvisor.name} on ${selectedDate.toLocaleDateString('en-IN')}` });
-      setBookingSuccess(true);
-      setTimeout(() => {
-        setIsSchedulerOpen(false);
-        setBookingSuccess(false);
-        setBookingName('');
-        setBookingEmail('');
-        setBookingMessage('');
-        setSelectedTime('');
-      }, 3500);
-    } catch (err: any) {
-      console.error('Error confirming appointment:', err);
-      toast.error(err?.message || 'Failed to schedule. Please try again.', { id: toastId });
+
+      if (!emailRes.ok) {
+        console.error('[Connect] Failed to send newsletter email via Edge Function');
+      }
+
+      toast.success(t('newsletterSuccess'), { id: toastId });
+      setSubscribed(true);
+      setNewsletterEmail('');
+      setNewsletterConsent(false);
+      setTimeout(() => setSubscribed(false), 5000);
+    } catch (err) {
+      toast.error('Subscription failed. Please try again.', { id: toastId });
     }
   };
+
+
 
   const handleBookAdvisory = () => {
     setIsSchedulerOpen(true);
   };
 
   return (
-    <div className="min-h-screen bg-background text-foreground pb-32 relative">
+    <div className="flex-1 bg-background text-foreground relative">
       <PageHero
         eyebrow={t('heroCategory')}
         title={t('heroTitleNormal')}
@@ -361,13 +367,13 @@ export default function Connect() {
         illustration={editorialIllustrations.guidance}
       />
 
-      <div className="max-w-[1440px] mx-auto px-6 md:px-12 relative z-10 mt-16">
+      <PageContainer className="mt-16">
         
         {/* Guidance Split Panel using pure shadcn Tabs */}
         <Tabs
           value={activeTab}
           onValueChange={setActiveTab}
-          className={`flex flex-col lg:flex-row gap-8 transition-all duration-1000 delay-300 transform ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
+          className={`flex flex-col lg:flex-row gap-12 transition-all duration-500 ease-out transform ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}
         >
           <div className="lg:w-1/4 flex flex-col gap-6 w-full">
             {/* Tab Selectors using shadcn TabsList */}
@@ -376,7 +382,7 @@ export default function Connect() {
                 <TabsTrigger
                   key={stakeholder.id}
                   value={stakeholder.id}
-                  className="px-4 py-3 text-left font-sans text-[14px] tracking-wide transition-all duration-300 w-full justify-start border-l-2 border-transparent data-[state=active]:border-l-primary data-[state=active]:bg-primary/5 data-[state=active]:text-primary rounded-none cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                  className="px-4 py-3 text-left font-sans text-[14px] tracking-wide transition-all duration-300 w-full justify-start data-[state=active]:bg-primary/10 data-[state=active]:text-primary rounded-none cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground focus-visible:ring-offset-2 focus-visible:ring-offset-background"
                 >
                   {t(stakeholder.labelKey)}
                 </TabsTrigger>
@@ -388,16 +394,16 @@ export default function Connect() {
           <div className="lg:w-3/4 flex flex-col gap-6 w-full">
             {STAKEHOLDERS.map(stakeholder => (
               <TabsContent key={stakeholder.id} value={stakeholder.id} className="mt-0">
-                <Card className="border border-border/50 h-auto min-h-[460px] p-6 md:p-8 bg-card rounded-none shadow-sm flex flex-col justify-between">
-                  <div className="flex flex-col h-full justify-between space-y-6">
-                    <div className="space-y-6">
-                      <span className="text-xs font-mono text-primary tracking-wider uppercase block opacity-60">
+                <InvisibleCard delay={0} className="border border-border/20 bg-background/50 h-auto min-h-[460px] flex flex-col justify-between">
+                  <div className="flex flex-col h-full justify-between space-y-8 w-full">
+                    <div className="space-y-8">
+                      <span className="text-xs font-mono text-primary tracking-widest uppercase block opacity-80">
                         {t('tailoredRoadmap')}
                       </span>
-                      <h2 className="font-heading text-2xl md:text-3xl font-semibold text-foreground tracking-tight">
+                      <h2 className="text-3xl md:text-4xl lg:text-5xl font-light text-foreground tracking-tight leading-tight">
                         {t(stakeholder.titleKey)}
                       </h2>
-                      <p className="font-sans text-sm md:text-base text-muted-foreground leading-relaxed">
+                      <p className="font-sans text-base md:text-lg text-muted-foreground leading-relaxed max-w-3xl">
                         {t(stakeholder.descKey)}
                       </p>
 
@@ -419,15 +425,9 @@ export default function Connect() {
                       </div>
                     </div>
 
-                    <div className="mt-12 pt-6 border-t border-border flex justify-end">
+                    <div className="mt-12 pt-6 flex justify-end">
                       <Button
-                        onClick={() => {
-                          const defaultAdvisor = activeTab === 'teachers' || activeTab === 'parents'
-                            ? ADVISORS.find(a => a.id === 'ronen')
-                            : ADVISORS.find(a => a.id === 'bikash');
-                          setSelectedAdvisor(defaultAdvisor || ADVISORS[0]);
-                          handleBookAdvisory();
-                        }}
+                        onClick={handleBookAdvisory}
                         size="md"
                         className="cursor-pointer rounded-none text-[13px] font-medium uppercase tracking-wide"
                       >
@@ -435,23 +435,26 @@ export default function Connect() {
                       </Button>
                     </div>
                   </div>
-                </Card>
+                </InvisibleCard>
               </TabsContent>
             ))}
           </div>
         </Tabs>
+      </PageContainer>
 
         {/* Call to Action Section */}
-        <section className="mt-28 border-t border-border/60 pt-20">
-          <div className="max-w-3xl mx-auto">
-            <Card
-              className="border border-border grid md:grid-cols-2 gap-8 p-6 md:p-8 bg-card rounded-none shadow-sm"
+        <PageSection className="mt-16 pt-20">
+          <PageContainer>
+          <div className="max-w-4xl mx-auto">
+            <InvisibleCard
+              delay={0}
+              className="grid md:grid-cols-2 gap-8 border-none bg-background/50"
             >
-              <div>
-                <h3 className="font-heading text-2xl md:text-3xl font-semibold text-foreground tracking-tight">
+              <div className="flex flex-col justify-center">
+                <h3 className="font-heading text-3xl md:text-4xl font-light text-foreground tracking-tight leading-tight">
                   {t('ctaTitle')}
                 </h3>
-                <p className="text-muted-foreground mt-3 text-xs leading-relaxed font-sans">
+                <p className="text-muted-foreground mt-4 text-sm md:text-base leading-relaxed font-sans max-w-lg">
                   {t('ctaDesc')}
                 </p>
                 <ul className="mt-6 space-y-2">
@@ -479,10 +482,7 @@ export default function Connect() {
                 </p>
                 <p className="text-muted-foreground mt-2 text-xs font-sans">{t('ctaFreeSubText')}</p>
                 <Button
-                  onClick={() => {
-                    setSelectedAdvisor(ADVISORS[0]);
-                    handleBookAdvisory();
-                  }}
+                  onClick={handleBookAdvisory}
                   size="md"
                   className="mt-6 gap-2 rounded-none font-mono text-xs uppercase tracking-wider w-full cursor-pointer"
                 >
@@ -490,66 +490,62 @@ export default function Connect() {
                   <ArrowRight className="size-4" />
                 </Button>
               </div>
-            </Card>
+            </InvisibleCard>
           </div>
-        </section>
+          </PageContainer>
+        </PageSection>
 
         {/* Contact Form & Office Split Section */}
-        <section className="py-20 border-t border-border/50 px-6 md:px-12 max-w-[1440px] mx-auto">
+        <PageSection className="pt-20">
+        <PageContainer>
         <FadeIn direction="up" delay={0.2}>
           <div className="grid lg:grid-cols-12 gap-16 lg:gap-24">
             {/* Left Column: Office & Details */}
             <div className="lg:col-span-5 space-y-6">
-              <Card className="p-6 bg-card rounded-none border border-border flex flex-col justify-between min-h-[360px] shadow-sm">
+              <InvisibleCard delay={0} className="border-none bg-background/50 flex flex-col justify-start">
                 <div className="space-y-6">
                   <div>
                     <span className="text-[10px] font-mono tracking-widest text-primary uppercase block mb-3 font-semibold">
                       {t('officeTitle')}
                     </span>
-                    <div className="flex items-start gap-3">
-                      <MapPin className="text-primary size-5 shrink-0 mt-0.5" />
-                      <div>
-                        <h4 className="font-heading text-lg font-semibold text-foreground tracking-tight mb-2">
-                          {t('officeName')}
-                        </h4>
-                        <p className="font-sans text-xs text-muted-foreground leading-relaxed">
-                          {t('officeAddress')}
-                        </p>
-                      </div>
-                    </div>
+                    <h3 className="text-[20px] font-medium text-foreground mb-3">{t('officeName')}</h3>
+                    <p className="text-[15px] text-muted-foreground leading-relaxed mb-4">
+                      {t('officeAddress')}
+                    </p>
+                    <h3 className="text-[20px] font-medium text-foreground mb-3">{t('branchName')}</h3>
+                    <p className="text-[15px] text-muted-foreground leading-relaxed">
+                      {t('branchAddress')}
+                    </p>
                   </div>
 
-                  <div className="pt-6 border-t border-border flex items-start gap-3">
-                    <Phone className="text-primary size-5 shrink-0 mt-0.5" />
-                    <div>
-                      <span className="text-[9px] font-mono text-muted-foreground uppercase tracking-widest block mb-1">
-                        {t('hotlineLabel')}
-                      </span>
-                      <a href="tel:+919089513731" className="text-sm font-semibold font-mono text-foreground hover:text-primary hover:underline focus:outline-none focus:ring-1 focus:ring-primary">
-                        {t('hotlinePhone')}
-                      </a>
-                    </div>
+                  <div className="pt-6 border-t border-border/50 flex flex-col gap-2">
+                    <span className="text-[10px] font-mono tracking-widest text-primary uppercase block font-semibold mb-2">
+                      {t('hotlineLabel')}
+                    </span>
+                    <a href={`tel:${t('hotlinePhone1').replace(/\s/g, '')}`} className="text-[16px] font-medium text-foreground hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground focus-visible:ring-offset-2 focus-visible:ring-offset-background">
+                      {t('hotlinePhone1')}
+                    </a>
+                    <a href={`tel:${t('hotlinePhone2').replace(/\s/g, '')}`} className="text-[16px] font-medium text-foreground hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground focus-visible:ring-offset-2 focus-visible:ring-offset-background">
+                      {t('hotlinePhone2')}
+                    </a>
                   </div>
 
-                  <div className="pt-6 border-t border-border flex items-start gap-3">
-                    <Mail className="text-primary size-5 shrink-0 mt-0.5" />
-                    <div>
-                      <span className="text-[9px] font-mono text-muted-foreground uppercase tracking-widest block mb-1">
-                        {t('inquiriesLabel')}
-                      </span>
-                      <a href={`mailto:${t('inquiriesEmail')}`} className="text-sm font-semibold font-mono text-foreground hover:text-primary hover:underline focus:outline-none focus:ring-1 focus:ring-primary">
-                        {t('inquiriesEmail')}
-                      </a>
-                    </div>
+                  <div className="pt-6 border-t border-border/50">
+                    <span className="text-[10px] font-mono tracking-widest text-primary uppercase block font-semibold mb-3">
+                      {t('inquiriesLabel')}
+                    </span>
+                    <a href={`mailto:${t('inquiriesEmail')}`} className="text-[16px] font-medium text-foreground hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground focus-visible:ring-offset-2 focus-visible:ring-offset-background">
+                      {t('inquiriesEmail')}
+                    </a>
                   </div>
                 </div>
-              </Card>
+              </InvisibleCard>
             </div>
 
             {/* Right Column: Interaction Form */}
-            <div className="lg:col-span-7 space-y-6">
-              <Card className="p-6 bg-card rounded-none border border-border shadow-sm">
-                <h3 className="font-heading text-xl font-semibold tracking-tight text-foreground mb-6">
+            <div className="lg:col-span-7">
+              <InvisibleCard delay={0} className="border-none bg-background/50">
+                <h3 className="font-heading text-2xl md:text-3xl font-light tracking-tight text-foreground mb-8">
                   {t('formTitle')}
                 </h3>
 
@@ -559,10 +555,7 @@ export default function Connect() {
                     <p className="text-[10px] text-muted-foreground font-sans mt-0.5">Book a slot on our calendar directly synced with Google Calendar.</p>
                   </div>
                   <Button
-                    onClick={() => {
-                      setSelectedAdvisor(ADVISORS[0]);
-                      handleBookAdvisory();
-                    }}
+                    onClick={handleBookAdvisory}
                     size="md"
                     className="font-mono text-xs uppercase tracking-wider shrink-0 rounded-none cursor-pointer"
                   >
@@ -577,8 +570,8 @@ export default function Connect() {
                 ) : (
                   <form onSubmit={handleSubmit} className="space-y-5">
                     <div className="grid md:grid-cols-2 gap-5">
-                      <div className="space-y-2">
-                        <Label htmlFor="contact-name" className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground">
+                      <div className="space-y-3">
+                        <Label htmlFor="contact-name" className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground">
                           {t('labelName')}
                         </Label>
                         <Input
@@ -588,11 +581,11 @@ export default function Connect() {
                           value={formData.name}
                           onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
                           placeholder={t('placeholderName')}
-                          className="font-mono text-xs rounded-none border-border focus:border-primary focus:ring-1 focus:ring-primary/20 bg-background/50 h-10 px-3"
+                          className="font-mono text-[13px] rounded-none border-border focus:border-primary focus:ring-0 bg-transparent h-12 px-4 transition-colors"
                         />
                       </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="contact-email" className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground">
+                      <div className="space-y-3">
+                        <Label htmlFor="contact-email" className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground">
                           {t('labelEmail')}
                         </Label>
                         <Input
@@ -602,20 +595,20 @@ export default function Connect() {
                           value={formData.email}
                           onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
                           placeholder={t('placeholderEmailInput')}
-                          className="font-mono text-xs rounded-none border-border focus:border-primary focus:ring-1 focus:ring-primary/20 bg-background/50 h-10 px-3"
+                          className="font-mono text-[13px] rounded-none border-border focus:border-primary focus:ring-0 bg-transparent h-12 px-4 transition-colors"
                         />
                       </div>
                     </div>
 
-                    <div className="space-y-2">
-                      <Label htmlFor="contact-profile" className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground block">
+                    <div className="space-y-3">
+                      <Label htmlFor="contact-profile" className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground block">
                         {t('labelProfile')}
                       </Label>
                       <Select
                         value={formData.profile}
                         onValueChange={(val) => setFormData(prev => ({ ...prev, profile: val }))}
                       >
-                        <SelectTrigger id="contact-profile" className="w-full font-mono text-xs rounded-none bg-background/50 border-border h-10 px-3">
+                        <SelectTrigger id="contact-profile" className="w-full font-mono text-[13px] rounded-none bg-transparent border-border h-12 px-4 focus:ring-0 focus:border-primary transition-colors">
                           <SelectValue placeholder={t('placeholderProfile')} />
                         </SelectTrigger>
                         <SelectContent className="rounded-none font-mono text-xs border border-border bg-card">
@@ -628,8 +621,8 @@ export default function Connect() {
                       </Select>
                     </div>
 
-                    <div className="space-y-2">
-                      <Label htmlFor="contact-message" className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground">
+                    <div className="space-y-3">
+                      <Label htmlFor="contact-message" className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground">
                         {t('labelMessage')}
                       </Label>
                       <Textarea
@@ -638,54 +631,85 @@ export default function Connect() {
                         value={formData.message}
                         onChange={(e) => setFormData(prev => ({ ...prev, message: e.target.value }))}
                         placeholder={t('placeholderMessage')}
-                        className="font-mono text-xs min-h-[120px] rounded-none border-border focus:border-primary focus:ring-1 focus:ring-primary/20 bg-background/50 p-3"
+                        className="font-mono text-[13px] min-h-[140px] rounded-none border-border focus:border-primary focus:ring-0 bg-transparent p-4 transition-colors"
                       />
                     </div>
 
-                    <Button type="submit" disabled={isSubmitting} size="md" className="w-full rounded-none font-mono text-xs uppercase tracking-wider cursor-pointer">
+                    <div className="flex items-start space-x-3 mt-2">
+                      <Checkbox
+                        id="connect-marketing"
+                        checked={formData.marketingConsent}
+                        onCheckedChange={(checked) => setFormData(prev => ({ ...prev, marketingConsent: checked as boolean }))}
+                        className="mt-1"
+                      />
+                      <label
+                        htmlFor="connect-marketing"
+                        className="font-sans text-[11px] text-muted-foreground leading-snug cursor-pointer"
+                      >
+                        I agree to receive marketing communications and accept the <Link to="/legal#terms" className="text-primary hover:underline" /* ui-ignore */>Terms of Service</Link>, <Link to="/legal#privacy" className="text-primary hover:underline" /* ui-ignore */>Privacy Policy</Link>, and <Link to="/legal#cookies" className="text-primary hover:underline" /* ui-ignore */>Cookie Policy</Link>.
+                      </label>
+                    </div>
+
+                    <Button type="submit" disabled={isSubmitting} size="lg" className="w-full rounded-none font-mono text-[13px] uppercase tracking-widest cursor-pointer h-12 mt-4">
                       {isSubmitting ? 'Sending...' : t('submitButton')}
                     </Button>
                   </form>
                 )}
-              </Card>
+              </InvisibleCard>
+            </div>
+          </div>
 
-              {/* Newsletter Subscription */}
-              <Card className="p-6 bg-card rounded-none border border-border shadow-sm">
-                <div className="space-y-4">
-                  <div>
-                    <h3 className="font-heading text-lg font-semibold tracking-tight text-foreground">
-                      {t('newsletterTitle')}
-                    </h3>
-                    <p className="font-sans text-xs text-muted-foreground leading-relaxed mt-1">
-                      {t('newsletterDesc')}
-                    </p>
+          {/* Newsletter — full-width, outside the grid to prevent row inflation */}
+          <div className="mt-16 pt-16 border-t border-border/30">
+            <div className="max-w-2xl">
+              <h3 className="font-heading text-2xl font-light tracking-tight text-foreground">
+                {t('newsletterTitle')}
+              </h3>
+              <p className="font-sans text-sm text-muted-foreground leading-relaxed mt-2">
+                {t('newsletterDesc')}
+              </p>
+
+              {subscribed ? (
+                <p className="text-sm text-primary font-mono bg-primary/10 border border-primary/25 p-4 mt-6">
+                  {t('newsletterSuccess')}
+                </p>
+              ) : (
+                <form onSubmit={handleSubscribe} className="flex flex-col gap-4 mt-6">
+                  <div className="flex flex-col sm:flex-row gap-4">
+                    <Input
+                      type="email"
+                      required
+                      value={newsletterEmail}
+                      onChange={(e) => setNewsletterEmail(e.target.value)}
+                      className="flex-grow font-mono text-[13px] rounded-none bg-transparent border-border h-12 px-4 focus:ring-0 focus:border-primary transition-colors"
+                      placeholder={t('placeholderEmail')}
+                    />
+                    <Button type="submit" variant="outline" size="lg" className="rounded-none font-mono text-[13px] uppercase tracking-widest cursor-pointer h-12 px-8">
+                      {t('subscribeButton')}
+                    </Button>
                   </div>
-
-                  {subscribed ? (
-                    <p className="text-xs text-primary font-mono bg-primary/10 border border-primary/25 p-3">
-                      {t('newsletterSuccess')}
-                    </p>
-                  ) : (
-                    <form onSubmit={handleSubscribe} className="flex gap-3">
-                      <Input
-                        type="email"
-                        required
-                        value={newsletterEmail}
-                        onChange={(e) => setNewsletterEmail(e.target.value)}
-                        className="flex-grow font-mono text-xs rounded-none bg-background/50 border-border h-9 px-3"
-                        placeholder={t('placeholderEmail')}
-                      />
-                      <Button type="submit" variant="outline" size="md" className="rounded-none font-mono text-xs uppercase tracking-wider cursor-pointer">
-                        {t('subscribeButton')}
-                      </Button>
-                    </form>
-                  )}
-                </div>
-              </Card>
+                  <div className="flex items-start space-x-3 mt-1">
+                    <Checkbox
+                      id="connect-newsletter-marketing"
+                      required
+                      checked={newsletterConsent}
+                      onCheckedChange={(checked) => setNewsletterConsent(checked as boolean)}
+                      className="mt-[2px]"
+                    />
+                    <label
+                      htmlFor="connect-newsletter-marketing"
+                      className="font-sans text-[11px] text-muted-foreground leading-snug cursor-pointer"
+                    >
+                      I agree to receive marketing communications and accept the <Link to="/legal#terms" className="text-primary hover:underline" /* ui-ignore */>Terms of Service</Link>, <Link to="/legal#privacy" className="text-primary hover:underline" /* ui-ignore */>Privacy Policy</Link>, and <Link to="/legal#cookies" className="text-primary hover:underline" /* ui-ignore */>Cookie Policy</Link>.
+                    </label>
+                  </div>
+                </form>
+              )}
             </div>
           </div>
         </FadeIn>
-      </section>
+        </PageContainer>
+        </PageSection>
 
       {/* Dynamic EduPlus Scheduler Modal using shadcn Calendar & Dialog */}
       <Dialog open={isSchedulerOpen} onOpenChange={setIsSchedulerOpen}>
@@ -699,155 +723,26 @@ export default function Connect() {
             </DialogDescription>
           </DialogHeader>
 
-          {bookingSuccess ? (
-            <div className="flex flex-col items-center justify-center py-12 space-y-4 text-center">
-              <span className="w-12 h-12 bg-primary/20 border border-primary text-primary flex items-center justify-center text-xl font-bold rounded-none animate-bounce">
-                ✓
-              </span>
-              <h3 className="font-heading text-lg font-semibold text-foreground">Booking Confirmed!</h3>
-              <p className="font-sans text-xs text-muted-foreground max-w-sm leading-relaxed">
-                Your advisory session with <strong className="text-primary">{selectedAdvisor?.name}</strong> has been successfully scheduled on <strong className="text-foreground">{selectedDate?.toLocaleDateString('en-IN')}</strong> at <strong className="text-foreground">{selectedTime} IST</strong>.
-              </p>
-              <p className="font-mono text-[10px] text-muted-foreground/60 animate-pulse pt-4">
-                Routing details and virtual link sent to {bookingEmail}...
-              </p>
-            </div>
-          ) : (
-            <form onSubmit={handleScheduleConfirm} className="space-y-6">
-              {/* Step 1: Advisor Selection */}
-              <div className="space-y-3">
-                <Label className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground">
-                  Step 1: Select Advisor
-                </Label>
-                <div className="grid sm:grid-cols-2 gap-4">
-                  {ADVISORS.map(advisor => {
-                    const isSelected = selectedAdvisor?.id === advisor.id;
-                    return (
-                      <div
-                        key={advisor.id}
-                        onClick={() => setSelectedAdvisor(advisor)}
-                        className={`border p-4 rounded-none cursor-pointer transition-all duration-300 flex items-start gap-3 select-none ${
-                          isSelected
-                            ? 'border-primary bg-primary/5 shadow-sm shadow-primary/10'
-                            : 'border-border bg-muted/20 hover:border-border-hover hover:bg-muted/30'
-                        }`}
-                      >
-                        <span className="w-10 h-10 shrink-0 bg-primary/10 border border-primary/20 flex items-center justify-center text-xs font-bold text-primary font-heading rounded-none">
-                          {advisor.avatar}
-                        </span>
-                        <div>
-                          <h4 className="font-heading text-xs font-semibold text-foreground">
-                            {advisor.name}
-                          </h4>
-                          <span className="text-[9px] font-mono text-primary/80 uppercase tracking-wide block">
-                            {advisor.role}
-                          </span>
-                          <p className="text-[10px] text-muted-foreground leading-normal mt-1">
-                            {advisor.desc}
-                          </p>
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-
-              {/* Step 2: Choose Date & Time */}
-              <div className="space-y-3 pt-4 border-t border-border/60">
-                <Label className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground">
-                  Step 2: Choose Date & Time
-                </Label>
-                <div className="grid md:grid-cols-12 gap-6 border border-border bg-muted/10 p-3">
-                  {/* Calendar Column */}
-                  <div className="md:col-span-7 flex justify-center bg-card border border-border p-2">
-                    <Calendar
-                      mode="single"
-                      selected={selectedDate}
-                      onSelect={setSelectedDate}
-                      disabled={(date) => date < new Date(new Date().setHours(0, 0, 0, 0))}
-                      className="w-full flex justify-center"
-                    />
-                  </div>
-                  {/* Time Slots Column */}
-                  <div className="md:col-span-5 flex flex-col gap-2">
-                    <span className="text-[9px] font-mono text-muted-foreground uppercase text-center block mb-1">
-                      Slots (IST)
-                    </span>
-                    <div className="grid grid-cols-2 md:grid-cols-1 gap-2 overflow-y-auto max-h-[260px] pr-1">
-                      {TIME_SLOTS.map(time => {
-                        const isSelected = selectedTime === time;
-                        return (
-                          <button /* ui-ignore */
-                            key={time}
-                            type="button"
-                            onClick={() => setSelectedTime(time)}
-                            className={`h-9 text-[10px] font-mono tracking-wider transition-all duration-200 cursor-pointer rounded-none border focus:outline-none focus:ring-1 focus:ring-[#7DF9FF] ${
-                              isSelected
-                                ? 'bg-primary text-primary-foreground border-primary'
-                                : 'bg-card text-muted-foreground border-border hover:text-foreground hover:bg-muted/40'
-                            }`}
-                          >
-                            {time}
-                          </button>
-                        );
-                      })}
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Step 3: Attendee Details */}
-              <div className="space-y-3 pt-4 border-t border-border/60">
-                <Label className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground">
-                  Step 3: Your Info
-                </Label>
-                <div className="grid md:grid-cols-2 gap-4">
-                  <div className="space-y-1">
-                    <Input
-                      type="text"
-                      required
-                      placeholder="Your Name"
-                      value={bookingName}
-                      onChange={e => setBookingName(e.target.value)}
-                      className="font-mono text-[10px] h-8 rounded-none border-border focus:border-primary focus:ring-1 focus:ring-primary/20 bg-background/50 px-3"
-                    />
-                  </div>
-                  <div className="space-y-1">
-                    <Input
-                      type="email"
-                      required
-                      placeholder="Email Address"
-                      value={bookingEmail}
-                      onChange={e => setBookingEmail(e.target.value)}
-                      className="font-mono text-[10px] h-8 rounded-none border-border focus:border-primary focus:ring-1 focus:ring-primary/20 bg-background/50 px-3"
-                    />
-                  </div>
-                </div>
-                <div className="space-y-1">
-                  <Textarea
-                    required
-                    placeholder="Consultation Topic / Inquiry Details..."
-                    value={bookingMessage}
-                    onChange={e => setBookingMessage(e.target.value)}
-                    className="font-mono text-[10px] min-h-[70px] rounded-none border-border focus:border-primary focus:ring-1 focus:ring-primary/20 bg-background/50 p-2 w-full"
-                  />
-                </div>
-                
-                <Button
-                  type="submit"
-                  disabled={!selectedAdvisor || !selectedDate || !selectedTime}
-                  size="md"
-                  className="w-full rounded-none font-mono text-[10px] uppercase tracking-wider mt-2 cursor-pointer"
-                >
-                  Confirm
-                </Button>
-              </div>
-            </form>
-          )}
+          <div className="w-full h-full min-h-[600px]">
+            <InlineWidget 
+              url="https://calendly.com/oldlion806?timezone=Asia/Kolkata" 
+              styles={{ height: '600px', width: '100%' }}
+              prefill={{
+                customAnswers: {
+                  a1: activeTab === 'students' ? 'Student' : activeTab === 'parents' ? 'Parent' : activeTab === 'teachers' ? 'Teacher/Educator' : 'Job Seeker'
+                }
+              }}
+              pageSettings={{
+                hideEventTypeDetails: true,
+                hideLandingPageDetails: true,
+                primaryColor: 'B8860B', // Nordic Lagom accent
+                textColor: isDark ? 'ffffff' : '1a1a1a',
+                backgroundColor: isDark ? '1a1a1a' : 'ffffff'
+              }}
+            />
+          </div>
         </DialogContent>
       </Dialog>
-
-      </div>
     </div>
   );
 }
