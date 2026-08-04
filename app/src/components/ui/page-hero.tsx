@@ -33,13 +33,14 @@ export function PageHero({
 
   return (
     <section className="relative w-full overflow-hidden border-b border-border/50 bg-background pt-8">
-      <div
-        className={
-          illustration
-            ? 'relative z-10 grid min-h-[55vh] lg:grid-cols-[55fr_45fr]'
-            : 'relative z-10 mx-auto flex min-h-[50vh] max-w-4xl items-center justify-center'
-        }
-      >
+      <div className="mx-auto max-w-[1440px]">
+        <div
+          className={
+            illustration
+              ? 'relative z-10 grid min-h-[55vh] lg:grid-cols-[55fr_45fr]'
+              : 'relative z-10 mx-auto flex min-h-[50vh] max-w-4xl items-center justify-center'
+          }
+        >
         <div
           className={`flex w-full flex-col justify-start px-8 pt-10 pb-16 md:px-12 lg:px-24 lg:pt-16 lg:pb-24 ${illustration ? '' : 'items-center text-center'}`}
         >
@@ -102,6 +103,7 @@ export function PageHero({
             />
           </FadeIn>
         ) : null}
+        </div>
       </div>
     </section>
   );
