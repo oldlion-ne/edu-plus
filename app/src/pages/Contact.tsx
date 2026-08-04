@@ -240,8 +240,11 @@ export default function Contact() {
 
             {/* Right Column: Form */}
             <div className="lg:col-span-7">
-              <InvisibleCard delay={0} className="border-none bg-background/50">
-                <h3 className="text-xl md:text-2xl font-medium text-foreground mb-6">Send an Inquiry</h3>
+              <div className="relative border border-border/60 bg-card p-8 md:p-10">
+                {/* Amber top accent — static, not hover-triggered, signals premium craftsmanship */}
+                <div className="absolute top-0 left-0 w-16 h-[2px] bg-primary" />
+
+                <h3 className="text-xl md:text-2xl font-medium text-foreground mb-8">Send an Inquiry</h3>
 
                 {submitted ? (
                   <div className="text-[14px] text-primary bg-primary/5 p-6 border border-primary/20">
@@ -251,7 +254,7 @@ export default function Contact() {
                   <form onSubmit={handleSubmit} className="space-y-6">
                     <div className="grid md:grid-cols-2 gap-6">
                       <div className="space-y-2">
-                        <Label htmlFor="contact-name" className="text-sm font-medium text-muted-foreground">
+                        <Label htmlFor="contact-name" className="text-[11px] font-mono uppercase tracking-widest text-muted-foreground">
                           Your Name
                         </Label>
                         <Input
@@ -261,11 +264,11 @@ export default function Contact() {
                           value={formData.name}
                           onChange={(e) => setFormData((prev) => ({ ...prev, name: e.target.value }))}
                           placeholder="John Doe"
-                          className="rounded-none border-border/50 text-base h-12"
+                          className="rounded-none border-border/60 bg-background text-base h-11 focus:border-primary focus:ring-0 transition-colors duration-200"
                         />
                       </div>
                       <div className="space-y-2">
-                        <Label htmlFor="contact-email" className="text-sm font-medium text-muted-foreground">
+                        <Label htmlFor="contact-email" className="text-[11px] font-mono uppercase tracking-widest text-muted-foreground">
                           Email Address
                         </Label>
                         <Input
@@ -275,13 +278,13 @@ export default function Contact() {
                           value={formData.email}
                           onChange={(e) => setFormData((prev) => ({ ...prev, email: e.target.value }))}
                           placeholder="john@example.com"
-                          className="rounded-none border-border/50 text-base h-12"
+                          className="rounded-none border-border/60 bg-background text-base h-11 focus:border-primary focus:ring-0 transition-colors duration-200"
                         />
                       </div>
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor="contact-mobile" className="text-sm font-medium text-muted-foreground">
+                      <Label htmlFor="contact-mobile" className="text-[11px] font-mono uppercase tracking-widest text-muted-foreground">
                         Mobile Number
                       </Label>
                       <Input
@@ -292,19 +295,19 @@ export default function Contact() {
                         onChange={(e) => setFormData((prev) => ({ ...prev, mobile: e.target.value }))}
                         placeholder="+91 98765 43210"
                         pattern="[0-9+\-\s()]{7,20}"
-                        className="rounded-none border-border/50 text-base h-12"
+                        className="rounded-none border-border/60 bg-background text-base h-11 focus:border-primary focus:ring-0 transition-colors duration-200"
                       />
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor="contact-profile" className="text-sm font-medium text-muted-foreground block">
+                      <Label htmlFor="contact-profile" className="text-[11px] font-mono uppercase tracking-widest text-muted-foreground block">
                         Stakeholder Profile
                       </Label>
                       <Select
                         value={formData.profile}
                         onValueChange={(val) => setFormData((prev) => ({ ...prev, profile: val }))}
                       >
-                        <SelectTrigger id="contact-profile" className="w-full rounded-none bg-background border-border/50 h-12 text-base text-foreground">
+                        <SelectTrigger id="contact-profile" className="w-full rounded-none bg-background border-border/60 h-11 text-base text-foreground focus:border-primary focus:ring-0 transition-colors duration-200">
                           <SelectValue placeholder="Select Profile" />
                         </SelectTrigger>
                         <SelectContent className="rounded-none text-base bg-background border border-border text-foreground">
@@ -318,7 +321,7 @@ export default function Contact() {
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor="contact-message" className="text-sm font-medium text-muted-foreground">
+                      <Label htmlFor="contact-message" className="text-[11px] font-mono uppercase tracking-widest text-muted-foreground">
                         Message
                       </Label>
                       <Textarea
@@ -327,7 +330,7 @@ export default function Contact() {
                         value={formData.message}
                         onChange={(e) => setFormData((prev) => ({ ...prev, message: e.target.value }))}
                         placeholder="Tell us how we can help configure your roadmap..."
-                        className="rounded-none border-border/50 text-base min-h-[120px]"
+                        className="rounded-none border-border/60 bg-background text-base min-h-[120px] focus:border-primary focus:ring-0 transition-colors duration-200 resize-none"
                       />
                     </div>
 
@@ -336,13 +339,13 @@ export default function Contact() {
                         id="contact-marketing"
                         checked={formData.marketingConsent}
                         onCheckedChange={(checked) => setFormData(prev => ({ ...prev, marketingConsent: checked as boolean }))}
-                        className="mt-1"
+                        className="mt-0.5 rounded-none"
                       />
                       <label
                         htmlFor="contact-marketing"
-                        className="text-[13px] font-medium text-muted-foreground leading-snug cursor-pointer"
+                        className="text-[12px] font-mono text-muted-foreground leading-relaxed cursor-pointer"
                       >
-                        I hereby agree to receive promotional messages through WhatsApp / RCS /SMS
+                        I hereby agree to receive promotional messages through WhatsApp / RCS / SMS
                       </label>
                     </div>
 
@@ -350,13 +353,13 @@ export default function Contact() {
                       type="submit"
                       size="md"
                       disabled={isSubmitting}
-                      className="w-full rounded-none bg-foreground text-background hover:bg-primary transition-colors duration-200 disabled:opacity-60 disabled:cursor-not-allowed"
+                      className="w-full rounded-none bg-foreground text-background hover:bg-primary hover:text-primary-foreground transition-colors duration-200 disabled:opacity-60 disabled:cursor-not-allowed"
                     >
                       {isSubmitting ? 'Sending...' : 'Submit'}
                     </Button>
                   </form>
                 )}
-              </InvisibleCard>
+              </div>
             </div>
           </div>
 
