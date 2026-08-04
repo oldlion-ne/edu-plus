@@ -30,6 +30,7 @@ export default function Contact() {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
+    mobile: '',
     profile: 'student',
     message: '',
     marketingConsent: false,
@@ -56,6 +57,7 @@ export default function Contact() {
         body: JSON.stringify({
           name: formData.name,
           email: formData.email,
+          mobile: formData.mobile || null,
           profile: formData.profile,
           message: formData.message,
           status: 'unread',
@@ -80,6 +82,7 @@ export default function Contact() {
           type: 'contact',
           name: formData.name,
           email: formData.email,
+          mobile: formData.mobile || undefined,
           message: formData.message,
         }),
         signal: controller.signal,
@@ -93,7 +96,7 @@ export default function Contact() {
       await new Promise((resolve) => setTimeout(resolve, 800));
       setIsSubmitting(false);
       setSubmitted(true);
-      setFormData({ name: '', email: '', profile: 'student', message: '', marketingConsent: false });
+      setFormData({ name: '', email: '', mobile: '', profile: 'student', message: '', marketingConsent: false });
       toast.success('Inquiry sent! We\'ll be in touch within 24 hours.', { id: toastId });
       setTimeout(() => setSubmitted(false), 6000);
     } catch (err: any) {
@@ -266,6 +269,21 @@ export default function Contact() {
                           className="rounded-none border-border/50 text-base h-12"
                         />
                       </div>
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="contact-mobile" className="text-sm font-medium text-muted-foreground">
+                        Mobile Number <span className="text-muted-foreground/50 font-normal">(optional)</span>
+                      </Label>
+                      <Input
+                        id="contact-mobile"
+                        type="tel"
+                        value={formData.mobile}
+                        onChange={(e) => setFormData((prev) => ({ ...prev, mobile: e.target.value }))}
+                        placeholder="+91 98765 43210"
+                        pattern="[0-9+\-\s()]{7,20}"
+                        className="rounded-none border-border/50 text-base h-12"
+                      />
                     </div>
 
                     <div className="space-y-2">

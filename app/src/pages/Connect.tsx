@@ -48,7 +48,7 @@ const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL as string;
 const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_PUBLIC_KEY as string;
 const REST_TIMEOUT_MS = 10000;
 
-async function insertContactMessage(payload: Record<string, string>) {
+async function insertContactMessage(payload: Record<string, any>) {
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), REST_TIMEOUT_MS);
   
@@ -266,6 +266,7 @@ export default function Connect() {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
+    mobile: '',
     profile: 'student',
     message: '',
     marketingConsent: false
@@ -283,6 +284,7 @@ export default function Connect() {
       await insertContactMessage({
         name: formData.name,
         email: formData.email,
+        mobile: formData.mobile || null,
         profile: formData.profile,
         message: formData.message,
         status: 'unread',
@@ -300,6 +302,7 @@ export default function Connect() {
           type: 'contact',
           name: formData.name,
           email: formData.email,
+          mobile: formData.mobile || undefined,
           message: formData.message,
         }),
       });
@@ -310,7 +313,7 @@ export default function Connect() {
 
       toast.success('Inquiry sent! We\'ll respond within 24 hours.', { id: toastId });
       setSubmitted(true);
-      setFormData({ name: '', email: '', profile: 'student', message: '', marketingConsent: false });
+      setFormData({ name: '', email: '', mobile: '', profile: 'student', message: '', marketingConsent: false });
       setTimeout(() => setSubmitted(false), 5000);
     } catch (err: any) {
       console.error('Error sending message:', err);
@@ -598,6 +601,21 @@ export default function Connect() {
                           className="font-mono text-[13px] rounded-none border-border focus:border-primary focus:ring-0 bg-transparent h-12 px-4 transition-colors"
                         />
                       </div>
+                    </div>
+
+                    <div className="space-y-3">
+                      <Label htmlFor="contact-mobile" className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground">
+                        Mobile Number <span className="text-muted-foreground/50 font-normal normal-case tracking-normal">(optional)</span>
+                      </Label>
+                      <Input
+                        id="contact-mobile"
+                        type="tel"
+                        value={formData.mobile}
+                        onChange={(e) => setFormData(prev => ({ ...prev, mobile: e.target.value }))}
+                        placeholder="+91 98765 43210"
+                        pattern="[0-9+\-\s()]{7,20}"
+                        className="font-mono text-[13px] rounded-none border-border focus:border-primary focus:ring-0 bg-transparent h-12 px-4 transition-colors"
+                      />
                     </div>
 
                     <div className="space-y-3">
