@@ -22,7 +22,7 @@ describe('PageHero', () => {
       screen.getByRole('heading', { level: 1, name: 'Quiet title' }),
     ).toBeInTheDocument();
     expect(screen.queryByRole('img')).not.toBeInTheDocument();
-    expect(container.firstElementChild?.firstElementChild).toHaveClass(
+    expect(container.firstElementChild?.firstElementChild?.firstElementChild).toHaveClass(
       'min-h-[50vh]',
     );
   });
@@ -44,7 +44,7 @@ describe('PageHero', () => {
     const image = screen.getByRole('img', {
       name: editorialIllustrations.home.alt,
     });
-    const layout = container.firstElementChild?.firstElementChild;
+    const layout = container.firstElementChild?.firstElementChild?.firstElementChild;
 
     expect(
       cta.compareDocumentPosition(image) & Node.DOCUMENT_POSITION_FOLLOWING,
