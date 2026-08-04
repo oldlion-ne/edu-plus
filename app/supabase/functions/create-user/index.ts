@@ -59,15 +59,19 @@ Deno.serve(async (req: Request) => {
     const body = await req.json();
     const { email, password, role } = body as { email: string; password?: string; role: string };
 
-    if (!email || !role) {
-      throw new Error('Missing required fields: email, role');
+    if (!email || !role || !password) {
+      throw new Error('Missing required fields: email, password, role');
+    }
+
+    const strongPasswordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    if (!strongPasswordRegex.test(password)) {
+      throw new Error('Temporary password must be at least 8 characters and include uppercase, lowercase, number, and special character.');
     }
 
     // ── Create Auth User ───────────────────────────────────────────────────────
     const { data: authData, error: createError } = await adminClient.auth.admin.createUser({
       email,
-      password: password || undefined,
-      email_confirm: true,
+      password,
     });
 
     if (createError) throw createError;
@@ -80,7 +84,11 @@ Deno.serve(async (req: Request) => {
 
     if (roleError) {
       // Rollback auth user creation if role assignment fails
-      await adminClient.auth.admin.deleteUser(authData.user.id);
+      const { error: deleteError } = await adminClient.auth.admin.deleteUser(authData.user.id);
+      if (deleteError) {
+        console.error('Rollback failure: could not delete user', deleteError);
+        throw new Error(`Role assignment failed, and rollback failed to delete user: ${deleteError.message}`);
+      }
       throw roleError;
     }
 
