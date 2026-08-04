@@ -5,6 +5,8 @@ import { createClient } from "@supabase/supabase-js";
 const ALLOWED_ORIGINS = [
   'http://localhost:3000',
   'http://127.0.0.1:3000',
+  'http://localhost:5173',
+  'http://127.0.0.1:5173',
   'https://eduplus-skills.vercel.app',
 ];
 
@@ -46,7 +48,7 @@ Deno.serve(async (req: Request) => {
     const { data: roleRow } = await anonClient
       .from('user_roles')
       .select('role')
-      .eq('user_id', user.id)
+      .eq('id', user.id)
       .single();
     if (roleRow?.role !== 'admin') throw new Error('Forbidden: admin role required');
 
@@ -71,7 +73,7 @@ Deno.serve(async (req: Request) => {
         if (!role) throw new Error('Missing field: role');
         const { error } = await adminClient
           .from('user_roles')
-          .upsert({ user_id: userId, role }, { onConflict: 'user_id' });
+          .upsert({ id: userId, role }, { onConflict: 'id' });
         if (error) throw error;
         break;
       }
@@ -101,7 +103,7 @@ Deno.serve(async (req: Request) => {
         const { error: roleCleanupError } = await adminClient
           .from('user_roles')
           .delete()
-          .eq('user_id', userId);
+          .eq('id', userId);
         if (roleCleanupError) throw roleCleanupError;
         break;
       }
