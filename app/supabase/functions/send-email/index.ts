@@ -47,14 +47,16 @@ Deno.serve(async (req: Request) => {
     const body = await req.json();
     const { type, email, name, message, mobile } = body;
 
-    // Validate size to prevent oversized payloads
+    // Validate size and format
+    const isMobileValid = !mobile || (/^[0-9+\-\s()]{7,20}$/.test(mobile));
+    
     if (
       (email && email.length > 255) ||
       (name && name.length > 255) ||
       (message && message.length > 5000) ||
-      (mobile && mobile.length > 30)
+      !isMobileValid
     ) {
-      throw new Error('Payload size exceeded limits');
+      throw new Error('Payload size exceeded limits or format invalid');
     }
 
     let subject = 'New Inquiry from EduPlus';
@@ -73,7 +75,7 @@ Deno.serve(async (req: Request) => {
       to: 'eduplusskills8@gmail.com',
       subject: subject,
       html: htmlTemplate,
-      replyTo: escapeHtml(email),
+      replyTo: (email || '').trim(),
     });
 
     if (error) {

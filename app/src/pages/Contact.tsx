@@ -41,6 +41,10 @@ export default function Contact() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
+    const normalizedMobile = (() => {
+      const trimmed = formData.mobile.trim();
+      return trimmed && /\d/.test(trimmed) ? trimmed : null;
+    })();
     const toastId = toast.loading('Sending your inquiry...');
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), REST_TIMEOUT_MS);
@@ -57,7 +61,7 @@ export default function Contact() {
         body: JSON.stringify({
           name: formData.name,
           email: formData.email,
-          mobile: formData.mobile || null,
+          mobile: normalizedMobile,
           profile: formData.profile,
           message: formData.message,
           status: 'unread',
@@ -82,7 +86,7 @@ export default function Contact() {
           type: 'contact',
           name: formData.name,
           email: formData.email,
-          mobile: formData.mobile || undefined,
+          mobile: normalizedMobile ?? undefined,
           message: formData.message,
         }),
         signal: controller.signal,
@@ -92,7 +96,7 @@ export default function Contact() {
         console.error('[Contact] Failed to send email via Edge Function');
       }
 
-      console.log('Form data:', formData);
+      console.log('[Contact] Inquiry submitted successfully');
       await new Promise((resolve) => setTimeout(resolve, 800));
       setIsSubmitting(false);
       setSubmitted(true);

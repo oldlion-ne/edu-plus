@@ -34,7 +34,9 @@ export function ScrollScrubVideo({ src, className = '', scrollFactor = 1.5, chil
       return;
     }
 
-    fetch(src)
+    const controller = new AbortController();
+
+    fetch(src, { signal: controller.signal })
       .then((r) => {
         if (!r.ok) throw new Error(`HTTP error! status: ${r.status}`);
         return r.blob();
@@ -57,6 +59,7 @@ export function ScrollScrubVideo({ src, className = '', scrollFactor = 1.5, chil
 
     return () => {
       active = false;
+      controller.abort();
       if (blobUrlRef.current) {
         URL.revokeObjectURL(blobUrlRef.current);
         blobUrlRef.current = null;
@@ -74,6 +77,7 @@ export function ScrollScrubVideo({ src, className = '', scrollFactor = 1.5, chil
 
     let animId: number;
     const scrollContainer = scrollContext?.scrollContainerRef?.current || window;
+    const overlayNode = overlayRef.current;
 
     const handleScroll = () => {
       const rect = container.getBoundingClientRect();
@@ -88,11 +92,11 @@ export function ScrollScrubVideo({ src, className = '', scrollFactor = 1.5, chil
       targetTimeRef.current = progress * (duration - 0.05); // slightly subtract to prevent end-of-file stall
 
       // Apply fade out and translation to overlay text as we scroll
-      if (overlayRef.current) {
+      if (overlayNode) {
         const fadeProgress = Math.min(progress / 0.4, 1); // Fades completely by 40% scroll
-        overlayRef.current.style.opacity = (1 - fadeProgress).toString();
-        overlayRef.current.style.transform = `translateY(${-progress * 15}vh)`;
-        overlayRef.current.style.pointerEvents = fadeProgress > 0.85 ? 'none' : 'auto';
+        overlayNode.style.opacity = (1 - fadeProgress).toString();
+        overlayNode.style.transform = `translateY(${-progress * 15}vh)`;
+        overlayNode.style.pointerEvents = fadeProgress > 0.85 ? 'none' : 'auto';
       }
     };
 
@@ -128,6 +132,13 @@ export function ScrollScrubVideo({ src, className = '', scrollFactor = 1.5, chil
       scrollContainer.removeEventListener('scroll', handleScroll);
       window.removeEventListener('resize', handleScroll);
       cancelAnimationFrame(animId);
+      
+      // Cleanup imperative styles safely
+      if (overlayNode) {
+        overlayNode.style.opacity = '';
+        overlayNode.style.transform = '';
+        overlayNode.style.pointerEvents = '';
+      }
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [videoUrl, scrollContext?.scrollContainerRef?.current, isMobile]);
@@ -186,8 +197,7 @@ export function ScrollScrubVideo({ src, className = '', scrollFactor = 1.5, chil
             {children && (
               <div 
                 ref={overlayRef}
-                className={`absolute inset-0 flex flex-col items-center justify-center z-20 pointer-events-none transition-all duration-75 ${isMobile ? 'bg-black/40' : ''}`}
-                style={isMobile ? {} : undefined} // Strip dynamic styles if mobile
+                className={`absolute inset-0 flex flex-col items-center justify-center z-20 pointer-events-none transition-all duration-75 ${isMobile ? 'bg-background/80' : ''}`}
               >
                 {children}
               </div>

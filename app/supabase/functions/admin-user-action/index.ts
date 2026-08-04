@@ -97,8 +97,12 @@ Deno.serve(async (req: Request) => {
       case 'delete': {
         const { error } = await adminClient.auth.admin.deleteUser(userId);
         if (error) throw error;
-        // Clean up role mapping
-        await adminClient.from('user_roles').delete().eq('user_id', userId);
+        // Clean up role mapping — throw if this fails to prevent stale mappings
+        const { error: roleCleanupError } = await adminClient
+          .from('user_roles')
+          .delete()
+          .eq('user_id', userId);
+        if (roleCleanupError) throw roleCleanupError;
         break;
       }
 

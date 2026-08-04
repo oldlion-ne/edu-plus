@@ -48,7 +48,16 @@ const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL as string;
 const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_PUBLIC_KEY as string;
 const REST_TIMEOUT_MS = 10000;
 
-async function insertContactMessage(payload: Record<string, any>) {
+interface ContactMessagePayload {
+  name: string;
+  email: string;
+  mobile: string | null;
+  profile: string;
+  message: string;
+  status: string;
+}
+
+async function insertContactMessage(payload: ContactMessagePayload) {
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), REST_TIMEOUT_MS);
   
@@ -279,12 +288,16 @@ export default function Connect() {
     e.preventDefault();
     if (isSubmitting) return;
     setIsSubmitting(true);
+    const normalizedMobile = (() => {
+      const trimmed = formData.mobile.trim();
+      return trimmed && /\d/.test(trimmed) ? trimmed : null;
+    })();
     const toastId = toast.loading('Sending your inquiry...');
     try {
       await insertContactMessage({
         name: formData.name,
         email: formData.email,
-        mobile: formData.mobile || null,
+        mobile: normalizedMobile,
         profile: formData.profile,
         message: formData.message,
         status: 'unread',
@@ -302,7 +315,7 @@ export default function Connect() {
           type: 'contact',
           name: formData.name,
           email: formData.email,
-          mobile: formData.mobile || undefined,
+          mobile: normalizedMobile ?? undefined,
           message: formData.message,
         }),
       });
@@ -614,7 +627,7 @@ export default function Connect() {
                         onChange={(e) => setFormData(prev => ({ ...prev, mobile: e.target.value }))}
                         placeholder="+91 98765 43210"
                         pattern="[0-9+\-\s()]{7,20}"
-                        className="font-mono text-[13px] rounded-none border-border focus:border-primary focus:ring-0 bg-transparent h-12 px-4 transition-colors"
+                        className="font-sans text-[13px] rounded-none border-border focus:border-primary focus:ring-0 bg-transparent h-12 px-4 transition-colors"
                       />
                     </div>
 

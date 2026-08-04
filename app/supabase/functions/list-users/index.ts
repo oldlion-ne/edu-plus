@@ -66,9 +66,10 @@ Deno.serve(async (req: Request) => {
     if (listError) throw listError;
 
     // Fetch all role mappings.
-    const { data: roles } = await adminClient
+    const { data: roles, error: rolesError } = await adminClient
       .from('user_roles')
       .select('user_id, role');
+    if (rolesError) throw rolesError;
 
     const roleMap = new Map((roles || []).map((r: any) => [r.user_id, r.role]));
 
