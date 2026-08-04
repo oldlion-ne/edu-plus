@@ -292,6 +292,11 @@ export default function Connect() {
       const trimmed = formData.mobile.trim();
       return trimmed && /\d/.test(trimmed) ? trimmed : null;
     })();
+    if (!normalizedMobile) {
+      toast.error('Please enter a valid mobile number.');
+      setIsSubmitting(false);
+      return;
+    }
     const toastId = toast.loading('Sending your inquiry...');
     try {
       await insertContactMessage({
@@ -618,11 +623,12 @@ export default function Connect() {
 
                     <div className="space-y-3">
                       <Label htmlFor="contact-mobile" className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground">
-                        Mobile Number <span className="text-muted-foreground/50 font-normal normal-case tracking-normal">(optional)</span>
+                        Mobile Number
                       </Label>
                       <Input
                         id="contact-mobile"
                         type="tel"
+                        required
                         value={formData.mobile}
                         onChange={(e) => setFormData(prev => ({ ...prev, mobile: e.target.value }))}
                         placeholder="+91 98765 43210"

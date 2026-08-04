@@ -45,6 +45,11 @@ export default function Contact() {
       const trimmed = formData.mobile.trim();
       return trimmed && /\d/.test(trimmed) ? trimmed : null;
     })();
+    if (!normalizedMobile) {
+      toast.error('Please enter a valid mobile number.');
+      setIsSubmitting(false);
+      return;
+    }
     const toastId = toast.loading('Sending your inquiry...');
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), REST_TIMEOUT_MS);
@@ -277,11 +282,12 @@ export default function Contact() {
 
                     <div className="space-y-2">
                       <Label htmlFor="contact-mobile" className="text-sm font-medium text-muted-foreground">
-                        Mobile Number <span className="text-muted-foreground/50 font-normal">(optional)</span>
+                        Mobile Number
                       </Label>
                       <Input
                         id="contact-mobile"
                         type="tel"
+                        required
                         value={formData.mobile}
                         onChange={(e) => setFormData((prev) => ({ ...prev, mobile: e.target.value }))}
                         placeholder="+91 98765 43210"
