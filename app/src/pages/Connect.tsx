@@ -565,7 +565,9 @@ export default function Connect() {
 
             {/* Right Column: Interaction Form */}
             <div className="lg:col-span-7">
-              <InvisibleCard delay={0} className="border-none bg-background/50">
+              <div className="relative border border-border/60 bg-card p-8 md:p-10">
+                {/* Amber top accent — static, not hover-triggered, signals premium craftsmanship */}
+                <div className="absolute top-0 left-0 w-16 h-[2px] bg-primary" />
                 <h3 className="font-heading text-2xl md:text-3xl font-light tracking-tight text-foreground mb-8">
                   {t('formTitle')}
                 </h3>
@@ -692,7 +694,7 @@ export default function Connect() {
                     </Button>
                   </form>
                 )}
-              </InvisibleCard>
+              </div>
             </div>
           </div>
 
