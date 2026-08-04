@@ -50,25 +50,13 @@ function App() {
     let mounted = true;
     const hide = () => mounted && setShowSplash(false);
     
-    // Safety fallback timeout
-    const fallbackTimer = setTimeout(hide, 2000);
-    let loadTimer: number | NodeJS.Timeout;
-
-    const handleLoad = () => {
-      loadTimer = setTimeout(hide, 800);
-    };
-
-    if (document.readyState === 'complete') {
-      handleLoad();
-    } else {
-      window.addEventListener('load', handleLoad);
-    }
+    // Dismiss the splash screen shortly after React finishes mounting the initial DOM.
+    // This allows FCP/LCP to fire immediately without waiting for heavy network assets.
+    const loadTimer = setTimeout(hide, 150);
 
     return () => {
       mounted = false;
-      clearTimeout(fallbackTimer);
       clearTimeout(loadTimer);
-      window.removeEventListener('load', handleLoad);
     };
   }, []);
 

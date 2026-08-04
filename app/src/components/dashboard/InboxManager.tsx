@@ -15,6 +15,7 @@ interface ContactMsg {
   id: string;
   name: string;
   email: string;
+  mobile?: string | null;
   profile: string;
   message: string;
   status: string;
@@ -193,7 +194,12 @@ export default function InboxManager() {
                 <div className="flex items-center justify-between border-b border-border pb-3">
                   <div>
                     <h3 className="font-heading text-lg font-light text-foreground">{selectedMsg.name}</h3>
-                    <p className="text-xs text-muted-foreground">{selectedMsg.email} • Persona: <span className="capitalize">{selectedMsg.profile}</span></p>
+                    <p className="text-xs text-muted-foreground">
+                      {selectedMsg.email} 
+                      {selectedMsg.mobile && /^[0-9+\-\s()]{7,20}$/.test(selectedMsg.mobile) && <> • <a href={`tel:${selectedMsg.mobile}`} className="hover:underline hover:text-foreground">{selectedMsg.mobile}</a></>}
+                      {selectedMsg.mobile && !(/^[0-9+\-\s()]{7,20}$/.test(selectedMsg.mobile)) && <> • {selectedMsg.mobile}</>}
+                      {' '}• Persona: <span className="capitalize">{selectedMsg.profile}</span>
+                    </p>
                   </div>
 
                   <div className="flex gap-2">

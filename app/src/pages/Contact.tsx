@@ -30,6 +30,7 @@ export default function Contact() {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
+    mobile: '',
     profile: 'student',
     message: '',
     marketingConsent: false,
@@ -40,6 +41,10 @@ export default function Contact() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
+    const normalizedMobile = (() => {
+      const trimmed = formData.mobile.trim();
+      return trimmed && /\d/.test(trimmed) ? trimmed : null;
+    })();
     const toastId = toast.loading('Sending your inquiry...');
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), REST_TIMEOUT_MS);
@@ -56,6 +61,7 @@ export default function Contact() {
         body: JSON.stringify({
           name: formData.name,
           email: formData.email,
+          mobile: normalizedMobile,
           profile: formData.profile,
           message: formData.message,
           status: 'unread',
@@ -80,6 +86,7 @@ export default function Contact() {
           type: 'contact',
           name: formData.name,
           email: formData.email,
+          mobile: normalizedMobile ?? undefined,
           message: formData.message,
         }),
         signal: controller.signal,
@@ -89,11 +96,11 @@ export default function Contact() {
         console.error('[Contact] Failed to send email via Edge Function');
       }
 
-      console.log('Form data:', formData);
+      console.log('[Contact] Inquiry submitted successfully');
       await new Promise((resolve) => setTimeout(resolve, 800));
       setIsSubmitting(false);
       setSubmitted(true);
-      setFormData({ name: '', email: '', profile: 'student', message: '', marketingConsent: false });
+      setFormData({ name: '', email: '', mobile: '', profile: 'student', message: '', marketingConsent: false });
       toast.success('Inquiry sent! We\'ll be in touch within 24 hours.', { id: toastId });
       setTimeout(() => setSubmitted(false), 6000);
     } catch (err: any) {
@@ -266,6 +273,21 @@ export default function Contact() {
                           className="rounded-none border-border/50 text-base h-12"
                         />
                       </div>
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="contact-mobile" className="text-sm font-medium text-muted-foreground">
+                        Mobile Number <span className="text-muted-foreground/50 font-normal">(optional)</span>
+                      </Label>
+                      <Input
+                        id="contact-mobile"
+                        type="tel"
+                        value={formData.mobile}
+                        onChange={(e) => setFormData((prev) => ({ ...prev, mobile: e.target.value }))}
+                        placeholder="+91 98765 43210"
+                        pattern="[0-9+\-\s()]{7,20}"
+                        className="rounded-none border-border/50 text-base h-12"
+                      />
                     </div>
 
                     <div className="space-y-2">

@@ -45,15 +45,18 @@ Deno.serve(async (req: Request) => {
 
     const resend = new Resend(RESEND_API_KEY);
     const body = await req.json();
-    const { type, email, name, message } = body;
+    const { type, email, name, message, mobile } = body;
 
-    // Validate size to prevent oversized payloads
+    // Validate size and format
+    const isMobileValid = !mobile || (/^[0-9+\-\s()]{7,20}$/.test(mobile));
+    
     if (
       (email && email.length > 255) ||
       (name && name.length > 255) ||
-      (message && message.length > 5000)
+      (message && message.length > 5000) ||
+      !isMobileValid
     ) {
-      throw new Error('Payload size exceeded limits');
+      throw new Error('Payload size exceeded limits or format invalid');
     }
 
     let subject = 'New Inquiry from EduPlus';
@@ -63,7 +66,8 @@ Deno.serve(async (req: Request) => {
       subject = 'New Newsletter Subscription';
       htmlTemplate = `<p><strong>Email:</strong> ${escapeHtml(email)}</p><p>Subscribed to the newsletter.</p>`;
     } else {
-      htmlTemplate = `<p><strong>Name:</strong> ${escapeHtml(name || 'N/A')}</p><p><strong>Email:</strong> ${escapeHtml(email)}</p><p><strong>Message:</strong><br/>${escapeHtml(message)}</p>`;
+      const mobileHtml = mobile ? `<p><strong>Mobile:</strong> ${escapeHtml(mobile)}</p>` : '';
+      htmlTemplate = `<p><strong>Name:</strong> ${escapeHtml(name || 'N/A')}</p><p><strong>Email:</strong> ${escapeHtml(email)}</p>${mobileHtml}<p><strong>Message:</strong><br/>${escapeHtml(message)}</p>`;
     }
 
     const { data, error } = await resend.emails.send({
@@ -71,7 +75,7 @@ Deno.serve(async (req: Request) => {
       to: 'eduplusskills8@gmail.com',
       subject: subject,
       html: htmlTemplate,
-      reply_to: escapeHtml(email),
+      replyTo: (email || '').trim(),
     });
 
     if (error) {
