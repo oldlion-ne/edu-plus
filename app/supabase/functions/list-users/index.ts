@@ -8,6 +8,8 @@ const ALLOWED_ORIGINS = [
   'http://localhost:5173',
   'http://127.0.0.1:5173',
   'https://eduplus-skills.vercel.app',
+  'https://eduplusskills.in',
+  'https://www.eduplusskills.in',
 ];
 
 function corsHeaders(origin: string) {
