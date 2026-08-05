@@ -78,7 +78,7 @@ function CommandInput({
         Object.assign({}, props, {
           "data-slot": "command-input",
           className: cn(
-            "w-full text-xs/relaxed outline-hidden disabled:cursor-not-allowed disabled:opacity-50",
+            "w-full text-xs/relaxed outline-none disabled:cursor-not-allowed disabled:opacity-50",
             className
           ),
         }) as React.ComponentProps<typeof CommandPrimitive.Input> & { "data-slot": string }
@@ -159,7 +159,7 @@ function CommandItem({
     Object.assign({}, props, {
       "data-slot": "command-item",
       className: cn(
-        "group/command-item relative flex min-h-7 cursor-default items-center gap-2 rounded-none px-2.5 py-1.5 text-xs/relaxed outline-hidden select-none in-data-[slot=dialog-content]:rounded-none data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 data-selected:bg-muted data-selected:text-foreground [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-3.5 data-selected:*:[svg]:text-foreground",
+        "group/command-item relative flex min-h-7 cursor-default items-center gap-2 rounded-none px-2.5 py-1.5 text-xs/relaxed outline-none select-none in-data-[slot=dialog-content]:rounded-none data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 data-selected:bg-muted data-selected:text-foreground [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-3.5 data-selected:*:[svg]:text-foreground",
         className
       ),
     }) as React.ComponentProps<typeof CommandPrimitive.Item> & { "data-slot": string },
