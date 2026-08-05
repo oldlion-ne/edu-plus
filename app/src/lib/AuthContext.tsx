@@ -1,10 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { supabase } from './supabaseClient';
-import { AuthContext } from './useAuth';
+import { AuthContext, type UserRole } from './useAuth';
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<any | null>(null);
-  const [role, setRole] = useState<'admin' | 'educator' | 'resource_person' | 'none' | null>(null);
+  const [role, setRole] = useState<UserRole | null>(null);
   const [loading, setLoading] = useState(true);
   const [isSimulated, setIsSimulated] = useState(false);
 
@@ -229,7 +229,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     await supabase.auth.signOut();
   };
 
-  const signInSimulated = (selectedRole: 'admin' | 'educator' | 'resource_person') => {
+  const signInSimulated = (selectedRole: UserRole) => {
     const mockUser = {
       id: '00000000-0000-0000-0000-000000000000',
       email: `simulated_${selectedRole}@eduplus.dev`,

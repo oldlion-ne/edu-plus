@@ -118,7 +118,7 @@ export default function MediaLibrary() {
           </p>
         </div>
 
-        <label className="cursor-pointer inline-flex items-center gap-2 bg-foreground text-background px-4 py-2 text-xs font-medium rounded-none hover:bg-foreground/90 transition-colors">
+        <label className="cursor-pointer inline-flex items-center gap-2 bg-primary text-primary-foreground px-4 py-2 text-xs font-medium rounded-none hover:bg-primary/90 transition-colors">
           <UploadCloud className="size-4" />
           {isUploading ? 'Uploading...' : 'Upload Media Asset'}
           <input type="file" onChange={handleFileUpload} disabled={isUploading} className="hidden" />

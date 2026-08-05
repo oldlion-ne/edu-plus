@@ -177,7 +177,7 @@ export default function UserManagement() {
               onClick={() => setSelectedRoleFilter(roleOption)}
               className={`px-3 py-1.5 text-xs font-sans capitalize transition-colors border rounded-none whitespace-nowrap ${
                 selectedRoleFilter === roleOption 
-                  ? 'bg-foreground text-background border-foreground font-medium' 
+                  ? 'bg-primary/5 text-primary border-primary font-medium' 
                   : 'bg-background text-muted-foreground border-border hover:text-foreground'
               }`}
             >
@@ -314,7 +314,7 @@ export default function UserManagement() {
                 <Button 
                   type="submit" 
                   disabled={isResetting}
-                  className="rounded-none bg-foreground text-background text-xs px-5"
+                  className="rounded-none bg-primary text-primary-foreground hover:bg-primary/90 text-xs px-5"
                 >
                   {isResetting ? 'Updating...' : 'Set Password'}
                 </Button>

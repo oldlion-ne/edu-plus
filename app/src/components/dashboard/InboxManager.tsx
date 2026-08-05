@@ -121,7 +121,7 @@ export default function InboxManager() {
           onClick={() => setActiveSubTab('contact')}
           className={`px-4 py-2 text-xs font-sans border rounded-none transition-colors flex items-center gap-2 ${
             activeSubTab === 'contact'
-              ? 'bg-foreground text-background border-foreground font-medium'
+              ? 'bg-primary/5 text-primary border-primary font-medium'
               : 'bg-card text-muted-foreground border-border hover:text-foreground'
           }`}
         >
@@ -133,7 +133,7 @@ export default function InboxManager() {
           onClick={() => setActiveSubTab('subscribers')}
           className={`px-4 py-2 text-xs font-sans border rounded-none transition-colors flex items-center gap-2 ${
             activeSubTab === 'subscribers'
-              ? 'bg-foreground text-background border-foreground font-medium'
+              ? 'bg-primary/5 text-primary border-primary font-medium'
               : 'bg-card text-muted-foreground border-border hover:text-foreground'
           }`}
         >
@@ -145,7 +145,7 @@ export default function InboxManager() {
           onClick={() => setActiveSubTab('ai-chats')}
           className={`px-4 py-2 text-xs font-sans border rounded-none transition-colors flex items-center gap-2 ${
             activeSubTab === 'ai-chats'
-              ? 'bg-foreground text-background border-foreground font-medium'
+              ? 'bg-primary/5 text-primary border-primary font-medium'
               : 'bg-card text-muted-foreground border-border hover:text-foreground'
           }`}
         >
@@ -228,7 +228,7 @@ export default function InboxManager() {
                 <div className="pt-2">
                   <a
                     href={`mailto:${selectedMsg.email}?subject=RE: Edu+ Inquiry`}
-                    className="inline-flex items-center gap-1.5 bg-foreground text-background px-4 py-2 text-xs font-medium rounded-none hover:bg-foreground/90 transition-colors"
+                    className="inline-flex items-center gap-1.5 bg-primary text-primary-foreground px-4 py-2 text-xs font-medium rounded-none hover:bg-primary/90 transition-colors"
                   >
                     <Mail className="size-3.5" /> Reply via Email
                   </a>

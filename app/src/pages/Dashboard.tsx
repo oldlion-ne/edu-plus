@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router';
+import { useNavigate } from 'react-router';
 import { useTranslation } from '../i18n/useTranslation';
 import { supabase } from '../lib/supabaseClient';
 import { toast } from 'sonner';
@@ -13,16 +13,13 @@ import {
   DialogContent,
   DialogDescription,
   DialogTitle,
-  DialogTrigger,
 } from '../components/ui/dialog';
 import {
   Avatar,
   AvatarImage,
   AvatarFallback,
 } from '../components/ui/avatar';
-
 import { Area, AreaChart, CartesianGrid, XAxis } from 'recharts';
-
 import {
   ChartContainer,
   ChartTooltip,
@@ -41,20 +38,9 @@ import { Card } from '../components/ui/card';
 import { Input } from '../components/ui/input';
 import { Textarea } from '../components/ui/textarea';
 import { Label } from '../components/ui/label';
-import { Sheet, SheetContent, SheetTitle, SheetDescription } from '../components/ui/sheet';
-import { AnimatedThemeToggler } from '../components/ui/animated-theme-toggler';
-import { 
-  Bell, 
-  LayoutDashboard, 
-  UploadCloud, 
-  Cpu, 
-  Menu, 
-  X,
-  Settings,
-  FileImage,
-  Inbox,
-  ShieldCheck
-} from 'lucide-react';
+import { Bell, UploadCloud } from 'lucide-react';
+import { SidebarProvider, SidebarInset, SidebarTrigger } from '../components/ui/sidebar';
+import { DashboardSidebar } from '../components/dashboard/DashboardSidebar';
 import UserManagement from '../components/dashboard/UserManagement';
 import MediaLibrary from '../components/dashboard/MediaLibrary';
 import InboxManager from '../components/dashboard/InboxManager';
@@ -170,17 +156,16 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
+export type DashboardTab = 'overview' | 'users' | 'uploader' | 'ai-matrix' | 'media' | 'inbox' | 'settings';
+
 export default function Dashboard() {
   const { t } = useTranslation();
   const { user, role: selectedRole, isSimulated, signOut, signInSimulated } = useAuth();
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState<
-    'overview' | 'users' | 'uploader' | 'ai-matrix' | 'media' | 'inbox' | 'settings'
-  >('overview');
+  const [activeTab, setActiveTab] = useState<DashboardTab>('overview');
   const [showTour, setShowTour] = useState(false);
   const [unreadMessagesCount, setUnreadMessagesCount] = useState(0);
   const [showBellDropdown, setShowBellDropdown] = useState(false);
-  const [isMobileOpen, setIsMobileOpen] = useState(false);
 
   // Chart States
   const [timeRange, setTimeRange] = useState("90d");
@@ -454,351 +439,60 @@ export default function Dashboard() {
     return date >= startDate
   });
 
-  const renderSidebarContents = (onNavItemClick?: () => void) => (
-    <div className="flex flex-col h-full justify-between bg-card text-card-foreground border-r border-border font-sans">
-      <div className="flex flex-col flex-1">
-        {/* Brand header */}
-        <div className="p-6 border-b border-border flex items-center justify-between">
-          <Link to="/" className="flex items-center gap-0 hover:text-primary focus:outline-none focus:ring-1 focus:ring-primary/70">
-            <span className="font-heading font-bold text-xl text-foreground">{t('dashboard.brand')}</span>
-            <span className="text-primary font-light text-xl">{t('dashboard.brandPlus')}</span>
-            <span className="font-mono text-[9px] text-muted-foreground tracking-widest uppercase ml-2">{t('dashboard.brandSuffix')}</span>
-          </Link>
-          {onNavItemClick && (
-            <Button variant="ghost" onClick={onNavItemClick} className="md:hidden text-muted-foreground hover:text-foreground focus:text-primary cursor-pointer p-1.5 h-8 w-8 flex items-center justify-center rounded-none">
-              <X className="size-4" />
-            </Button>
-          )}
-        </div>
-        <div className="px-6 py-4">
-          <span className="font-heading text-xs font-semibold text-muted-foreground uppercase tracking-wider block">{t('dashboard.workspacePortal')}</span>
-        </div>
-
-        {/* Navigation Sidebar Tabs */}
-        <nav className="flex-grow px-4 py-2 space-y-4 overflow-y-auto max-h-[calc(100vh-160px)]">
-          {/* Main System Group */}
-          <div className="space-y-1">
-            <span className="font-heading text-[10px] uppercase font-bold text-muted-foreground/60 px-3 block mb-1 tracking-wider">System</span>
-            <Button
-              id="tab-overview"
-              variant="ghost"
-              onClick={() => { setActiveTab('overview'); onNavItemClick?.(); }}
-              className={`w-full justify-start gap-3 px-3 py-2 font-sans text-xs font-medium transition-all duration-200 rounded-none border-l-2 ${
-                activeTab === 'overview'
-                  ? 'border-primary bg-primary/5 text-primary'
-                  : 'border-transparent text-muted-foreground hover:border-primary/30 hover:text-primary hover:bg-muted/30'
-              }`}
-            >
-              <LayoutDashboard className="size-4 shrink-0" />
-              <span>Overview</span>
-            </Button>
-            {hasPermission(['admin']) && (
-              <Button
-                id="tab-users"
-                variant="ghost"
-                onClick={() => { setActiveTab('users'); onNavItemClick?.(); }}
-                className={`w-full justify-start gap-3 px-3 py-2 font-sans text-xs font-medium transition-all duration-200 rounded-none border-l-2 ${
-                  activeTab === 'users'
-                    ? 'border-primary bg-primary/5 text-primary'
-                    : 'border-transparent text-muted-foreground hover:border-primary/30 hover:text-primary hover:bg-muted/30'
-                }`}
-              >
-                <ShieldCheck className="size-4 shrink-0 text-primary" />
-                <span>User Management</span>
-              </Button>
-            )}
-          </div>
-
-          {/* Knowledge Hub CMS Group */}
-          <div className="space-y-1">
-            <span className="font-heading text-[10px] uppercase font-bold text-muted-foreground/60 px-3 block mb-1 tracking-wider">Knowledge Hub CMS</span>
-            <Button
-              id="tab-uploader"
-              variant="ghost"
-              onClick={() => { setActiveTab('uploader'); onNavItemClick?.(); }}
-              className={`w-full justify-start gap-3 px-3 py-2 font-sans text-xs font-medium transition-all duration-200 rounded-none border-l-2 ${
-                activeTab === 'uploader'
-                  ? 'border-primary bg-primary/5 text-primary'
-                  : 'border-transparent text-muted-foreground hover:border-primary/30 hover:text-primary hover:bg-muted/30'
-              }`}
-            >
-              <UploadCloud className="size-4 shrink-0" />
-              <span>Resource Manager</span>
-            </Button>
-            <Button
-              id="tab-ai-matrix"
-              variant="ghost"
-              onClick={() => { setActiveTab('ai-matrix'); onNavItemClick?.(); }}
-              className={`w-full justify-start gap-3 px-3 py-2 font-sans text-xs font-medium transition-all duration-200 rounded-none border-l-2 ${
-                activeTab === 'ai-matrix'
-                  ? 'border-primary bg-primary/5 text-primary'
-                  : 'border-transparent text-muted-foreground hover:border-primary/30 hover:text-primary hover:bg-muted/30'
-              }`}
-            >
-              <Cpu className="size-4 shrink-0" />
-              <span>AI Guidelines</span>
-            </Button>
-          </div>
-
-          {/* Assets & Communications */}
-          <div className="space-y-1">
-            <span className="font-heading text-[10px] uppercase font-bold text-muted-foreground/60 px-3 block mb-1 tracking-wider">Assets & Inbox</span>
-            <Button
-              id="tab-media"
-              variant="ghost"
-              onClick={() => { setActiveTab('media'); onNavItemClick?.(); }}
-              className={`w-full justify-start gap-3 px-3 py-2 font-sans text-xs font-medium transition-all duration-200 rounded-none border-l-2 ${
-                activeTab === 'media'
-                  ? 'border-primary bg-primary/5 text-primary'
-                  : 'border-transparent text-muted-foreground hover:border-primary/30 hover:text-primary hover:bg-muted/30'
-              }`}
-            >
-              <FileImage className="size-4 shrink-0" />
-              <span>Media Library</span>
-            </Button>
-            <Button
-              id="tab-inbox"
-              variant="ghost"
-              onClick={() => { setActiveTab('inbox'); onNavItemClick?.(); }}
-              className={`w-full justify-start gap-3 px-3 py-2 font-sans text-xs font-medium transition-all duration-200 rounded-none border-l-2 ${
-                activeTab === 'inbox'
-                  ? 'border-primary bg-primary/5 text-primary'
-                  : 'border-transparent text-muted-foreground hover:border-primary/30 hover:text-primary hover:bg-muted/30'
-              }`}
-            >
-              <Inbox className="size-4 shrink-0" />
-              <span>Inbox & Chat Logs</span>
-            </Button>
-            <Button
-              id="tab-settings"
-              variant="ghost"
-              onClick={() => { setActiveTab('settings'); onNavItemClick?.(); }}
-              className={`w-full justify-start gap-3 px-3 py-2 font-sans text-xs font-medium transition-all duration-200 rounded-none border-l-2 ${
-                activeTab === 'settings'
-                  ? 'border-primary bg-primary/5 text-primary'
-                  : 'border-transparent text-muted-foreground hover:border-primary/30 hover:text-primary hover:bg-muted/30'
-              }`}
-            >
-              <Settings className="size-4 shrink-0" />
-              <span>Security & MFA</span>
-            </Button>
-          </div>
-        </nav>
-      </div>
-
-      {/* Footer profile card trigger dialog */}
-      <div className="p-4 border-t border-border bg-card font-sans relative">
-        <Dialog open={isSettingsOpen} onOpenChange={setIsSettingsOpen}>
-          <DialogTrigger asChild>
-            <button className="w-full flex items-center gap-3 py-3 px-2 border-none hover:bg-muted/20 focus:outline-none transition-colors duration-200 text-left cursor-pointer rounded-none group">
-              <Avatar className="size-9 border-none rounded-none shrink-0 transition-opacity duration-200 group-hover:opacity-80">
-                <AvatarImage src={user?.user_metadata?.avatar_url} className="rounded-none object-cover" />
-                <AvatarFallback className="bg-muted text-muted-foreground font-sans text-xs rounded-none flex items-center justify-center">
-                  {profileName.substring(0, 2).toUpperCase() || 'AD'}
-                </AvatarFallback>
-              </Avatar>
-              <div className="flex-grow min-w-0">
-                <p className="font-sans text-sm text-foreground truncate transition-colors">
-                  {profileName || 'Administrator'}
-                </p>
-                <div className="flex items-center gap-2 mt-0.5 opacity-60">
-                  <p className="font-sans text-[10px] truncate">
-                    {user?.email}
-                  </p>
-                </div>
-              </div>
-            </button>
-          </DialogTrigger>
-
-          <DialogContent className="max-w-md w-full bg-card border border-border/40 text-foreground rounded-none p-0 shadow-lg font-sans overflow-hidden max-h-[85vh] overflow-y-auto">
-            {/* Profile Identity Header */}
-            <div className="p-6 pb-2 flex flex-col items-center text-center mt-4">
-              <div className="relative group mb-4">
-                <Avatar className="size-16 border-none rounded-none shrink-0">
-                  <AvatarImage src={profileAvatar} className="rounded-none object-cover" />
-                  <AvatarFallback className="bg-muted text-muted-foreground font-sans text-lg rounded-none flex items-center justify-center">
-                    {profileName.substring(0, 2).toUpperCase() || 'AD'}
-                  </AvatarFallback>
-                </Avatar>
-                <label className="absolute inset-0 bg-background/90 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col items-center justify-center cursor-pointer border border-primary/20">
-                  {isUploadingAvatar ? (
-                    <span className="text-xs font-sans text-muted-foreground animate-pulse">Wait...</span>
-                  ) : (
-                    <>
-                      <UploadCloud size={18} className="text-muted-foreground mb-1" />
-                      <span className="text-[10px] font-sans text-muted-foreground">Upload</span>
-                      <input type="file" accept="image/*" className="hidden" onChange={handleAvatarUpload} disabled={isUploadingAvatar} />
-                    </>
-                  )}
-                </label>
-              </div>
-              
-              <DialogTitle className="text-foreground font-sans font-medium text-lg tracking-wide truncate w-full">
-                {profileName || 'Administrator'}
-              </DialogTitle>
-              <div className="flex items-center justify-center gap-2 mt-1 opacity-60">
-                <p className="font-sans text-xs truncate">{user?.email}</p>
-                {selectedRole && (
-                  <>
-                    <span className="w-1 h-1 bg-foreground/30 rounded-none" />
-                    <span className="text-[10px] font-sans capitalize">
-                      {selectedRole.replace('_', ' ')}
-                    </span>
-                  </>
-                )}
-              </div>
-            </div>
-
-            {/* Dialog description for a11y */}
-            <DialogDescription className="sr-only">
-              Manage your display name, avatar image, and workspace parameters.
-            </DialogDescription>
-
-            {/* Form body */}
-            {/* Form body */}
-            <form onSubmit={handleUpdateProfile} className="px-6 pb-6 space-y-5 font-sans">
-              <div className="space-y-1.5">
-                <Label className="text-sm font-sans text-muted-foreground font-normal">Display name</Label>
-                <Input
-                  type="text"
-                  required
-                  autoComplete="off"
-                  value={profileName}
-                  onChange={e => setProfileName(e.target.value)}
-                  className="w-full bg-transparent border-0 border-b border-border px-0 py-2 outline-none focus:border-foreground focus:ring-0 rounded-none text-foreground font-sans text-base transition-colors shadow-none"
-                />
-              </div>
-
-              <div className="space-y-1.5">
-                <Label className="text-sm font-sans text-muted-foreground font-normal">About</Label>
-                <Textarea
-                  value={profileBio}
-                  onChange={e => setProfileBio(e.target.value)}
-                  rows={2}
-                  className="w-full bg-transparent border-0 border-b border-border px-0 py-2 outline-none focus:border-foreground focus:ring-0 rounded-none text-foreground font-sans text-base resize-none min-h-[60px] transition-colors shadow-none"
-                />
-              </div>
-
-              {/* Dev role switcher — simulated sessions only */}
-              {isSimulated && (
-                <div className="pt-4 space-y-3">
-                  <span className="font-sans text-[10px] text-muted-foreground uppercase tracking-widest block">Role Override</span>
-                  <div className="flex gap-2">
-                    {(['admin', 'educator', 'resource_person'] as const).map(role => (
-                      <Button key={role} type="button" variant="ghost" onClick={() => { signInSimulated(role); toast.success(`Role set to ${role}`, { style: { background: 'oklch(var(--card))', border: '1px solid oklch(var(--primary))', color: 'oklch(var(--foreground))', borderRadius: '0px' } }); setIsSettingsOpen(false); }} className={`py-1 px-3 h-auto text-center font-sans text-xs capitalize transition-colors rounded-none focus:outline-none ${selectedRole === role ? 'bg-muted text-foreground' : 'text-muted-foreground hover:bg-muted/50 hover:text-foreground'}`}>
-                        {role.replace('_', ' ')}
-                      </Button>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {/* Actions */}
-              <div className="pt-4 flex flex-col gap-5">
-                {/* Primary Form Actions */}
-                <div className="flex justify-end gap-5 items-center">
-                  <button 
-                    type="button" 
-                    onClick={() => setIsSettingsOpen(false)} 
-                    className="text-xs font-sans text-muted-foreground hover:text-foreground transition-colors focus:outline-none"
-                  >
-                    Cancel
-                  </button>
-                  <Button 
-                    type="submit" 
-                    className="px-6 bg-foreground text-background hover:bg-foreground/90 transition-colors font-sans text-[11px] font-medium cursor-pointer rounded-none h-9 shadow-none border-none tracking-wide"
-                  >
-                    Save changes
-                  </Button>
-                </div>
-                
-                {/* Delicate Separator */}
-                <div className="w-full h-px bg-gradient-to-r from-transparent via-border/60 to-transparent" />
-                
-                {/* Session Action */}
-                <button
-                  type="button"
-                  onClick={() => { setIsSettingsOpen(false); handleLogout(); }}
-                  className="text-[10px] font-sans text-muted-foreground hover:text-foreground transition-colors focus:outline-none uppercase tracking-widest text-center pb-2"
-                >
-                  Sign out of account
-                </button>
-              </div>
-            </form>
-          </DialogContent>
-        </Dialog>
-      </div>
-    </div>
-  );
 
   return (
-    <div className="h-screen w-full flex flex-col md:flex-row overflow-x-hidden bg-background text-foreground font-sans relative">
-      {/* Onboarding Tour Spotlight */}
+    <SidebarProvider
+      style={{ '--sidebar-width': '15rem', '--sidebar-width-icon': '3rem' } as React.CSSProperties}
+      className="h-dvh overflow-hidden"
+    >
+      {/* Onboarding Tour */}
       {showTour && <DashboardOnboardingTour onComplete={() => setShowTour(false)} />}
 
-      {/* Global HUD elements removed for minimalistic aesthetic */}
+      {/* Sidebar */}
+      <DashboardSidebar
+        activeTab={activeTab}
+        setActiveTab={setActiveTab}
+        selectedRole={selectedRole}
+        profileName={profileName}
+        profileAvatar={profileAvatar}
+        userEmail={user?.email}
+        unreadMessagesCount={unreadMessagesCount}
+        onProfileClick={() => setIsSettingsOpen(true)}
+        onLogout={handleLogout}
+        hasPermission={hasPermission}
+      />
 
-      {/* Mobile Drawer Header */}
-      <div className="md:hidden flex items-center justify-between px-6 py-4 bg-card border-b border-border z-40 w-full font-sans">
-        <Link to="/" className="flex items-center gap-0 hover:text-primary focus:outline-none focus:ring-1 focus:ring-primary/70">
-          <span className="font-heading font-bold text-lg text-foreground">{t('dashboard.brand')}</span>
-          <span className="text-primary font-light text-lg">{t('dashboard.brandPlus')}</span>
-          <span className="font-mono text-[9px] text-muted-foreground tracking-widest uppercase ml-2">{t('dashboard.brandSuffix')}</span>
-        </Link>
-        <Button variant="outline" onClick={() => setIsMobileOpen(!isMobileOpen)} className="p-2 border border-border hover:border-primary text-muted-foreground hover:text-primary rounded-none h-9 w-9 flex items-center justify-center cursor-pointer">
-          <Menu className="size-4" />
-        </Button>
-      </div>
-
-      {/* Desktop Sidebar (hidden on mobile, static on desktop) */}
-      <div className="hidden md:flex md:w-64 md:shrink-0 md:h-full">
-        {renderSidebarContents()}
-      </div>
-
-      {/* Mobile Drawer (via shadcn Sheet) */}
-      <Sheet open={isMobileOpen} onOpenChange={setIsMobileOpen}>
-        <SheetContent side="left" className="w-64 p-0 border-r border-border animate-in slide-in-from-left duration-300 rounded-none" showCloseButton={false}>
-          <SheetTitle className="sr-only">{t('dashboard.header.adminNavWorkspace')}</SheetTitle>
-          <SheetDescription className="sr-only">{t('dashboard.header.adminNavWorkspaceDesc')}</SheetDescription>
-          {renderSidebarContents(() => setIsMobileOpen(false))}
-        </SheetContent>
-      </Sheet>
-
-      {/* Main Workspace viewport layout */}
-      <div className="flex-grow flex flex-col min-h-0 relative overflow-hidden w-full">
-        {/* Topbar Telemetry Header */}
-        <header className="bg-card border-b border-border px-6 md:px-12 py-4 flex flex-col sm:flex-row gap-4 justify-between items-center z-30">
+      {/* Main content inset */}
+      <SidebarInset className="flex flex-col min-h-0 overflow-hidden bg-background">
+        {/* Topbar */}
+        <header className="bg-card border-b border-border px-5 py-3 flex items-center justify-between gap-4 z-30 shrink-0">
           <div className="flex items-center gap-3">
+            <SidebarTrigger className="md:hidden text-muted-foreground hover:text-foreground rounded-none" />
             <div className="flex items-center gap-2 px-3 py-1 bg-muted/30 border border-border text-foreground font-sans text-xs font-medium select-none">
-              <span className="w-1.5 h-1.5 bg-primary rounded-none"></span>
+              <span className="w-1.5 h-1.5 bg-primary rounded-none" />
               <span>System Active</span>
             </div>
-            
             <span className="text-muted-foreground/20 font-mono text-[10px] hidden sm:inline">|</span>
-            
-            {/* Breadcrumb based on active tab */}
             <div className="hidden sm:flex items-center gap-1.5 text-xs text-muted-foreground font-sans">
               <span>{t('dashboard.header.adminBreadcrumb')}</span>
               <span>/</span>
               <span className="text-foreground capitalize font-medium">{activeTab.replace('-', ' ')}</span>
             </div>
           </div>
-
-          <div className="flex items-center gap-6">
-            {/* Sonar Bell notifications */}
+          <div className="flex items-center gap-4">
+            {/* Bell notifications */}
             <div className="relative">
-              <Button
+              <button
                 id="bell-sonar"
-                variant="ghost"
                 onClick={() => { setShowBellDropdown(!showBellDropdown); setUnreadMessagesCount(0); }}
-                className="relative p-2 text-muted-foreground hover:text-primary hover:bg-accent/50 transition-colors cursor-pointer rounded-none"
+                className="relative p-2 text-muted-foreground hover:text-primary hover:bg-accent/50 transition-colors cursor-pointer rounded-none focus:outline-none"
+                aria-label="Notifications"
               >
                 <Bell className="size-4" />
                 {unreadMessagesCount > 0 && (
-                  <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-primary rounded-none"></span>
+                  <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-primary rounded-none" />
                 )}
-              </Button>
-
+              </button>
               {showBellDropdown && (
                 <div className="absolute right-0 mt-3 w-80 bg-card border border-border p-4 shadow-xl z-50 rounded-none text-left font-sans animate-fade-in">
                   <h4 className="font-sans text-xs font-semibold text-foreground tracking-wide border-b border-border pb-2 mb-2">
@@ -821,22 +515,96 @@ export default function Dashboard() {
                 </div>
               )}
             </div>
-
-            <AnimatedThemeToggler variant="square" duration={400} className="text-muted-foreground hover:text-primary transition-colors cursor-pointer" />
-
-            <Button
-              variant="outline"
-              size="md"
+            <button
               onClick={() => { localStorage.removeItem('edu_plus_onboarding_completed'); setShowTour(true); }}
-              className="border border-border hover:border-primary text-foreground hover:text-primary hover:bg-primary/5 focus:outline-none px-3.5 font-sans text-xs transition-all duration-300 cursor-pointer rounded-none"
+              className="border border-border hover:border-primary text-muted-foreground hover:text-primary hover:bg-primary/5 focus:outline-none focus-visible:ring-1 focus-visible:ring-primary px-3 py-1.5 font-sans text-xs transition-all duration-200 cursor-pointer rounded-none"
             >
               Tour
-            </Button>
+            </button>
           </div>
         </header>
 
-        {/* Content area workspace */}
-        <main className="flex-1 h-0 p-4 sm:p-6 md:p-12 pb-24 md:pb-24 relative flex flex-col justify-start overflow-y-auto bg-background">
+        {/* Content workspace */}
+        <main className="flex-1 h-0 p-4 sm:p-6 md:p-10 pb-24 relative flex flex-col justify-start overflow-y-auto bg-background">
+          {/* Profile edit dialog — triggered programmatically from sidebar user badge */}
+          <Dialog open={isSettingsOpen} onOpenChange={setIsSettingsOpen}>
+            <DialogContent className="max-w-md w-full bg-card border border-border/40 text-foreground rounded-none p-0 shadow-lg font-sans overflow-hidden max-h-[85vh] overflow-y-auto">
+              {/* Profile Identity Header */}
+              <div className="p-6 pb-2 flex flex-col items-center text-center mt-4">
+                <div className="relative group mb-4">
+                  <Avatar className="size-16 border-none rounded-none shrink-0">
+                    <AvatarImage src={profileAvatar} className="rounded-none object-cover" />
+                    <AvatarFallback className="bg-muted text-muted-foreground font-sans text-lg rounded-none flex items-center justify-center">
+                      {profileName.substring(0, 2).toUpperCase() || 'AD'}
+                    </AvatarFallback>
+                  </Avatar>
+                  <label className="absolute inset-0 bg-background/90 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col items-center justify-center cursor-pointer border border-primary/20">
+                    {isUploadingAvatar ? (
+                      <span className="text-xs font-sans text-muted-foreground animate-in fade-in duration-300">Uploading...</span>
+                    ) : (
+                      <>
+                        <UploadCloud size={18} className="text-muted-foreground mb-1" />
+                        <span className="text-[10px] font-sans text-muted-foreground">Upload</span>
+                        <input type="file" accept="image/*" className="hidden" onChange={handleAvatarUpload} disabled={isUploadingAvatar} />
+                      </>
+                    )}
+                  </label>
+                </div>
+                <DialogTitle className="text-foreground font-sans font-medium text-lg tracking-wide truncate w-full">
+                  {profileName || 'Administrator'}
+                </DialogTitle>
+                <div className="flex items-center justify-center gap-2 mt-1 opacity-60">
+                  <p className="font-sans text-xs truncate">{user?.email}</p>
+                  {selectedRole && (
+                    <>
+                      <span className="w-1 h-1 bg-foreground/30 rounded-none" />
+                      <span className="text-[10px] font-sans capitalize">{selectedRole.replace('_', ' ')}</span>
+                    </>
+                  )}
+                </div>
+              </div>
+              <DialogDescription className="sr-only">Manage your display name, avatar image, and workspace parameters.</DialogDescription>
+              <form onSubmit={handleUpdateProfile} className="px-6 pb-6 space-y-5 font-sans">
+                <div className="space-y-1.5">
+                  <Label className="text-sm font-sans text-muted-foreground font-normal">Display name</Label>
+                  <Input
+                    type="text" required autoComplete="off"
+                    value={profileName} onChange={e => setProfileName(e.target.value)}
+                    className="w-full bg-transparent border-0 border-b border-border px-0 py-2 outline-none focus:border-foreground focus:ring-0 rounded-none text-foreground font-sans text-base transition-colors shadow-none"
+                  />
+                </div>
+                <div className="space-y-1.5">
+                  <Label className="text-sm font-sans text-muted-foreground font-normal">About</Label>
+                  <Textarea
+                    value={profileBio} onChange={e => setProfileBio(e.target.value)}
+                    rows={2}
+                    className="w-full bg-transparent border-0 border-b border-border px-0 py-2 outline-none focus:border-foreground focus:ring-0 rounded-none text-foreground font-sans text-base resize-none min-h-[60px] transition-colors shadow-none"
+                  />
+                </div>
+                {isSimulated && (
+                  <div className="pt-4 space-y-3">
+                    <span className="font-sans text-[10px] text-muted-foreground uppercase tracking-widest block">Role Override</span>
+                    <div className="flex gap-2">
+                      {(['admin', 'educator', 'resource_person'] as const).map(role => (
+                        <Button key={role} type="button" variant="ghost" onClick={() => { signInSimulated(role); toast.success(`Role set to ${role}`, { style: { background: 'oklch(var(--card))', border: '1px solid oklch(var(--primary))', color: 'oklch(var(--foreground))', borderRadius: '0px' } }); setIsSettingsOpen(false); }} className={`py-1 px-3 h-auto text-center font-sans text-xs capitalize transition-colors rounded-none focus:outline-none ${selectedRole === role ? 'bg-muted text-foreground' : 'text-muted-foreground hover:bg-muted/50 hover:text-foreground'}`}>
+                          {role.replace('_', ' ')}
+                        </Button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+                <div className="pt-4 flex flex-col gap-5">
+                  <div className="flex justify-end gap-5 items-center">
+                    <button type="button" onClick={() => setIsSettingsOpen(false)} className="text-xs font-sans text-muted-foreground hover:text-foreground transition-colors focus:outline-none focus-visible:ring-1 focus-visible:ring-primary">Cancel</button>
+                    <Button type="submit" className="px-6 bg-primary text-primary-foreground hover:bg-primary/90 transition-colors font-sans text-[11px] font-medium cursor-pointer rounded-none h-9 shadow-none border-none tracking-wide focus-visible:ring-1 focus-visible:ring-primary">Save changes</Button>
+                  </div>
+                  <div className="w-full h-px bg-gradient-to-r from-transparent via-border/60 to-transparent" />
+                  <button type="button" onClick={() => { setIsSettingsOpen(false); handleLogout(); }} className="text-[10px] font-sans text-muted-foreground hover:text-foreground transition-colors focus:outline-none focus-visible:ring-1 focus-visible:ring-primary uppercase tracking-widest text-center pb-2">Sign out of account</button>
+                </div>
+              </form>
+            </DialogContent>
+          </Dialog>
+
           <Card className="border border-border bg-card/30 p-4 sm:p-8 rounded-none min-h-[500px] shrink-0 mb-12">
             {/* TAB OVERVIEW */}
             {activeTab === 'overview' && (
@@ -847,7 +615,7 @@ export default function Dashboard() {
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 w-full">
-                  <MagicCard className="border-border bg-card rounded-none text-left p-5 flex flex-col gap-0 py-5" gradientColor="oklch(var(--primary)/0.08)" gradientSize={150}>
+                  <MagicCard className="border-border border-l-2 border-l-primary bg-card rounded-none text-left p-5 flex flex-col gap-0 py-5" gradientColor="oklch(var(--primary)/0.08)" gradientSize={150}>
                     <span className="font-sans text-xs font-medium text-muted-foreground block mb-1">{t('dashboard.overview.hubResources')}</span>
                     <span className="font-heading text-3xl font-light text-foreground">
                       <NumberTicker value={knowledgeHubItems.length} />
@@ -1132,7 +900,7 @@ export default function Dashboard() {
             )}
           </Card>
         </main>
-      </div>
-    </div>
+      </SidebarInset>
+    </SidebarProvider>
   );
 }
