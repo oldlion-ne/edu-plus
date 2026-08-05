@@ -1,4 +1,6 @@
 import { Link } from 'react-router';
+import type { UserRole } from '../../lib/useAuth';
+import type { DashboardTab } from '../../pages/Dashboard';
 import { useTranslation } from '../../i18n/useTranslation';
 import { AnimatedThemeToggler } from '@/components/ui/animated-theme-toggler';
 import { Badge } from '@/components/ui/badge';
@@ -28,11 +30,9 @@ import {
   LogOut,
 } from 'lucide-react';
 
-type UserRole = 'admin' | 'educator' | 'resource_person' | 'none';
-
 interface DashboardSidebarProps {
-  activeTab: string;
-  setActiveTab: (tab: any) => void;
+  activeTab: DashboardTab;
+  setActiveTab: (tab: DashboardTab) => void;
   selectedRole: UserRole | null;
   profileName: string;
   profileAvatar: string;
@@ -43,7 +43,7 @@ interface DashboardSidebarProps {
   hasPermission: (roles: UserRole[]) => boolean;
 }
 
-const ROLE_LABELS: Record<string, string> = {
+const ROLE_LABELS: Record<UserRole, string> = {
   admin: 'Admin',
   educator: 'Educator',
   resource_person: 'Resource',
@@ -117,7 +117,7 @@ export function DashboardSidebar({
   return (
     <Sidebar
       collapsible="icon"
-      className="border-r border-border bg-card text-card-foreground font-sans"
+      className="font-sans"
     >
       {/* ── Header: Brand + User Identity ────────────────────────── */}
       <SidebarHeader className="border-b border-border p-0 gap-0">
@@ -133,7 +133,7 @@ export function DashboardSidebar({
             <span className="text-primary font-light text-lg leading-none">
               {t('dashboard.brandPlus')}
             </span>
-            <span className="font-mono text-[8px] text-muted-foreground tracking-widest uppercase ml-2">
+            <span className="font-sans text-[8px] text-muted-foreground tracking-widest uppercase ml-2">
               {t('dashboard.brandSuffix')}
             </span>
           </Link>
@@ -173,13 +173,13 @@ export function DashboardSidebar({
         {/* Group: System */}
         <SidebarGroup className="px-2 pb-0">
           <SidebarGroupLabel className="font-heading text-[10px] uppercase font-bold text-muted-foreground/60 tracking-wider px-1 mb-1 h-auto">
-            System
+            {t('dashboard.navGroupSystem') || 'System'}
           </SidebarGroupLabel>
           <SidebarMenu>
             <SidebarNavItem
               id="tab-overview"
               icon={LayoutDashboard}
-              label="Overview"
+              label={t('dashboard.navOverview') || 'Overview'}
               tabKey="overview"
               activeTab={activeTab}
               setActiveTab={setActiveTab}
@@ -188,7 +188,7 @@ export function DashboardSidebar({
               <SidebarNavItem
                 id="tab-users"
                 icon={ShieldCheck}
-                label="User Management"
+                label={t('dashboard.navUsers') || 'User Management'}
                 tabKey="users"
                 activeTab={activeTab}
                 setActiveTab={setActiveTab}
@@ -202,13 +202,13 @@ export function DashboardSidebar({
         {/* Group: Knowledge Hub CMS */}
         <SidebarGroup className="px-2 pb-0">
           <SidebarGroupLabel className="font-heading text-[10px] uppercase font-bold text-muted-foreground/60 tracking-wider px-1 mb-1 h-auto">
-            Knowledge Hub CMS
+            {t('dashboard.navGroupKnowledge') || 'Knowledge Hub CMS'}
           </SidebarGroupLabel>
           <SidebarMenu>
             <SidebarNavItem
               id="tab-uploader"
               icon={UploadCloud}
-              label="Resource Manager"
+              label={t('dashboard.navResourceManager') || 'Resource Manager'}
               tabKey="uploader"
               activeTab={activeTab}
               setActiveTab={setActiveTab}
@@ -216,7 +216,7 @@ export function DashboardSidebar({
             <SidebarNavItem
               id="tab-ai-matrix"
               icon={Cpu}
-              label="AI Guidelines"
+              label={t('dashboard.navAiGuidelines') || 'AI Guidelines'}
               tabKey="ai-matrix"
               activeTab={activeTab}
               setActiveTab={setActiveTab}
@@ -229,13 +229,13 @@ export function DashboardSidebar({
         {/* Group: Assets & Inbox */}
         <SidebarGroup className="px-2 pb-0">
           <SidebarGroupLabel className="font-heading text-[10px] uppercase font-bold text-muted-foreground/60 tracking-wider px-1 mb-1 h-auto">
-            Assets &amp; Inbox
+            {t('dashboard.navGroupAssets') || 'Assets & Inbox'}
           </SidebarGroupLabel>
           <SidebarMenu>
             <SidebarNavItem
               id="tab-media"
               icon={FileImage}
-              label="Media Library"
+              label={t('dashboard.navMediaLibrary') || 'Media Library'}
               tabKey="media"
               activeTab={activeTab}
               setActiveTab={setActiveTab}
@@ -243,7 +243,7 @@ export function DashboardSidebar({
             <SidebarNavItem
               id="tab-inbox"
               icon={Inbox}
-              label="Inbox & Chat Logs"
+              label={t('dashboard.navInbox') || 'Inbox & Chat Logs'}
               tabKey="inbox"
               activeTab={activeTab}
               setActiveTab={setActiveTab}
@@ -259,7 +259,7 @@ export function DashboardSidebar({
           <SidebarNavItem
             id="tab-settings"
             icon={Settings}
-            label="Security & MFA"
+            label={t('dashboard.navSecurity') || 'Security & MFA'}
             tabKey="settings"
             activeTab={activeTab}
             setActiveTab={setActiveTab}
@@ -273,11 +273,11 @@ export function DashboardSidebar({
               />
               <button
                 onClick={onLogout}
-                className="flex items-center gap-1.5 text-[10px] text-muted-foreground hover:text-destructive transition-colors focus:outline-none group-data-[collapsible=icon]:hidden"
-                aria-label="Sign out"
+                className="flex items-center gap-1.5 text-[10px] text-muted-foreground hover:text-destructive transition-colors focus:outline-none focus-visible:ring-1 focus-visible:ring-primary/70 group-data-[collapsible=icon]:hidden"
+                aria-label={t('dashboard.navSignOut') || 'Sign out'}
               >
                 <LogOut className="size-3 shrink-0" />
-                <span>Sign out</span>
+                <span>{t('dashboard.navSignOut') || 'Sign out'}</span>
               </button>
             </div>
           </SidebarMenuItem>

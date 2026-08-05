@@ -156,13 +156,13 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
+export type DashboardTab = 'overview' | 'users' | 'uploader' | 'ai-matrix' | 'media' | 'inbox' | 'settings';
+
 export default function Dashboard() {
   const { t } = useTranslation();
   const { user, role: selectedRole, isSimulated, signOut, signInSimulated } = useAuth();
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState<
-    'overview' | 'users' | 'uploader' | 'ai-matrix' | 'media' | 'inbox' | 'settings'
-  >('overview');
+  const [activeTab, setActiveTab] = useState<DashboardTab>('overview');
   const [showTour, setShowTour] = useState(false);
   const [unreadMessagesCount, setUnreadMessagesCount] = useState(0);
   const [showBellDropdown, setShowBellDropdown] = useState(false);
@@ -443,7 +443,7 @@ export default function Dashboard() {
   return (
     <SidebarProvider
       style={{ '--sidebar-width': '15rem', '--sidebar-width-icon': '3rem' } as React.CSSProperties}
-      className="h-screen overflow-hidden"
+      className="h-dvh overflow-hidden"
     >
       {/* Onboarding Tour */}
       {showTour && <DashboardOnboardingTour onComplete={() => setShowTour(false)} />}
@@ -517,7 +517,7 @@ export default function Dashboard() {
             </div>
             <button
               onClick={() => { localStorage.removeItem('edu_plus_onboarding_completed'); setShowTour(true); }}
-              className="border border-border hover:border-primary text-muted-foreground hover:text-primary hover:bg-primary/5 focus:outline-none px-3 py-1.5 font-sans text-xs transition-all duration-200 cursor-pointer rounded-none"
+              className="border border-border hover:border-primary text-muted-foreground hover:text-primary hover:bg-primary/5 focus:outline-none focus-visible:ring-1 focus-visible:ring-primary px-3 py-1.5 font-sans text-xs transition-all duration-200 cursor-pointer rounded-none"
             >
               Tour
             </button>
@@ -540,7 +540,7 @@ export default function Dashboard() {
                   </Avatar>
                   <label className="absolute inset-0 bg-background/90 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col items-center justify-center cursor-pointer border border-primary/20">
                     {isUploadingAvatar ? (
-                      <span className="text-xs font-sans text-muted-foreground animate-pulse">Wait...</span>
+                      <span className="text-xs font-sans text-muted-foreground animate-in fade-in duration-300">Uploading...</span>
                     ) : (
                       <>
                         <UploadCloud size={18} className="text-muted-foreground mb-1" />
@@ -595,11 +595,11 @@ export default function Dashboard() {
                 )}
                 <div className="pt-4 flex flex-col gap-5">
                   <div className="flex justify-end gap-5 items-center">
-                    <button type="button" onClick={() => setIsSettingsOpen(false)} className="text-xs font-sans text-muted-foreground hover:text-foreground transition-colors focus:outline-none">Cancel</button>
-                    <Button type="submit" className="px-6 bg-primary text-primary-foreground hover:bg-primary/90 transition-colors font-sans text-[11px] font-medium cursor-pointer rounded-none h-9 shadow-none border-none tracking-wide">Save changes</Button>
+                    <button type="button" onClick={() => setIsSettingsOpen(false)} className="text-xs font-sans text-muted-foreground hover:text-foreground transition-colors focus:outline-none focus-visible:ring-1 focus-visible:ring-primary">Cancel</button>
+                    <Button type="submit" className="px-6 bg-primary text-primary-foreground hover:bg-primary/90 transition-colors font-sans text-[11px] font-medium cursor-pointer rounded-none h-9 shadow-none border-none tracking-wide focus-visible:ring-1 focus-visible:ring-primary">Save changes</Button>
                   </div>
                   <div className="w-full h-px bg-gradient-to-r from-transparent via-border/60 to-transparent" />
-                  <button type="button" onClick={() => { setIsSettingsOpen(false); handleLogout(); }} className="text-[10px] font-sans text-muted-foreground hover:text-foreground transition-colors focus:outline-none uppercase tracking-widest text-center pb-2">Sign out of account</button>
+                  <button type="button" onClick={() => { setIsSettingsOpen(false); handleLogout(); }} className="text-[10px] font-sans text-muted-foreground hover:text-foreground transition-colors focus:outline-none focus-visible:ring-1 focus-visible:ring-primary uppercase tracking-widest text-center pb-2">Sign out of account</button>
                 </div>
               </form>
             </DialogContent>

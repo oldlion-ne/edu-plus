@@ -52,7 +52,7 @@ function MenubarTrigger({
     <MenubarPrimitive.Trigger
       data-slot="menubar-trigger"
       className={cn(
-        "flex items-center rounded-none px-2 py-[calc(--spacing(0.85))] text-xs/relaxed font-medium outline-none select-none hover:bg-muted aria-expanded:bg-muted",
+        "flex items-center rounded-none px-2 py-[calc(--spacing(0.85))] text-xs/relaxed font-medium outline-none select-none hover:bg-muted focus-visible:ring-1 focus-visible:ring-ring aria-expanded:bg-muted",
         className
       )}
       {...props}

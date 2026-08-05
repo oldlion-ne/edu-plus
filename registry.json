@@ -69,7 +69,8 @@
       "title": "Nordic Dashboard Sidebar",
       "description": "Nordic Lagom admin sidebar using shadcn Sidebar primitives. Collapsible to icon rail, user identity badge with role, grouped nav sections, amber accent, no rounded corners.",
       "dependencies": [
-        "lucide-react"
+        "lucide-react",
+        "react-router"
       ],
       "registryDependencies": [
         "sidebar",
@@ -82,6 +83,11 @@
           "path": "src/components/dashboard/DashboardSidebar.tsx",
           "type": "registry:ui",
           "target": "components/dashboard/DashboardSidebar.tsx"
+        },
+        {
+          "path": "src/i18n/useTranslation.ts",
+          "type": "registry:hook",
+          "target": "i18n/useTranslation.ts"
         }
       ]
     }
