@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { useParams, Link, useNavigate } from 'react-router';
+import { useParams, Link, useNavigate, Navigate } from 'react-router';
 import { CURRICULUM_TRACKS } from '../data/lmsCurriculumData';
 import { useLmsProgress } from '../lib/lmsProgressContext';
 import { PageHero } from '@/components/ui/page-hero';
@@ -24,9 +24,13 @@ export default function LmsTrackDetail() {
  useLmsProgress();
 
  const track = useMemo(
- () => CURRICULUM_TRACKS.find((t) => t.id === trackId) || CURRICULUM_TRACKS[0],
+ () => CURRICULUM_TRACKS.find((t) => t.id === trackId),
  [trackId],
  );
+
+ if (!track) {
+ return <Navigate to="/lms" replace />;
+ }
 
  const enrolled = isEnrolled(track.id);
  const progress = getTrackProgress(track.id);

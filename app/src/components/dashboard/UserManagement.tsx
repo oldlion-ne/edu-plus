@@ -153,18 +153,18 @@ export default function UserManagement() {
         </div>
       </div>
 
-      <div className="toolbar">
-        <div className="search">
+      <div className="toolbar flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
+        <div className="search w-full sm:max-w-[320px]">
           <Search />
           <input 
             type="text" 
-            className="input" 
+            className="input w-full" 
             placeholder="Search by email…" 
             value={searchTerm}
             onChange={e => setSearchTerm(e.target.value)}
           />
         </div>
-        <div className="seg">
+        <div className="seg w-full sm:w-auto overflow-x-auto flex whitespace-nowrap hide-scrollbar">
           {(['all', 'admin', 'educator', 'resource_person', 'none'] as const).map(roleOption => (
             <button
               key={roleOption}

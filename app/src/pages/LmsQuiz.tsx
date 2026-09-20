@@ -19,7 +19,7 @@ import { cn } from '../lib/utils';
 
 export default function LmsQuiz() {
  const { trackId, moduleId } = useParams<{ trackId: string; moduleId: string }>();
- const { recordQuizAttempt } = useLmsProgress();
+ const { recordQuizAttempt, getTrackProgress } = useLmsProgress();
 
  const track = useMemo(
  () => CURRICULUM_TRACKS.find((t) => t.id === trackId) || CURRICULUM_TRACKS[0],
@@ -66,10 +66,7 @@ export default function LmsQuiz() {
  setIsAnswerSubmitted(false);
  } else {
  // Finished
- const finalScore =
- selectedOption === currentQuestion.correctIndex
- ? correctAnswersCount + 1
- : correctAnswersCount;
+ const finalScore = correctAnswersCount;
  const total = questions.length;
  const percentage = Math.round((finalScore / total) * 100);
  const passed = percentage >= (quiz?.passingPercentage || 70);
@@ -130,6 +127,7 @@ export default function LmsQuiz() {
 
  const percentage = Math.round((correctAnswersCount / questions.length) * 100);
  const passed = percentage >= quiz.passingPercentage;
+ const { isCompleted: isTrackCompleted } = getTrackProgress(track.id);
 
  return (
  <div className="flex-1 w-full py-8 sm:py-12 px-4 sm:px-6">
@@ -193,7 +191,7 @@ export default function LmsQuiz() {
  </div>
 
  <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-4 border-t border-border">
- {passed ? (
+ {passed && isTrackCompleted ? (
  <>
  <Button
  onClick={() => setShowCertificate(true)}

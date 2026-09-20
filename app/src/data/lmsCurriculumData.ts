@@ -60,8 +60,8 @@ Psychometric testing provides a scientific mirror. Instead of telling you what y
             ],
             practicalExercise: 'Write down three activities where you lose track of time and identify whether they involve people, systems, words, or physical materials.',
             resources: [
-              { title: 'EduPlus Aptitude Diagnostic Guide', type: 'document' },
-              { title: 'Multiple Intelligences Self-Audit Worksheet', type: 'worksheet' },
+              { title: 'EduPlus Aptitude Diagnostic Guide', type: 'document', url: '#' },
+              { title: 'Multiple Intelligences Self-Audit Worksheet', type: 'worksheet', url: '#' },
             ],
           },
           {

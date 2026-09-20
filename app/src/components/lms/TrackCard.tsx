@@ -11,7 +11,7 @@ interface TrackCardProps {
 }
 
 export const TrackCard: React.FC<TrackCardProps> = ({ track }) => {
-  const { isEnrolled, getTrackProgress } = useLmsProgress();
+  const { isEnrolled, getTrackProgress, progress: globalProgress } = useLmsProgress();
   const enrolled = isEnrolled(track.id);
   const progress = getTrackProgress(track.id);
 
@@ -114,9 +114,11 @@ export const TrackCard: React.FC<TrackCardProps> = ({ track }) => {
           >
             <Link
               to={
-                enrolled && firstLessonId
-                  ? `/lms/learn/${track.id}/${firstLessonId}`
-                  : `/lms/tracks/${track.id}`
+                enrolled && globalProgress?.lastActiveLesson?.lessonId && globalProgress.lastActiveLesson.trackId === track.id
+                  ? `/lms/learn/${track.id}/${globalProgress.lastActiveLesson.lessonId}`
+                  : firstLessonId
+                    ? `/lms/learn/${track.id}/${firstLessonId}`
+                    : `/lms/tracks/${track.id}`
               }
             >
               {enrolled ? (

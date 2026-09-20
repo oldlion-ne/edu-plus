@@ -64,7 +64,7 @@ export const LmsProgressProvider: React.FC<{ children: React.ReactNode }> = ({ c
     }
   }, [progress]);
 
-  const enrollTrack = (trackId: string) => {
+  const enrollTrack = useCallback((trackId: string) => {
     setProgress((prev) => {
       if (prev.enrolledTrackIds.includes(trackId)) return prev;
       return {
@@ -72,23 +72,23 @@ export const LmsProgressProvider: React.FC<{ children: React.ReactNode }> = ({ c
         enrolledTrackIds: [...prev.enrolledTrackIds, trackId],
       };
     });
-  };
+  }, []);
 
-  const isEnrolled = (trackId: string) => progress.enrolledTrackIds.includes(trackId);
+  const isEnrolled = useCallback((trackId: string) => progress.enrolledTrackIds.includes(trackId), [progress.enrolledTrackIds]);
 
-  const toggleLessonCompletion = (lessonId: string) => {
+  const toggleLessonCompletion = useCallback((lessonId: string) => {
     setProgress((prev) => {
-      const exists = prev.completedLessonIds.includes(lessonId);
+      const isCompleted = prev.completedLessonIds.includes(lessonId);
       return {
         ...prev,
-        completedLessonIds: exists
+        completedLessonIds: isCompleted
           ? prev.completedLessonIds.filter((id) => id !== lessonId)
           : [...prev.completedLessonIds, lessonId],
       };
     });
-  };
+  }, []);
 
-  const markLessonCompleted = (lessonId: string) => {
+  const markLessonCompleted = useCallback((lessonId: string) => {
     setProgress((prev) => {
       if (prev.completedLessonIds.includes(lessonId)) return prev;
       return {
@@ -96,11 +96,11 @@ export const LmsProgressProvider: React.FC<{ children: React.ReactNode }> = ({ c
         completedLessonIds: [...prev.completedLessonIds, lessonId],
       };
     });
-  };
+  }, []);
 
-  const isLessonCompleted = (lessonId: string) => progress.completedLessonIds.includes(lessonId);
+  const isLessonCompleted = useCallback((lessonId: string) => progress.completedLessonIds.includes(lessonId), [progress.completedLessonIds]);
 
-  const recordQuizAttempt = (moduleId: string, attempt: QuizAttempt) => {
+  const recordQuizAttempt = useCallback((moduleId: string, attempt: QuizAttempt) => {
     setProgress((prev) => ({
       ...prev,
       quizAttempts: {
@@ -108,16 +108,21 @@ export const LmsProgressProvider: React.FC<{ children: React.ReactNode }> = ({ c
         [moduleId]: attempt,
       },
     }));
-  };
+  }, []);
 
-  const getQuizAttempt = (moduleId: string) => progress.quizAttempts[moduleId];
+  const getQuizAttempt = useCallback((moduleId: string) => progress.quizAttempts[moduleId], [progress.quizAttempts]);
 
-  const setLastActive = (trackId: string, lessonId: string) => {
-    setProgress((prev) => ({
-      ...prev,
-      lastActiveLesson: { trackId, lessonId },
-    }));
-  };
+  const setLastActive = useCallback((trackId: string, lessonId: string) => {
+    setProgress((prev) => {
+      if (prev.lastActiveLesson?.trackId === trackId && prev.lastActiveLesson?.lessonId === lessonId) {
+        return prev;
+      }
+      return {
+        ...prev,
+        lastActiveLesson: { trackId, lessonId },
+      };
+    });
+  }, []);
 
   const getTrackProgress = useMemo(
     () => (trackId: string) => {
@@ -134,14 +139,19 @@ export const LmsProgressProvider: React.FC<{ children: React.ReactNode }> = ({ c
         progress.completedLessonIds.includes(l.id),
       ).length;
       const percentage = Math.round((completedLessons / totalLessons) * 100);
+      const quizzesPassed = track.modules.every((m) => {
+        if (!m.quiz) return true;
+        const attempt = progress.quizAttempts[m.id];
+        return attempt && attempt.percentage >= m.quiz.passingPercentage;
+      });
       return {
         completedLessons,
         totalLessons,
         percentage,
-        isCompleted: percentage === 100,
+        isCompleted: percentage === 100 && quizzesPassed,
       };
     },
-    [progress.completedLessonIds],
+    [progress.completedLessonIds, progress.quizAttempts],
   );
 
   const getOverallStats = useCallback(
@@ -161,11 +171,11 @@ export const LmsProgressProvider: React.FC<{ children: React.ReactNode }> = ({ c
     [progress.enrolledTrackIds, progress.completedLessonIds.length, getTrackProgress],
   );
 
-  const resetProgress = () => {
+  const resetProgress = useCallback(() => {
     setProgress(DEFAULT_PROGRESS);
-  };
+  }, []);
 
-  const value = {
+  const value = useMemo(() => ({
     progress,
     enrollTrack,
     isEnrolled,
@@ -178,7 +188,20 @@ export const LmsProgressProvider: React.FC<{ children: React.ReactNode }> = ({ c
     getTrackProgress,
     getOverallStats,
     resetProgress,
-  };
+  }), [
+    progress,
+    enrollTrack,
+    isEnrolled,
+    toggleLessonCompletion,
+    markLessonCompleted,
+    isLessonCompleted,
+    recordQuizAttempt,
+    getQuizAttempt,
+    setLastActive,
+    getTrackProgress,
+    getOverallStats,
+    resetProgress
+  ]);
 
   return (
     <LmsProgressContext.Provider value={value}>

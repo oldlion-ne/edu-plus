@@ -29,9 +29,56 @@ export default function SettingsHub({ activeTab = 'profile' }: { activeTab?: 'pr
   const [newUserRole, setNewUserRole] = useState<'admin' | 'educator' | 'resource_person'>('educator');
   const [isCreatingUser, setIsCreatingUser] = useState(false);
 
+  // AI Advisor State
+  const [facts, setFacts] = useState<any[]>([]);
+  const [newFactTopic, setNewFactTopic] = useState('');
+  const [newFactContent, setNewFactContent] = useState('');
+
   useEffect(() => {
     checkMfaStatus();
-  }, []);
+    if (activeTab === 'ai-advisor') {
+      fetchFacts();
+    }
+  }, [activeTab]);
+
+  const fetchFacts = async () => {
+    try {
+      const { data, error } = await supabase.from('kb_documents').select('*').order('created_at', { ascending: false });
+      if (error) throw error;
+      setFacts(data || []);
+    } catch (err) {
+      console.error('Error fetching facts:', err);
+    }
+  };
+
+  const handleAddFact = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newFactTopic.trim() || !newFactContent.trim()) return;
+    try {
+      const { error } = await supabase.from('kb_documents').insert({
+        title: newFactTopic,
+        content: newFactContent,
+      });
+      if (error) throw error;
+      toast.success('Fact added successfully');
+      setNewFactTopic('');
+      setNewFactContent('');
+      fetchFacts();
+    } catch (err: any) {
+      toast.error(err.message || 'Failed to add fact');
+    }
+  };
+
+  const handleRemoveAvatar = async () => {
+    try {
+      const { error } = await supabase.auth.updateUser({ data: { avatar_url: null } });
+      if (error) throw error;
+      setAvatarUrl('');
+      toast.success('Avatar removed successfully');
+    } catch (err: any) {
+      toast.error(err.message || 'Failed to remove avatar');
+    }
+  };
 
   const checkMfaStatus = async () => {
     try {
@@ -232,7 +279,7 @@ export default function SettingsHub({ activeTab = 'profile' }: { activeTab?: 'pr
                       Change
                       <input type="file" accept="image/*" className="hidden" onChange={handleAvatarUpload} disabled={isUploading} />
                     </label>
-                    <button type="button" className="inline-flex items-center h-[34px] px-3 text-[13px] font-semibold text-[oklch(var(--fjord))] hover:bg-[oklch(var(--fjord)/0.12)] transition-colors bg-transparent border border-transparent">
+                    <button type="button" onClick={handleRemoveAvatar} className="inline-flex items-center h-[34px] px-3 text-[13px] font-semibold text-[oklch(var(--fjord))] hover:bg-[oklch(var(--fjord)/0.12)] transition-colors bg-transparent border border-transparent">
                       Remove
                     </button>
                   </div>
@@ -442,13 +489,15 @@ export default function SettingsHub({ activeTab = 'profile' }: { activeTab?: 'pr
                 <span className="sub">Facts injected into the site advisor chatbot</span>
               </div>
               <div className="space-y-[28px]">
-                <form className="card card-pad measure" onSubmit={(e) => { e.preventDefault(); toast('Fact added'); }}>
+                <form className="card card-pad measure" onSubmit={handleAddFact}>
                   <h3 className="font-sans text-[16px] font-semibold text-foreground mb-4">Add a fact</h3>
                   <div className="mb-5">
                     <label className="block text-[13px] font-semibold mb-[7px] text-foreground">Topic</label>
                     <input
                       placeholder="e.g. Founder Bikash Oinam's email"
                       className="w-full h-[42px] px-[14px] rounded-none bg-card border border-border text-[14px] text-foreground focus:outline-none focus:border-[oklch(var(--fjord))] focus:shadow-[0_0_0_2.5px_oklch(var(--fjord)/0.12)] transition-all"
+                      value={newFactTopic}
+                      onChange={(e) => setNewFactTopic(e.target.value)}
                     />
                   </div>
                   <div className="mb-5">
@@ -456,6 +505,8 @@ export default function SettingsHub({ activeTab = 'profile' }: { activeTab?: 'pr
                     <textarea
                       placeholder="e.g. Mr. Bikash Oinam can be reached at info@eduplus.in"
                       className="w-full min-h-[96px] py-[12px] px-[14px] rounded-none bg-card border border-border text-[14px] text-foreground focus:outline-none focus:border-[oklch(var(--fjord))] focus:shadow-[0_0_0_2.5px_oklch(var(--fjord)/0.12)] transition-all resize-y"
+                      value={newFactContent}
+                      onChange={(e) => setNewFactContent(e.target.value)}
                     />
                     <div className="text-[12.5px] text-muted-foreground mt-[6px]">Write it the way the advisor should say it — one clear sentence works best.</div>
                   </div>
@@ -465,17 +516,22 @@ export default function SettingsHub({ activeTab = 'profile' }: { activeTab?: 'pr
                     </button>
                   </div>
                 </form>
-                <div className="max-w-[560px]">
-                  <h3 className="font-sans text-[16px] font-semibold text-foreground mb-[14px]">Active facts</h3>
-                  <div className="bg-card border border-border/60 rounded-none">
-                    <div className="grid place-content-center justify-items-center gap-2 text-center min-h-[220px] pb-4">
-                      <svg viewBox="0 0 24 24" className="size-[30px] stroke-muted-foreground opacity-70 mb-1.5 fill-none" strokeWidth={1.4} strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M18.4 5.6l-2.1 2.1M7.7 16.3l-2.1 2.1" /><circle cx="12" cy="12" r="3.2" />
-                      </svg>
-                      <div className="font-heading text-[17px] text-foreground">No facts yet</div>
-                      <div className="text-[13.5px] text-muted-foreground max-w-[40ch]">Add your first one above — for example, the advisor's answer to "How do I contact the founder?"</div>
+                <div className="card card-pad measure">
+                  <h3 className="font-sans text-[16px] font-semibold text-foreground mb-4">Active facts</h3>
+                  {facts.length === 0 ? (
+                    <div className="p-8 text-center border border-dashed border-border bg-background rounded-none">
+                      <p className="text-[13px] font-mono text-muted-foreground">No facts yet.</p>
                     </div>
-                  </div>
+                  ) : (
+                    <div className="space-y-4">
+                      {facts.map((fact) => (
+                        <div key={fact.id} className="p-4 border border-border bg-background">
+                          <h4 className="font-semibold text-sm mb-1">{fact.title}</h4>
+                          <p className="text-xs text-muted-foreground whitespace-pre-wrap">{fact.content}</p>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
               </div>
             </div>

@@ -434,7 +434,7 @@ export default function Dashboard() {
   <SidebarTrigger className="md:hidden text-muted-foreground hover:text-foreground rounded-none mr-2 size-7" />
   <span className="size-[7px] rounded-none bg-[oklch(var(--moss))] shrink-0" />
   <span className="font-sans text-foreground font-medium">System Active</span>
-  {unreadMessagesCount > 0 && (
+  {(unreadMessagesCount > 0 || showBellDropdown) && (
   <div className="relative ml-2">
   <button
   id="bell-sonar"
