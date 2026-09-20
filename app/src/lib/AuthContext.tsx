@@ -163,12 +163,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
     };
 
-    // Race against a 2.5s timeout so the loading screen never hangs forever
+    // Race against a 10s timeout so the loading screen never hangs forever
     const timeout = new Promise<void>((resolve) => setTimeout(() => {
       console.info('[AuthContext] Auth initialization timed out - forcing loading=false');
       setLoading(false);
       resolve();
-    }, 2500));
+    }, 10000));
 
     Promise.race([initializeAuth(), timeout]);
 
