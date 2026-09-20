@@ -151,7 +151,7 @@ export default function LmsQuiz() {
  className={cn(
  'size-16 mx-auto border flex items-center justify-center',
  passed
- ? 'border-emerald-500/40 bg-emerald-500/10 text-emerald-500'
+ ? 'border-[#22C55E]/40 bg-[#22C55E]/10 text-[#22C55E]'
  : 'border-destructive/40 bg-destructive/10 text-destructive',
  )}
  >
@@ -271,7 +271,7 @@ export default function LmsQuiz() {
  } else if (isAnswerSubmitted) {
  if (isCorrect) {
  optionStyles =
- 'border-emerald-500 bg-emerald-500/10 text-emerald-500 font-medium';
+ 'border-[#22C55E] bg-[#22C55E]/10 text-[#22C55E] font-medium';
  } else if (isSelected && !isCorrect) {
  optionStyles =
  'border-destructive bg-destructive/10 text-destructive font-medium';
@@ -305,15 +305,14 @@ export default function LmsQuiz() {
  className={cn(
  'border p-4 text-xs leading-relaxed space-y-1',
  selectedOption === currentQuestion.correctIndex
- ? 'border-emerald-500/40 bg-emerald-500/5 text-foreground'
+ ? 'border-[#22C55E]/40 bg-[#22C55E]/5 text-foreground'
  : 'border-destructive/40 bg-destructive/5 text-foreground',
  )}
  >
  <div className="font-semibold font-mono text-[0.65rem] uppercase tracking-wider flex items-center gap-1.5">
  {selectedOption === currentQuestion.correctIndex ? (
- <>
- <CheckCircle2 className="size-3.5 text-emerald-500" />
- <span className="text-emerald-500">CORRECT ANALYSIS</span>
+ <CheckCircle2 className="size-3.5 text-[#22C55E]" />
+ <span className="text-[#22C55E]">CORRECT ANALYSIS</span>
  </>
  ) : (
  <>

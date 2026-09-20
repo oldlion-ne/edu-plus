@@ -17,12 +17,6 @@ export const TrackCard: React.FC<TrackCardProps> = ({ track }) => {
 
   const firstLessonId = track.modules[0]?.lessons[0]?.id;
 
-  const handleEnrollClick = () => {
-    if (!enrolled) {
-      enrollTrack(track.id);
-    }
-  };
-
   const runtimeBase = import.meta.env.BASE_URL || '/';
   const portraitUrl = `${runtimeBase.endsWith('/') ? runtimeBase : `${runtimeBase}/`}images/editorial/${track.councilLead.portraitFilename}`;
 
@@ -117,7 +111,6 @@ export const TrackCard: React.FC<TrackCardProps> = ({ track }) => {
             asChild
             variant={enrolled ? 'default' : 'outline'}
             className="flex-1 rounded-none text-xs h-9 justify-center gap-1.5"
-            onClick={handleEnrollClick}
           >
             <Link
               to={

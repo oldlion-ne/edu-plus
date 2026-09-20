@@ -453,7 +453,7 @@ html[data-magicui-theme-vt="active"]::view-transition-group(root) {
   .drop-tile:hover { @apply border-primary text-primary bg-primary/5; }
   .drop-tile svg { @apply size-[22px] stroke-current fill-none stroke-[1.6]; }
   .asset { @apply overflow-hidden; }
-  .asset .th { @apply aspect-[4/3] bg-gradient-to-br from-[#0E3A46] to-[#1C7C8C] grid place-items-center font-heading text-[26px] text-[#BFE3EA]; }
+  .asset .th { @apply aspect-[4/3] bg-gradient-to-br from-[#0E3A46] to-[#1C7C8C] grid place-items-center font-heading text-[26px] text-[#7DF9FF]; }
   .asset .bd { @apply py-[13px] px-[15px]; }
   .asset .fn { @apply text-[13px] font-semibold text-foreground; }
   .asset .fm { @apply font-mono text-[10.5px] text-muted-foreground mt-[2px]; }

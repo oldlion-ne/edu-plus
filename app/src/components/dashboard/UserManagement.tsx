@@ -165,7 +165,7 @@ export default function UserManagement() {
           />
         </div>
         <div className="seg">
-          {(['all', 'admin', 'educator', 'none'] as const).map(roleOption => (
+          {(['all', 'admin', 'educator', 'resource_person', 'none'] as const).map(roleOption => (
             <button
               key={roleOption}
               className={selectedRoleFilter === roleOption ? 'on' : ''}
@@ -223,7 +223,7 @@ export default function UserManagement() {
                     <td>{new Date(userItem.created_at).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' })}</td>
                     <td>
                       <div className="menu-wrap" onClick={e => e.stopPropagation()}>
-                        <button 
+                        <button aria-label="Open account actions" 
                           className="icon-btn" 
                           onClick={() => setMenuOpenId(isMenuOpen ? null : userItem.id)}
                         >

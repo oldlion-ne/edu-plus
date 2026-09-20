@@ -43,7 +43,7 @@ export const CURRICULUM_TRACKS: readonly CurriculumTrack[] = Object.freeze([
             durationMinutes: 25,
             type: 'video',
             summary: 'Why academic grades alone do not indicate career happiness or long-term competence, and how psychometrics bridges the gap.',
-            videoEmbedId: 'M7lc1UVf-VE',
+            videoEmbedId: 'aqz-KE-bpKQ',
             contentMarkdown: `### The Limits of Marks as a Predictor
 
 For decades, students have been funneled into career decisions solely based on 10th or 12th board examination scores. Yet real-world job satisfaction and exceptional performance depend on:
@@ -245,7 +245,7 @@ When picking your board stream, prioritize core quantitative and communicative f
             durationMinutes: 30,
             type: 'video',
             summary: 'Structuring thoughts using the Hook, Problem, Solution, and Call to Action formula.',
-            videoEmbedId: 'M7lc1UVf-VE',
+            videoEmbedId: 'dQw4w9WgXcQ',
             contentMarkdown: `### The Four Pillars of Clear Speech
 
 Whether speaking to a classroom, an admissions committee, or a future investor, high-impact speech follows four clean phases:
@@ -374,7 +374,7 @@ Financial independence is not determined by how much you earn, but how much you 
             durationMinutes: 35,
             type: 'video',
             summary: 'How water-splitting technologies and clean energy storage are creating thousands of new engineering disciplines globally.',
-            videoEmbedId: 'M7lc1UVf-VE',
+            videoEmbedId: 'tgbNymZ7vqY',
             contentMarkdown: `### The Global Energy Transition
 
 Hydrogen is the most abundant element in the universe, but separating it cleanly requires breakthroughs in:
@@ -458,7 +458,7 @@ Students aiming for high-impact research careers in South Korea, Germany, or Jap
             durationMinutes: 45,
             type: 'video',
             summary: 'Avoid the cliché childhood story; learn how top universities evaluate authentic intellectual curiosity.',
-            videoEmbedId: 'M7lc1UVf-VE',
+            videoEmbedId: 'jNQXAC9IVRw',
             contentMarkdown: `### Moving Beyond Clichés in Admissions Essays
 
 Admissions committees read thousands of essays starting with *"Ever since I was a child, I dreamed of..."* Stand out by anchoring your narrative in specific, recent intellectual turning points:
@@ -626,7 +626,7 @@ Most resumes fail because they list passive tasks: *"Responsible for website upd
             durationMinutes: 35,
             type: 'video',
             summary: 'How to shift lecture delivery to self-paced digital modules so classroom time is reserved for collaborative problem-solving.',
-            videoEmbedId: 'M7lc1UVf-VE',
+            videoEmbedId: 'V-_O7nl0Ii0',
             contentMarkdown: `### Transforming Classroom Energy
 
 When a teacher lectures uninterrupted for 45 minutes, attention degrades within the first 12 minutes. In an inquiry-driven flipped model:

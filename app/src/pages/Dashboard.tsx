@@ -432,7 +432,7 @@ export default function Dashboard() {
   <header className="h-[52px] border-b border-border bg-background flex items-center px-6 md:px-10 shrink-0 z-30 w-full">
   <div className="w-full flex items-center gap-2 max-w-[calc(var(--content-max)+80px)] mx-auto text-muted-foreground text-[13px]">
   <SidebarTrigger className="md:hidden text-muted-foreground hover:text-foreground rounded-none mr-2 size-7" />
-  <span className="size-[7px] rounded-full bg-[oklch(var(--moss))] shrink-0" />
+  <span className="size-[7px] rounded-none bg-[oklch(var(--moss))] shrink-0" />
   <span className="font-sans text-foreground font-medium">System Active</span>
   {unreadMessagesCount > 0 && (
   <div className="relative ml-2">
@@ -683,7 +683,7 @@ export default function Dashboard() {
   type="linear"
   fill="url(#fillDesktop)"
   fillOpacity={1}
-  stroke="#D9A75C"
+  stroke="#F59E0B"
   strokeWidth={2}
   />
   </AreaChart>
@@ -691,8 +691,8 @@ export default function Dashboard() {
   </div>
 
   <div className="legend flex items-center gap-4 px-6 pb-4 text-[12px] text-muted-foreground">
-  <span className="flex items-center gap-1.5"><i className="inline-block w-3.5 h-[2.5px] rounded-[1px] bg-[#D9A75C]" /> Desktop</span>
-  <span className="flex items-center gap-1.5"><i className="inline-block w-3.5 h-[2.5px] rounded-[1px] bg-muted-foreground/60" /> Mobile</span>
+  <span className="flex items-center gap-1.5"><i className="inline-block w-3.5 h-[2.5px] rounded-none bg-[#F59E0B]" /> Desktop</span>
+  <span className="flex items-center gap-1.5"><i className="inline-block w-3.5 h-[2.5px] rounded-none bg-muted-foreground/60" /> Mobile</span>
   </div>
   </div>
 

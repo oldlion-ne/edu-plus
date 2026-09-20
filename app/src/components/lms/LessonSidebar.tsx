@@ -123,7 +123,7 @@ export const LessonSidebar: React.FC<LessonSidebarProps> = ({
                     onClick={onCloseMobile}
                     className={cn(
                       'flex items-center gap-2.5 p-2.5 text-xs transition-colors hover:bg-muted/40 border-t border-dashed border-border/80',
-                      quizResult?.passed ? 'text-emerald-500 bg-emerald-500/5' : 'text-primary/90 bg-primary/5',
+                      quizResult?.passed ? 'text-[#22C55E] bg-[#22C55E]/5' : 'text-primary/90 bg-primary/5',
                     )}
                   >
                     <HelpCircle className="size-4 shrink-0" />

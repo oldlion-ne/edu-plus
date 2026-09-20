@@ -126,7 +126,7 @@ export const CertificateModal: React.FC<CertificateModalProps> = ({
           </div>
 
           {/* Verification Badge */}
-          <div className="mt-8 flex items-center gap-1.5 text-xs text-emerald-500 font-mono">
+          <div className="mt-8 flex items-center gap-1.5 text-xs text-[#22C55E] font-mono">
             <CheckCircle2 className="size-3.5" />
             <span>AUTHENTICATED RECORD // EDUPLUS SKILLS COUNCIL</span>
           </div>

@@ -213,7 +213,7 @@ export default function SettingsHub({ activeTab = 'profile' }: { activeTab?: 'pr
                 <span className="sub">Your display name and avatar</span>
               </div>
               <div className="space-y-[28px]">
-                <div className="card card-pad panel flex items-center gap-5">
+                <div className="card card-pad panel flex flex-col sm:flex-row items-center gap-5">
                   <div className="relative group shrink-0">
                     <div className="w-[64px] h-[64px] rounded-none bg-muted border border-border/60 flex items-center justify-center overflow-hidden">
                       {avatarUrl ? (

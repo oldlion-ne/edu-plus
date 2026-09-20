@@ -170,7 +170,7 @@ export default function InboxManager({ activeFolder = 'inquiries' }: { activeFol
         </div>
       </div>
 
-      {((activeFolder === 'inquiries' && filteredInquiries.length === 0) || (activeFolder === 'ai-chats' && filteredChats.length === 0)) && !loading ? (
+      {((activeFolder === 'inquiries' && contactMessages.length === 0) || (activeFolder === 'ai-chats' && conversations.length === 0)) && !loading ? (
         <div className="empty-focal">
           <MessageSquare />
           <div className="t">{activeFolder === 'ai-chats' ? 'No chats yet' : 'No inquiries yet'}</div>
