@@ -11,7 +11,7 @@ interface TrackCardProps {
 }
 
 export const TrackCard: React.FC<TrackCardProps> = ({ track }) => {
-  const { isEnrolled, getTrackProgress, enrollTrack } = useLmsProgress();
+  const { isEnrolled, getTrackProgress } = useLmsProgress();
   const enrolled = isEnrolled(track.id);
   const progress = getTrackProgress(track.id);
 

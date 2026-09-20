@@ -311,6 +311,7 @@ export default function LmsQuiz() {
  >
  <div className="font-semibold font-mono text-[0.65rem] uppercase tracking-wider flex items-center gap-1.5">
  {selectedOption === currentQuestion.correctIndex ? (
+ <>
  <CheckCircle2 className="size-3.5 text-[#22C55E]" />
  <span className="text-[#22C55E]">CORRECT ANALYSIS</span>
  </>
