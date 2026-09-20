@@ -34,7 +34,7 @@ describe('Vision Component', () => {
     expect(screen.getByText('02 / Our Vision')).toBeInTheDocument();
 
     // Full copy verified via textContent (unaffected by CSS opacity).
-    expect(container.textContent).toMatch(/To become a leading skills development platform/i);
-    expect(container.textContent).toMatch(/To empower individuals to acquire future-ready/i);
+    expect(container.textContent).toMatch(/We exist to build the premier skills development ecosystem/i);
+    expect(container.textContent).toMatch(/We envision a world where every individual is empowered with future-ready/i);
   });
 });

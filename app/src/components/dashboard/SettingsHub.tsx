@@ -1,17 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '@/lib/useAuth';
 import { supabase } from '@/lib/supabaseClient';
-import { Card } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { User, Shield, Users, UploadCloud, CheckCircle2, Smartphone } from 'lucide-react';
+import {  CheckCircle2, Smartphone } from 'lucide-react';
 import { toast } from 'sonner';
 
 
-export default function SettingsHub() {
+export default function SettingsHub({ activeTab = 'profile' }: { activeTab?: 'profile' | 'security' | 'access-control' | 'ai-advisor' }) {
   const { user, role } = useAuth();
-  const [activeTab, setActiveTab] = useState<'profile' | 'security' | 'access'>('profile');
   
   // Profile State
   const [fullName, setFullName] = useState(user?.user_metadata?.full_name || '');
@@ -34,9 +29,56 @@ export default function SettingsHub() {
   const [newUserRole, setNewUserRole] = useState<'admin' | 'educator' | 'resource_person'>('educator');
   const [isCreatingUser, setIsCreatingUser] = useState(false);
 
+  // AI Advisor State
+  const [facts, setFacts] = useState<any[]>([]);
+  const [newFactTopic, setNewFactTopic] = useState('');
+  const [newFactContent, setNewFactContent] = useState('');
+
   useEffect(() => {
     checkMfaStatus();
-  }, []);
+    if (activeTab === 'ai-advisor') {
+      fetchFacts();
+    }
+  }, [activeTab]);
+
+  const fetchFacts = async () => {
+    try {
+      const { data, error } = await supabase.from('kb_documents').select('*').order('created_at', { ascending: false });
+      if (error) throw error;
+      setFacts(data || []);
+    } catch (err) {
+      console.error('Error fetching facts:', err);
+    }
+  };
+
+  const handleAddFact = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newFactTopic.trim() || !newFactContent.trim()) return;
+    try {
+      const { error } = await supabase.from('kb_documents').insert({
+        title: newFactTopic,
+        content: newFactContent,
+      });
+      if (error) throw error;
+      toast.success('Fact added successfully');
+      setNewFactTopic('');
+      setNewFactContent('');
+      fetchFacts();
+    } catch (err: any) {
+      toast.error(err.message || 'Failed to add fact');
+    }
+  };
+
+  const handleRemoveAvatar = async () => {
+    try {
+      const { error } = await supabase.auth.updateUser({ data: { avatar_url: null } });
+      if (error) throw error;
+      setAvatarUrl('');
+      toast.success('Avatar removed successfully');
+    } catch (err: any) {
+      toast.error(err.message || 'Failed to remove avatar');
+    }
+  };
 
   const checkMfaStatus = async () => {
     try {
@@ -207,241 +249,292 @@ export default function SettingsHub() {
   };
 
   return (
-    <div className="space-y-6 animate-in fade-in duration-300 text-left">
-      <div className="border-b border-border pb-4">
-        <h2 className="font-heading text-2xl font-light text-foreground">Settings & Security</h2>
-        <p className="font-sans text-xs text-muted-foreground mt-1">Manage your profile, security preferences, and dashboard access.</p>
-      </div>
-
-      <div className="flex flex-col md:flex-row gap-8 items-start">
-        {/* Settings Navigation */}
-        <div className="w-full md:w-64 flex flex-col gap-1 shrink-0">
-          <button 
-            onClick={() => setActiveTab('profile')}
-            className={`flex items-center gap-3 px-4 py-3 text-sm font-sans font-medium transition-all rounded-none border-l-2 ${activeTab === 'profile' ? 'border-primary bg-primary/5 text-foreground' : 'border-transparent text-muted-foreground hover:bg-muted/30 hover:text-foreground'}`}
-          >
-            <User size={16} /> Profile
-          </button>
-          <button 
-            onClick={() => setActiveTab('security')}
-            className={`flex items-center gap-3 px-4 py-3 text-sm font-sans font-medium transition-all rounded-none border-l-2 ${activeTab === 'security' ? 'border-primary bg-primary/5 text-foreground' : 'border-transparent text-muted-foreground hover:bg-muted/30 hover:text-foreground'}`}
-          >
-            <Shield size={16} /> Security & MFA
-          </button>
-          {role === 'admin' && (
-            <button 
-              onClick={() => setActiveTab('access')}
-              className={`flex items-center gap-3 px-4 py-3 text-sm font-sans font-medium transition-all rounded-none border-l-2 ${activeTab === 'access' ? 'border-primary bg-primary/5 text-foreground' : 'border-transparent text-muted-foreground hover:bg-muted/30 hover:text-foreground'}`}
-            >
-              <Users size={16} /> Access Control
-            </button>
-          )}
-        </div>
-
+    <div className="flex flex-col gap-7 animate-in fade-in duration-300 w-full text-left">
+      <div className="flex flex-col gap-8 items-start">
         {/* Content Area */}
         <div className="flex-1 w-full">
           {activeTab === 'profile' && (
-            <Card className="border border-border p-6 sm:p-8 bg-card/30 rounded-none space-y-8">
-              <div className="flex flex-col sm:flex-row items-center gap-6 pb-6 border-b border-border">
-                <div className="relative group">
-                  <div className="w-24 h-24 rounded-none overflow-hidden bg-muted border border-border flex items-center justify-center">
-                    {avatarUrl ? (
-                      <img src={avatarUrl} alt="Avatar" className="w-full h-full object-cover" />
-                    ) : (
-                      <User size={32} className="text-muted-foreground/50" />
-                    )}
-                  </div>
-                  <label className="absolute inset-0 bg-background/80 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center cursor-pointer border border-primary/50">
-                    <UploadCloud size={20} className="text-primary mb-1" />
-                    <span className="text-[10px] font-sans font-medium text-foreground">Upload</span>
-                    <input type="file" accept="image/*" className="hidden" onChange={handleAvatarUpload} disabled={isUploading} />
-                  </label>
-                </div>
-                <div>
-                  <h3 className="font-heading text-lg font-medium text-foreground">Profile Picture</h3>
-                  <p className="font-sans text-xs text-muted-foreground mt-1">We recommend a 1:1 image, at least 200x200px.</p>
-                </div>
+            <div id="v-profile" className="animate-in fade-in duration-300">
+              <div className="page-head mb-8">
+                <h1>Profile</h1>
+                <span className="sub">Your display name and avatar</span>
               </div>
-
-              <form onSubmit={handleUpdateProfile} className="space-y-4 max-w-md">
-                <div className="space-y-2">
-                  <Label className="text-xs font-medium text-foreground block">Full Name</Label>
-                  <Input
-                    value={fullName}
-                    onChange={(e) => setFullName(e.target.value)}
-                    placeholder="Your Name"
-                    className="w-full bg-background border border-border text-xs px-4 py-2.5 outline-none focus:border-primary rounded-none text-foreground font-sans h-10"
-                  />
+              <div className="space-y-[28px]">
+                <div className="card card-pad panel flex flex-col sm:flex-row items-center gap-5">
+                  <div className="relative group shrink-0">
+                    <div className="w-[64px] h-[64px] rounded-none bg-muted border border-border/60 flex items-center justify-center overflow-hidden">
+                      {avatarUrl ? (
+                        <img src={avatarUrl} alt="Avatar" className="w-full h-full object-cover" />
+                      ) : (
+                        <span className="font-heading text-[26px] text-muted-foreground">A</span>
+                      )}
+                    </div>
+                  </div>
+                  <div>
+                    <h3 className="font-sans text-[16px] font-semibold text-foreground leading-[1.15]">Profile picture</h3>
+                    <p className="text-[12.5px] text-muted-foreground mt-[3px]">Square image works best · at least 200×200px</p>
+                  </div>
+                  <div className="ml-auto flex gap-2">
+                    <label className="inline-flex items-center gap-2 h-[34px] px-[14px] text-[13px] font-semibold bg-transparent border border-border text-foreground hover:border-muted-foreground hover:bg-muted/30 cursor-pointer transition-colors">
+                      Change
+                      <input type="file" accept="image/*" className="hidden" onChange={handleAvatarUpload} disabled={isUploading} />
+                    </label>
+                    <button type="button" onClick={handleRemoveAvatar} className="inline-flex items-center h-[34px] px-3 text-[13px] font-semibold text-[oklch(var(--fjord))] hover:bg-[oklch(var(--fjord)/0.12)] transition-colors bg-transparent border border-transparent">
+                      Remove
+                    </button>
+                  </div>
                 </div>
-                <div className="space-y-2">
-                  <Label className="text-xs font-medium text-foreground block">Email Address (Read-only)</Label>
-                  <Input
-                    value={user?.email || ''}
-                    disabled
-                    className="w-full bg-muted/50 border border-border text-xs px-4 py-2.5 outline-none rounded-none text-muted-foreground font-sans h-10 cursor-not-allowed"
-                  />
-                </div>
-                <Button type="submit" className="bg-primary text-primary-foreground hover:bg-foreground hover:text-background font-sans text-sm font-medium rounded-none px-6 mt-2">
-                  Save Changes
-                </Button>
-              </form>
-            </Card>
+                
+                <form onSubmit={handleUpdateProfile} className="card card-pad measure">
+                  <div className="mb-5">
+                    <label className="block text-[13px] font-semibold mb-[7px] text-foreground">Full name</label>
+                    <input
+                      value={fullName}
+                      onChange={(e) => setFullName(e.target.value)}
+                      placeholder="Your name"
+                      className="w-full h-[42px] px-[14px] rounded-none bg-card border border-border text-[14px] text-foreground focus:outline-none focus:border-[oklch(var(--fjord))] focus:shadow-[0_0_0_2.5px_oklch(var(--fjord)/0.12)] transition-all"
+                    />
+                  </div>
+                  <div className="mb-5">
+                    <label className="block text-[13px] font-semibold mb-[7px] text-foreground">Email address</label>
+                    <input
+                      value={user?.email || ''}
+                      readOnly
+                      className="w-full h-[42px] px-[14px] rounded-none bg-background border border-border border-dashed text-[14px] text-muted-foreground focus:outline-none transition-all cursor-not-allowed"
+                    />
+                    <div className="text-[12.5px] text-muted-foreground mt-[6px]">Sign-in email — contact a system administrator to change it.</div>
+                  </div>
+                  <div className="mt-[26px]">
+                    <button type="submit" className="btn btn-p">
+                      Save changes
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
           )}
 
           {activeTab === 'security' && (
-            <div className="space-y-8">
-              {/* Password Update */}
-              <Card className="border border-border p-6 sm:p-8 bg-card/30 rounded-none space-y-6">
-                <div>
-                  <h3 className="font-heading text-lg font-medium text-foreground">Update Password</h3>
-                  <p className="font-sans text-xs text-muted-foreground mt-1">Ensure your account is using a long, random password.</p>
-                </div>
-                <form onSubmit={handleUpdatePassword} className="space-y-4 max-w-md">
-                  <div className="space-y-2">
-                    <Label className="text-xs font-medium text-foreground block">New Password</Label>
-                    <Input
+            <div id="v-security" className="animate-in fade-in duration-300">
+              <div className="page-head mb-8">
+                <h1>Security & MFA</h1>
+                <span className="sub">Password and two-factor authentication</span>
+              </div>
+              <div className="space-y-[28px]">
+                
+                <form onSubmit={handleUpdatePassword} className="card card-pad measure">
+                  <h3 className="font-sans text-[16px] font-semibold text-foreground mb-1">Update password</h3>
+                  <p className="text-[12.5px] text-muted-foreground mb-5">Use a long, random password you don't reuse elsewhere.</p>
+                  
+                  <div className="mb-5">
+                    <label className="block text-[13px] font-semibold mb-[7px] text-foreground">New password</label>
+                    <input
                       type="password"
                       value={newPassword}
                       onChange={(e) => setNewPassword(e.target.value)}
                       placeholder="••••••••"
-                      className="w-full bg-background border border-border text-xs px-4 py-2.5 outline-none focus:border-primary rounded-none text-foreground font-sans h-10"
+                      className="w-full h-[42px] px-[14px] rounded-none bg-card border border-border text-[14px] text-foreground focus:outline-none focus:border-[oklch(var(--fjord))] focus:shadow-[0_0_0_2.5px_oklch(var(--fjord)/0.12)] transition-all"
                     />
                   </div>
-                  <div className="space-y-2">
-                    <Label className="text-xs font-medium text-foreground block">Confirm New Password</Label>
-                    <Input
+                  <div className="mb-5">
+                    <label className="block text-[13px] font-semibold mb-[7px] text-foreground">Confirm new password</label>
+                    <input
                       type="password"
                       value={confirmPassword}
                       onChange={(e) => setConfirmPassword(e.target.value)}
                       placeholder="••••••••"
-                      className="w-full bg-background border border-border text-xs px-4 py-2.5 outline-none focus:border-primary rounded-none text-foreground font-sans h-10"
+                      className="w-full h-[42px] px-[14px] rounded-none bg-card border border-border text-[14px] text-foreground focus:outline-none focus:border-[oklch(var(--fjord))] focus:shadow-[0_0_0_2.5px_oklch(var(--fjord)/0.12)] transition-all"
                     />
                   </div>
-                  <Button type="submit" className="bg-primary text-primary-foreground hover:bg-foreground hover:text-background font-sans text-sm font-medium rounded-none px-6 mt-2">
-                    Update Password
-                  </Button>
+                  <div className="mt-[24px]">
+                    <button type="submit" className="btn btn-p">
+                      Update password
+                    </button>
+                  </div>
                 </form>
-              </Card>
 
-              {/* MFA Settings */}
-              <Card className="border border-border p-6 sm:p-8 bg-card/30 rounded-none space-y-6">
-                <div>
-                  <h3 className="font-heading text-lg font-medium text-foreground">Two-Factor Authentication (TOTP)</h3>
-                  <p className="font-sans text-xs text-muted-foreground mt-1">Add an extra layer of security to your account using an authenticator app.</p>
+                <div className="card card-pad measure">
+                  <h3 className="font-sans text-[16px] font-semibold text-foreground mb-1">Two-factor authentication</h3>
+                  <p className="text-[12.5px] text-muted-foreground mb-5">Add a one-time code from an authenticator app on top of your password.</p>
+                  
+                  {mfaStatus === 'loading' && <p className="text-[12.5px] text-muted-foreground animate-pulse">Loading...</p>}
+                  
+                  {mfaStatus === 'unenrolled' && (
+                    <>
+                      <div className="flex items-center gap-[14px] p-4 border border-border/60 rounded-none bg-background">
+                        <Smartphone className="size-[22px] text-muted-foreground shrink-0" strokeWidth={1.6} />
+                        <div>
+                          <div className="font-semibold text-[14px] text-foreground">Authenticator app</div>
+                          <div className="text-[12.5px] text-muted-foreground">Google Authenticator, Authy, or 1Password</div>
+                        </div>
+                        <span className="font-mono text-[10px] tracking-[.1em] text-muted-foreground uppercase ml-auto">Not enabled</span>
+                      </div>
+                      <div className="mt-5">
+                        <button onClick={handleMfaEnroll} className="btn btn-p">
+                          Enable two-factor auth
+                        </button>
+                      </div>
+                    </>
+                  )}
+                  
+                  {mfaStatus === 'enrolling' && (
+                    <form onSubmit={handleMfaVerify}>
+                      <div className="space-y-4 mb-5">
+                        <p className="text-[13px] font-semibold text-foreground">1. Scan this QR code with your authenticator app:</p>
+                        <div className="bg-white p-4 border border-border/60 inline-block" dangerouslySetInnerHTML={{ __html: mfaQrCode }} />
+                      </div>
+                      <div className="mb-5">
+                        <label className="block text-[13px] font-semibold mb-[7px] text-foreground">2. Enter the 6-digit code from the app:</label>
+                        <input
+                          type="text"
+                          value={mfaCode}
+                          onChange={(e) => setMfaCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
+                          placeholder="000000"
+                          className="w-[120px] h-[42px] px-[14px] rounded-none bg-card border border-border text-[14px] text-center tracking-[.2em] text-foreground focus:outline-none focus:border-[oklch(var(--fjord))] focus:shadow-[0_0_0_2.5px_oklch(var(--fjord)/0.12)] transition-all"
+                        />
+                      </div>
+                      <div className="flex gap-2.5">
+                        <button type="submit" disabled={mfaCode.length !== 6} className="inline-flex items-center gap-2 h-[40px] px-[18px] font-semibold text-[13.5px] bg-primary text-primary-foreground hover:bg-primary/90 transition-transform hover:-translate-y-px disabled:opacity-50">
+                          Verify & Enable
+                        </button>
+                        <button type="button" onClick={() => setMfaStatus('unenrolled')} className="inline-flex items-center h-[40px] px-[18px] text-[13.5px] font-semibold bg-transparent border border-border text-foreground hover:border-muted-foreground hover:bg-muted/30 transition-colors">
+                          Cancel
+                        </button>
+                      </div>
+                    </form>
+                  )}
+                  
+                  {mfaStatus === 'enrolled' && (
+                    <>
+                      <div className="flex items-center gap-[14px] p-4 border border-border/60 rounded-none bg-background">
+                        <CheckCircle2 className="size-[22px] text-primary shrink-0" strokeWidth={1.6} />
+                        <div>
+                          <div className="font-semibold text-[14px] text-foreground">Authenticator app</div>
+                          <div className="text-[12.5px] text-muted-foreground">Google Authenticator, Authy, or 1Password</div>
+                        </div>
+                        <span className="font-mono text-[10px] tracking-[.1em] text-primary uppercase ml-auto">Active</span>
+                      </div>
+                      <div className="mt-5">
+                        <button onClick={handleMfaUnenroll} className="inline-flex items-center gap-2 h-[34px] px-[12px] font-semibold text-[13px] bg-transparent text-[oklch(var(--destructive))] border border-[oklch(var(--destructive)/0.3)] hover:bg-[oklch(var(--destructive)/0.1)] transition-colors">
+                          Disable two-factor auth
+                        </button>
+                      </div>
+                    </>
+                  )}
                 </div>
-
-                {mfaStatus === 'loading' && (
-                  <p className="text-sm font-sans text-muted-foreground animate-pulse">Loading security status...</p>
-                )}
-
-                {mfaStatus === 'unenrolled' && (
-                  <div className="space-y-4">
-                    <div className="p-4 bg-muted/30 border border-border flex items-start gap-4">
-                      <Smartphone className="text-muted-foreground shrink-0 mt-1" size={20} />
-                      <div>
-                        <p className="text-sm font-sans font-medium text-foreground">Authenticator App</p>
-                        <p className="text-xs font-sans text-muted-foreground mt-1">Use an app like Google Authenticator, Authy, or 1Password to generate one-time codes.</p>
-                      </div>
-                    </div>
-                    <Button onClick={handleMfaEnroll} className="bg-primary text-primary-foreground hover:bg-foreground hover:text-background font-sans text-sm font-medium rounded-none px-6">
-                      Enable Two-Factor Auth
-                    </Button>
-                  </div>
-                )}
-
-                {mfaStatus === 'enrolling' && (
-                  <form onSubmit={handleMfaVerify} className="space-y-6 max-w-md">
-                    <div className="space-y-4">
-                      <p className="text-sm font-sans text-foreground">1. Scan this QR code with your authenticator app:</p>
-                      <div className="bg-white p-4 border border-border inline-block" dangerouslySetInnerHTML={{ __html: mfaQrCode }} />
-                    </div>
-                    <div className="space-y-2">
-                      <Label className="text-xs font-medium text-foreground block">2. Enter the 6-digit code from the app:</Label>
-                      <Input
-                        type="text"
-                        value={mfaCode}
-                        onChange={(e) => setMfaCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
-                        placeholder="000000"
-                        className="w-32 bg-background border border-border text-center text-lg tracking-widest px-4 py-2.5 outline-none focus:border-primary rounded-none text-foreground font-sans h-12"
-                      />
-                    </div>
-                    <div className="flex gap-3">
-                      <Button type="submit" disabled={mfaCode.length !== 6} className="bg-primary text-primary-foreground hover:bg-foreground hover:text-background font-sans text-sm font-medium rounded-none px-6">
-                        Verify & Enable
-                      </Button>
-                      <Button type="button" variant="outline" onClick={() => setMfaStatus('unenrolled')} className="font-sans text-sm font-medium rounded-none">
-                        Cancel
-                      </Button>
-                    </div>
-                  </form>
-                )}
-
-                {mfaStatus === 'enrolled' && (
-                  <div className="space-y-4">
-                    <div className="p-4 bg-primary/5 border border-primary/20 flex items-start gap-4">
-                      <CheckCircle2 className="text-primary shrink-0 mt-1" size={20} />
-                      <div>
-                        <p className="text-sm font-sans font-medium text-foreground">MFA is Active</p>
-                        <p className="text-xs font-sans text-muted-foreground mt-1">Your account is secured with a TOTP authenticator app. You will be prompted for a code when signing in.</p>
-                      </div>
-                    </div>
-                    <Button onClick={handleMfaUnenroll} variant="destructive" className="font-sans text-sm font-medium rounded-none px-6 border border-destructive hover:bg-destructive/10 hover:text-destructive bg-transparent text-destructive">
-                      Disable Two-Factor Auth
-                    </Button>
-                  </div>
-                )}
-              </Card>
+              </div>
             </div>
           )}
 
-          {activeTab === 'access' && role === 'admin' && (
-            <Card className="border border-border p-6 sm:p-8 bg-card/30 rounded-none space-y-6">
-              <div>
-                <h3 className="font-heading text-lg font-medium text-foreground">Add New User</h3>
-                <p className="font-sans text-xs text-muted-foreground mt-1">Invite a new staff member to the dashboard and assign their permissions.</p>
+          {activeTab === 'access-control' && role === 'admin' && (
+            <div id="v-access" className="animate-in fade-in duration-300">
+              <div className="page-head mb-8">
+                <h1>Access Control</h1>
+                <span className="sub">Invite staff and assign permissions</span>
               </div>
-
-              <form onSubmit={handleCreateUser} className="space-y-4 max-w-md">
-                <div className="space-y-2">
-                  <Label className="text-xs font-medium text-foreground block">Email Address</Label>
-                  <Input
+              <form onSubmit={handleCreateUser} className="card card-pad measure">
+                <div className="mb-5">
+                  <label className="block text-[13px] font-semibold mb-[7px] text-foreground">Email address</label>
+                  <input
                     type="email"
                     required
                     value={newUserEmail}
                     onChange={(e) => setNewUserEmail(e.target.value)}
-                    placeholder="staff@eduplus.in"
-                    className="w-full bg-background border border-border text-xs px-4 py-2.5 outline-none focus:border-primary rounded-none text-foreground font-sans h-10"
+                    placeholder="name@eduplus.app"
+                    className="w-full h-[42px] px-[14px] rounded-none bg-card border border-border text-[14px] text-foreground focus:outline-none focus:border-[oklch(var(--fjord))] focus:shadow-[0_0_0_2.5px_oklch(var(--fjord)/0.12)] transition-all"
                   />
                 </div>
-                <div className="space-y-2">
-                  <Label className="text-xs font-medium text-foreground block">Temporary Password</Label>
-                  <Input
+                <div className="mb-5">
+                  <label className="block text-[13px] font-semibold mb-[7px] text-foreground">Temporary password</label>
+                  <input
                     type="password"
                     required
                     value={newUserPassword}
                     onChange={(e) => setNewUserPassword(e.target.value)}
                     placeholder="••••••••"
-                    className="w-full bg-background border border-border text-xs px-4 py-2.5 outline-none focus:border-primary rounded-none text-foreground font-sans h-10"
+                    className="w-full h-[42px] px-[14px] rounded-none bg-card border border-border text-[14px] text-foreground focus:outline-none focus:border-[oklch(var(--fjord))] focus:shadow-[0_0_0_2.5px_oklch(var(--fjord)/0.12)] transition-all"
                   />
-                  <p className="text-[10px] text-muted-foreground">Must be at least 8 chars with uppercase, lowercase, number, and special character.</p>
+                  <div className="text-[12.5px] text-muted-foreground mt-[6px]">At least 8 characters with uppercase, lowercase, a number, and a special character. The user changes it on first sign-in.</div>
                 </div>
-                <div className="space-y-2">
-                  <Label className="text-xs font-medium text-foreground block">Role</Label>
+                <div className="mb-5">
+                  <label className="block text-[13px] font-semibold mb-[7px] text-foreground">Role</label>
                   <select 
                     value={newUserRole}
                     onChange={(e) => setNewUserRole(e.target.value as any)}
-                    className="w-full bg-background border border-border text-xs px-4 py-2.5 outline-none focus:border-primary rounded-none text-foreground font-sans h-10"
+                    className="w-full h-[42px] px-[14px] rounded-none bg-card border border-border text-[14px] text-foreground focus:outline-none focus:border-[oklch(var(--fjord))] focus:shadow-[0_0_0_2.5px_oklch(var(--fjord)/0.12)] transition-all appearance-none"
+                    style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'12\' height=\'12\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'%23B3A88F\' stroke-width=\'2.4\' stroke-linecap=\'round\'%3E%3Cpath d=\'m6 9 6 6 6-6\'/%3E%3C/svg%3E")', backgroundRepeat: 'no-repeat', backgroundPosition: 'right 14px center', paddingRight: '38px' }}
                   >
-                    <option value="admin">Administrator</option>
+                    <option value="admin">Admin</option>
                     <option value="educator">Educator</option>
                     <option value="resource_person">Resource Person</option>
                   </select>
+                  <div className="text-[12.5px] text-muted-foreground mt-[6px]">Roles map to dashboard permissions — admins manage people, educators manage content.</div>
                 </div>
-                <Button type="submit" disabled={isCreatingUser} className="bg-primary text-primary-foreground hover:bg-foreground hover:text-background font-sans text-sm font-medium rounded-none px-6 mt-4 w-full">
-                  {isCreatingUser ? 'Creating...' : 'Create Dashboard User'}
-                </Button>
+                <div className="mt-[26px] flex gap-2.5">
+                  <button type="submit" disabled={isCreatingUser} className="btn btn-p" style={{ opacity: isCreatingUser ? 0.5 : 1 }}>
+                    {isCreatingUser ? 'Creating...' : 'Create dashboard user'}
+                  </button>
+                  <button type="button" onClick={() => {setNewUserEmail(''); setNewUserPassword('')}} className="btn btn-g">
+                    Cancel
+                  </button>
+                </div>
               </form>
-            </Card>
+            </div>
+          )}
+
+          {activeTab === 'ai-advisor' && (
+            <div id="v-aiadvisor" className="animate-in fade-in duration-300">
+              <div className="page-head mb-8">
+                <h1>AI Advisor</h1>
+                <span className="sub">Facts injected into the site advisor chatbot</span>
+              </div>
+              <div className="space-y-[28px]">
+                <form className="card card-pad measure" onSubmit={handleAddFact}>
+                  <h3 className="font-sans text-[16px] font-semibold text-foreground mb-4">Add a fact</h3>
+                  <div className="mb-5">
+                    <label className="block text-[13px] font-semibold mb-[7px] text-foreground">Topic</label>
+                    <input
+                      placeholder="e.g. Founder Bikash Oinam's email"
+                      className="w-full h-[42px] px-[14px] rounded-none bg-card border border-border text-[14px] text-foreground focus:outline-none focus:border-[oklch(var(--fjord))] focus:shadow-[0_0_0_2.5px_oklch(var(--fjord)/0.12)] transition-all"
+                      value={newFactTopic}
+                      onChange={(e) => setNewFactTopic(e.target.value)}
+                    />
+                  </div>
+                  <div className="mb-5">
+                    <label className="block text-[13px] font-semibold mb-[7px] text-foreground">Answer</label>
+                    <textarea
+                      placeholder="e.g. Mr. Bikash Oinam can be reached at info@eduplus.in"
+                      className="w-full min-h-[96px] py-[12px] px-[14px] rounded-none bg-card border border-border text-[14px] text-foreground focus:outline-none focus:border-[oklch(var(--fjord))] focus:shadow-[0_0_0_2.5px_oklch(var(--fjord)/0.12)] transition-all resize-y"
+                      value={newFactContent}
+                      onChange={(e) => setNewFactContent(e.target.value)}
+                    />
+                    <div className="text-[12.5px] text-muted-foreground mt-[6px]">Write it the way the advisor should say it — one clear sentence works best.</div>
+                  </div>
+                  <div className="mt-[24px]">
+                    <button type="submit" className="btn btn-p">
+                      Add fact
+                    </button>
+                  </div>
+                </form>
+                <div className="card card-pad measure">
+                  <h3 className="font-sans text-[16px] font-semibold text-foreground mb-4">Active facts</h3>
+                  {facts.length === 0 ? (
+                    <div className="p-8 text-center border border-dashed border-border bg-background rounded-none">
+                      <p className="text-[13px] font-mono text-muted-foreground">No facts yet.</p>
+                    </div>
+                  ) : (
+                    <div className="space-y-4">
+                      {facts.map((fact) => (
+                        <div key={fact.id} className="p-4 border border-border bg-background">
+                          <h4 className="font-semibold text-sm mb-1">{fact.title}</h4>
+                          <p className="text-xs text-muted-foreground whitespace-pre-wrap">{fact.content}</p>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
           )}
         </div>
       </div>

@@ -33,7 +33,7 @@ export default function ServicesMatrix() {
   return (
     <section
       id="building"
-      className="relative w-full py-40 bg-background border-t border-border/50"
+      className="relative w-full py-40 border-t border-border/50"
     >
       <div className="max-w-[1440px] mx-auto px-6 md:px-12">
         {/* Section header */}

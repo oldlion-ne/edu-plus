@@ -8,6 +8,7 @@
     "navOverview": "Overview",
     "navUsers": "User Management",
     "navGroupKnowledge": "Knowledge Hub CMS",
+    "navCurriculumLms": "Curriculum & LMS",
     "navResourceManager": "Resource Manager",
     "navAiGuidelines": "AI Guidelines",
     "navGroupAssets": "Assets & Inbox",
@@ -68,7 +69,7 @@
       "subheading": "Inject custom facts directly into the site advisor chatbot.",
       "newFactualGuideline": "Add Factual Guideline",
       "activeFactMatrix": "Active Fact Rules",
-      "noTrainingInjections": "NO TRAINING RULES RECORDED.",
+      "noTrainingInjections": "No training rules recorded.",
       "topicPrefix": "TOPIC: "
     },
     "messages": {

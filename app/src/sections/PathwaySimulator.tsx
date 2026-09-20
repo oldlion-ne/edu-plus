@@ -20,9 +20,9 @@ const INTEGRATIONS = [
 
 export default function PathwaySimulator() {
   return (
-    <section
+    <section 
       id="simulator"
-      className="relative w-full bg-background border-t border-border/50 py-40"
+      className="relative w-full border-t border-border/50 py-40"
     >
       <div className="mx-auto max-w-[1440px] px-6 md:px-12">
 

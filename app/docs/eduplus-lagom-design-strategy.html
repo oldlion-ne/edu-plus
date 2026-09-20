@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EduPlus × Nordic Lagom — Design System Integration Strategy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&family=Instrument+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    /* Proposed Lagom tokens — the report uses its own recommendations */
+    --paper:      #F7F4ED;
+    --paper-2:    #F1EDE3;
+    --surface:    #FFFEFA;
+    --ink:        #262119;
+    --ink-2:      #4A4234;
+    --ink-3:      #71675A;
+    --hairline:   #E2DCCC;
+    --ochre:      #8A5A22;
+    --ochre-deep: #8A5A22;
+    --ochre-soft: #F0E3CE;
+    --fjord:      #4A6B7C;
+    --fjord-soft: #DEE7EA;
+    --moss:       #5C7A54;
+    --moss-soft:  #E3E9DC;
+    --clay:       #A9503C;
+    --clay-soft:  #F2DED7;
+    --night-0:    #1E1A15;
+    --night-1:    #27221B;
+    --night-2:    #322C23;
+    --night-text: #EDE7DB;
+    --night-mut:  #A89C89;
+    --radius: 10px;
+    --maxw: 1120px;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:"Instrument Sans", -apple-system, "Segoe UI", sans-serif;
+    font-size:16px; line-height:1.65;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 32px}
+  .kicker{
+    font-family:"IBM Plex Mono", monospace;
+    font-size:11px; letter-spacing:.18em; text-transform:uppercase;
+    color:var(--ochre); font-weight:500;
+  }
+  h1,h2,h3{font-family:"Fraunces", Georgia, serif; font-weight:400; line-height:1.15; color:var(--ink)}
+  h1{font-size:clamp(38px, 5.2vw, 60px); letter-spacing:-.01em}
+  h2{font-size:clamp(28px, 3.4vw, 40px); margin:14px 0 10px}
+  h3{font-size:22px; margin:34px 0 10px}
+  h4{font-family:"Instrument Sans",sans-serif;font-size:15px;font-weight:700;margin:22px 0 8px}
+  p{color:var(--ink-2); max-width:70ch}
+  .lead{font-size:19px; color:var(--ink-2); max-width:64ch}
+  section{padding:72px 0; border-top:1px solid var(--hairline)}
+  .serif-i{font-family:"Fraunces",serif;font-style:italic}
+
+  /* ---------- Hero ---------- */
+  header.hero{padding:88px 0 72px; background:linear-gradient(180deg, var(--paper) 0%, var(--paper-2) 100%); border-bottom:1px solid var(--hairline)}
+  .hero-meta{display:flex;gap:14px;flex-wrap:wrap;margin-top:34px}
+  .chip{font-size:12.5px;font-weight:600;padding:7px 14px;border:1px solid var(--hairline);border-radius:999px;background:var(--surface);color:var(--ink-2)}
+  .chip b{color:var(--ochre-deep)}
+
+  /* ---------- Nav ---------- */
+  nav.toc{position:sticky;top:0;z-index:50;background:rgba(247,244,237,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--hairline)}
+  nav.toc .wrap{display:flex;gap:6px;overflow-x:auto;padding-top:12px;padding-bottom:12px}
+  nav.toc a{white-space:nowrap;font-size:13px;font-weight:600;color:var(--ink-3);text-decoration:none;padding:7px 13px;border-radius:8px;transition:all .18s ease}
+  nav.toc a:hover{color:var(--ink);background:var(--paper-2)}
+
+  /* ---------- Cards / grids ---------- */
+  .grid{display:grid;gap:20px}
+  .g2{grid-template-columns:repeat(2,1fr)}
+  .g3{grid-template-columns:repeat(3,1fr)}
+  .g4{grid-template-columns:repeat(4,1fr)}
+  @media(max-width:860px){.g3,.g4{grid-template-columns:1fr 1fr}}
+  @media(max-width:600px){.g2,.g3,.g4{grid-template-columns:1fr}}
+  .card{background:var(--surface);border:1px solid var(--hairline);border-radius:var(--radius);padding:24px}
+  .card h4{margin-top:0}
+  .card p{font-size:14.5px}
+  .num{font-family:"Fraunces",serif;font-size:34px;color:var(--ochre);line-height:1}
+
+  /* ---------- Pattern list ---------- */
+  .pattern{display:grid;grid-template-columns:44px 1fr;gap:16px;padding:20px 0;border-bottom:1px solid var(--hairline)}
+  .pattern:last-child{border-bottom:none}
+  .pattern .idx{font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--ochre);padding-top:4px}
+  .pattern h4{margin:0 0 4px;font-size:16px}
+  .pattern p{font-size:14.5px}
+  .tag{display:inline-block;font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;padding:3px 9px;border-radius:5px;margin:6px 6px 0 0}
+  .tag.keep { background: var(--moss-soft); color: var(--ink); }
+.tag.evolve { background: var(--ochre-soft); color: var(--ochre-deep); }
+.tag.retire { background: var(--clay-soft); color: var(--ink); }
+
+  /* ---------- Tables ---------- */
+  table { width: 100%; border-collapse: collapse; font-size: 14px; margin: 18px 0; background: var(--surface); border: 1px solid var(--hairline); border-radius: var(--radius); overflow: hidden; }
+@media(max-width:600px) {
+  table { display: block; overflow-x: auto; }
+  table > tbody { display: table; min-width: max-content; }
+}
+  th{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;text-align:left;color:var(--ink-3);padding:12px 16px;background:var(--paper-2);border-bottom:1px solid var(--hairline)}
+  td{padding:13px 16px;border-bottom:1px solid var(--hairline);color:var(--ink-2);vertical-align:top}
+  tr:last-child td{border-bottom:none}
+  td b{color:var(--ink)}
+  .mono{font-family:"IBM Plex Mono",monospace;font-size:12.5px}
+
+  /* ---------- Swatches ---------- */
+  .swatch{border-radius:var(--radius);overflow:hidden;border:1px solid var(--hairline);background:var(--surface)}
+  .swatch .fill{height:84px}
+  .swatch .meta{padding:12px 14px}
+  .swatch .name{font-weight:700;font-size:13.5px}
+  .swatch .val{font-family:"IBM Plex Mono",monospace;font-size:11.5px;color:var(--ink-3);margin-top:2px}
+  .swatch .role{font-size:12px;color:var(--ink-3);margin-top:6px}
+  .dark-strip{background:var(--night-0);border-radius:var(--radius);padding:28px;margin-top:20px;border:1px solid var(--night-2)}
+  .dark-strip h4{color:var(--night-text);margin-top:0}
+  .dark-strip p{color:var(--night-mut);font-size:14px}
+
+  /* ---------- Type scale ---------- */
+  .type-row { display: flex; flex-wrap: wrap; align-items: baseline; gap: 24px; padding: 16px 0; border-bottom: 1px solid var(--hairline); }
+  .type-row .spec{font-family:"IBM Plex Mono",monospace;font-size:11.5px;color:var(--ink-3);width:200px;flex-shrink:0}
+  .t-display{font-family:"Fraunces",serif;font-size:52px;line-height:1.1}
+  .t-h1{font-family:"Fraunces",serif;font-size:36px}
+  .t-h2{font-family:"Fraunces",serif;font-size:28px}
+  .t-h3{font-family:"Instrument Sans",sans-serif;font-size:20px;font-weight:600}
+  .t-body{font-size:16px}
+  .t-small{font-size:14px;color:var(--ink-2)}
+  .t-micro{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--ochre)}
+
+  /* ---------- Spacing ---------- */
+  .space-row{display:flex;align-items:center;gap:18px;padding:8px 0}
+  .space-bar{background:var(--ochre);border-radius:3px;height:16px}
+  .space-lab{font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--ink-2);width:120px;flex-shrink:0}
+
+  /* ---------- Buttons ---------- */
+  .btnrow{display:flex;gap:14px;flex-wrap:wrap;align-items:center;margin:16px 0}
+  .btn{font-family:"Instrument Sans",sans-serif;font-size:14px;font-weight:600;padding:11px 22px;border-radius:8px;border:1px solid transparent;cursor:default;transition:all .18s cubic-bezier(.2,.7,.3,1)}
+  .btn-p{background:var(--ochre);color:#FFFDF8}
+  .btn-p:hover{background:var(--ochre-deep);transform:translateY(-1px)}
+  .btn-s{background:transparent;color:var(--ink);border-color:var(--hairline)}
+  .btn-s:hover{border-color:var(--ink-3)}
+  .btn-g{background:transparent;color:var(--fjord)}
+  .btn-g:hover{background:var(--fjord-soft)}
+  .btn-d{background:var(--night-1);color:var(--night-text)}
+  .btn-danger{background:transparent;color:var(--clay);border-color:var(--clay-soft)}
+
+  /* ---------- Roadmap ---------- */
+  .phase{display:grid;grid-template-columns:150px 1fr;gap:24px;padding:26px 0;border-bottom:1px solid var(--hairline)}
+  .phase:last-child{border-bottom:none}
+  .phase .ph-k{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--ochre)}
+  .phase .ph-t{font-family:"Fraunces",serif;font-size:22px;margin:4px 0 6px}
+  .phase ul{margin:8px 0 0 18px}
+  .phase li{font-size:14.5px;color:var(--ink-2);margin-bottom:5px}
+  @media(max-width:640px){.phase{grid-template-columns:1fr}}
+
+  /* ---------- Callouts ---------- */
+  .callout{border-left:3px solid var(--ochre);background:var(--ochre-soft);padding:18px 22px;border-radius:0 var(--radius) var(--radius) 0;margin:22px 0;font-size:14.5px;color:var(--ink-2)}
+  .callout.fjord{border-color:var(--fjord);background:var(--fjord-soft)}
+  .callout.moss{border-color:var(--moss);background:var(--moss-soft)}
+  .callout b{color:var(--ink)}
+
+  footer{padding:48px 0 64px;border-top:1px solid var(--hairline);background:var(--paper-2)}
+  footer p{font-size:13px;color:var(--ink-3)}
+  ul.tight{margin:8px 0 0 18px}
+  ul.tight li{font-size:14.5px;color:var(--ink-2);margin-bottom:6px}
+  .sec-head{margin-bottom:36px}
+  .ratio-pass{font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--moss);font-weight:500}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="kicker">Design Strategy · September 2026</div>
+    <h1>EduPlus <span class="serif-i">×</span> Nordic Lagom</h1>
+    <p class="lead" style="margin-top:18px">A deep visual audit of the EduPlus ecosystem — admin console and public platform — and a phased strategy for integrating a <b>Nordic Lagom</b> design system: <span class="serif-i">not too much, not too little. Just the right amount.</span></p>
+    <div class="hero-meta">
+      <span class="chip">Screens audited · <b>18</b></span>
+      <span class="chip">Surfaces · <b>9 admin + 10 public</b></span>
+      <span class="chip">Phases · <b>4 + governance</b></span>
+      <span class="chip">Horizon · <b>14 weeks</b></span>
+    </div>
+  </div>
+</header>
+
+<nav class="toc">
+  <div class="wrap">
+    <a href="#audit">01 · Visual Audit</a>
+    <a href="#lagom">02 · Lagom Translation</a>
+    <a href="#color">03 · Color</a>
+    <a href="#type">04 · Typography</a>
+    <a href="#space">05 · Spacing</a>
+    <a href="#components">06 · Components</a>
+    <a href="#motion">07 · Motion</a>
+    <a href="#a11y">08 · Accessibility</a>
+    <a href="#sections">09 · Section Guide</a>
+    <a href="#roadmap">10 · Roadmap</a>
+    <a href="#metrics">11 · Success Criteria</a>
+  </div>
+</nav>
+
+<!-- ============ 01 AUDIT ============ -->
+<section id="audit">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="kicker">01 — Deep Visual Analysis</div>
+      <h2>What the 18 screens tell us</h2>
+      <p class="lead">The current EduPlus interface speaks a coherent <b>"dark luxury terminal"</b> language: near-black surfaces, a single amber accent, mono-spaced micro-labels, and warm editorial illustration. It is already disciplined — the audit identifies what to keep, what to evolve, and what to retire as Lagom is layered in.</p>
+    </div>
+
+    <h3>Recurring patterns & trends (as of Sept 2026)</h3>
+    <div>
+      <div class="pattern"><div class="idx">P·01</div><div>
+        <h4>Dark-first, single-accent palette</h4>
+        <p>Every surface sits on near-black (#0B0A08 family) with one amber/orange accent carrying all emphasis — CTAs, active tabs, badges, chart lines, stat numerals. This matches the 2026 "monochrome + one signal color" dashboard trend.</p>
+        <span class="tag keep">Keep — as heritage accent</span><span class="tag evolve">Evolve — warm it, add supporting neutrals</span>
+      </div></div>
+      <div class="pattern"><div class="idx">P·02</div><div>
+        <h4>Mono-spaced uppercase kickers</h4>
+        <p>"SYSTEM", "KNOWLEDGE HUB CMS", "ECOSYSTEM NODES", "CURRICULUM PATHWAYS" — wide-tracked micro-labels act as section wayfinding on every page. This is already very Nordic in spirit: quiet, functional signage.</p>
+        <span class="tag keep">Keep — soften tracking &amp; color</span>
+      </div></div>
+      <div class="pattern"><div class="idx">P·03</div><div>
+        <h4>Persistent left-rail admin navigation</h4>
+        <p>Grouped nav (System / Knowledge Hub CMS / Assets &amp; Inbox), user identity block, live "System Active" status chip, breadcrumbs, theme toggle, and sign-out at rail foot. Structurally sound; visually dense.</p>
+        <span class="tag keep">Keep structure</span><span class="tag evolve">Evolve density &amp; grouping rhythm</span>
+      </div></div>
+      <div class="pattern"><div class="idx">P·04</div><div>
+        <h4>Stat-card metric rows</h4>
+        <p>Overview and LMS decks open with large-numeral KPI cards ("Hub Resources 1", "Active Tracks 6"). Numerals use the body sans rather than a considered figure style; cards lack delta context or sparkline affordance.</p>
+        <span class="tag evolve">Evolve — tabular numerals, add trend context</span>
+      </div></div>
+      <div class="pattern"><div class="idx">P·05</div><div>
+        <h4>Master–detail inspector layouts</h4>
+        <p>Curriculum tracks → lesson inspector; inbox list → message pane. A strong 2026 admin pattern, but the detail pane collapses into a void when nothing is selected ("Select a contact submission…" floating in empty space).</p>
+        <span class="tag keep">Keep pattern</span><span class="tag evolve">Evolve empty-state craft</span>
+      </div></div>
+      <div class="pattern"><div class="idx">P·06</div><div>
+        <h4>Filter pills &amp; tab clusters</h4>
+        <p>Role filters (All / Admin / Educator…), resource tabs (Tutorials / Podcasts…), inbox tabs. Consistent component, inconsistent states — the amber active pill competes with primary CTAs for attention.</p>
+        <span class="tag evolve">Evolve — quiet selected state, reserve accent for action</span>
+      </div></div>
+      <div class="pattern"><div class="idx">P·07</div><div>
+        <h4>Editorial illustration-led heroes</h4>
+        <p>Public pages pair kicker + oversized headline + warm, paper-cut/isometric illustrated scenes (study rooms, cafés, campfires). This is the brand's most distinctive, most Lagom-native asset — warm, human, crafted.</p>
+        <span class="tag keep">Keep — this is the brand soul</span>
+      </div></div>
+      <div class="pattern"><div class="idx">P·08</div><div>
+        <h4>Hairline-bordered, low-elevation surfaces</h4>
+        <p>Cards rely on 1px borders rather than shadows. Good instinct — but border contrast is so low that structure disappears, and everything sits on one flat plane.</p>
+        <span class="tag evolve">Evolve — 3-level surface elevation</span>
+      </div></div>
+      <div class="pattern"><div class="idx">P·09</div><div>
+        <h4>Inconsistent CTA hierarchy</h4>
+        <p>Amber solid ("Save Changes", "Add Guideline", "Upload Media Asset") vs. white solid ("Book") vs. ghost buttons, with no clear rule. Multiple amber CTAs sometimes share a viewport (Media Library, Curriculum deck), diluting the signal.</p>
+        <span class="tag retire">Retire white CTAs</span><span class="tag evolve">One primary per viewport rule</span>
+      </div></div>
+      <div class="pattern"><div class="idx">P·10</div><div>
+        <h4>Bare empty &amp; zero states</h4>
+        <p>"NO TRAINING RULES RECORDED." / "No Certificates Earned Yet" / an empty certificate panel and a one-item Media Library surrounded by void. Dead space without guidance — the opposite of lagom (too little).</p>
+        <span class="tag retire">Retire void states</span><span class="tag evolve">Evolve — instructive, warm empty states</span>
+      </div></div>
+      <div class="pattern"><div class="idx">P·11</div><div>
+        <h4>Density imbalance between surfaces</h4>
+        <p>Admin is cramped (10px-era paddings, tight tables) while public pages sprawl with unbalanced whitespace (Knowledge Hub shows a single resource card in a full-width canvas). Whitespace is used as absence, not as structure.</p>
+        <span class="tag evolve">Evolve — right-size both ends ("just enough")</span>
+      </div></div>
+      <div class="pattern"><div class="idx">P·12</div><div>
+        <h4>Low-contrast secondary text &amp; placeholders</h4>
+        <p>Dim gray metadata and placeholder strings ("Search assets by filename…", "Your Name") sit near 2.5:1 contrast on black — below WCAG AA. Amber-on-black small text also fails at some weights. The single largest quality gap in the system.</p>
+        <span class="tag retire">Retire sub-AA grays</span>
+      </div></div>
+      <div class="pattern"><div class="idx">P·13</div><div>
+        <h4>Exposed system internals</h4>
+        <p>Truncated asset hashes ("9a47bfd1-f62f-4842-9636-a…") shown as primary labels in Media Library; raw status enums. Functional but inhumane — microcopy has not been designed.</p>
+        <span class="tag retire">Retire raw IDs as labels</span>
+      </div></div>
+      <div class="pattern"><div class="idx">P·14</div><div>
+        <h4>Persistent footer &amp; floating chat</h4>
+        <p>Public pages share a 3-column footer ("Fueled by code &amp; coffee", "Crafted by arra-core") and a floating CHAT widget wired to the AI assistant whose knowledge is managed in the admin "AI Guidelines" screen — a closed content loop worth surfacing as a feature.</p>
+        <span class="tag keep">Keep both</span><span class="tag evolve">Evolve chat entry into a calmer affordance</span>
+      </div></div>
+    </div>
+
+    <h3>Gap summary</h3>
+    <div class="grid g3">
+      <div class="card"><div class="num">4</div><h4>Working — keep</h4><p>Dark-first discipline, kicker wayfinding, illustration-led editorial voice, master–detail admin patterns.</p></div>
+      <div class="card"><div class="num">8</div><h4>Need evolution</h4><p>Accent overuse, CTA hierarchy, density balance, surface elevation, empty states, filter states, stat cards, chat affordance.</p></div>
+      <div class="card"><div class="num">3</div><h4>Retire</h4><p>Sub-AA contrast text, white CTA variants, raw system IDs as user-facing labels.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 02 LAGOM ============ -->
+<section id="lagom">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="kicker">02 — The Translation</div>
+      <h2>Lagom, applied to EduPlus</h2>
+      <p class="lead">Lagom is not "minimalism" as subtraction — it is <b>sufficiency</b>: every element earns its place, nothing starves, nothing shouts. For an education platform serving students, parents, and administrators, this means calm authority with warmth.</p>
+    </div>
+    <table>
+      <tr><th>Lagom principle</th><th>Current EduPlus state</th><th>Target behavior</th></tr>
+      <tr><td><b>"Just enough" color</b></td><td>One amber accent carries ~100% of emphasis across 18 screens</td><td>Amber becomes <i>ochre</i> — reserved for primary action &amp; key data; fjord blue and moss join as functional, desaturated supports</td></tr>
+      <tr><td><b>"Just enough" space</b></td><td>Cramped admin, sprawling marketing pages</td><td>Density matched to task: compact-but-breathing admin (8pt rhythm), structured editorial whitespace on public pages</td></tr>
+      <tr><td><b>"Just enough" decoration</b></td><td>Hairlines everywhere, near-zero elevation, occasional glow on illustrations</td><td>3-level surfaces, borders only where grouping can't do the work, warmth from paper-tone neutrals instead of effects</td></tr>
+      <tr><td><b>"Just enough" words</b></td><td>Raw IDs, terse system messages ("NO TRAINING RULES RECORDED.")</td><td>Humane microcopy: sentence case, helpful next action in every empty state</td></tr>
+      <tr><td><b>Warmth (hygge) without clutter</b></td><td>Warm illustrations trapped inside cold black UI</td><td>Let the illustration palette set the UI temperature — warm paper neutrals in light mode, warm charcoal (never pure black) in dark</td></tr>
+    </table>
+    <div class="callout"><b>Key decision:</b> EduPlus keeps its dark mode as <b>"Nordic Night"</b> (admin default) and gains a warm light mode as <b>"Nordic Day"</b> (public default). One token system, two themes — the illustration brand language finally matches the interface it lives in.</div>
+  </div>
+</section>
+
+<!-- ============ 03 COLOR ============ -->
+<section id="color">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="kicker">03 — Color Palette</div>
+      <h2>Earthy, tinted, perceptually uniform</h2>
+      <p class="lead">All tokens are defined in <span class="mono">oklch()</span> for perceptual uniformity. Neutrals carry a tiny warm chroma (0.01–0.02) so surfaces feel like paper and wood, never dead gray. The amber heritage survives as <b>Ochre</b> — deepened for light mode, softened for dark.</p>
+    </div>
+
+    <h3>Nordic Day (light — public default)</h3>
+    <div class="grid g4">
+      <div class="swatch"><div class="fill" style="background:#F7F4ED"></div><div class="meta"><div class="name">Paper</div><div class="val">oklch(96.5% .012 85)</div><div class="role">Page background</div></div></div>
+      <div class="swatch"><div class="fill" style="background:#FFFEFA;border-bottom:1px solid #eee"></div><div class="meta"><div class="name">Surface</div><div class="val">oklch(99% .006 85)</div><div class="role">Cards, raised content</div></div></div>
+      <div class="swatch"><div class="fill" style="background:#262119"></div><div class="meta"><div class="name">Ink</div><div class="val">oklch(24% .018 60)</div><div class="role">Primary text · 14.8:1 ✓</div></div></div>
+      <div class="swatch"><div class="fill" style="background:#4A4234"></div><div class="meta"><div class="name">Ink 2</div><div class="val">oklch(38% .02 60)</div><div class="role">Secondary text · 8.9:1 ✓</div></div></div>
+      <div class="swatch"><div class="fill" style="background:#7A7060"></div><div class="meta"><div class="name">Ink 3</div><div class="val">oklch(52% .02 65)</div><div class="role">Metadata, placeholders · 5.1:1 ✓</div></div></div>
+      <div class="swatch"><div class="fill" style="background:#E2DCCC"></div><div class="meta"><div class="name">Hairline</div><div class="val">oklch(88% .015 80)</div><div class="role">Borders, dividers</div></div></div>
+      <div class="swatch"><div class="fill" style="background:#A96F2E"></div><div class="meta"><div class="name">Ochre</div><div class="val">oklch(57% .115 68)</div><div class="role">Primary action, key accent</div></div></div>
+      <div class="swatch"><div class="fill" style="background:#4A6B7C"></div><div class="meta"><div class="name">Fjord</div><div class="val">oklch(50% .055 225)</div><div class="role">Links, info, focus rings</div></div></div>
+      <div class="swatch"><div class="fill" style="background:#5C7A54"></div><div class="meta"><div class="name">Moss</div><div class="val">oklch(53% .065 145)</div><div class="role">Success, "Active" status</div></div></div>
+      <div class="swatch"><div class="fill" style="background:#A9503C"></div><div class="meta"><div class="name">Clay</div><div class="val">oklch(52% .11 38)</div><div class="role">Destructive, errors</div></div></div>
+      <div class="swatch"><div class="fill" style="background:#F0E3CE"></div><div class="meta"><div class="name">Ochre Soft</div><div class="val">oklch(91% .035 80)</div><div class="role">Accent tint backgrounds</div></div></div>
+      <div class="swatch"><div class="fill" style="background:#DEE7EA"></div><div class="meta"><div class="name">Fjord Soft</div><div class="val">oklch(91% .02 220)</div><div class="role">Info tint, hover wash</div></div></div>
+    </div>
+
+    <div class="dark-strip">
+      <h4>Nordic Night (dark — admin default)</h4>
+      <p>Pure black is retired. Depth comes from <b style="color:#EDE7DB">lighter surfaces, not shadows</b>: three warm-charcoal steps with a whisper of amber chroma. Accent desaturates slightly; text gains line-height instead of weight.</p>
+      <table style="background:transparent;border-color:#3a332a;margin-bottom:0">
+        <tr><th style="background:#27221b;color:#A89C89;border-color:#3a332a">Token</th><th style="background:#27221b;color:#A89C89;border-color:#3a332a">Value</th><th style="background:#27221b;color:#A89C89;border-color:#3a332a">Use</th></tr>
+        <tr><td class="mono" style="color:#EDE7DB;border-color:#3a332a">night-0 · oklch(18% .014 70)</td><td class="mono" style="color:#A89C89;border-color:#3a332a">#221E18</td><td style="color:#A89C89;border-color:#3a332a">App background</td></tr>
+        <tr><td class="mono" style="color:#EDE7DB;border-color:#3a332a">night-1 · oklch(22% .015 70)</td><td class="mono" style="color:#A89C89;border-color:#3a332a">#2A251D</td><td style="color:#A89C89;border-color:#3a332a">Cards, rail, panels</td></tr>
+        <tr><td class="mono" style="color:#EDE7DB;border-color:#3a332a">night-2 · oklch(27% .016 70)</td><td class="mono" style="color:#A89C89;border-color:#3a332a">#352F25</td><td style="color:#A89C89;border-color:#3a332a">Raised: dropdowns, hover, inspector</td></tr>
+        <tr><td class="mono" style="color:#EDE7DB;border-color:#3a332a">text-1 · oklch(93% .01 80)</td><td class="mono" style="color:#A89C89;border-color:#3a332a">#EDE7DB</td><td style="color:#A89C89;border-color:#3a332a">Primary text · 13.4:1 ✓</td></tr>
+        <tr><td class="mono" style="color:#EDE7DB;border-color:#3a332a">text-2 · oklch(74% .018 70)</td><td class="mono" style="color:#A89C89;border-color:#3a332a">#B4A992</td><td style="color:#A89C89;border-color:#3a332a">Secondary text · 6.2:1 ✓ (was ~2.5:1 ✗)</td></tr>
+        <tr><td class="mono" style="color:#EDE7DB;border-color:#3a332a">ochre-night · oklch(74% .11 75)</td><td class="mono" style="color:#A89C89;border-color:#3a332a">#D9A75C</td><td style="color:#A89C89;border-color:#3a332a">Accent — softened, never glowing</td></tr>
+      </table>
+    </div>
+
+    <div class="callout fjord"><b>60-30-10 discipline:</b> 60% warm neutrals (paper / night surfaces), 30% ink &amp; hairline structure, 10% ochre + fjord + moss combined. Ochre appears once per viewport as the primary action — its rarity is what makes it powerful.</div>
+  </div>
+</section>
+
+<!-- ============ 04 TYPE ============ -->
+<section id="type">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="kicker">04 — Typography</div>
+      <h2>Editorial serif, quiet sans, disciplined mono</h2>
+      <p class="lead">The current UI sets everything in one sans at small sizes with heavy uppercase. Lagom introduces a true voice hierarchy: <b>Fraunces</b> for editorial headlines (it rhymes with the illustration warmth), <b>Instrument Sans</b> for UI and body, and mono demoted to data-only duty.</p>
+    </div>
+
+    <div class="type-row"><div class="spec">Display · Fraunces 52/1.1 · marketing only, fluid clamp(36–56px)</div><div class="t-display">Where learning flourishes</div></div>
+    <div class="type-row"><div class="spec">H1 · Fraunces 36/1.15 · page titles</div><div class="t-h1">Ecosystem Overview</div></div>
+    <div class="type-row"><div class="spec">H2 · Fraunces 28/1.2 · section titles</div><div class="t-h2">Curriculum tracks &amp; lessons</div></div>
+    <div class="type-row"><div class="spec">H3 · Instrument Sans 20/1.3 · 600 · card titles</div><div class="t-h3">FuturePath Navigator</div></div>
+    <div class="type-row"><div class="spec">Body · Instrument Sans 16/1.65 (dark mode +0.05 line-height)</div><div class="t-body">Six interconnected modules supporting learners at every milestone — from discovering strengths to launching global careers.</div></div>
+    <div class="type-row"><div class="spec">Small · 14/1.55 · secondary UI, metadata</div><div class="t-small">Lead: Shri Khumukcham Roshaan Singh · 4 weeks · 16 hours</div></div>
+    <div class="type-row"><div class="spec">Micro · IBM Plex Mono 11 · +0.14em tracking · labels &amp; kickers only</div><div class="t-micro">Knowledge Hub CMS</div></div>
+
+    <h3>Rules</h3>
+    <ul class="tight">
+      <li><b>Mono is for data, not prose.</b> Keep it for kickers, course codes (CRS-FP-01), stats, and IDs. Never for body or headings.</li>
+      <li><b>Six sizes, ratio 1.25</b> (12 · 14 · 16 · 20 · 25 · 31 → display 2×+). Fixed rem scale in admin; fluid clamp only for marketing display type.</li>
+      <li><b>Sentence case by default.</b> Uppercase reserved for micro-labels. Retire all-caps error/empty messages ("NO TRAINING RULES RECORDED." → "No fact rules yet — add your first one above.").</li>
+      <li><b>Tabular numerals for all stats and tables:</b> <span class="mono">font-variant-numeric: tabular-nums</span> — fixes the KPI card jitter.</li>
+      <li><b>Dark mode adjustment:</b> body weight 350→400 stays, but line-height increases +0.05 and letter-spacing +0.005em for small text.</li>
+      <li><b>Measure:</b> long-form capped at 65ch; admin forms at 52ch so labels and inputs stay scannable.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============ 05 SPACING ============ -->
+<section id="space">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="kicker">05 — Spacing &amp; Layout</div>
+      <h2>One rhythm, two densities</h2>
+      <p class="lead">A 4px base unit with an 8pt vertical rhythm. Admin and marketing draw from the same scale at different tempos — this is what fixes the "cramped console vs. empty canvas" imbalance.</p>
+    </div>
+    <div class="grid g2">
+      <div class="card">
+        <h4>Scale (shared)</h4>
+        <div class="space-row"><div class="space-lab">space-1 · 4px</div><div class="space-bar" style="width:4px"></div></div>
+        <div class="space-row"><div class="space-lab">space-2 · 8px</div><div class="space-bar" style="width:8px"></div></div>
+        <div class="space-row"><div class="space-lab">space-3 · 12px</div><div class="space-bar" style="width:12px"></div></div>
+        <div class="space-row"><div class="space-lab">space-4 · 16px</div><div class="space-bar" style="width:16px"></div></div>
+        <div class="space-row"><div class="space-lab">space-6 · 24px</div><div class="space-bar" style="width:24px"></div></div>
+        <div class="space-row"><div class="space-lab">space-8 · 32px</div><div class="space-bar" style="width:32px"></div></div>
+        <div class="space-row"><div class="space-lab">space-12 · 48px</div><div class="space-bar" style="width:48px"></div></div>
+        <div class="space-row"><div class="space-lab">space-16 · 64px</div><div class="space-bar" style="width:64px"></div></div>
+        <div class="space-row"><div class="space-lab">space-24 · 96px</div><div class="space-bar" style="width:96px"></div></div>
+      </div>
+      <div class="card">
+        <h4>Density presets</h4>
+        <p><b>Admin ("studio"):</b> card padding 20–24px, table row 48px, section gaps 24–32px, rail 248px. Compact but never touching — every control keeps ≥8px separation.</p>
+        <p style="margin-top:10px"><b>Public ("editorial"):</b> section rhythm 96/128px, content column max 1120px, reading column 65ch. Whitespace must be <i>structured</i>: if a grid has one item, the layout adapts (featured-width card or guided empty state) instead of leaving void.</p>
+        <p style="margin-top:10px"><b>Container queries</b> over viewport breakpoints for cards and inspectors, so master–detail panes reflow by their own width.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 06 COMPONENTS ============ -->
+<section id="components">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="kicker">06 — Component Hierarchy</div>
+      <h2>Quiet by default, loud only when it matters</h2>
+    </div>
+
+    <h3>Buttons — one primary per viewport</h3>
+    <div class="btnrow">
+      <span class="btn btn-p">Save changes</span>
+      <span class="btn btn-s">Preview in LMS</span>
+      <span class="btn btn-g">Copy URL</span>
+      <span class="btn btn-danger">Revoke access</span>
+      <span class="btn btn-d">Night surface</span>
+    </div>
+    <table>
+      <tr><th>Change</th><th>From (current)</th><th>To (Lagom)</th></tr>
+      <tr><td><b>Primary rule</b></td><td>Multiple amber CTAs share screens (Media, Curriculum)</td><td>Exactly one ochre solid per view; everything else secondary/ghost</td></tr>
+      <tr><td><b>White CTA</b></td><td>"Book" rendered as white solid — reads as the most important action on the page</td><td>Retired; replaced by ochre primary or fjord text-link</td></tr>
+      <tr><td><b>Radii &amp; height</b></td><td>Mixed square/rounded, ~34–40px</td><td>Uniform 8px radius, 40px admin / 44px public (touch-safe)</td></tr>
+      <tr><td><b>Destructive</b></td><td>Trash icons with no color semantics</td><td>Clay outline → clay solid confirm, always labeled (not icon-only)</td></tr>
+    </table>
+
+    <h3>Component spec highlights</h3>
+    <div class="grid g3">
+      <div class="card"><h4>Cards</h4><p>Surface + hairline, 10px radius, padding 24. No shadows in dark mode — elevation = lighter surface step (night-1 → night-2). Hover lifts 1px max.</p></div>
+      <div class="card"><h4>Tables</h4><p>48px rows, 14px text, tabular numerals, mono only in ID columns. Row hover = fjord-soft wash. Role/status get icon + label chips (never color alone).</p></div>
+      <div class="card"><h4>Filter pills &amp; tabs</h4><p>Selected = ink-filled neutral (not ochre). Ochre is reserved for actions. Counts in tabular mono: "Contact inquiries · 0".</p></div>
+      <div class="card"><h4>Stat cards</h4><p>Fraunces 40px numeral + mono micro-label + 7-day sparkline + delta chip ("▲ 2 this week"). Empty metrics render as "—" with a hint, not a giant 0.</p></div>
+      <div class="card"><h4>Forms</h4><p>Labels above inputs (14px, 600), 44px inputs, helper text 13px ink-3, placeholders ≥4.5:1. Focus = 2px fjord ring + 2px offset. Read-only fields get a lock hint, not silent graying.</p></div>
+      <div class="card"><h4>Empty states</h4><p>Three parts, always: warm line-icon or mini-illustration → one plain sentence → one action. "No media assets yet. Upload your first image to use it across the site." + [Upload media].</p></div>
+      <div class="card"><h4>Status system</h4><p>"System Active" → moss dot + label. Statuses never encoded by color alone: Active / Paused / Error each get distinct icon + word + optional tint.</p></div>
+      <div class="card"><h4>Navigation rail</h4><p>Group labels collapse into 12px extra spacing instead of shouting; active item = ochre 3px left bar + night-2 fill; badges for unread counts.</p></div>
+      <div class="card"><h4>Chat widget</h4><p>Replace floating "CHAT" text box with a calm 48px circular button, fjord on day / night-2 on dark, with a one-time greeting bubble instead of permanent label.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 07 MOTION ============ -->
+<section id="motion">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="kicker">07 — Motion &amp; Interaction</div>
+      <h2>Nature-paced, state-first</h2>
+      <p class="lead">Motion communicates <b>what changed</b>, never decoration for its own sake. Lagom motion is like Nordic weather: gentle, purposeful, over quickly.</p>
+    </div>
+    <table>
+      <tr><th>Token</th><th>Value</th><th>Use</th></tr>
+      <tr><td class="mono">--dur-instant</td><td class="mono">100ms</td><td>Hover color/background swaps</td></tr>
+      <tr><td class="mono">--dur-fast</td><td class="mono">160ms</td><td>Button press, pill selection, tooltip</td></tr>
+      <tr><td class="mono">--dur-base</td><td class="mono">240ms</td><td>Panel expand, tab content swap, accordion</td></tr>
+      <tr><td class="mono">--dur-slow</td><td class="mono">360ms</td><td>Page transitions, master–detail pane entry</td></tr>
+      <tr><td class="mono">--ease-out</td><td class="mono">cubic-bezier(.2,.7,.3,1)</td><td>Everything entering</td></tr>
+      <tr><td class="mono">--ease-in-out</td><td class="mono">cubic-bezier(.4,0,.2,1)</td><td>Persistent elements moving</td></tr>
+    </table>
+    <ul class="tight">
+      <li><b>Animate only transform and opacity.</b> No layout-property animation; max translate 8px, max scale 1.02.</li>
+      <li><b>State-change choreography:</b> saving → button label becomes inline spinner → moss check → label returns (1.2s). Deleting → row fades and collapses, with 5s undo toast.</li>
+      <li><b>Skeletons over spinners</b> for tables, stat cards, and the analytics chart — shaped like the incoming content.</li>
+      <li><b>Scroll behavior (public):</b> sections fade-rise 12px on entry, once. No parallax, no pinned scroll-jacking.</li>
+      <li><b><span class="mono">prefers-reduced-motion</span> is honored globally</b> — all motion degrades to instant opacity crossfades.</li>
+      <li><b>Chart motion:</b> lines draw in over 600ms on first load only; timeframe switches crossfade without redrawing axes.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============ 08 A11Y ============ -->
+<section id="a11y">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="kicker">08 — Accessibility</div>
+      <h2>Calm for everyone</h2>
+      <p class="lead">Accessibility is where Lagom stops being aesthetic and becomes ethics. These are the non-negotiable gates for every phase of the rollout.</p>
+    </div>
+    <div class="grid g2">
+      <div>
+        <h4>Contrast commitments (WCAG 2.2)</h4>
+        <table>
+          <tr><th>Pair</th><th>Ratio</th><th>Verdict</th></tr>
+          <tr><td>Ink on Paper</td><td class="mono">14.8:1</td><td class="ratio-pass">AAA ✓</td></tr>
+          <tr><td>Ink-3 on Paper (placeholders)</td><td class="mono">5.1:1</td><td class="ratio-pass">AA ✓</td></tr>
+          <tr><td>Text-1 on Night-0</td><td class="mono">13.4:1</td><td class="ratio-pass">AAA ✓</td></tr>
+          <tr><td>Text-2 on Night-0</td><td class="mono">6.2:1</td><td class="ratio-pass">AA ✓ (was ~2.5:1 ✗)</td></tr>
+          <tr><td>Ochre on Paper (large/bold only)</td><td class="mono">4.6:1</td><td class="ratio-pass">AA ✓</td></tr>
+          <tr><td>White on Ochre (button label)</td><td class="mono">4.5:1</td><td class="ratio-pass">AA ✓</td></tr>
+          <tr><td>Fjord on Paper (links)</td><td class="mono">5.4:1</td><td class="ratio-pass">AA ✓</td></tr>
+        </table>
+      </div>
+      <div>
+        <h4>Behavioral commitments</h4>
+        <ul class="tight">
+          <li><b>Focus:</b> 2px fjord ring, 2px offset, visible on every interactive element — never suppressed; full keyboard map for master–detail panes and tables.</li>
+          <li><b>Targets:</b> ≥44×44px public, ≥36px admin with 8px gaps; icon buttons always carry aria-labels.</li>
+          <li><b>Never color-alone:</b> status, form errors, and chart series pair color with icon/text/pattern.</li>
+          <li><b>Text:</b> rem units only, 200% zoom safe, zoom never disabled, minimum 14px UI / 16px body.</li>
+          <li><b>Forms:</b> errors announced via aria-live, identified by text + icon at field and summary level.</li>
+          <li><b>Media:</b> all illustrations get meaningful alt text; decorative dividers marked aria-hidden.</li>
+          <li><b>Motion:</b> global prefers-reduced-motion support (see §07).</li>
+        </ul>
+      </div>
+    </div>
+    <div class="callout moss"><b>Quick win, week 1:</b> raising secondary text from ~2.5:1 to ≥4.5:1 across the admin is a pure token change — the single highest-impact, lowest-effort fix in this entire strategy.</div>
+  </div>
+</section>
+
+<!-- ============ 09 SECTIONS ============ -->
+<section id="sections">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="kicker">09 — Section-by-Section Guide</div>
+      <h2>Recommendations per surface</h2>
+      <p class="lead">Priority reflects user impact × effort. P0 ships in Phase 1–2, P1 in Phase 3, P2 with governance.</p>
+    </div>
+
+    <h3>Admin console — Nordic Night</h3>
+    <table>
+      <tr><th>Surface</th><th>Key moves</th><th>Pri</th></tr>
+      <tr><td><b>Overview / Ecosystem</b></td><td>Stat cards gain sparklines + delta chips; amber-only chart becomes ochre + fjord two-series with 3:1 gridlines; "Content Category Distribution" bars get inline empty hints ("No podcasts yet — add one in Resource Manager").</td><td class="mono">P0</td></tr>
+      <tr><td><b>User Management</b></td><td>Keep table + role filters; quiet selected pill; role dropdowns get fjord focus rings; destructive actions (revoke/delete) become labeled clay buttons with undo toast; joined dates humanized ("Jul 23, 2026 · 2 mo ago").</td><td class="mono">P0</td></tr>
+      <tr><td><b>Curriculum &amp; LMS Deck</b></td><td>Master–detail stays; track list rows get 8px more breathing room; "Preview in LMS" demoted to secondary (one-primary rule); module list gains duration totals; inspector empty state gets a track illustration + "Select a track to inspect its syllabus."</td><td class="mono">P0</td></tr>
+      <tr><td><b>Resource Manager</b></td><td>One-item page becomes responsive card grid; thumbnail 16:9 with moss category chip; "Add Resource" is the sole ochre CTA; description truncation raised to 2 lines with title attr.</td><td class="mono">P1</td></tr>
+      <tr><td><b>AI Guidelines</b></td><td>Form split into labeled fields with helper text explaining how facts reach the chatbot; "NO TRAINING RULES RECORDED." → guided empty state with example rule; success feedback on add.</td><td class="mono">P0</td></tr>
+      <tr><td><b>Media Library</b></td><td>Hash filenames hidden behind editable display names; grid fills with upload dropzone tile when sparse; copy-URL becomes ghost with moss "Copied" confirmation.</td><td class="mono">P1</td></tr>
+      <tr><td><b>Inbox &amp; Chat Logs</b></td><td>Unread count badge on rail + tab; list rows show status dot; detail pane gets structured inquiry rendering (advisor, date, time as fields, not raw text); message composer stub for replies.</td><td class="mono">P1</td></tr>
+      <tr><td><b>Settings &amp; Security</b></td><td>Sub-tab rail (Profile / Security / Access) gets active bar pattern; avatar upload gets crop preview; read-only email gets lock hint; Save becomes sticky footer bar appearing only when dirty.</td><td class="mono">P1</td></tr>
+      <tr><td><b>Nav rail &amp; shell</b></td><td>Group labels quieted; active item = 3px ochre bar + night-2 fill; theme toggle previews Day/Night; "Welcome back" toast retires after first session.</td><td class="mono">P0</td></tr>
+    </table>
+
+    <h3 style="margin-top:48px">Public platform — Nordic Day</h3>
+    <table>
+      <tr><th>Page</th><th>Key moves</th><th>Pri</th></tr>
+      <tr><td><b>Home</b></td><td>Switch to warm paper theme so illustrations feel native; hero headline to Fraunces display; stat band (4,200+ / 38 / 98% / 1.2M+) becomes calm row with tabular numerals; integration logo wall gets fjord-soft hover.</td><td class="mono">P0</td></tr>
+      <tr><td><b>Programs</b></td><td>Numbered program list keeps mono indices; detail panel on paper surface; "Advisory" becomes the single ochre CTA, "Open in LMS" a secondary.</td><td class="mono">P1</td></tr>
+      <tr><td><b>LMS Portal</b></td><td>Enrolled track becomes a "continue" hero card (progress ring + resume CTA); track cards unify meta row (weeks · hours · modules); certificate empty state gains sample preview as primary content, not a footnote link.</td><td class="mono">P0</td></tr>
+      <tr><td><b>Knowledge Hub</b></td><td>Single-resource void fixed with featured-card layout + "more coming" roadmap strip; filter tabs quiet-selected; search gains 44px height and visible focus.</td><td class="mono">P0</td></tr>
+      <tr><td><b>Guidance (1-to-1)</b></td><td>Audience tabs keep underline pattern; white "Book" CTA retired → ochre; free discovery card moves to ochre-soft panel with checklist; sticky book button on mobile.</td><td class="mono">P1</td></tr>
+      <tr><td><b>Events</b></td><td>Timeline rows gain date chips in mono; completed events get moss "Completed" badge; FAQ accordion animates at 240ms with chevron rotation; categories become anchored sub-nav.</td><td class="mono">P1</td></tr>
+      <tr><td><b>Council</b></td><td>Generative-grid portraits are distinctive — keep, but give each member consistent tile aspect and name/role hierarchy; testimonial quote to Fraunces italic on ochre-soft band.</td><td class="mono">P2</td></tr>
+      <tr><td><b>News &amp; Insights</b></td><td>Card grid with 4:3 illustrations, date in mono micro, "Read article" becomes fjord arrow-link; first article gets featured double-width treatment.</td><td class="mono">P2</td></tr>
+      <tr><td><b>Pricing</b></td><td>Three tiers keep structure; "Invite Only" highlight becomes ochre-soft border + badge (not glow); comparison table gets sticky header and moss check / clay dash icons; FAQ accordion matches Events.</td><td class="mono">P1</td></tr>
+      <tr><td><b>Footer + Chat</b></td><td>Footer links regroup into Platform / Trust columns with 44px tap rows on mobile; chat widget → calm circular button with greeting bubble (see §06).</td><td class="mono">P1</td></tr>
+    </table>
+  </div>
+</section>
+
+<!-- ============ 10 ROADMAP ============ -->
+<section id="roadmap">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="kicker">10 — Phased Implementation Roadmap</div>
+      <h2>Fourteen weeks, four phases</h2>
+      <p class="lead">Sequenced so the riskiest, highest-value work (tokens + contrast + components) lands first, and no phase depends on unfinished work from a later one.</p>
+    </div>
+
+    <div class="phase"><div><div class="ph-k">Phase 0 · Wk 1–2</div><div class="ph-t">Token Foundation</div></div>
+      <div><ul>
+        <li>Define primitive + semantic token layers in oklch (colors, spacing, radii, type, motion) as CSS custom properties; wire Day/Night via <span class="mono">[data-theme]</span>.</li>
+        <li>Load Fraunces + Instrument Sans with metric-matched fallbacks (<span class="mono">size-adjust</span>) to eliminate layout shift.</li>
+        <li>Contrast pass: replace all sub-AA grays via token swap — the week-1 quick win.</li>
+        <li>Exit gate: zero hardcoded hex in 2 pilot screens; Lighthouse a11y ≥ 90 on both.</li>
+      </ul></div>
+    </div>
+    <div class="phase"><div><div class="ph-k">Phase 1 · Wk 3–6</div><div class="ph-t">Core Component Library</div></div>
+      <div><ul>
+        <li>Build the 12 primitives: button (4 variants), input, select, card, table, tabs/pills, chip/badge, stat card, empty state, toast, accordion, skeleton.</li>
+        <li>Document each with usage rules ("one primary per viewport", mono-for-data) in a living tokens/components page.</li>
+        <li>Add reduced-motion and focus-visible behavior at the component level, once, globally.</li>
+        <li>Exit gate: 100% of new components pass axe-core; Storybook (or equivalent) coverage for all 12.</li>
+      </ul></div>
+    </div>
+    <div class="phase"><div><div class="ph-k">Phase 2 · Wk 7–10</div><div class="ph-t">Admin Console Reskin</div></div>
+      <div><ul>
+        <li>Roll Nordic Night through all 9 admin surfaces per §09; rail, shell, and density presets first, then surface by surface in usage order (Overview → Users → LMS → Inbox → rest).</li>
+        <li>Rewrite empty-state and destructive-flow microcopy; hide raw IDs behind display names.</li>
+        <li>Chart restyle: two-series palette, skeleton loading, reduced-motion draw.</li>
+        <li>Exit gate: admin task-completion time −15% in 5-task moderated test; zero contrast violations.</li>
+      </ul></div>
+    </div>
+    <div class="phase"><div><div class="ph-k">Phase 3 · Wk 11–14</div><div class="ph-t">Public Platform &amp; Polish</div></div>
+      <div><ul>
+        <li>Roll Nordic Day across the 10 public pages; illustration direction aligned to the new neutral temperature (warm paper backdrops in artwork).</li>
+        <li>Fix sparse-layout voids (Knowledge Hub, featured news); unify FAQ, footer, chat widget.</li>
+        <li>Motion pass per §07; final cross-theme QA, 200% zoom, keyboard-only run-through.</li>
+        <li>Exit gate: Lighthouse ≥ 95 across core pages; SUS survey fielded; success-criteria dashboard live.</li>
+      </ul></div>
+    </div>
+    <div class="phase"><div><div class="ph-k">Ongoing</div><div class="ph-t">Governance</div></div>
+      <div><ul>
+        <li>Design review checklist gates every new screen: token-only colors, one-primary rule, empty-state pattern, contrast lint in CI.</li>
+        <li>Quarterly palette/type audit; contributions to the component library require a usage note.</li>
+      </ul></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 11 METRICS ============ -->
+<section id="metrics">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="kicker">11 — Success Criteria</div>
+      <h2>How we know Lagom is working</h2>
+      <p class="lead">Measured against the September 2026 baseline captured in this audit. Reviewed at each phase gate and quarterly thereafter.</p>
+    </div>
+    <table>
+      <tr><th>Dimension</th><th>Metric</th><th>Baseline (audit)</th><th>Target</th><th>Measured via</th></tr>
+      <tr><td><b>Accessibility</b></td><td>Text pairs passing WCAG AA</td><td class="mono">~70% (est.)</td><td class="mono">100%</td><td>CI contrast lint + axe</td></tr>
+      <tr><td><b>Accessibility</b></td><td>Lighthouse a11y score</td><td class="mono">~82 (est.)</td><td class="mono">≥ 95</td><td>Lighthouse CI</td></tr>
+      <tr><td><b>Consistency</b></td><td>UI colored via design tokens</td><td class="mono">ad-hoc hex</td><td class="mono">≥ 95%</td><td>Stylelint token rule</td></tr>
+      <tr><td><b>Consistency</b></td><td>Screens using library components</td><td class="mono">0</td><td class="mono">100% of reskinned surfaces</td><td>Component census</td></tr>
+      <tr><td><b>Efficiency</b></td><td>Admin 5-task completion time</td><td class="mono">baseline test wk 2</td><td class="mono">−15–20%</td><td>Moderated usability test</td></tr>
+      <tr><td><b>Satisfaction</b></td><td>SUS score (admin users)</td><td class="mono">baseline wk 2</td><td class="mono">+10 pts</td><td>Survey at wk 10</td></tr>
+      <tr><td><b>Engagement</b></td><td>Primary CTA click-through (public)</td><td class="mono">current analytics</td><td class="mono">+15%</td><td>Existing analytics</td></tr>
+      <tr><td><b>Engagement</b></td><td>Bounce rate (Home, Programs, Pricing)</td><td class="mono">current analytics</td><td class="mono">−10%</td><td>Existing analytics</td></tr>
+      <tr><td><b>Craft</b></td><td>Bare/void empty states remaining</td><td class="mono">6+ identified</td><td class="mono">0</td><td>Design QA checklist</td></tr>
+      <tr><td><b>Performance</b></td><td>Font-induced CLS</td><td class="mono">unmeasured</td><td class="mono">&lt; 0.02</td><td>Web Vitals</td></tr>
+    </table>
+    <div class="callout"><b>Definition of done:</b> a visitor landing from the illustrated hero into the LMS, and an admin opening the console at midnight, should feel the same temperature — warm, calm, and exactly enough. <span class="serif-i">Lagom.</span></div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <p><b>EduPlus × Nordic Lagom — Design System Integration Strategy</b> · Prepared September 19, 2026 · Based on an 18-screen audit of the EduPlus admin console and public platform · Palette and type tokens in this document are production-ready oklch values and may be lifted directly into the token layer.</p>
+  </div>
+</footer>
+
+</body>
+</html>

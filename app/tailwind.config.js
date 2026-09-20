@@ -5,9 +5,10 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['var(--font-sans)', 'Outfit', 'sans-serif'],
-        serif: ['Merriweather', 'serif'],
-        heading: ['var(--font-heading)', 'Merriweather', 'serif'],
+        sans: ['var(--font-sans)', 'Instrument Sans', 'sans-serif'],
+        serif: ['Fraunces', 'serif'],
+        heading: ['var(--font-heading)', 'Fraunces', 'serif'],
+        mono: ['var(--font-mono)', 'IBM Plex Mono', 'monospace'],
       },
       colors: {
         border: "oklch(var(--border))",

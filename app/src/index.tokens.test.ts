@@ -48,16 +48,16 @@ describe('light Nordic interface tokens', () => {
     const tokens = extractRootTokens(stylesheet);
 
     expect(tokens).toMatchObject({
-      background: '98% 0.01 85deg',
-      foreground: '20% 0.015 85deg',
-      primary: '65% 0.15 75deg',
-      'primary-foreground': '98% 0.01 85deg',
-      'muted-foreground': '50% 0.02 85deg',
-      border: '90% 0.01 85deg',
-      input: '90% 0.01 85deg',
-      ring: '65% 0.15 75deg',
-      'sidebar-primary': '65% 0.15 75deg',
-      'sidebar-primary-foreground': '98% 0.01 85deg',
+      background: '96.5% 0.012 85',
+      foreground: '24% 0.018 60',
+      primary: '57% 0.115 68',
+      'primary-foreground': '96.5% 0.012 85',
+      'muted-foreground': '38% 0.02 60',
+      border: '88% 0.015 80',
+      input: '88% 0.015 80',
+      ring: '50% 0.055 225',
+      'sidebar-primary': '57% 0.115 68',
+      'sidebar-primary-foreground': '96.5% 0.012 85',
     });
   });
 

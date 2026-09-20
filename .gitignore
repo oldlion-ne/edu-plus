@@ -59,3 +59,10 @@ tmp/imagegen/
 *.spec.ts
 *.spec.jsx
 *.spec.js
+
+# Ignored reports and presentations
+AUDIT_REPORT.html
+PRESENTATION.html
+2026-09-18.md
+2026-09-20.md
+eduplus-stakeholder-presentation.html
