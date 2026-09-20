@@ -1,42 +1,67 @@
-import { useState, useEffect } from 'react';
-import { supabase } from '../../lib/supabaseClient';
-import { Card } from '../ui/card';
-import { Input } from '../ui/input';
-import { Label } from '../ui/label';
-import { Textarea } from '../ui/textarea';
-import { Button } from '../ui/button';
-import { useTranslation } from '../../i18n/useTranslation';
+import React, { useState, useEffect } from 'react';
+import { supabase } from '@/lib/supabaseClient';
+import { 
+  Search, 
+  Trash2, 
+  UploadCloud,
+  FileText,
+  X
+} from 'lucide-react';
 import { toast } from 'sonner';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '../ui/select';
-import { UploadCloud, FileText, Video, Link, Trash2, Edit2, X } from 'lucide-react';
-import { Attachment } from '../ui/attachment';
 
-export function ResourceManager() {
-  const { t } = useTranslation();
-  const [items, setItems] = useState<any[]>([]);
+interface KnowledgeHubItem {
+  id: string;
+  title: string;
+  description: string;
+  category: string;
+  media_type: 'video_embed' | 'document_url' | 'external_link';
+  url: string;
+  cover_image_url: string | null;
+  author_name: string;
+  created_at: string;
+}
+
+const Attachment = ({ file, onRemove, isUploading }: { file: File; onRemove: () => void; isUploading: boolean }) => {
+  return (
+    <div className="flex items-center gap-3 p-3 border border-border bg-card">
+      <FileText className="size-4 text-primary" />
+      <div className="flex-1 min-w-0">
+        <p className="text-xs font-sans font-medium text-foreground truncate">{file.name}</p>
+        <p className="text-[10px] text-muted-foreground">{(file.size / 1024 / 1024).toFixed(2)} MB</p>
+      </div>
+      {!isUploading && (
+        <button type="button" onClick={onRemove} className="text-muted-foreground hover:text-destructive p-1 transition-colors">
+          <Trash2 className="size-4" />
+        </button>
+      )}
+    </div>
+  );
+};
+
+export default function ResourceManager() {
+    const [items, setItems] = useState<KnowledgeHubItem[]>([]);
   const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filterCat, setFilterCat] = useState('all');
 
-  // Form states
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
-  const [isUploading, setIsUploading] = useState(false);
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  
+  const [newHubItem, setNewHubItem] = useState<{
+    title: string;
+    description: string;
+    category: string;
+    media_type: 'video_embed' | 'document_url' | 'external_link';
+    url: string;
+    author_name: string;
+  }>({
+    title: '', description: '', category: 'tutorial', media_type: 'document_url', url: '', author_name: ''
+  });
+
   const [coverFile, setCoverFile] = useState<File | null>(null);
   const [coverPreviewUrl, setCoverPreviewUrl] = useState<string>('');
-  const [newHubItem, setNewHubItem] = useState({
-    title: '',
-    description: '',
-    category: 'tutorial',
-    media_type: 'video_embed',
-    url: '',
-    author_name: ''
-  });
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [isUploading, setIsUploading] = useState(false);
 
   useEffect(() => {
     fetchItems();
@@ -44,63 +69,53 @@ export function ResourceManager() {
 
   const fetchItems = async () => {
     setLoading(true);
-    const { data, error } = await supabase
-      .from('knowledge_hub')
-      .select('*')
-      .order('created_at', { ascending: false });
-    if (!error && data) {
-      setItems(data);
+    try {
+      const { data, error } = await supabase
+        .from('knowledge_hub')
+        .select('*')
+        .order('created_at', { ascending: false });
+      if (error) throw error;
+      setItems(data || []);
+    } catch (err: any) {
+      toast.error('Failed to fetch resources');
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
-  useEffect(() => {
-    return () => {
-      if (coverPreviewUrl && coverPreviewUrl.startsWith('blob:')) {
-        URL.revokeObjectURL(coverPreviewUrl);
-      }
-    };
-  }, [coverPreviewUrl]);
-
-  const resetForm = () => {
-    setNewHubItem({
-      title: '',
-      description: '',
-      category: 'tutorial',
-      media_type: 'video_embed',
-      url: '',
-      author_name: ''
-    });
-    setSelectedFile(null);
-    setCoverFile(null);
-    setCoverPreviewUrl('');
-    setEditingId(null);
-    setIsFormOpen(false);
-  };
-
-  const handleEdit = (item: any) => {
+  const handleEdit = (item: KnowledgeHubItem) => {
+    setEditingId(item.id);
     setNewHubItem({
       title: item.title,
-      description: item.description || '',
+      description: item.description,
       category: item.category,
       media_type: item.media_type,
       url: item.url,
-      author_name: item.author_name || ''
+      author_name: item.author_name
     });
     setCoverPreviewUrl(item.cover_image_url || '');
-    setEditingId(item.id);
+    setCoverFile(null);
+    setSelectedFile(null);
     setIsFormOpen(true);
   };
 
+  const resetForm = () => {
+    setIsFormOpen(false);
+    setEditingId(null);
+    setNewHubItem({
+      title: '', description: '', category: 'tutorial', media_type: 'document_url', url: '', author_name: ''
+    });
+    setCoverFile(null);
+    setCoverPreviewUrl('');
+    setSelectedFile(null);
+  };
+
   const handleDelete = async (id: string, coverUrl: string | null, docUrl: string | null) => {
-    if (!window.confirm('Are you sure you want to delete this resource?')) return;
-    
+    if (!confirm('Are you sure you want to delete this resource?')) return;
     try {
-      // 1. Delete the record
       const { error } = await supabase.from('knowledge_hub').delete().eq('id', id);
       if (error) throw error;
 
-      // 2. Cleanup storage optionally
       const pathsToDelete = [];
       if (coverUrl && coverUrl.includes('resources/covers/')) {
         const path = coverUrl.split('resources/')[1];
@@ -115,16 +130,10 @@ export function ResourceManager() {
         await supabase.storage.from('resources').remove(pathsToDelete);
       }
 
-      toast.success('Resource Deleted', {
-        description: 'The resource has been removed.',
-        style: { background: 'oklch(var(--card))', border: '1px solid oklch(var(--primary)/0.3)', color: 'oklch(var(--foreground))', borderRadius: '0px' }
-      });
+      toast.success('Resource Deleted');
       fetchItems();
     } catch (err: any) {
-      toast.error('Delete Failed', {
-        description: err.message,
-        style: { background: 'oklch(var(--card))', border: '1px solid oklch(var(--destructive)/0.3)', color: 'oklch(var(--foreground))', borderRadius: '0px' }
-      });
+      toast.error('Delete Failed');
     }
   };
 
@@ -136,27 +145,21 @@ export function ResourceManager() {
       let finalUrl = newHubItem.url;
       let coverImageUrl: string | null = coverPreviewUrl && !coverFile ? coverPreviewUrl : null;
 
-      // Upload new cover image if provided
       if (coverFile) {
         const coverExt = coverFile.name.split('.').pop();
         const coverName = `covers/${Date.now()}-${Math.random().toString(36).slice(2)}.${coverExt}`;
-        const { error: coverUploadError } = await supabase.storage
-          .from('resources')
-          .upload(coverName, coverFile);
+        const { error: coverUploadError } = await supabase.storage.from('resources').upload(coverName, coverFile);
         if (coverUploadError) throw coverUploadError;
         const { data: coverData } = supabase.storage.from('resources').getPublicUrl(coverName);
         coverImageUrl = coverData.publicUrl;
         uploadedPaths.push(coverName);
       }
 
-      // Upload new document file if document_url type and a file was selected
       if (newHubItem.media_type === 'document_url' && selectedFile) {
         const fileExt = selectedFile.name.split('.').pop();
         const fileName = `${Date.now()}-${Math.random().toString(36).slice(2)}.${fileExt}`;
         const fp = `uploads/${fileName}`;
-        const { error: uploadError } = await supabase.storage
-          .from('resources')
-          .upload(fp, selectedFile);
+        const { error: uploadError } = await supabase.storage.from('resources').upload(fp, selectedFile);
         if (uploadError) throw uploadError;
         const { data } = supabase.storage.from('resources').getPublicUrl(fp);
         finalUrl = data.publicUrl;
@@ -175,66 +178,54 @@ export function ResourceManager() {
         author_name: newHubItem.author_name || 'Staff Advisor'
       };
 
-      let saveError;
       if (editingId) {
         const { error } = await supabase.from('knowledge_hub').update(payload).eq('id', editingId);
-        saveError = error;
+        if (error) throw error;
       } else {
         const { error } = await supabase.from('knowledge_hub').insert(payload);
-        saveError = error;
+        if (error) throw error;
       }
 
-      if (saveError) throw saveError;
-
-      toast.success(editingId ? 'Resource Updated' : 'Resource Published', {
-        description: 'Knowledge node has been updated in the database.',
-        style: { background: 'oklch(var(--card))', border: '1px solid oklch(var(--primary)/0.3)', color: 'oklch(var(--foreground))', borderRadius: '0px' }
-      });
-
+      toast.success(editingId ? 'Resource Updated' : 'Resource Published');
       resetForm();
       fetchItems();
     } catch (err: any) {
-      console.error('Content Save Error:', err);
       if (uploadedPaths.length > 0) {
         supabase.storage.from('resources').remove(uploadedPaths).catch(console.error);
       }
-      
-      const errorMessage = err?.message || err?.toString() || 'An unexpected error occurred.';
-      toast.error('Save Failed', {
-        description: errorMessage,
-        style: { background: 'oklch(var(--card))', border: '1px solid oklch(var(--destructive)/0.3)', color: 'oklch(var(--foreground))', borderRadius: '0px' }
-      });
+      toast.error('Save Failed', { description: err.message || err.toString() });
     } finally {
       setIsUploading(false);
     }
   };
 
+  const filteredItems = items.filter(item => {
+    const matchesSearch = item.title.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesCat = filterCat === 'all' || item.category === filterCat;
+    return matchesSearch && matchesCat;
+  });
+
   if (isFormOpen) {
     return (
-      <div className="space-y-6 animate-in fade-in duration-300 text-left">
-        <div className="flex justify-between items-center border-b border-border pb-4">
-          <div>
-            <h2 className="font-heading text-2xl font-light text-foreground">{editingId ? 'Edit Resource' : t('dashboard.uploader.heading')}</h2>
-            <p className="font-sans text-xs text-muted-foreground mt-1">{t('dashboard.uploader.subheading')}</p>
+      <div className="animate-in fade-in duration-300">
+        <div className="page-head">
+          <h1>{editingId ? 'Edit Resource' : 'Publish Resource'}</h1>
+          <span className="sub">{'Add a new resource to the knowledge hub'}</span>
+          <div className="act">
+            <button className="btn btn-g" onClick={resetForm}><X className="size-4" /> Cancel</button>
           </div>
-          <Button variant="ghost" size="sm" onClick={resetForm} className="rounded-none">
-            <X className="size-4 mr-2" /> Cancel
-          </Button>
         </div>
 
-        <form onSubmit={handleSave} className="space-y-8 max-w-4xl border border-border p-8 bg-card rounded-none shadow-sm">
-          <div className="space-y-2">
-            <Label className="text-[10px] font-sans font-semibold text-muted-foreground uppercase tracking-wider block">Visual Identity</Label>
+        <form onSubmit={handleSave} className="card card-pad measure w-full" style={{ paddingBottom: '32px' }}>
+          <div className="field">
+            <label>Visual Identity</label>
             {coverPreviewUrl ? (
               <div className="relative aspect-video w-full max-w-md border border-border overflow-hidden bg-muted group">
                 <img src={coverPreviewUrl} alt="Cover preview" className="w-full h-full object-cover" />
                 <button
                   type="button"
-                  onClick={() => {
-                    setCoverFile(null);
-                    setCoverPreviewUrl('');
-                  }}
-                  className="absolute top-2 right-2 p-1.5 bg-background/80 hover:bg-destructive hover:text-destructive-foreground transition-colors rounded-none"
+                  onClick={() => { setCoverFile(null); setCoverPreviewUrl(''); }}
+                  className="absolute top-2 right-2 p-1.5 bg-background/80 hover:bg-destructive hover:text-destructive-foreground transition-colors"
                 >
                   <Trash2 className="size-4" />
                 </button>
@@ -243,11 +234,11 @@ export function ResourceManager() {
               <button
                 type="button"
                 onClick={() => document.getElementById('cover-file-input')?.click()}
-                className="w-full max-w-md aspect-video border-2 border-dashed border-border hover:border-primary/50 transition-colors flex flex-col items-center justify-center bg-card hover:bg-primary/5 rounded-none group cursor-pointer"
+                className="drop-tile w-full max-w-md"
               >
-                <UploadCloud className="size-7 text-muted-foreground/50" />
-                <span className="font-sans text-sm text-foreground font-medium mt-1">Upload Cover Image (16:9)</span>
-                <span className="text-xs text-muted-foreground">Recommended: 1200x675px — JPEG, PNG, WEBP</span>
+                <UploadCloud />
+                <span style={{ fontSize: '14px', fontWeight: 600, color: 'oklch(var(--foreground))' }}>Upload Cover Image (16:9)</span>
+                <span>Recommended: 1200x675px — JPEG, PNG, WEBP</span>
                 <input
                   id="cover-file-input"
                   type="file"
@@ -266,193 +257,141 @@ export function ResourceManager() {
             )}
           </div>
 
-          <div className="grid md:grid-cols-2 gap-5">
-            <div className="space-y-2">
-              <Label className="text-[10px] font-sans font-semibold text-muted-foreground uppercase tracking-wider block">{t('dashboard.uploader.title')}</Label>
-              <Input
-                type="text"
-                required
-                value={newHubItem.title}
-                onChange={e => setNewHubItem(p => ({ ...p, title: e.target.value }))}
-                placeholder="Technical Introduction to React 19..."
-                className="w-full bg-background border border-border text-xs px-4 py-2.5 outline-none focus:border-primary rounded-none text-foreground font-sans h-9"
-              />
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
+            <div className="field">
+              <label>{'Title'}</label>
+              <input type="text" className="input" required value={newHubItem.title} onChange={e => setNewHubItem(p => ({ ...p, title: e.target.value }))} placeholder="Technical Introduction..." />
             </div>
-            <div className="space-y-2">
-              <Label className="text-[10px] font-sans font-semibold text-muted-foreground uppercase tracking-wider block">{t('dashboard.uploader.authorName')}</Label>
-              <Input
-                type="text"
-                required
-                value={newHubItem.author_name}
-                onChange={e => setNewHubItem(p => ({ ...p, author_name: e.target.value }))}
-                placeholder="e.g., Roshan Khumukcham"
-                className="w-full bg-background border border-border text-xs px-4 py-2.5 outline-none focus:border-primary rounded-none text-foreground font-sans h-9"
-              />
+            <div className="field">
+              <label>{'Author Name'}</label>
+              <input type="text" className="input" required value={newHubItem.author_name} onChange={e => setNewHubItem(p => ({ ...p, author_name: e.target.value }))} placeholder="e.g., Roshan Khumukcham" />
             </div>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-5">
-            <div className="space-y-2 flex flex-col gap-1.5">
-              <Label className="text-[10px] font-sans font-semibold text-muted-foreground uppercase tracking-wider block">{t('dashboard.uploader.category')}</Label>
-              <Select
-                value={newHubItem.category}
-                onValueChange={val => setNewHubItem(p => ({ ...p, category: val }))}
-              >
-                <SelectTrigger className="w-full bg-background border border-border text-xs px-4 py-2.5 outline-none focus:border-primary rounded-none text-foreground font-sans h-9">
-                  <SelectValue placeholder="Select Category" />
-                </SelectTrigger>
-                <SelectContent className="rounded-none bg-card border border-border text-foreground font-sans text-xs z-50">
-                  <SelectItem value="tutorial" className="rounded-none cursor-pointer">{t('dashboard.uploader.tutorial')}</SelectItem>
-                  <SelectItem value="podcast" className="rounded-none cursor-pointer">{t('dashboard.uploader.podcast')}</SelectItem>
-                  <SelectItem value="webinar" className="rounded-none cursor-pointer">{t('dashboard.uploader.webinar')}</SelectItem>
-                  <SelectItem value="study_material" className="rounded-none cursor-pointer">{t('dashboard.uploader.studyMaterial')}</SelectItem>
-                </SelectContent>
-              </Select>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
+            <div className="field">
+              <label>{'Category'}</label>
+              <select className="input" value={newHubItem.category} onChange={e => setNewHubItem(p => ({ ...p, category: e.target.value }))}>
+                <option value="tutorial">{'Tutorial'}</option>
+                <option value="podcast">{'Podcast'}</option>
+                <option value="webinar">{'Webinar'}</option>
+                <option value="study_material">{'Study Material'}</option>
+              </select>
             </div>
-            <div className="space-y-2 flex flex-col gap-1.5">
-              <Label className="text-[10px] font-sans font-semibold text-muted-foreground uppercase tracking-wider block">{t('dashboard.uploader.mediaType')}</Label>
-              <Select
-                value={newHubItem.media_type}
-                onValueChange={val => setNewHubItem(p => ({ ...p, media_type: val }))}
-              >
-                <SelectTrigger className="w-full bg-background border border-border text-xs px-4 py-2.5 outline-none focus:border-primary rounded-none text-foreground font-sans h-9">
-                  <SelectValue placeholder="Select Media Type" />
-                </SelectTrigger>
-                <SelectContent className="rounded-none bg-card border border-border text-foreground font-sans text-xs z-50">
-                   <SelectItem value="video_embed" className="rounded-none cursor-pointer">{t('dashboard.uploader.videoLink')}</SelectItem>
-                   <SelectItem value="document_url" className="rounded-none cursor-pointer">{t('dashboard.uploader.pdfLink')}</SelectItem>
-                   <SelectItem value="external_link" className="rounded-none cursor-pointer">{t('dashboard.uploader.externalLink')}</SelectItem>
-                </SelectContent>
-              </Select>
+            <div className="field">
+              <label>{'Media Type'}</label>
+              <select className="input" value={newHubItem.media_type} onChange={e => setNewHubItem(p => ({ ...p, media_type: e.target.value as any }))}>
+                <option value="video_embed">{'Video Link'}</option>
+                <option value="document_url">{'PDF Document'}</option>
+                <option value="external_link">{'External Link'}</option>
+              </select>
             </div>
           </div>
 
           {newHubItem.media_type === 'document_url' ? (
-            <div className="space-y-2">
-              <Label className="text-[10px] font-sans font-semibold text-muted-foreground uppercase tracking-wider block">Document File Node</Label>
+            <div className="field">
+              <label>Document File Node</label>
               {!selectedFile && !newHubItem.url ? (
-                <div className="relative">
-                  <Input
-                    type="file"
-                    accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt"
-                    required={!editingId}
-                    onChange={e => {
-                      if (e.target.files && e.target.files[0]) {
-                        setSelectedFile(e.target.files[0]);
-                      }
-                    }}
-                    className="w-full bg-background border border-border text-xs px-4 py-1.5 outline-none focus:border-primary rounded-none text-foreground font-sans h-9 file:mr-4 file:py-1 file:px-2 file:rounded-none file:border-0 file:text-[10px] file:font-sans file:bg-primary file:text-primary-foreground hover:file:bg-foreground hover:file:text-background cursor-pointer"
-                  />
-                </div>
-              ) : selectedFile ? (
-                <Attachment 
-                  file={selectedFile} 
-                  onRemove={() => setSelectedFile(null)} 
-                  isUploading={isUploading}
+                <input
+                  type="file"
+                  accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt"
+                  required={!editingId}
+                  onChange={e => {
+                    if (e.target.files && e.target.files[0]) {
+                      setSelectedFile(e.target.files[0]);
+                    }
+                  }}
+                  className="input" style={{ paddingTop: '8px' }}
                 />
+              ) : selectedFile ? (
+                <Attachment file={selectedFile} onRemove={() => setSelectedFile(null)} isUploading={isUploading} />
               ) : (
                 <div className="flex items-center gap-3 p-3 border border-border bg-card">
                   <FileText className="size-4 text-primary" />
                   <span className="text-xs font-sans flex-1 truncate">{newHubItem.url.split('/').pop()}</span>
-                  <Button variant="ghost" size="sm" onClick={() => setNewHubItem({ ...newHubItem, url: '' })} className="h-6 px-2 text-[10px]">
-                    Replace
-                  </Button>
+                  <button type="button" className="btn btn-g btn-sm" onClick={() => setNewHubItem({ ...newHubItem, url: '' })}>Replace</button>
                 </div>
               )}
             </div>
           ) : (
-            <div className="space-y-2">
-              <Label className="text-[10px] font-sans font-semibold text-muted-foreground uppercase tracking-wider block">{t('dashboard.uploader.resourceUrl')}</Label>
-              <Input
-                type="url"
-                required
-                value={newHubItem.url}
-                onChange={e => setNewHubItem(p => ({ ...p, url: e.target.value }))}
-                placeholder={newHubItem.media_type === 'video_embed' ? "https://www.youtube.com/watch?v=..." : "https://example.com/..."}
-                className="w-full bg-background border border-border text-xs px-4 py-2.5 outline-none focus:border-primary rounded-none text-foreground font-sans h-9"
-              />
+            <div className="field">
+              <label>{'Resource URL'}</label>
+              <input type="url" className="input" required value={newHubItem.url} onChange={e => setNewHubItem(p => ({ ...p, url: e.target.value }))} placeholder="https://..." />
             </div>
           )}
 
-          <div className="space-y-2">
-            <Label className="text-[10px] font-sans font-semibold text-muted-foreground uppercase tracking-wider block">{t('dashboard.uploader.briefDescription')}</Label>
-            <Textarea
-              value={newHubItem.description}
-              onChange={e => setNewHubItem(p => ({ ...p, description: e.target.value }))}
-              placeholder="A concise synopsis detailing what core concepts this resource node will cover..."
-              rows={3}
-              className="w-full bg-background border border-border text-xs px-4 py-2 outline-none focus:border-primary rounded-none text-foreground font-sans resize-none min-h-20"
-            />
+          <div className="field">
+            <label>{'Brief Description'}</label>
+            <textarea className="input" value={newHubItem.description} onChange={e => setNewHubItem(p => ({ ...p, description: e.target.value }))} placeholder="A concise synopsis..." rows={3} />
           </div>
 
-          <Button type="submit" disabled={isUploading} size="md" className="bg-primary text-primary-foreground hover:bg-foreground hover:text-background focus:outline-none focus:ring-1 focus:ring-primary transition-all duration-300 font-sans text-sm font-medium cursor-pointer rounded-none disabled:opacity-50 disabled:cursor-not-allowed">
-            {isUploading ? 'Saving...' : (editingId ? 'Update Resource' : 'Publish Resource')}
-          </Button>
+          <div style={{ marginTop: '24px' }}>
+            <button type="submit" className="btn btn-p" disabled={isUploading}>
+              {isUploading ? 'Saving...' : (editingId ? 'Update Resource' : 'Publish Resource')}
+            </button>
+          </div>
         </form>
       </div>
     );
   }
 
   return (
-    <div className="space-y-6 animate-in fade-in duration-300 text-left">
-      <div className="flex justify-between items-center border-b border-border pb-4">
-        <div>
-          <h2 className="font-heading text-2xl font-light text-foreground">Resource Manager</h2>
-          <p className="font-sans text-xs text-muted-foreground mt-1">Manage and audit your Knowledge Hub library.</p>
+    <div className="flex flex-col gap-7 animate-in fade-in duration-300 w-full">
+      <div className="page-head">
+        <h1>Library</h1>
+        <span className="sub">Knowledge Hub resources</span>
+        <div className="act">
+          <span className="count-chip">{filteredItems.length} items</span>
+          <button className="btn btn-p" onClick={() => setIsFormOpen(true)}>+ Add resource</button>
         </div>
-        <Button onClick={() => setIsFormOpen(true)} className="rounded-none bg-primary text-primary-foreground">
-          + Add Resource
-        </Button>
+      </div>
+
+      <div className="toolbar">
+        <div className="search">
+          <Search />
+          <input 
+            type="text" 
+            className="input" 
+            placeholder="Search resources…" 
+            value={searchTerm}
+            onChange={e => setSearchTerm(e.target.value)}
+          />
+        </div>
+        <div className="seg">
+          <button className={filterCat === 'all' ? 'on' : ''} onClick={() => setFilterCat('all')}>All files</button>
+          <button className={filterCat === 'tutorial' ? 'on' : ''} onClick={() => setFilterCat('tutorial')}>Tutorials</button>
+          <button className={filterCat === 'podcast' ? 'on' : ''} onClick={() => setFilterCat('podcast')}>Podcasts</button>
+          <button className={filterCat === 'webinar' ? 'on' : ''} onClick={() => setFilterCat('webinar')}>Webinars</button>
+          <button className={filterCat === 'study_material' ? 'on' : ''} onClick={() => setFilterCat('study_material')}>Study Material</button>
+        </div>
       </div>
 
       {loading ? (
-        <div className="py-12 flex justify-center">
-          <span className="font-sans text-[10px] text-muted-foreground uppercase tracking-widest animate-pulse">Loading resources...</span>
-        </div>
-      ) : items.length === 0 ? (
-        <div className="text-center py-12 border border-border bg-card/30">
-          <p className="font-sans text-xs text-muted-foreground">No resources found.</p>
-        </div>
+        <div style={{ padding: '40px', textAlign: 'center', color: 'oklch(var(--muted-foreground))' }}>Loading resources...</div>
+      ) : filteredItems.length === 0 ? (
+        <div style={{ padding: '40px', textAlign: 'center', color: 'oklch(var(--muted-foreground))', border: '1px solid oklch(var(--border))' }}>No resources found.</div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {items.map(item => (
-            <Card key={item.id} className="border border-border bg-card/30 rounded-none p-4 flex flex-col justify-between group">
-              <div className="flex gap-4">
+        <div className="mgrid">
+          {filteredItems.map(item => (
+            <div key={item.id} className="card asset">
+              <div className="th" style={{ background: item.cover_image_url ? 'transparent' : 'var(--card)' }}>
                 {item.cover_image_url ? (
-                  <div className="w-24 h-16 shrink-0 bg-muted overflow-hidden border border-border">
-                    <img src={item.cover_image_url} alt="" className="w-full h-full object-cover" />
-                  </div>
+                  <img src={item.cover_image_url} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                 ) : (
-                  <div className="w-24 h-16 shrink-0 bg-muted flex items-center justify-center border border-border">
-                    <FileText className="size-6 text-muted-foreground/50" />
-                  </div>
+                  <FileText style={{ width: '32px', height: '32px', stroke: 'oklch(var(--muted-foreground))' }} />
                 )}
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-start justify-between gap-2">
-                    <h3 className="font-sans text-sm font-medium text-foreground truncate">{item.title}</h3>
-                  </div>
-                  <p className="font-sans text-xs text-muted-foreground truncate mt-1">{item.description}</p>
-                  <div className="flex items-center gap-3 mt-2">
-                    <span className="font-sans text-[9px] uppercase tracking-wider text-primary bg-primary/10 px-1.5 py-0.5">
-                      {item.category}
-                    </span>
-                    <span className="font-sans text-[9px] uppercase tracking-wider text-muted-foreground flex items-center gap-1">
-                      {item.media_type === 'video_embed' && <Video className="size-3" />}
-                      {item.media_type === 'document_url' && <FileText className="size-3" />}
-                      {item.media_type === 'external_link' && <Link className="size-3" />}
-                    </span>
-                  </div>
+              </div>
+              <div className="bd">
+                <div className="fn truncate" title={item.title}>{item.title}</div>
+                <div className="fm">
+                  {item.category.toUpperCase().replace('_', ' ')} • {item.media_type === 'video_embed' ? 'Video' : item.media_type === 'document_url' ? 'Doc' : 'Link'}
                 </div>
               </div>
-              <div className="mt-4 pt-3 border-t border-border flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                <Button variant="ghost" size="sm" onClick={() => handleEdit(item)} className="h-7 px-2 text-[10px] rounded-none">
-                  <Edit2 className="size-3 mr-1.5" /> Edit
-                </Button>
-                <Button variant="ghost" size="sm" onClick={() => handleDelete(item.id, item.cover_image_url, item.media_type === 'document_url' ? item.url : null)} className="h-7 px-2 text-[10px] rounded-none hover:text-destructive hover:bg-destructive/10">
-                  <Trash2 className="size-3 mr-1.5" /> Delete
-                </Button>
+              <div className="ac">
+                <button className="btn btn-q" onClick={() => handleEdit(item)}>Edit</button>
+                <button className="btn btn-q" style={{ color: 'oklch(var(--destructive))' }} onClick={() => handleDelete(item.id, item.cover_image_url, item.media_type === 'document_url' ? item.url : null)}>Delete</button>
               </div>
-            </Card>
+            </div>
           ))}
         </div>
       )}

@@ -34,7 +34,7 @@ export default function TelemetryStats() {
   return (
     <section
       id="telemetry"
-      className="relative w-full py-24 md:py-32 bg-background border-t border-border/50 overflow-hidden"
+      className="relative w-full py-24 md:py-32 border-t border-border/50 overflow-hidden"
     >
       <div className="mx-auto max-w-7xl px-6 md:px-12 lg:px-24">
         <motion.div 

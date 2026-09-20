@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EduPlus Alignment &amp; Layout Enhancement — The Placement Fix</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500&family=Instrument+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#F7F4ED; --paper-2:#F1EDE3; --surface:#FFFEFA;
+    --ink:#262119; --ink-2:#4A4234; --ink-3:#7A7060;
+    --hairline:#E2DCCC;
+    --ochre:#A96F2E; --ochre-deep:#8A5A22; --ochre-soft:#F0E3CE;
+    --fjord:#4A6B7C; --fjord-soft:#DEE7EA;
+    --moss:#5C7A54; --moss-soft:#E3E9DC;
+    --clay:#A9503C; --clay-soft:#F2DED7;
+    --night-0:#1E1A15; --night-1:#27221B; --night-2:#322C23;
+    --night-text:#EDE7DB; --night-mut:#A89C89;
+    --radius:10px; --maxw:1120px;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{background:var(--paper);color:var(--ink);font-family:"Instrument Sans",-apple-system,"Segoe UI",sans-serif;font-size:16px;line-height:1.65;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 32px}
+  .kicker{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--ochre);font-weight:500}
+  h1,h2,h3{font-family:"Fraunces",Georgia,serif;font-weight:400;line-height:1.15}
+  h1{font-size:clamp(36px,5vw,56px);letter-spacing:-.01em}
+  h2{font-size:clamp(27px,3.4vw,38px);margin:14px 0 10px}
+  h3{font-size:22px;margin:38px 0 12px}
+  h4{font-family:"Instrument Sans",sans-serif;font-size:15px;font-weight:700;margin:20px 0 8px}
+  p{color:var(--ink-2);max-width:72ch}
+  .lead{font-size:19px;color:var(--ink-2);max-width:66ch}
+  section{padding:66px 0;border-top:1px solid var(--hairline)}
+  .serif-i{font-family:"Fraunces",serif;font-style:italic}
+  .sec-head{margin-bottom:32px}
+  .mono{font-family:"IBM Plex Mono",monospace;font-size:12.5px}
+
+  header.hero{padding:80px 0 64px;background:linear-gradient(180deg,var(--paper) 0%,var(--paper-2) 100%);border-bottom:1px solid var(--hairline)}
+  .hero-meta{display:flex;gap:12px;flex-wrap:wrap;margin-top:28px}
+  .chip{font-size:12.5px;font-weight:600;padding:7px 14px;border:1px solid var(--hairline);border-radius:999px;background:var(--surface);color:var(--ink-2)}
+  .chip b{color:var(--ochre-deep)}
+
+  nav.toc{position:sticky;top:0;z-index:50;background:rgba(247,244,237,.93);backdrop-filter:blur(10px);border-bottom:1px solid var(--hairline)}
+  nav.toc .wrap{display:flex;gap:6px;overflow-x:auto;padding-top:12px;padding-bottom:12px}
+  nav.toc a{white-space:nowrap;font-size:13px;font-weight:600;color:var(--ink-3);text-decoration:none;padding:7px 13px;border-radius:8px}
+  nav.toc a:hover{color:var(--ink);background:var(--paper-2)}
+
+  .grid{display:grid;gap:18px}
+  .g2{grid-template-columns:repeat(2,1fr)}
+  .g3{grid-template-columns:repeat(3,1fr)}
+  @media(max-width:860px){.g3{grid-template-columns:1fr 1fr}}
+  @media(max-width:600px){.g2,.g3{grid-template-columns:1fr}}
+  .card{background:var(--surface);border:1px solid var(--hairline);border-radius:var(--radius);padding:22px}
+  .card h4{margin-top:0}
+  .card p{font-size:14.5px}
+
+  table{width:100%;border-collapse:collapse;font-size:14px;margin:18px 0;background:var(--surface);border:1px solid var(--hairline);border-radius:var(--radius);overflow:hidden}
+  th{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;text-align:left;color:var(--ink-3);padding:11px 16px;background:var(--paper-2);border-bottom:1px solid var(--hairline)}
+  td{padding:12px 16px;border-bottom:1px solid var(--hairline);color:var(--ink-2);vertical-align:top}
+  tr:last-child td{border-bottom:none}
+  td b{color:var(--ink)}
+  .bad{color:var(--clay);font-weight:600}
+  .good{color:var(--moss);font-weight:600}
+  .fix{color:var(--fjord);font-weight:600}
+
+  .fail{display:grid;grid-template-columns:46px 1fr;gap:16px;padding:22px 0;border-bottom:1px solid var(--hairline)}
+  .fail:last-child{border-bottom:none}
+  .fail .idx{font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--clay);padding-top:4px}
+  .fail h4{margin:0 0 5px;font-size:16.5px}
+  .fail p{font-size:14.5px}
+  .fail .ev{font-size:13px;color:var(--ink-3);margin-top:7px}
+  .fail .ev b{color:var(--clay)}
+  .fail .rx{font-size:13.5px;color:var(--moss);margin-top:7px}
+  .fail .rx b{color:var(--moss)}
+
+  /* ---- wireframes ---- */
+  .wf{background:var(--night-0);border-radius:12px;padding:22px;margin:14px 0;border:1px solid var(--night-2)}
+  .wf-title{font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:#D9A75C;margin-bottom:14px}
+  .wf-grid{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+  @media(max-width:760px){.wf-grid{grid-template-columns:1fr}}
+  .wf-screen{background:var(--night-1);border:1px solid var(--night-2);border-radius:8px;padding:14px;position:relative;min-height:300px}
+  .wf-cap{font-size:12px;font-weight:700;color:var(--night-text);margin-bottom:10px;display:flex;justify-content:space-between;align-items:center}
+  .wf-cap span:last-child{font-family:"IBM Plex Mono",monospace;font-size:10px;font-weight:400}
+  .wf-cap .no{color:var(--clay)} .wf-cap .yes{color:var(--moss)}
+  .bx{border:1px dashed #4a4234;border-radius:5px;background:rgba(255,254,250,.03)}
+  .bx-solid{border:1px solid #4a4234;border-radius:5px;background:var(--night-2)}
+  .bx-accent{border:1px solid #A96F2E;border-radius:5px;background:rgba(169,111,46,.16)}
+  .bx-err{border:1.5px solid #A9503C;border-radius:5px;background:rgba(169,80,60,.1)}
+  .bx-lab{font-family:"IBM Plex Mono",monospace;font-size:9px;letter-spacing:.06em;color:var(--night-mut);padding:5px 7px;text-transform:uppercase}
+  .err-tag{position:absolute;font-family:"IBM Plex Mono",monospace;font-size:9px;color:#F2DED7;background:#A9503C;padding:2px 7px;border-radius:4px;letter-spacing:.04em}
+  .ok-tag{position:absolute;font-family:"IBM Plex Mono",monospace;font-size:9px;color:#fff;background:#5C7A54;padding:2px 7px;border-radius:4px;letter-spacing:.04em}
+  .axis{position:absolute;top:0;bottom:0;width:0;border-left:1.5px dashed #A9503C;opacity:.9}
+  .axis.ok{border-left:1.5px dashed #5C7A54}
+  .axis-lab{position:absolute;top:2px;font-family:"IBM Plex Mono",monospace;font-size:8.5px;letter-spacing:.05em;white-space:nowrap}
+
+  pre.code{background:var(--night-0);color:var(--night-text);border-radius:10px;padding:22px 24px;font-family:"IBM Plex Mono",monospace;font-size:12.5px;line-height:1.7;overflow-x:auto;border:1px solid var(--night-2);margin:14px 0}
+  pre.code .c{color:#7A7060}
+  pre.code .k{color:#D9A75C}
+  pre.code .v{color:#9FC2A3}
+
+  .callout{border-left:3px solid var(--ochre);background:var(--ochre-soft);padding:18px 22px;border-radius:0 var(--radius) var(--radius) 0;margin:22px 0;font-size:14.5px;color:var(--ink-2)}
+  .callout.fjord{border-color:var(--fjord);background:var(--fjord-soft)}
+  .callout.moss{border-color:var(--moss);background:var(--moss-soft)}
+  .callout.clay{border-color:var(--clay);background:var(--clay-soft)}
+  .callout b{color:var(--ink)}
+  ul.tight{margin:8px 0 0 18px}
+  ul.tight li{font-size:14.5px;color:var(--ink-2);margin-bottom:6px}
+  .check{display:grid;grid-template-columns:22px 1fr;gap:10px;padding:8px 0;font-size:14.5px;color:var(--ink-2)}
+  .check .cb{width:16px;height:16px;border:1.5px solid var(--moss);border-radius:4px;margin-top:4px}
+  footer{padding:46px 0 60px;border-top:1px solid var(--hairline);background:var(--paper-2)}
+  footer p{font-size:13px;color:var(--ink-3)}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="kicker">Alignment &amp; Placement Deep-Dive · 23:19–23:22 Audit · Round 3</div>
+    <h1>The <span class="serif-i">placement</span> fix</h1>
+    <p class="lead" style="margin-top:18px">The IA merge shipped — the rail is clean, sections are grouped, and the skeleton is right. What's broken now is <b>geometry</b>: content sits at five different widths, left axes snap mid-page, actions float away from the things they act on, and empty states fight each other for attention. This is the full alignment audit and the layout system that ends it.</p>
+    <div class="hero-meta">
+      <span class="chip">Screens audited · <b>12</b></span>
+      <span class="chip">Alignment failures · <b>9 classes</b></span>
+      <span class="chip">Content widths in use · <b>5+ (should be 3)</b></span>
+      <span class="chip">Bugs caught · <b>4</b></span>
+    </div>
+  </div>
+</header>
+
+<nav class="toc">
+  <div class="wrap">
+    <a href="#status">01 · Status</a>
+    <a href="#failures">02 · Failure Catalogue</a>
+    <a href="#system">03 · The Layout System</a>
+    <a href="#wireframes">04 · Before / After</a>
+    <a href="#screens">05 · Screen Fixes</a>
+    <a href="#css">06 · CSS Starter</a>
+    <a href="#qa">07 · QA &amp; Order</a>
+  </div>
+</nav>
+
+<!-- ============ 01 STATUS ============ -->
+<section id="status">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="kicker">01 — Where We Stand</div>
+      <h2>Fixed vs. newly exposed</h2>
+      <p class="lead">Round 3 shows the declutter plan's Phase 1 landing. But removing elements didn't place the survivors — it exposed that there was never a placement system underneath.</p>
+    </div>
+    <div class="grid g2">
+      <div class="card" style="border-color:var(--moss)">
+        <h4 class="good">✓ Landed correctly</h4>
+        <ul class="tight">
+          <li>Rail: 5 groups, no group-label spam, icons aligned</li>
+          <li>AI Advisor correctly nested under Settings</li>
+          <li>Row actions collapsed to "⋯" (People table)</li>
+          <li>Chart x-ticks thinned (Apr 2 → Jun 29, ~9 ticks)</li>
+          <li>Category distribution → single stacked bar</li>
+          <li>Breadcrumbs gone; single status bar</li>
+        </ul>
+      </div>
+      <div class="card" style="border-color:var(--clay)">
+        <h4 class="bad">✗ Newly exposed failures</h4>
+        <ul class="tight">
+          <li>5+ unrelated content widths across screens</li>
+          <li>Left axis breaks inside pages (title ≠ body margin)</li>
+          <li>Save button detached at page bottom (Profile)</li>
+          <li>Triple-stacked headers (Settings pages)</li>
+          <li>Dual competing empty states (Communication)</li>
+          <li>Chart tooltip prints <b>"Invalid Date"</b></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 02 FAILURES ============ -->
+<section id="failures">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="kicker">02 — Alignment Failure Catalogue</div>
+      <h2>Nine failure classes, with evidence</h2>
+      <p class="lead">Every misalignment on the 12 screens belongs to one of these nine classes. Fix the class once, fix it everywhere.</p>
+    </div>
+
+    <div class="fail"><div class="idx">F·1</div><div>
+      <h4>Width chaos — no canonical content widths</h4>
+      <p>Each screen invents its own width: Add-User form ≈ 640px · Media search ≈ 480px · Library card ≈ 660px · TOTP card = full width · Update-Password form ≈ 600px · Inquiries list ≈ 480px. Right edges land on six different coordinates, so every page has a ragged silhouette and nothing lines up with anything — even within one page (Security &amp; MFA: narrow form stacked on full-width card).</p>
+      <p class="ev"><b>Evidence:</b> Access Control, Security &amp; MFA, Media, Library, Inquiries.</p>
+      <p class="rx"><b>Fix:</b> exactly three canonical widths — <b>measure (560px)</b> for forms &amp; text, <b>panel (760px)</b> for focused cards, <b>fluid</b> for tables/grids. Nothing else exists.</p>
+    </div></div>
+
+    <div class="fail"><div class="idx">F·2</div><div>
+      <h4>Broken left axis — title and body start at different x-positions</h4>
+      <p>On Profile, the avatar block and form are inset ~35px from the page title's left edge; on AI Advisor the "Add Factual Guideline" card is inset while "AI Knowledge Base" is not; on Add New User the form floats at yet another offset. The eye tracks the left edge down the page and it kinks. One page = one vertical axis: title, sections, cards, and buttons all share the same left margin.</p>
+      <p class="ev"><b>Evidence:</b> Profile (avatar row vs. "Settings &amp; Security" title), AI Advisor (card vs. heading), Access Control.</p>
+      <p class="rx"><b>Fix:</b> one content container with one padding. Inner sections never add horizontal padding — only vertical space.</p>
+    </div></div>
+
+    <div class="fail"><div class="idx">F·3</div><div>
+      <h4>Detached actions — buttons far from what they control</h4>
+      <p>Profile's "Save Changes" renders as a giant bar at the <i>bottom of the viewport</i>, a full scroll away from the form it saves — it reads as page furniture, not as the form's submit. Meanwhile "Create Dashboard User" is full-width of the form, "Add Guideline" / "Update Password" / "Enable Two-Factor Auth" are small left-aligned, and "Upload Media Asset" / "+ Add Resource" / "Refresh Accounts" sit top-right. Five placement logics, zero system.</p>
+      <p class="ev"><b>Evidence:</b> Profile (save bar at page bottom), Access Control, Media, People.</p>
+      <p class="rx"><b>Fix:</b> the action-proximity rule — a button lives inside the container it affects: page-level primary → header top-right; form submit → bottom-left of its form card, width auto; row actions → row menu. Never page-bottom, never full-width unless the form itself is full-width.</p>
+    </div></div>
+
+    <div class="fail"><div class="idx">F·4</div><div>
+      <h4>Stacked headers — three titles for one page</h4>
+      <p>Settings pages render "Settings &amp; Security" (title + subtitle) → then "AI Knowledge Base" (title + subtitle) → then "Add Factual Guideline" (card title) before any content. Three header tiers consume the first 280px and the user still hasn't seen an input. One page gets one H1; sections are H2 with a single purpose line; cards don't repeat what the section just said.</p>
+      <p class="ev"><b>Evidence:</b> AI Advisor ("Settings &amp; Security" + "AI Knowledge Base" + card title), Profile, Security &amp; MFA.</p>
+      <p class="rx"><b>Fix:</b> H1 = the rail item ("AI Advisor", "Profile"). Kill the parent "Settings &amp; Security" page wrapper title — the rail group already says it.</p>
+    </div></div>
+
+    <div class="fail"><div class="idx">F·5</div><div>
+      <h4>Dueling empty states — two focal points, no focus</h4>
+      <p>Communication screens render a top-left list ("No chats found.") <i>and</i> a vertically-centered "No item selected" pane at right simultaneously. The eye gets two targets in a sea of black; both are dead ends. An empty list means there is nothing to select — the detail pane shouldn't exist at all in that state.</p>
+      <p class="ev"><b>Evidence:</b> AI Chats, Subscribers, Inquiries ("No item selected" floating at 45% height in a bordered void).</p>
+      <p class="rx"><b>Fix:</b> single-focal rule — list empty → one centered empty state spanning the content area ("No chats yet — when visitors talk to the advisor, transcripts appear here"); list has items but none selected → detail pane shows a quiet hint at <i>optical</i> center (42% height), not geometric center of a tall box.</p>
+    </div></div>
+
+    <div class="fail"><div class="idx">F·6</div><div>
+      <h4>Stat-card labels wrap and break the row</h4>
+      <p>"ACTIVE CURRICULUM TRACKS" wraps to two lines while its siblings stay on one — the four cards no longer share a baseline or a height rhythm. Long caps labels don't fit 4-up grids; that's what forced the wrap.</p>
+      <p class="ev"><b>Evidence:</b> Courses deck (4 stat cards, first label wraps).</p>
+      <p class="rx"><b>Fix:</b> sentence-case short labels ("Tracks", "Modules", "Lessons", "Tiers") at 13px — single line guaranteed; numerals share one baseline via fixed label height.</p>
+    </div></div>
+
+    <div class="fail"><div class="idx">F·7</div><div>
+      <h4>Rail overflow — nav scrolls and eats its own items</h4>
+      <p>The rail renders scroll arrows (▲▼) and clips items: on AI Advisor, "Overview" and "People" have scrolled out of reach; on Inquiries, the scrollbar overlaps Library/Media. Persistent navigation that hides destinations isn't persistent. 11 items + 3 group labels must fit by design, not by scroll.</p>
+      <p class="ev"><b>Evidence:</b> AI Advisor (rail scrolled past Overview), Inquiries (scrollbar collision), AI Chats.</p>
+      <p class="rx"><b>Fix:</b> rail density pass — item height 34px, group gap 18px, user card compacted to one line; everything fits ≥ 700px viewport height with zero rail scroll. The thick custom scrollbar is removed everywhere (thin 8px overlay scrollbars only).</p>
+    </div></div>
+
+    <div class="fail"><div class="idx">F·8</div><div>
+      <h4>Orphan content on wide canvases — everything drifts top-left</h4>
+      <p>On a 1440px+ viewport, Add New User puts a 640px form at the far left and abandons 55% of the canvas; Media's 480px search + one 220px card do the same; Subscribers shows one row in a void. Top-left anchoring with no max-width strategy makes every sparse page look broken rather than calm.</p>
+      <p class="ev"><b>Evidence:</b> Access Control, Media, Library, Subscribers, AI Chats.</p>
+      <p class="rx"><b>Fix:</b> content container = <span class="mono">max-width 1200px, margin: 0 auto</span> inside the fluid region, and sparse states use the F·5 single-focal pattern — designed emptiness at optical center, not abandonment at top-left.</p>
+    </div></div>
+
+    <div class="fail"><div class="idx">F·9</div><div>
+      <h4>Grid misalignment within composite rows</h4>
+      <p>People: search (480px) + 5 pills pushed to the far right leaves an arbitrary dead gap; table columns distribute unevenly with a void between "Joined Date" and "Actions". Courses: track-list rows right-align "Foundational" while the inspector right-aligns "Preview in LMS" — two different right edges in one panel. Profile: avatar (80px) and "Profile Picture" text block sit on mismatched baselines.</p>
+      <p class="ev"><b>Evidence:</b> People, Courses, Profile.</p>
+      <p class="rx"><b>Fix:</b> one 12-column grid per page; toolbar rows use <span class="mono">justify-content: space-between</span> with the grid, tables get explicit column tracks (<span class="mono">minmax</span>), and master–detail panels share one right margin.</p>
+    </div></div>
+
+    <div class="callout clay" style="margin-top:26px"><b>Also caught — 4 functional bugs to ticket now:</b> ① chart tooltip prints "Invalid Date" (Overview); ② "Ai Chats" title-case bug → "AI Chats"; ③ "NO TRAINING RULES RECORDED." still all-caps (AI Advisor); ④ Profile read-only email is below readable contrast.</div>
+  </div>
+</section>
+
+<!-- ============ 03 SYSTEM ============ -->
+<section id="system">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="kicker">03 — The Layout System</div>
+      <h2>Five rules that place everything</h2>
+      <p class="lead">Every screen in the admin is assembled from the same shell, the same container, and the same three widths. When placement is systemic, alignment stops depending on whoever built the page.</p>
+    </div>
+
+    <h3>Rule 1 — The shell contract</h3>
+    <table>
+      <tr><th>Region</th><th>Spec</th><th>Notes</th></tr>
+      <tr><td><b>Rail</b></td><td class="mono">width 248px · fixed · item 34px · group gap 18px</td><td>Never scrolls at ≥ 700px viewport height; thin overlay scrollbar below that</td></tr>
+      <tr><td><b>Status bar</b></td><td class="mono">height 52px · padding-inline 32px</td><td>Left edge = content container's left edge (shared axis)</td></tr>
+      <tr><td><b>Content region</b></td><td class="mono">padding 40px 48px 64px · max-width 1200px · margin-inline auto</td><td>One container per page; centers on ultrawide instead of stretching</td></tr>
+      <tr><td><b>Page grid</b></td><td class="mono">12 cols · 24px gutters</td><td>All toolbar rows, stat rows, and panels snap to it</td></tr>
+    </table>
+
+    <h3>Rule 2 — Three canonical widths, nothing else</h3>
+    <div class="grid g3">
+      <div class="card"><h4>measure · 560px</h4><p>Forms, settings cards, prose. Add User, Update Password, Profile fields, AI Advisor form — all identical width, all sharing the page's left axis.</p></div>
+      <div class="card"><h4>panel · 760px</h4><p>Focused single cards: TOTP setup, profile picture row, certificate preview. Used when measure is too narrow but fluid is too loud.</p></div>
+      <div class="card"><h4>fluid · 100%</h4><p>Tables, stat rows, media/asset grids, master–detail inspectors, charts. Fills the 12-col container, snaps to its columns.</p></div>
+    </div>
+
+    <h3>Rule 3 — One left axis per page</h3>
+    <p>Page title, every section heading, every card, every form, and every primary button share the container's left margin. Inner elements are indented only as <i>content inside a card</i> (24px card padding), never as independent floats. When this rule holds, the ragged-right problem disappears because right edges follow from the three canonical widths.</p>
+
+    <h3>Rule 4 — Action proximity map</h3>
+    <table>
+      <tr><th>Action affects…</th><th>Lives at…</th><th>Example</th></tr>
+      <tr><td>The whole page / collection</td><td>Header row, top-right, on the title's baseline</td><td>+ Add Resource · Upload Media Asset</td></tr>
+      <tr><td>A form</td><td>Bottom-left inside the form card, auto width, 24px from last field</td><td>Save Changes · Create Dashboard User · Add Guideline</td></tr>
+      <tr><td>A section</td><td>Section header row, right side</td><td>Enable Two-Factor Auth → moves into the TOTP card header</td></tr>
+      <tr><td>A row / item</td><td>Row's "⋯" menu</td><td>Reset password · Revoke · Delete</td></tr>
+      <tr><td>Nothing visible (Refresh)</td><td>Banned — auto-refresh or pull-to-refresh</td><td>"Refresh Accounts" is deleted</td></tr>
+    </table>
+
+    <h3>Rule 5 — Vertical rhythm &amp; focal placement</h3>
+    <ul class="tight">
+      <li>Stack: H1 block → 32px → toolbar row → 24px → first panel → 32px between panels. No exceptions, no extra dividers.</li>
+      <li>Exactly one H1 per page (the rail item's name). Sections are H2 + one purpose line. Cards have no titles that repeat their section.</li>
+      <li>Empty states sit at <b>optical center — 42% of the container height</b> — one per screen, with one sentence and one action.</li>
+      <li>Master–detail: list column fixed 380px, detail fluid; both panes share top and bottom edges; no detail pane when the list is empty.</li>
+      <li>Footer furniture (scrollbars, stray save bars) never occupies the page bottom — sticky elements only when the form is dirty.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============ 04 WIREFRAMES ============ -->
+<section id="wireframes">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="kicker">04 — Before / After</div>
+      <h2>The two worst pages, re-placed</h2>
+    </div>
+
+    <h3>Profile — broken axis + detached save</h3>
+    <div class="wf"><div class="wf-title">Profile · current vs. corrected</div>
+      <div class="wf-grid">
+        <div class="wf-screen">
+          <div class="wf-cap"><span>BEFORE</span><span class="no">axis broken · save detached</span></div>
+          <div class="bx bx-lab" style="height:34px">H1 "Settings &amp; Security" + subtitle</div>
+          <div style="height:14px"></div>
+          <div style="margin-left:34px;position:relative">
+            <div class="axis" style="left:-34px"><span class="axis-lab" style="color:#A9503C;left:2px">title axis</span></div>
+            <div class="bx bx-lab" style="height:52px">avatar + "Profile Picture" (inset +34px)</div>
+            <div style="height:10px"></div>
+            <div class="bx bx-lab" style="height:30px">Full Name field</div>
+            <div style="height:10px"></div>
+            <div class="bx bx-lab" style="height:30px">Email (read-only, dim)</div>
+            <span class="err-tag" style="right:0;top:-2px">broken left axis</span>
+          </div>
+          <div style="height:90px"></div>
+          <div class="bx-err bx-lab" style="height:40px;position:relative">SAVE CHANGES — page bottom, away from form
+            <span class="err-tag" style="right:6px;top:8px">detached action</span>
+          </div>
+        </div>
+        <div class="wf-screen">
+          <div class="wf-cap"><span>AFTER</span><span class="yes">one axis · action inside form</span></div>
+          <div class="bx bx-lab" style="height:30px">H1 "Profile" (no parent title)</div>
+          <div style="height:12px"></div>
+          <div style="width:78%;position:relative">
+            <div class="axis ok" style="left:0"><span class="axis-lab" style="color:#5C7A54;left:2px">single axis</span></div>
+            <div class="bx-solid bx-lab" style="height:56px;margin-left:14px">panel: avatar row + change button (aligned baseline)</div>
+            <div style="height:12px"></div>
+            <div class="bx-solid bx-lab" style="margin-left:14px;padding-bottom:8px">
+              measure 560px form card<br>
+              Full Name · Email (lock hint)<br>
+              <span style="display:inline-block;margin-top:6px;border:1px solid #A96F2E;border-radius:4px;padding:2px 10px;color:#D9A75C">Save changes — inside card, bottom-left</span>
+            </div>
+            <span class="ok-tag" style="right:0;top:-2px">measure · 560px</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <h3>Courses deck — wrapped stats + split right edges</h3>
+    <div class="wf"><div class="wf-title">Courses · current vs. corrected</div>
+      <div class="wf-grid">
+        <div class="wf-screen">
+          <div class="wf-cap"><span>BEFORE</span><span class="no">label wrap · 2 right edges</span></div>
+          <div class="bx bx-lab" style="height:32px">H1 + subtitle + "Control Deck" flourish</div>
+          <div style="height:12px"></div>
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px">
+            <div class="bx-err bx-lab" style="height:48px">ACTIVE CURRICULUM TRACKS ↩ wraps</div>
+            <div class="bx bx-lab" style="height:48px">TOTAL MODULES</div>
+            <div class="bx bx-lab" style="height:48px">INTERACTIVE LESSONS</div>
+            <div class="bx bx-lab" style="height:48px">ACCREDITATION TIERS</div>
+          </div>
+          <div style="height:12px"></div>
+          <div style="display:grid;grid-template-columns:1fr 1.2fr;gap:8px">
+            <div class="bx bx-lab" style="height:120px">track list — right edge: "Foundational" @ x-1</div>
+            <div class="bx bx-lab" style="height:120px">inspector — right edge: [Preview in LMS] @ x-2 ≠ x-1</div>
+          </div>
+          <span class="err-tag" style="right:14px;bottom:8px">stat wrap + split edges</span>
+        </div>
+        <div class="wf-screen">
+          <div class="wf-cap"><span>AFTER</span><span class="yes">4 even cards · shared margin</span></div>
+          <div class="bx bx-lab" style="height:28px">H1 "Courses" + one purpose line · [Preview in LMS] top-right</div>
+          <div style="height:12px"></div>
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px">
+            <div class="bx-solid bx-lab" style="height:44px">Tracks · 6</div>
+            <div class="bx-solid bx-lab" style="height:44px">Modules · 8</div>
+            <div class="bx-solid bx-lab" style="height:44px">Lessons · 9</div>
+            <div class="bx-solid bx-lab" style="height:44px">Tiers · 6</div>
+          </div>
+          <div style="height:12px"></div>
+          <div class="bx-solid bx-lab" style="height:118px;position:relative">
+            inspector panel (fluid, one right margin)<br>
+            list 380px │ detail fluid — hairline divider, no inner boxes<br>
+            module rows: hairline-separated, durations in tabular mono
+            <span class="ok-tag" style="right:6px;top:6px">nesting depth 1</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <h3>AI Chats — dueling empty states</h3>
+    <div class="wf"><div class="wf-title">AI Chats · current vs. corrected</div>
+      <div class="wf-grid">
+        <div class="wf-screen">
+          <div class="wf-cap"><span>BEFORE</span><span class="no">two focal points</span></div>
+          <div class="bx bx-lab" style="height:24px;width:40%">H1 "Ai Chats" (case bug)</div>
+          <div style="height:10px"></div>
+          <div class="bx-err bx-lab" style="height:22px;width:52%">"No chats found." — top-left</div>
+          <div style="height:34px"></div>
+          <div class="bx-err bx-lab" style="height:110px;position:relative;display:flex;align-items:center;justify-content:center">"No item selected" — dead center of void
+            <span class="err-tag" style="right:6px;top:6px">2nd empty state</span>
+          </div>
+        </div>
+        <div class="wf-screen">
+          <div class="wf-cap"><span>AFTER</span><span class="yes">single focal at 42%</span></div>
+          <div class="bx bx-lab" style="height:24px;width:40%">H1 "AI Chats"</div>
+          <div style="height:52px"></div>
+          <div class="bx-solid bx-lab" style="height:120px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;position:relative">
+            inbox-icon (24px, night-2)<br>
+            "No conversations yet."<br>
+            <span style="text-transform:none;letter-spacing:0">Transcripts appear here when visitors use the site advisor.</span>
+            <span class="ok-tag" style="right:6px;top:6px">one state · 42% height</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 05 SCREENS ============ -->
+<section id="screens">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="kicker">05 — Screen-by-Screen Placement Fixes</div>
+      <h2>The 12 screens, corrected</h2>
+    </div>
+    <table>
+      <tr><th>Screen</th><th>Placement failures present</th><th>Fix spec</th></tr>
+      <tr><td><b>Overview</b></td><td class="bad">F·9 bug ("Invalid Date" tooltip) · stat labels caps · chart panel heading wraps with dropdown</td>
+        <td class="fix">Fix tooltip date formatter; stats → sentence-case labels on one baseline; chart header = one row (title left, "Last 3 months" quiet control right); stacked bar panel gets purpose line</td></tr>
+      <tr><td><b>People</b></td><td class="bad">F·9 toolbar gap · F·3 "Refresh Accounts" · column void before Actions</td>
+        <td class="fix">Delete refresh; toolbar = search (320px, left) + segmented role filter (right) on grid; table tracks: email minmax(220,1fr) · role 200px · status 140px · joined 140px · menu 48px</td></tr>
+      <tr><td><b>Access Control</b></td><td class="bad">F·1 (640px one-off width) · F·8 orphan top-left · full-width submit</td>
+        <td class="fix">Form → measure 560px on page axis; submit auto-width bottom-left; helper text 13px fjord; page centered in 1200px container</td></tr>
+      <tr><td><b>Courses</b></td><td class="bad">F·6 wrapped stat label · F·9 split right edges · nested module boxes · thick scrollbars</td>
+        <td class="fix">4 stat cards w/ short labels; inspector = one panel (nesting 1), hairline module rows; list 380px; shared right margin; thin scrollbars; "Preview in LMS" → header top-right</td></tr>
+      <tr><td><b>Library</b></td><td class="bad">F·1 (660px card) · F·8 void page · truncated title/desc</td>
+        <td class="fix">Fluid card grid (min 300px, 3-up); single item renders as featured row (thumb 160px + meta + quiet actions); title 2 lines, no truncation</td></tr>
+      <tr><td><b>Media</b></td><td class="bad">F·1 search 480px vs grid · hash label · void below single asset</td>
+        <td class="fix">Toolbar: search 320px left; fluid grid; dropzone tile as first cell; display name editable, hash in tooltip</td></tr>
+      <tr><td><b>Inquiries</b></td><td class="bad">F·5 "No item selected" at dead center · list column arbitrary 480px</td>
+        <td class="fix">List fixed 380px; detail hint at 42% optical center ("Select an inquiry — booking details render here"); rows parse advisor/date/time into labeled fields</td></tr>
+      <tr><td><b>Subscribers</b></td><td class="bad">F·5 + F·8 — one row + void + dead detail pane</td>
+        <td class="fix">Kill detail pane for this entity (nothing to inspect); subscribers = simple fluid table (email · joined · source · menu); count in header</td></tr>
+      <tr><td><b>AI Chats</b></td><td class="bad">F·5 dual empty states · case bug "Ai Chats"</td>
+        <td class="fix">Title "AI Chats"; list empty → single centered state at 42%, no detail pane; with data → 380px list + transcript pane</td></tr>
+      <tr><td><b>Profile</b></td><td class="bad">F·2 inset axis · F·3 save at page bottom · F·4 double header · dim read-only</td>
+        <td class="fix">H1 "Profile" only; avatar panel 760px (baseline-aligned row); form measure 560px; Save inside form card bottom-left (sticky only when dirty); email gets lock hint + readable tone</td></tr>
+      <tr><td><b>Security &amp; MFA</b></td><td class="bad">F·1 form 600px vs TOTP full-width · F·3 enable button under card · F·4 double header</td>
+        <td class="fix">H1 "Security &amp; MFA"; both sections measure 560px stacked; "Enable Two-Factor Auth" moves into TOTP card as its primary row action; 32px between sections</td></tr>
+      <tr><td><b>AI Advisor</b></td><td class="bad">F·4 triple header · F·2 card inset from heading · caps empty string</td>
+        <td class="fix">H1 "AI Advisor" + one line; form card measure 560px on axis; empty state: "No fact rules yet — add your first one above." + example in helper text; rules list renders as hairline rows when present</td></tr>
+    </table>
+  </div>
+</section>
+
+<!-- ============ 06 CSS ============ -->
+<section id="css">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="kicker">06 — Drop-In CSS Foundation</div>
+      <h2>The placement system as code</h2>
+      <p class="lead">Hand this to whoever owns the admin stylesheet. It encodes Rules 1–5; page templates then compose from these primitives.</p>
+    </div>
+<pre class="code"><span class="c">/* ---- Layout tokens ---- */</span>
+:root {
+  <span class="k">--rail-w</span>: <span class="v">248px</span>;
+  <span class="k">--statusbar-h</span>: <span class="v">52px</span>;
+  <span class="k">--content-max</span>: <span class="v">1200px</span>;
+  <span class="k">--content-pad-x</span>: <span class="v">48px</span>;
+  <span class="k">--w-measure</span>: <span class="v">560px</span>;   <span class="c">/* forms, prose */</span>
+  <span class="k">--w-panel</span>: <span class="v">760px</span>;     <span class="c">/* focused cards */</span>
+  <span class="k">--gap-section</span>: <span class="v">32px</span>;
+  <span class="k">--gap-block</span>: <span class="v">24px</span>;
+}
+
+<span class="c">/* ---- Shell: one container, one axis ---- */</span>
+.admin-main {
+  margin-left: <span class="v">var(--rail-w)</span>;
+}
+.page {
+  max-width: <span class="v">var(--content-max)</span>;
+  margin-inline: <span class="v">auto</span>;          <span class="c">/* centers on ultrawide (fixes F·8) */</span>
+  padding: <span class="v">40px var(--content-pad-x) 64px</span>;
+}
+.page > * + * { margin-top: <span class="v">var(--gap-section)</span>; }  <span class="c">/* vertical rhythm */</span>
+
+<span class="c">/* ---- Header: one H1, actions on its baseline ---- */</span>
+.page-header {
+  display: <span class="v">flex</span>; align-items: <span class="v">baseline</span>;
+  justify-content: <span class="v">space-between</span>; gap: <span class="v">16px</span>;
+}
+.page-header h1 { font-size: <span class="v">28px</span>; }        <span class="c">/* no parent title (F·4) */</span>
+.page-header .purpose { color: <span class="v">var(--night-mut)</span>; font-size: <span class="v">14px</span>; }
+
+<span class="c">/* ---- Canonical widths (fixes F·1, F·2) ---- */</span>
+.measure { max-width: <span class="v">var(--w-measure)</span>; }
+.panel   { max-width: <span class="v">var(--w-panel)</span>; }
+.fluid   { width: <span class="v">100%</span>; }
+.measure, .panel { margin-left: <span class="v">0</span>; }   <span class="c">/* never inset from the axis */</span>
+
+<span class="c">/* ---- Form card: submit lives inside (fixes F·3) ---- */</span>
+.form-card { padding: <span class="v">24px</span>; border: <span class="v">1px solid var(--night-2)</span>; border-radius: <span class="v">10px</span>; }
+.form-card > * + * { margin-top: <span class="v">20px</span>; }
+.form-actions { display: <span class="v">flex</span>; justify-content: <span class="v">flex-start</span>; } <span class="c">/* bottom-left, auto width */</span>
+
+<span class="c">/* ---- Toolbar rows snap to grid (fixes F·9) ---- */</span>
+.toolbar { display: <span class="v">flex</span>; justify-content: <span class="v">space-between</span>; gap: <span class="v">16px</span>; }
+.toolbar .search { width: <span class="v">320px</span>; }
+
+<span class="c">/* ---- Stat row: labels never wrap (fixes F·6) ---- */</span>
+.stats { display: <span class="v">grid</span>; grid-template-columns: <span class="v">repeat(auto-fit, minmax(160px, 1fr))</span>; gap: <span class="v">16px</span>; }
+.stat .label { font-size: <span class="v">13px</span>; white-space: <span class="v">nowrap</span>; text-transform: <span class="v">none</span>; }
+.stat .value { font-size: <span class="v">32px</span>; font-variant-numeric: <span class="v">tabular-nums</span>; }
+
+<span class="c">/* ---- Master–detail (fixes F·5) ---- */</span>
+.split { display: <span class="v">grid</span>; grid-template-columns: <span class="v">380px 1fr</span>; gap: <span class="v">0</span>; }
+.split .detail:empty, .split[data-list-empty] .detail { display: <span class="v">none</span>; }
+.empty-focal {                                  <span class="c">/* single focal, optical center */</span>
+  min-height: <span class="v">52vh</span>; display: <span class="v">grid</span>; place-content: <span class="v">center</span>;
+  justify-items: <span class="v">center</span>; gap: <span class="v">8px</span>; text-align: <span class="v">center</span>;
+  padding-bottom: <span class="v">10vh</span>;                       <span class="c">/* pushes to ~42% */</span>
+}
+
+<span class="c">/* ---- Rail: fits without scrolling (fixes F·7) ---- */</span>
+.rail-item { height: <span class="v">34px</span>; }
+.rail-group { margin-top: <span class="v">18px</span>; }
+.rail { scrollbar-width: <span class="v">thin</span>; }            <span class="c">/* thin overlay only */</span></pre>
+  </div>
+</section>
+
+<!-- ============ 07 QA ============ -->
+<section id="qa">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="kicker">07 — Rollout Order &amp; Alignment QA</div>
+      <h2>Sequence and gate</h2>
+    </div>
+    <div class="grid g2">
+      <div class="card">
+        <h4>Implementation order (1 week)</h4>
+        <ul class="tight">
+          <li><b>Day 1:</b> land §06 shell CSS + fix the 4 bugs (Invalid Date, "AI Chats", caps empty string, email contrast)</li>
+          <li><b>Day 2:</b> rail density pass (F·7) + Settings family (Profile, Security, AI Advisor, Access Control — all measure-width forms)</li>
+          <li><b>Day 3:</b> Communication family (Inquiries, Subscribers, AI Chats — split-pane + focal empties)</li>
+          <li><b>Day 4:</b> Content family (Courses, Library, Media — stats, grids, inspector)</li>
+          <li><b>Day 5:</b> Overview + People, then full QA pass at 1280 / 1440 / 1920 widths</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h4>Alignment QA checklist (every screen)</h4>
+        <div class="check"><div class="cb"></div><div>One left axis: title, sections, cards, forms share x</div></div>
+        <div class="check"><div class="cb"></div><div>Only three widths in play: 560 / 760 / fluid</div></div>
+        <div class="check"><div class="cb"></div><div>Exactly one H1; no stacked parent titles</div></div>
+        <div class="check"><div class="cb"></div><div>Every button within the container it affects</div></div>
+        <div class="check"><div class="cb"></div><div>One empty state, at 42% height, with next action</div></div>
+        <div class="check"><div class="cb"></div><div>Rail fits without scroll at 700px viewport height</div></div>
+        <div class="check"><div class="cb"></div><div>Stat labels single-line; numerals share baseline</div></div>
+        <div class="check"><div class="cb"></div><div>No content orphaning at 1920px (container centers)</div></div>
+        <div class="check"><div class="cb"></div><div>Border nesting ≤ 1 on split panes, ≤ 2 anywhere</div></div>
+        <div class="check"><div class="cb"></div><div>Scrollbars thin; no scroll arrows anywhere</div></div>
+      </div>
+    </div>
+    <div class="callout moss"><b>Definition of done:</b> screenshot any admin page, draw a vertical line at the title's left edge — every element on that page touches the line or lives inside something that does. Ragged edges gone; actions adjacent; one focal point per screen.</div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <p><b>EduPlus Alignment &amp; Layout Enhancement</b> · Round-3 audit (23:19–23:22 set, 12 admin screens) · Companion to the Lagom Strategy and Declutter Plan · Prepared September 19, 2026.</p>
+  </div>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,129 @@
+import { useState } from 'react';
+import { CURRICULUM_TRACKS } from '../../data/lmsCurriculumData';
+import { Link } from 'react-router';
+import { ExternalLink } from 'lucide-react';
+
+export default function LmsManager() {
+  const [selectedTrackId, setSelectedTrackId] = useState(CURRICULUM_TRACKS[0].id);
+  const selectedTrack =
+    CURRICULUM_TRACKS.find((t) => t.id === selectedTrackId) || CURRICULUM_TRACKS[0];
+
+  const totalModules = CURRICULUM_TRACKS.reduce((acc, t) => acc + t.modules.length, 0);
+  const totalLessons = CURRICULUM_TRACKS.reduce(
+    (acc, t) => acc + t.modules.reduce((mAcc, m) => mAcc + m.lessons.length, 0),
+    0,
+  );
+
+  return (
+    <div className="flex flex-col gap-7 animate-in fade-in duration-300 w-full">
+      <div className="page-head">
+        <h1>Courses</h1>
+        <span className="sub">Tracks, modules, and lesson contents</span>
+        <div className="act">
+          <Link to={`/lms/tracks/${selectedTrack.id}`} target="_blank" className="btn btn-p btn-sm">
+            Preview in LMS <ExternalLink className="size-3.5 ml-1" />
+          </Link>
+        </div>
+      </div>
+
+      <div className="stack flex flex-col gap-7">
+        {/* Header telemetry stats */}
+        <div className="stats">
+          <div className="card stat p-[18px_20px]">
+            <div className="text-[13px] text-muted-foreground">Tracks</div>
+            <div className="font-heading text-[32px] leading-[1.2] mt-0.5 text-foreground font-normal tabular-nums">{CURRICULUM_TRACKS.length}</div>
+          </div>
+          <div className="card stat p-[18px_20px]">
+            <div className="text-[13px] text-muted-foreground">Modules</div>
+            <div className="font-heading text-[32px] leading-[1.2] mt-0.5 text-foreground font-normal tabular-nums">{totalModules}</div>
+          </div>
+          <div className="card stat p-[18px_20px]">
+            <div className="text-[13px] text-muted-foreground">Lessons</div>
+            <div className="font-heading text-[32px] leading-[1.2] mt-0.5 text-foreground font-normal tabular-nums">{totalLessons}</div>
+          </div>
+          <div className="card stat p-[18px_20px]">
+            <div className="text-[13px] text-muted-foreground">Tiers</div>
+            <div className="font-heading text-[32px] leading-[1.2] mt-0.5 text-foreground font-normal tabular-nums">6</div>
+          </div>
+        </div>
+
+        {/* Master-Detail Split Workspace */}
+        <div className="split">
+          {/* Left Track List */}
+          <div className="split-list">
+            {CURRICULUM_TRACKS.map((track) => {
+              const isSelected = track.id === selectedTrackId;
+              return (
+                <button
+                  key={track.id}
+                  onClick={() => setSelectedTrackId(track.id)}
+                  className={`tr-row ${isSelected ? 'on' : ''}`}
+                >
+                  <div className="flex justify-between items-baseline gap-2">
+                    <span className="code">{track.code}</span>
+                    <span className="lvl">{track.level}</span>
+                  </div>
+                  <div className="tt">{track.title}</div>
+                  <div className="ld">Lead: {track.councilLead.name}</div>
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Right Track Detail Panel */}
+          <div className="split-detail">
+            <div className="font-mono text-[11.5px] text-primary tracking-wide">
+              {selectedTrack.code}&nbsp;&nbsp;·&nbsp;&nbsp;{selectedTrack.estimatedWeeks} WEEKS&nbsp;&nbsp;·&nbsp;&nbsp;{selectedTrack.totalHours} HOURS
+            </div>
+            <h2 className="font-heading text-xl font-normal text-foreground mt-2 mb-1">
+              {selectedTrack.title}
+            </h2>
+            <p className="text-[14px] text-muted-foreground">
+              {selectedTrack.tagline}
+            </p>
+            
+            <div className="hr" />
+
+            <h3 className="font-sans text-[16px] font-semibold text-foreground mb-2">
+              Syllabus · {selectedTrack.modules.length} modules
+            </h3>
+            
+            <div className="divide-y divide-border/60">
+              {selectedTrack.modules.map((m) => (
+                <div key={m.id} className="mod py-4">
+                  <div className="mh flex justify-between items-baseline gap-3 mb-1">
+                    <span className="mt font-semibold text-foreground text-[14.5px]">
+                      Module {m.order} · {m.title}
+                    </span>
+                    <span className="mm font-mono text-[11px] text-muted-foreground shrink-0">
+                      {m.estimatedHours}h · {m.lessons.length} lessons
+                    </span>
+                  </div>
+                  <div className="space-y-1 mt-2">
+                    {m.lessons.map((l) => (
+                      <div key={l.id} className="les flex justify-between items-baseline gap-3 text-[13.5px] text-muted-foreground">
+                        <span>{l.title}</span>
+                        <span className="dur font-mono text-[11px] text-muted-foreground shrink-0">
+                          {l.durationMinutes}m · {l.type}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div className="mt-6 pt-4 border-t border-border flex items-center justify-between">
+              <span className="font-mono text-[11px] text-muted-foreground">
+                Council Certified Track
+              </span>
+              <Link to={`/lms/tracks/${selectedTrack.id}`} target="_blank" className="btn btn-q btn-sm">
+                Open Course Player <ExternalLink className="size-3.5 ml-1" />
+              </Link>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}

@@ -8,6 +8,7 @@
       }
     ],
     "no-descending-specificity": null,
+    "at-rule-prelude-no-invalid": null,
     "color-function-notation": "modern",
     "keyframes-name-pattern": null,
     "alpha-value-notation": null

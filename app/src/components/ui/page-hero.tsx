@@ -32,7 +32,7 @@ export function PageHero({
   const titlePrefix = hasValidSuffixWords && hasValidPrefix ? titleWords.slice(0, -1).join(' ') : null;
 
   return (
-    <section className="relative w-full overflow-hidden border-b border-border/50 bg-background pt-8">
+    <section className="relative w-full overflow-hidden border-b border-border/50 pt-8">
       <div className="mx-auto max-w-[1440px]">
         <div
           className={

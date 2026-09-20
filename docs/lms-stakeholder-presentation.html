@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Edu+ Skills — LMS Stakeholder Presentation</title>
+<style>
+  /* ============================================================
+     Edu+ Skills LMS — Stakeholder Deck
+     Nordic Lagom design language: warm paper, warm ink, ochre accent.
+     Straight-edge geometry only. All slides 1280x720, centered.
+     ============================================================ */
+  :root{
+    --paper:      #FAF6EE;
+    --paper-2:    #F3EDE0;
+    --card:       #F6F1E6;
+    --ink:        #2A251E;
+    --ink-soft:   #4A4237;
+    --muted:      #857A6A;
+    --line:       #E4DCCB;
+    --line-soft:  #EDE6D6;
+    --ochre:      #C4922F;
+    --ochre-deep: #A1761F;
+    --ochre-soft: #EBD9AE;
+    --fjord:      #4E6E7B;
+    --moss:       #5F7351;
+    --clay:       #A65A44;
+    --charcoal:   #211D17;
+    --charcoal-2: #2C2720;
+    --charcoal-3: #38311F;
+    --cream-on-dark:#F2EBDC;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html,body{height:100%;}
+  body{
+    background:var(--charcoal);
+    font-family:"Instrument Sans","Segoe UI",system-ui,-apple-system,sans-serif;
+    color:var(--ink);
+    overflow:hidden;
+    -webkit-font-smoothing:antialiased;
+  }
+  .serif{font-family:"Fraunces",Georgia,"Iowan Old Style","Times New Roman",serif;}
+  .mono{font-family:"IBM Plex Mono",ui-monospace,"Cascadia Mono",Consolas,monospace;}
+
+  /* ---------- Stage : perfectly centered slide ---------- */
+  #stage{
+    position:fixed; inset:0;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .slide{
+    position:absolute;
+    width:1280px; height:720px;
+    background:var(--paper);
+    display:none;
+    flex-direction:column;
+    align-items:center;
+    overflow:hidden;
+    transform-origin:center center;
+  }
+  .slide.active{display:flex;}
+  .slide.dark{background:var(--charcoal); color:var(--cream-on-dark);}
+
+  /* ---------- Slide chrome ---------- */
+  .chrome{
+    width:1120px;
+    display:flex; align-items:center; justify-content:space-between;
+    padding-top:34px;
+  }
+  .kicker{
+    display:flex; align-items:center; gap:12px;
+    font-size:11px; letter-spacing:3.5px; text-transform:uppercase;
+    color:var(--ochre-deep); font-weight:600;
+  }
+  .dark .kicker{color:var(--ochre);}
+  .kicker::before{content:""; width:34px; height:2px; background:var(--ochre);}
+  .slidenum{
+    font-size:11px; letter-spacing:2px; color:var(--muted);
+  }
+  .slidenum b{color:var(--ochre-deep); font-weight:600;}
+  .dark .slidenum{color:#7d7466;}
+  .dark .slidenum b{color:var(--ochre);}
+
+  .body{
+    width:1120px; flex:1;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    text-align:center;
+  }
+  .foot{
+    width:1120px;
+    display:flex; align-items:center; justify-content:space-between;
+    padding-bottom:26px;
+    font-size:10px; letter-spacing:2.5px; text-transform:uppercase; color:var(--muted);
+  }
+  .dark .foot{color:#6e665a;}
+  .foot .rule{flex:1; height:1px; background:var(--line); margin:0 22px;}
+  .dark .foot .rule{background:#3a342a;}
+
+  h1.title{
+    font-family:"Fraunces",Georgia,serif;
+    font-weight:560; font-size:44px; line-height:1.12;
+    letter-spacing:-0.5px; margin:14px 0 10px;
+  }
+  .dark h1.title{color:var(--cream-on-dark);}
+  .subtitle{font-size:15px; line-height:1.65; color:var(--muted); max-width:760px;}
+  .dark .subtitle{color:#a89d8a;}
+
+  /* ---------- Shared layout primitives ---------- */
+  .cols{display:flex; align-items:stretch; justify-content:center; gap:44px; width:100%;}
+  .col{display:flex; flex-direction:column; align-items:center; justify-content:center;}
+  .card{
+    background:var(--card); border:1px solid var(--line);
+    padding:22px 24px; text-align:center;
+  }
+  .dark .card{background:var(--charcoal-2); border-color:#3d372c;}
+  .tag{
+    display:inline-block; padding:4px 12px; border:1px solid var(--ochre);
+    color:var(--ochre-deep); font-size:10px; letter-spacing:2.5px;
+    text-transform:uppercase; font-weight:600;
+  }
+  .dark .tag{color:var(--ochre);}
+  .divider{width:64px; height:2px; background:var(--ochre); margin:16px auto;}
+
+  /* ---------- Navigation UI ---------- */
+  #nav{
+    position:fixed; left:50%; bottom:18px; transform:translateX(-50%);
+    display:flex; align-items:center; gap:14px; z-index:50;
+    background:rgba(33,29,23,.82); border:1px solid #3d372c;
+    padding:8px 16px;
+  }
+  #nav button{
+    background:none; border:1px solid #4a4237; color:#d9cfba;
+    width:30px; height:30px; cursor:pointer; font-size:14px; line-height:1;
+    display:flex; align-items:center; justify-content:center;
+    transition:background .24s ease, color .24s ease;
+  }
+  #nav button:hover{background:var(--ochre); color:var(--charcoal); border-color:var(--ochre);}
+  #dots{display:flex; gap:8px;}
+  #dots span{
+    width:8px; height:8px; background:#4a4237; cursor:pointer;
+    transition:background .24s ease;
+  }
+  #dots span.on{background:var(--ochre);}
+  #progress{position:fixed; top:0; left:0; height:3px; background:var(--ochre); width:0%; z-index:60; transition:width .24s ease;}
+  #hint{
+    position:fixed; right:20px; bottom:26px; z-index:50;
+    font-size:10px; letter-spacing:2px; text-transform:uppercase; color:#6e665a;
+  }
+
+  /* ---------- Slide-specific ---------- */
+  .stat-row{display:flex; gap:26px; justify-content:center; margin-top:30px;}
+  .stat{width:200px; border:1px solid var(--line); background:var(--card); padding:24px 16px 20px;}
+  .stat .n{font-family:"Fraunces",Georgia,serif; font-size:52px; font-weight:560; color:var(--ochre-deep); line-height:1;}
+  .stat .l{font-size:11px; letter-spacing:2px; text-transform:uppercase; color:var(--muted); margin-top:10px; line-height:1.6;}
+
+  .techgrid{display:grid; grid-template-columns:repeat(4,1fr); gap:14px; width:100%; margin-top:26px;}
+  .tech{border:1px solid var(--line); background:var(--card); padding:18px 14px 16px;}
+  .tech .ic{height:44px; display:flex; align-items:center; justify-content:center; margin-bottom:10px;}
+  .tech .t{font-weight:650; font-size:14.5px; letter-spacing:.2px;}
+  .tech .d{font-size:11px; color:var(--muted); margin-top:5px; line-height:1.5;}
+
+  .swatches{display:flex; gap:14px; justify-content:center; margin-top:6px;}
+  .sw{width:118px;}
+  .sw .chip{height:64px; border:1px solid var(--line);}
+  .sw .nm{font-size:10.5px; letter-spacing:1.5px; text-transform:uppercase; margin-top:8px; color:var(--ink-soft); font-weight:600;}
+  .sw .ok{font-size:10px; color:var(--muted); margin-top:2px;}
+
+  .policy{display:flex; gap:12px; justify-content:center; margin-top:18px; flex-wrap:wrap;}
+  .policy .p{border:1px solid var(--line); background:var(--card); padding:10px 16px; font-size:11.5px; color:var(--ink-soft);}
+
+  .flowstep{display:flex; align-items:center; gap:0; justify-content:center; margin-top:22px;}
+  .fstep{border:1px solid var(--line); background:var(--card); padding:14px 18px; text-align:center; min-width:150px;}
+  .fstep .a{font-size:10px; letter-spacing:2px; color:var(--ochre-deep); text-transform:uppercase; font-weight:700;}
+  .fstep .b{font-size:12.5px; margin-top:5px; color:var(--ink-soft); line-height:1.45;}
+  .farrow{width:34px; height:2px; background:var(--ochre); position:relative;}
+  .farrow::after{content:""; position:absolute; right:-1px; top:-4px;
+    border-left:8px solid var(--ochre); border-top:5px solid transparent; border-bottom:5px solid transparent;}
+
+  .list-tight{text-align:left; font-size:13.5px; line-height:2.0; color:var(--ink-soft);}
+  .list-tight b{color:var(--ink); font-weight:650;}
+  .list-tight .k{color:var(--ochre-deep); font-weight:700; margin-right:10px; font-family:"IBM Plex Mono",monospace; font-size:11.5px;}
+
+  svg text{font-family:"IBM Plex Mono",ui-monospace,Consolas,monospace;}
+</style>
+</head>
+<body>
+
+<div id="progress"></div>
+
+<div id="stage">
+
+  <!-- ================= SLIDE 1 · COVER ================= -->
+  <section class="slide dark" data-s="1">
+    <div class="chrome">
+      <div class="kicker">Stakeholder Briefing</div>
+      <div class="slidenum"><b>01</b> / 10</div>
+    </div>
+    <div class="body">
+      <svg width="560" height="150" viewBox="0 0 560 150" aria-hidden="true">
+        <!-- Geometric horizon emblem : straight lines only -->
+        <g stroke="#C4922F" stroke-width="2" fill="none">
+          <rect x="250" y="15" width="60" height="60" transform="rotate(45 280 45)"/>
+          <rect x="262" y="27" width="36" height="36" transform="rotate(45 280 45)"/>
+        </g>
+        <g stroke="#4E6E7B" stroke-width="2" fill="none">
+          <path d="M40 118 L160 118 L200 82 L240 118 L320 118 L360 82 L400 118 L520 118 Z"/>
+          <path d="M40 132 L520 132"/>
+        </g>
+        <g fill="#C4922F">
+          <rect x="197" y="112" width="6" height="6"/>
+          <rect x="357" y="112" width="6" height="6"/>
+        </g>
+      </svg>
+      <div class="tag" style="margin-top:8px;">Edu+ Skills · Learning Management System</div>
+      <h1 class="title serif" style="font-size:64px; max-width:900px;">Elevate Tomorrow.<br>The Global Engine for Skill Engineering.</h1>
+      <p class="subtitle" style="color:#a89d8a; margin-top:6px;">
+        An innovation-led, hybrid learning platform bridging classrooms and the real world —
+        from stream selection to career launch, powered by React&nbsp;19, Supabase and an AI Cognitive Advisor.
+      </p>
+      <div style="display:flex; gap:34px; margin-top:34px; font-size:11px; letter-spacing:2.5px; text-transform:uppercase; color:#8b8172;">
+        <span>Prepared for Stakeholders</span><span style="color:#C4922F;">·</span>
+        <span>Product &amp; Technology Deep-Dive</span><span style="color:#C4922F;">·</span>
+        <span>2026 Edition</span>
+      </div>
+    </div>
+    <div class="foot"><span>Edu+ Skills</span><span class="rule"></span><span>Nordic Lagom Edition</span></div>
+  </section>
+
+  <!-- ================= SLIDE 2 · EXECUTIVE SUMMARY ================= -->
+  <section class="slide" data-s="2">
+    <div class="chrome">
+      <div class="kicker">Executive Summary</div>
+      <div class="slidenum"><b>02</b> / 10</div>
+    </div>
+    <div class="body">
+      <h1 class="title serif">One Platform, The Entire Learning Lifecycle</h1>
+      <p class="subtitle">Edu+ Skills accompanies learners across every stage — school, skills, admissions,
+        mentorship, placement and educator training — through a premium, constraint-driven web experience.</p>
+
+      <!-- Lifecycle illustration -->
+      <svg width="980" height="150" viewBox="0 0 980 150" style="margin-top:26px;" aria-hidden="true">
+        <g stroke="#E4DCCB" stroke-width="2"><path d="M30 108 L950 108"/></g>
+        <g stroke="#C4922F" stroke-width="2" fill="#FAF6EE">
+          <path d="M70 108 L95 58 L120 108 Z"/>
+          <path d="M225 108 L225 62 L275 62 L275 108 Z"/>
+          <path d="M380 108 L405 58 L430 108 Z"/>
+          <path d="M535 108 L535 62 L585 62 L585 108 Z"/>
+          <path d="M690 108 L715 58 L740 108 Z"/>
+          <path d="M845 108 L845 62 L895 62 L895 108 Z"/>
+        </g>
+        <g fill="#C4922F">
+          <rect x="92" y="100" width="6" height="6"/><rect x="247" y="100" width="6" height="6"/>
+          <rect x="402" y="100" width="6" height="6"/><rect x="557" y="100" width="6" height="6"/>
+          <rect x="712" y="100" width="6" height="6"/><rect x="867" y="100" width="6" height="6"/>
+        </g>
+        <g fill="#4A4237" font-size="12" text-anchor="middle" letter-spacing="1">
+          <text x="95" y="140">SCHOOL YEARS</text><text x="250" y="140">LIFE SKILLS</text>
+          <text x="405" y="140">MENTORSHIP</text><text x="560" y="140">ADMISSIONS</text>
+          <text x="715" y="140">CAREER LAUNCH</text><text x="870" y="140">EDUCATORS</text>
+        </g>
+      </svg>
+
+      <div class="stat-row">
+        <div class="stat"><div class="n">11</div><div class="l">Routed product<br>experiences</div></div>
+        <div class="stat"><div class="n">6</div><div class="l">Flagship program<br>phases</div></div>
+        <div class="stat"><div class="n">14</div><div class="l">Expert council<br>advisors</div></div>
+        <div class="stat"><div class="n">4</div><div class="l">Admin dashboard<br>modules</div></div>
+      </div>
+    </div>
+    <div class="foot"><span>Executive Summary</span><span class="rule"></span><span>Edu+ Skills LMS</span></div>
+  </section>
+
+  <!-- ================= SLIDE 3 · TECHNOLOGY STACK ================= -->
+  <section class="slide" data-s="3">
+    <div class="chrome">
+      <div class="kicker">Advanced Technology Stack</div>
+      <div class="slidenum"><b>03</b> / 10</div>
+    </div>
+    <div class="body">
+      <h1 class="title serif" style="font-size:38px;">A Modern, Scale-Ready Engineering Stack</h1>
+      <p class="subtitle" style="font-size:13.5px;">Every layer chosen for performance, type-safety and long-term maintainability.</p>
+
+      <div class="techgrid">
+        <div class="tech">
+          <div class="ic"><svg width="40" height="40" viewBox="0 0 40 40"><g stroke="#C4922F" stroke-width="2" fill="none"><rect x="8" y="8" width="24" height="24"/><rect x="15" y="15" width="10" height="10"/></g></svg></div>
+          <div class="t">React 19</div><div class="d">Functional components, hooks, clean lifecycles</div>
+        </div>
+        <div class="tech">
+          <div class="ic"><svg width="40" height="40" viewBox="0 0 40 40"><g stroke="#4E6E7B" stroke-width="2" fill="none"><path d="M8 32 L8 12 L20 8 L32 12 L32 32 Z"/><path d="M14 32 L14 18 L26 18 L26 32"/></g></svg></div>
+          <div class="t">TypeScript 5</div><div class="d">Full static typing, typed props &amp; interfaces</div>
+        </div>
+        <div class="tech">
+          <div class="ic"><svg width="40" height="40" viewBox="0 0 40 40"><g stroke="#C4922F" stroke-width="2" fill="none"><path d="M22 4 L10 22 L19 22 L18 36 L30 18 L21 18 Z"/></g></svg></div>
+          <div class="t">Vite 7</div><div class="d">Lightning HMR dev server, optimized bundles</div>
+        </div>
+        <div class="tech">
+          <div class="ic"><svg width="40" height="40" viewBox="0 0 40 40"><g stroke="#5F7351" stroke-width="2" fill="none"><path d="M6 26 L20 10 L26 18 L30 14 L34 18"/><path d="M6 32 L34 32"/></g></svg></div>
+          <div class="t">Tailwind CSS v3</div><div class="d">Utility-first styling on custom design tokens</div>
+        </div>
+        <div class="tech">
+          <div class="ic"><svg width="40" height="40" viewBox="0 0 40 40"><g stroke="#4E6E7B" stroke-width="2" fill="none"><rect x="6" y="6" width="12" height="12"/><rect x="22" y="6" width="12" height="12"/><rect x="6" y="22" width="12" height="12"/><rect x="22" y="22" width="12" height="12"/></g></svg></div>
+          <div class="t">Radix + shadcn/ui</div><div class="d">Accessible primitives, straight-edged styling</div>
+        </div>
+        <div class="tech">
+          <div class="ic"><svg width="40" height="40" viewBox="0 0 40 40"><g stroke="#C4922F" stroke-width="2" fill="none"><path d="M8 20 L32 20"/><path d="M8 20 L16 10 L24 20 L32 12"/><rect x="4" y="16" width="8" height="8"/><rect x="28" y="16" width="8" height="8"/></g></svg></div>
+          <div class="t">React Router v7</div><div class="d">Declarative routing, protected-route middleware</div>
+        </div>
+        <div class="tech">
+          <div class="ic"><svg width="40" height="40" viewBox="0 0 40 40"><g stroke="#5F7351" stroke-width="2" fill="none"><path d="M20 4 L34 12 L34 28 L20 36 L6 28 L6 12 Z"/><path d="M20 4 L20 36"/><path d="M6 12 L34 28"/></g></svg></div>
+          <div class="t">Supabase</div><div class="d">PostgreSQL, Auth, RLS, real-time pub/sub</div>
+        </div>
+        <div class="tech">
+          <div class="ic"><svg width="40" height="40" viewBox="0 0 40 40"><g stroke="#C4922F" stroke-width="2" fill="none"><rect x="10" y="10" width="20" height="20"/><path d="M16 4 L16 10 M24 4 L24 10 M16 30 L16 36 M24 30 L24 36 M4 16 L10 16 M4 24 L10 24 M30 16 L36 16 M30 24 L36 24"/></g></svg></div>
+          <div class="t">OpenRouter + Gemini</div><div class="d">LLM gateway on gemini-2.5-flash for counseling</div>
+        </div>
+      </div>
+
+      <div style="display:flex; gap:12px; margin-top:18px; font-size:11px; color:var(--muted);">
+        <span class="policy p" style="padding:6px 14px;">Recharts v3.8 — linear SVG telemetry charts</span>
+        <span class="policy p" style="padding:6px 14px;">Lucide + Hugeicons vector iconography</span>
+        <span class="policy p" style="padding:6px 14px;">dotted-map · clsx · tailwind-merge utilities</span>
+      </div>
+    </div>
+    <div class="foot"><span>Technology Stack</span><span class="rule"></span><span>Edu+ Skills LMS</span></div>
+  </section>

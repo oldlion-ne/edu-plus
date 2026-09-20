@@ -27,6 +27,11 @@ import { AnimatedThemeToggler } from '@/components/ui/animated-theme-toggler';
 
 const PLATFORM_LINKS = [
   {
+    label: 'Learning Portal (LMS)',
+    path: '/lms',
+    description: 'Interactive curriculum modules, assessments, and council certificates.',
+  },
+  {
     label: 'Programs',
     path: '/programs',
     description: 'Explore structured learning tracks and certifications.',
@@ -64,6 +69,7 @@ const COMMUNITY_LINKS = [
 // Flat list used by the mobile drawer
 const ALL_MOBILE_LINKS = [
   { label: 'About', path: '/about' },
+  { label: 'LMS Portal', path: '/lms' },
   { label: 'Programs', path: '/programs' },
   { label: 'Knowledge Hub', path: '/knowledge-hub' },
   { label: 'Guidance', path: '/guidance' },

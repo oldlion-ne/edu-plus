@@ -13,17 +13,18 @@
 
 ## Design System — Nordic Lagom Philosophy
 - The visual identity follows the **Nordic Lagom** design philosophy: clean, balanced, and quietly confident.
-- **Color palette:** Warm charcoal backgrounds, candlelight amber/gold accent, warm off-white text. Defined in OKLCH in `app/src/index.css`.
-- **Typography:** `Inter Variable` for headings and body. `Outfit` as alternate sans-serif. Monospace is reserved only for technical data (IDs, status codes).
-- **No cyberpunk/HUD patterns:** No neon glows, pulsing animations, dot-grids, or scrambling text effects.
+- **Color palette:** Warm paper/ink for public ("Nordic Day") and warm charcoal/ink for admin ("Nordic Night"). Key accents are Ochre (primary), Fjord (info), Moss (success), and Clay (destructive). Defined in OKLCH in `app/src/index.css`.
+- **Typography:** `Fraunces` for headings/display, `Instrument Sans` for body/UI, and `IBM Plex Mono` for data and micro-labels only.
+- **Text Spacing:** Ensure text is never crowded. Use generous paddings (`p-4` or `p-5`) and relaxed line heights (`leading-relaxed`) to give content room to breathe.
+- **No cyberpunk/HUD patterns:** No neon glows, pulsing animations, dot-grids, or scrambling text effects. *(Exception: The global `GlyphMatrix` component is explicitly permitted as the sole exception to this rule).*
 
 ## Styling and Layout Rules
 - Styling uses Tailwind CSS.
-- All newly added components and modified container cards must adhere strictly to the straight-line requirement (`rounded-none`). No rounded corners allowed.
+- **Geometry:** Components should use a uniform 0px radius for a sharp aesthetic (`rounded-none` with `--radius: 0px`).
 - **No curved lines anywhere:** SVG paths must use `L`/`H`/`V`/`Z` only (no Bezier curves `C`/`S`/`Q`/`A`). Recharts must use `type="linear"`.
-- **Animations:** Only refined transitions (fade-ins, soft translations, hover color shifts). No glowing, pulsing, or aggressive motion.
+- **Animations:** Nature-paced, state-first motion (240ms base). Only refined transitions (fade-ins, soft translations). No glowing, pulsing, or aggressive motion.
 
 ## Illustration & Imagery Rules
-- **Style:** Ultra-clean flat vector, soft gradient cel shading, warm dark charcoal background, candlelight amber highlights.
+- **Style:** Ultra-clean flat vector, soft gradient cel shading, warm dark charcoal or warm paper background, candlelight amber highlights.
 - **Asian Community Requirement:** All human characters in illustrations and avatars **must** represent East Asian people. Non-Asian characters are strictly forbidden.
 - **Geometry:** Straight lines only in illustrations. No curved decorative paths.

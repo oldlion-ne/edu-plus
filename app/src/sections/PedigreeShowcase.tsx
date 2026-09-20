@@ -32,7 +32,7 @@ export default function PedigreeShowcase() {
     <section
       id="advisory"
       aria-label="Technical Pedigree and Advisory Network"
-      className="relative w-full bg-background py-40 border-t border-border/50"
+      className="relative w-full py-40 border-t border-border/50"
     >
       <div className="relative mx-auto max-w-[1440px] px-6 md:px-12">
 

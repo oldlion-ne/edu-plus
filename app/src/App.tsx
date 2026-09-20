@@ -14,6 +14,9 @@ import CookieConsentBanner from './components/CookieConsentBanner';
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/react';
 
+import { LmsProgressProvider } from './lib/lmsProgressContext';
+import { GlyphMatrix } from './components/effects/GlyphMatrix';
+
 // Lazy-load all page components — each is only downloaded when its route is visited.
 // Dashboard (with Recharts) is never loaded until the user navigates to /dashboard.
 const Home = lazy(() => import('./pages/Home'));
@@ -30,6 +33,10 @@ const Dashboard = lazy(() => import('./pages/Dashboard'));
 const Login = lazy(() => import('./pages/Login'));
 const Pricing = lazy(() => import('./pages/Pricing'));
 const Legal = lazy(() => import('./pages/Legal'));
+const LmsHub = lazy(() => import('./pages/LmsHub'));
+const LmsTrackDetail = lazy(() => import('./pages/LmsTrackDetail'));
+const LmsLessonPlayer = lazy(() => import('./pages/LmsLessonPlayer'));
+const LmsQuiz = lazy(() => import('./pages/LmsQuiz'));
 
 // Minimal inline fallback — renders instantly, no layout shift
 const PageLoader = () => (
@@ -119,47 +126,63 @@ function App() {
 
   return (
     <AuthProvider>
-      <MotionConfig reducedMotion="user">
-        {sharedGlobals}
-        <ScrollContext.Provider value={{ scrollContainerRef }}>
-          <div className="relative h-[100dvh] w-full bg-background flex flex-col overflow-hidden [touch-action:none]">
-            {showChatAgent && <AIChatAgent />}
-            <div 
-              ref={handleScrollRef}
-              id="main-scroll-container"
-              className="flex-1 overflow-y-scroll min-h-0 [touch-action:pan-y_manipulation] relative [scrollbar-gutter:stable]"
-            >
-              <div className="flex flex-col min-h-full">
-                {showPublicNav && <Navigation />}
-                <main className="flex-1 flex flex-col">
-                  <Suspense fallback={<PageLoader />}>
-                    <ScrollToTop />
-                    {scrollEl && (
-                      <Routes>
-                        <Route path="/" element={<Home />} />
-                        <Route path="/about" element={<About />} />
-                        <Route path="/programs" element={<Programs />} />
-                        <Route path="/events" element={<SignatureExperiences />} />
-                        <Route path="/council" element={<Council />} />
-                        <Route path="/guidance" element={<Guidance />} />
-                        <Route path="/news" element={<News />} />
-                        <Route path="/news/:slug" element={<News />} />
-                        <Route path="/contact" element={<Contact />} />
-                        <Route path="/connect" element={<Connect />} />
-                        <Route path="/knowledge-hub" element={<KnowledgeHub />} />
-                        <Route path="/pricing" element={<Pricing />} />
-                        <Route path="/login" element={<Login />} />
-                        <Route path="/legal" element={<Legal />} />
-                      </Routes>
-                    )}
-                  </Suspense>
-                </main>
-                {showPublicFooter && <Footer />}
+      <LmsProgressProvider>
+        <MotionConfig reducedMotion="user">
+          {sharedGlobals}
+          <ScrollContext.Provider value={{ scrollContainerRef }}>
+            <div className="relative h-[100dvh] w-full bg-background flex flex-col overflow-hidden [touch-action:none]">
+              {/* GLOBAL BACKGROUND MATRIX */}
+              <div className="fixed inset-0 z-0 pointer-events-none opacity-100">
+                <GlyphMatrix 
+                  cellSize={18} 
+                  mutationRate={0.04} 
+                  interval={90} 
+                  fadeBottom={0.6} 
+                />
+              </div>
+              
+              {showChatAgent && <AIChatAgent />}
+              <div 
+                ref={handleScrollRef}
+                id="main-scroll-container"
+                className="flex-1 overflow-y-scroll min-h-0 [touch-action:pan-y_manipulation] relative [scrollbar-gutter:stable]"
+              >
+                <div className="flex flex-col min-h-full">
+                  {showPublicNav && <Navigation />}
+                  <main className="flex-1 flex flex-col">
+                    <Suspense fallback={<PageLoader />}>
+                      <ScrollToTop />
+                      {scrollEl && (
+                        <Routes>
+                          <Route path="/" element={<Home />} />
+                          <Route path="/about" element={<About />} />
+                          <Route path="/programs" element={<Programs />} />
+                          <Route path="/events" element={<SignatureExperiences />} />
+                          <Route path="/council" element={<Council />} />
+                          <Route path="/guidance" element={<Guidance />} />
+                          <Route path="/news" element={<News />} />
+                          <Route path="/news/:slug" element={<News />} />
+                          <Route path="/contact" element={<Contact />} />
+                          <Route path="/connect" element={<Connect />} />
+                          <Route path="/knowledge-hub" element={<KnowledgeHub />} />
+                          <Route path="/lms" element={<LmsHub />} />
+                          <Route path="/lms/tracks/:trackId" element={<LmsTrackDetail />} />
+                          <Route path="/lms/learn/:trackId/:lessonId" element={<LmsLessonPlayer />} />
+                          <Route path="/lms/quiz/:trackId/:moduleId" element={<LmsQuiz />} />
+                          <Route path="/pricing" element={<Pricing />} />
+                          <Route path="/login" element={<Login />} />
+                          <Route path="/legal" element={<Legal />} />
+                        </Routes>
+                      )}
+                    </Suspense>
+                  </main>
+                  {showPublicFooter && <Footer />}
+                </div>
               </div>
             </div>
-          </div>
-        </ScrollContext.Provider>
-      </MotionConfig>
+          </ScrollContext.Provider>
+        </MotionConfig>
+      </LmsProgressProvider>
     </AuthProvider>
   );
 }

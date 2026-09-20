@@ -122,3 +122,15 @@ export const councilPortraits = Object.freeze(
     'usham-rojio',
   ].map((slug) => editorialAssetUrl(`council-${slug}-v2.webp`)),
 );
+
+export const lmsEditorialIllustrations = Object.freeze({
+  portalHero: hero(
+    'lms-portal-hero-v2.webp',
+    'An East Asian learner studying with learning modules at an amber-lit Nordic studio desk',
+  ),
+  curriculumPathway: hero(
+    'lms-curriculum-pathway-v2.webp',
+    'East Asian learners analyzing modular curriculum pathways and syllabus blueprints',
+  ),
+} satisfies Record<string, EditorialIllustration>);
+

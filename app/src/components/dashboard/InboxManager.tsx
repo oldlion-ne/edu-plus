@@ -1,13 +1,13 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '@/lib/supabaseClient';
-import { Button } from '@/components/ui/button';
 import { 
   Inbox, 
   Mail, 
   Bot, 
-  UserCheck, 
   Trash2, 
-  Check
+  Check,
+  Search,
+  MessageSquare
 } from 'lucide-react';
 import { toast } from 'sonner';
 
@@ -34,15 +34,16 @@ interface Conversation {
   updated_at: string;
 }
 
-export default function InboxManager() {
-  const [activeSubTab, setActiveSubTab] = useState<'contact' | 'subscribers' | 'ai-chats'>('contact');
+export default function InboxManager({ activeFolder = 'inquiries' }: { activeFolder?: 'inquiries' | 'subscribers' | 'ai-chats' }) {
   const [contactMessages, setContactMessages] = useState<ContactMsg[]>([]);
   const [subscribers, setSubscribers] = useState<Subscriber[]>([]);
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState('');
 
   // Selected Detail Modal/View
   const [selectedMsg, setSelectedMsg] = useState<ContactMsg | null>(null);
+  const [selectedConv, setSelectedConv] = useState<Conversation | null>(null);
 
   useEffect(() => {
     fetchInboxData();
@@ -57,16 +58,16 @@ export default function InboxManager() {
         supabase.from('conversations').select('*').order('updated_at', { ascending: false })
       ]);
 
-      if (msgRes.error) toast.error('Failed to load contact messages: ' + msgRes.error.message);
+      if (msgRes.error) toast.error('Failed to load contact messages');
       else if (msgRes.data) setContactMessages(msgRes.data);
 
-      if (subRes.error) toast.error('Failed to load subscribers: ' + subRes.error.message);
+      if (subRes.error) toast.error('Failed to load subscribers');
       else if (subRes.data) setSubscribers(subRes.data);
 
-      if (convRes.error) toast.error('Failed to load AI chats: ' + convRes.error.message);
+      if (convRes.error) toast.error('Failed to load AI chats');
       else if (convRes.data) setConversations(convRes.data);
     } catch (err: any) {
-      toast.error(err.message || 'Failed to load inbox');
+      toast.error('Failed to load inbox');
     } finally {
       setLoading(false);
     }
@@ -82,8 +83,11 @@ export default function InboxManager() {
 
       if (error) throw error;
       setContactMessages(prev => prev.map(m => m.id === msg.id ? { ...m, status: newStatus } : m));
+      if (selectedMsg?.id === msg.id) {
+        setSelectedMsg({ ...msg, status: newStatus });
+      }
     } catch (err: any) {
-      toast.error(err.message || 'Failed to update message status');
+      toast.error('Failed to update status');
     }
   };
 
@@ -96,220 +100,214 @@ export default function InboxManager() {
       setContactMessages(prev => prev.filter(m => m.id !== id));
       if (selectedMsg?.id === id) setSelectedMsg(null);
     } catch (err: any) {
-      toast.error(err.message || 'Failed to delete message');
+      toast.error('Failed to delete message');
     }
   };
 
-  return (
-    <div className="space-y-6 text-left font-sans">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-border pb-4">
-        <div>
-          <h2 className="font-heading text-2xl font-light text-foreground flex items-center gap-2">
-            <Inbox className="size-5 text-primary" />
-            Communication & Submissions Inbox
-          </h2>
-          <p className="font-sans text-xs text-muted-foreground mt-1">
-            Review user contact form inquiries, newsletter subscribers, and AI assistant interaction logs.
-          </p>
-        </div>
-      </div>
-
-      {/* Sub Tabs */}
-      <div className="flex gap-2 border-b border-border pb-3">
-        <button
-          onClick={() => setActiveSubTab('contact')}
-          className={`px-4 py-2 text-xs font-sans border rounded-none transition-colors flex items-center gap-2 ${
-            activeSubTab === 'contact'
-              ? 'bg-primary/5 text-primary border-primary font-medium'
-              : 'bg-card text-muted-foreground border-border hover:text-foreground'
-          }`}
-        >
-          <Mail className="size-3.5" />
-          Contact Inquiries ({contactMessages.filter(m => m.status === 'unread').length} unread)
-        </button>
-
-        <button
-          onClick={() => setActiveSubTab('subscribers')}
-          className={`px-4 py-2 text-xs font-sans border rounded-none transition-colors flex items-center gap-2 ${
-            activeSubTab === 'subscribers'
-              ? 'bg-primary/5 text-primary border-primary font-medium'
-              : 'bg-card text-muted-foreground border-border hover:text-foreground'
-          }`}
-        >
-          <UserCheck className="size-3.5" />
-          Newsletter Subscribers ({subscribers.length})
-        </button>
-
-        <button
-          onClick={() => setActiveSubTab('ai-chats')}
-          className={`px-4 py-2 text-xs font-sans border rounded-none transition-colors flex items-center gap-2 ${
-            activeSubTab === 'ai-chats'
-              ? 'bg-primary/5 text-primary border-primary font-medium'
-              : 'bg-card text-muted-foreground border-border hover:text-foreground'
-          }`}
-        >
-          <Bot className="size-3.5" />
-          AI Chat Logs ({conversations.length})
-        </button>
-      </div>
-
-      {/* Contact Messages View */}
-      {activeSubTab === 'contact' && (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="md:col-span-1 border border-border bg-card rounded-none overflow-hidden divide-y divide-border/40 max-h-[600px] overflow-y-auto">
-            {loading ? (
-              <p className="p-8 text-center text-xs text-muted-foreground">Loading inquiries...</p>
-            ) : contactMessages.length === 0 ? (
-              <p className="p-8 text-center text-xs text-muted-foreground">No contact messages received yet.</p>
-            ) : (
-              contactMessages.map(msg => (
-                <div
-                  key={msg.id}
-                  onClick={() => setSelectedMsg(msg)}
-                  className={`p-3 cursor-pointer transition-colors text-xs ${
-                    selectedMsg?.id === msg.id 
-                      ? 'bg-muted/40 border-l-2 border-l-primary' 
-                      : msg.status === 'unread' 
-                        ? 'bg-primary/5 font-medium' 
-                        : 'hover:bg-muted/10'
-                  }`}
-                >
-                  <div className="flex items-center justify-between">
-                    <p className="font-semibold text-foreground truncate">{msg.name}</p>
-                    <span className="text-[10px] text-muted-foreground">
-                      {new Date(msg.created_at).toLocaleDateString()}
-                    </span>
-                  </div>
-                  <p className="text-[11px] text-muted-foreground truncate mt-0.5">{msg.email}</p>
-                  <p className="text-xs text-foreground/80 line-clamp-2 mt-1">{msg.message}</p>
-                </div>
-              ))
-            )}
-          </div>
-
-          <div className="md:col-span-2 border border-border bg-card p-6 rounded-none space-y-4">
-            {selectedMsg ? (
-              <div className="space-y-4">
-                <div className="flex items-center justify-between border-b border-border pb-3">
-                  <div>
-                    <h3 className="font-heading text-lg font-light text-foreground">{selectedMsg.name}</h3>
-                    <p className="text-xs text-muted-foreground">
-                      {selectedMsg.email} 
-                      {selectedMsg.mobile && /^[0-9+\-\s()]{7,20}$/.test(selectedMsg.mobile) && <> • <a href={`tel:${selectedMsg.mobile}`} className="hover:underline hover:text-foreground">{selectedMsg.mobile}</a></>}
-                      {selectedMsg.mobile && !(/^[0-9+\-\s()]{7,20}$/.test(selectedMsg.mobile)) && <> • {selectedMsg.mobile}</>}
-                      {' '}• Persona: <span className="capitalize">{selectedMsg.profile}</span>
-                    </p>
-                  </div>
-
-                  <div className="flex gap-2">
-                    <Button
-                      onClick={() => handleMarkAsRead(selectedMsg)}
-                      variant="outline"
-                      className="rounded-none text-xs border-border h-8 gap-1"
-                    >
-                      <Check className="size-3.5" />
-                      {selectedMsg.status === 'read' ? 'Mark Unread' : 'Mark Read'}
-                    </Button>
-                    <Button
-                      onClick={() => handleDeleteMsg(selectedMsg.id)}
-                      variant="destructive"
-                      className="rounded-none text-xs h-8"
-                    >
-                      <Trash2 className="size-3.5" />
-                    </Button>
-                  </div>
-                </div>
-
-                <div className="bg-background border border-border p-4 rounded-none min-h-[150px] text-xs leading-relaxed text-foreground whitespace-pre-wrap">
-                  {selectedMsg.message}
-                </div>
-
-                <div className="pt-2">
-                  <a
-                    href={`mailto:${selectedMsg.email}?subject=RE: Edu+ Inquiry`}
-                    className="inline-flex items-center gap-1.5 bg-primary text-primary-foreground px-4 py-2 text-xs font-medium rounded-none hover:bg-primary/90 transition-colors"
-                  >
-                    <Mail className="size-3.5" /> Reply via Email
-                  </a>
-                </div>
-              </div>
-            ) : (
-              <div className="p-16 text-center text-xs text-muted-foreground space-y-2">
-                <Mail className="size-8 mx-auto opacity-40" />
-                <p>Select a contact submission from the list to view details.</p>
-              </div>
-            )}
+  if (activeFolder === 'subscribers') {
+    return (
+      <div className="animate-in fade-in duration-300">
+        <div className="page-head">
+          <h1>Subscribers</h1>
+          <span className="sub">Newsletter and update opt-ins</span>
+          <div className="act">
+            <span className="count-chip">{subscribers.length} subscribers</span>
           </div>
         </div>
-      )}
-
-      {/* Newsletter Subscribers View */}
-      {activeSubTab === 'subscribers' && (
-        <div className="border border-border bg-card rounded-none overflow-hidden">
-          <table className="w-full text-left text-xs">
-            <thead className="bg-muted/30 border-b border-border text-muted-foreground font-medium">
+        <div className="card">
+          <table className="tbl">
+            <thead>
               <tr>
-                <th className="p-3 pl-4">Subscriber Email</th>
-                <th className="p-3">Subscribed Date</th>
+                <th>Email Address</th>
+                <th>Joined Date</th>
+                <th>Source</th>
+                <th style={{ width: '60px' }}></th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-border/40">
-              {subscribers.length === 0 ? (
-                <tr>
-                  <td colSpan={2} className="p-8 text-center text-muted-foreground">
-                    No newsletter subscribers registered yet.
-                  </td>
-                </tr>
+            <tbody>
+              {loading ? (
+                <tr><td colSpan={4} style={{ textAlign: 'center' }}>Loading...</td></tr>
+              ) : subscribers.length === 0 ? (
+                <tr><td colSpan={4} style={{ textAlign: 'center' }}>No subscribers yet</td></tr>
               ) : (
                 subscribers.map(sub => (
-                  <tr key={sub.id} className="hover:bg-muted/10 transition-colors">
-                    <td className="p-3 pl-4 font-sans text-foreground">{sub.email}</td>
-                    <td className="p-3 text-muted-foreground">
-                      {new Date(sub.subscribed_at).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' })}
-                    </td>
+                  <tr key={sub.id}>
+                    <td className="pri">{sub.email}</td>
+                    <td>{new Date(sub.subscribed_at).toLocaleDateString()}</td>
+                    <td>Website Form</td>
+                    <td></td>
                   </tr>
                 ))
               )}
             </tbody>
           </table>
         </div>
-      )}
+      </div>
+    );
+  }
 
-      {/* AI Chat Logs View */}
-      {activeSubTab === 'ai-chats' && (
-        <div className="border border-border bg-card rounded-none overflow-hidden">
-          <table className="w-full text-left text-xs">
-            <thead className="bg-muted/30 border-b border-border text-muted-foreground font-medium">
-              <tr>
-                <th className="p-3 pl-4">Conversation ID</th>
-                <th className="p-3">Last Active</th>
-                <th className="p-3">Created</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-border/40">
-              {conversations.length === 0 ? (
-                <tr>
-                  <td colSpan={3} className="p-8 text-center text-muted-foreground">
-                    No AI conversations logged yet.
-                  </td>
-                </tr>
-              ) : (
-                conversations.map(conv => (
-                  <tr key={conv.id} className="hover:bg-muted/10 transition-colors">
-                    <td className="p-3 pl-4 font-mono text-foreground">{conv.id}</td>
-                    <td className="p-3 text-muted-foreground">
-                      {new Date(conv.updated_at).toLocaleString()}
-                    </td>
-                    <td className="p-3 text-muted-foreground">
-                      {new Date(conv.created_at).toLocaleString()}
-                    </td>
-                  </tr>
-                ))
-              )}
-            </tbody>
-          </table>
+  const isMsgSelected = activeFolder === 'inquiries' && selectedMsg;
+  const isConvSelected = activeFolder === 'ai-chats' && selectedConv;
+  const isAnySelected = isMsgSelected || isConvSelected;
+
+  const filteredInquiries = contactMessages.filter(m => 
+    m.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
+    m.email.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+  const filteredChats = conversations.filter(c => c.id.toLowerCase().includes(searchTerm.toLowerCase()));
+
+  return (
+    <div className="flex flex-col gap-7 animate-in fade-in duration-300 w-full">
+      <div className="page-head">
+        <h1>{activeFolder === 'ai-chats' ? 'AI Chats' : 'Inquiries'}</h1>
+        <span className="sub">
+          {activeFolder === 'ai-chats' ? 'Conversation logs from the AI Advisor' : 'Messages from contact forms'}
+        </span>
+        <div className="act">
+          <span className="count-chip">
+            {activeFolder === 'inquiries' ? `${filteredInquiries.length} inquiries` : `${filteredChats.length} sessions`}
+          </span>
         </div>
+      </div>
+
+      {((activeFolder === 'inquiries' && filteredInquiries.length === 0) || (activeFolder === 'ai-chats' && filteredChats.length === 0)) && !loading ? (
+        <div className="empty-focal">
+          <MessageSquare />
+          <div className="t">{activeFolder === 'ai-chats' ? 'No chats yet' : 'No inquiries yet'}</div>
+          <div className="s">{activeFolder === 'ai-chats' ? 'When visitors talk to the advisor, transcripts appear here.' : 'When users submit the contact form, messages appear here.'}</div>
+        </div>
+      ) : (
+      <div className="split" data-list-empty={!isAnySelected}>
+        <div className="split-list">
+          <div className="search" style={{ width: '100%', borderBottom: '1px solid oklch(var(--border))' }}>
+            <Search style={{ left: '18px' }} />
+            <input 
+              type="text" 
+              className="input" 
+              style={{ border: 'none', height: '56px', paddingLeft: '48px', backgroundColor: 'transparent' }}
+              placeholder={activeFolder === 'ai-chats' ? 'Search sessions…' : 'Search inquiries…'} 
+              value={searchTerm}
+              onChange={e => setSearchTerm(e.target.value)}
+            />
+          </div>
+          
+          {loading && <div style={{ padding: '20px', textAlign: 'center', color: 'oklch(var(--muted-foreground))' }}>Loading...</div>}
+          
+          {/* Contact List */}
+          {activeFolder === 'inquiries' && !loading && (
+            filteredInquiries.length === 0 ? (
+              <div style={{ padding: '20px', textAlign: 'center', color: 'oklch(var(--muted-foreground))' }}>No inquiries found.</div>
+            ) : (
+              filteredInquiries.map(msg => (
+                <button
+                  key={msg.id}
+                  onClick={() => setSelectedMsg(msg)}
+                  className={`li-row ${selectedMsg?.id === msg.id ? 'on' : ''}`}
+                >
+                  <div className="top">
+                    <div className="nm" style={{ color: msg.status === 'unread' ? 'oklch(var(--foreground))' : 'oklch(var(--muted-foreground))' }}>
+                      {msg.name}
+                    </div>
+                    <div className="dt font-mono text-[11px] text-muted-foreground">
+                      {new Date(msg.created_at).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
+                    </div>
+                  </div>
+                  <div className="em text-[12.5px] text-muted-foreground mt-[1px]">{msg.email}</div>
+                  <div className="pv text-[13px] text-muted-foreground mt-1 truncate">{msg.message}</div>
+                </button>
+              ))
+            )
+          )}
+
+          {/* AI Chats List */}
+          {activeFolder === 'ai-chats' && !loading && (
+            filteredChats.length === 0 ? (
+              <div style={{ padding: '20px', textAlign: 'center', color: 'oklch(var(--muted-foreground))' }}>No chats found.</div>
+            ) : (
+              filteredChats.map(conv => (
+                <button
+                  key={conv.id}
+                  onClick={() => setSelectedConv(conv)}
+                  className={`li-row ${selectedConv?.id === conv.id ? 'on' : ''}`}
+                >
+                  <div className="top">
+                    <div className="nm text-foreground font-semibold text-[14px]">Session_{conv.id.substring(0, 5)}</div>
+                    <div className="dt font-mono text-[11px] text-muted-foreground">{new Date(conv.updated_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div>
+                  </div>
+                  <div className="pv text-[13px] text-muted-foreground mt-1">Advisor Chat Session</div>
+                </button>
+              ))
+            )
+          )}
+        </div>
+
+        <div className="split-detail">
+          {activeFolder === 'inquiries' && selectedMsg ? (
+            <div>
+              <div className="font-mono text-[11px] tracking-[.12em] uppercase text-primary">
+                {selectedMsg.profile} Inquiry
+              </div>
+              <h2 className="font-heading text-xl font-normal text-foreground mt-2 mb-0.5">
+                {selectedMsg.name}
+              </h2>
+              <div className="text-[12.5px] text-muted-foreground">
+                {selectedMsg.email} · {new Date(selectedMsg.created_at).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}
+              </div>
+
+              <dl className="kv">
+                <dt>Email</dt>
+                <dd>{selectedMsg.email}</dd>
+                {selectedMsg.mobile && (
+                  <>
+                    <dt>Mobile</dt>
+                    <dd>{selectedMsg.mobile}</dd>
+                  </>
+                )}
+                <dt>Persona</dt>
+                <dd style={{ textTransform: 'capitalize' }}>{selectedMsg.profile}</dd>
+                <dt>Status</dt>
+                <dd style={{ textTransform: 'capitalize' }}>{selectedMsg.status}</dd>
+                <dt>Date</dt>
+                <dd className="font-mono text-xs">{new Date(selectedMsg.created_at).toLocaleString()}</dd>
+              </dl>
+
+              <div className="hr" />
+
+              <h3 className="font-sans text-[16px] font-semibold text-foreground mb-2">Message</h3>
+              <p className="text-[14px] text-muted-foreground leading-relaxed max-w-[56ch] whitespace-pre-wrap">
+                {selectedMsg.message}
+              </p>
+
+              <div className="flex gap-2.5 mt-6 items-center">
+                <a href={`mailto:${selectedMsg.email}?subject=RE: Edu+ Inquiry`} className="btn btn-p btn-sm">
+                  <Mail className="size-3.5 mr-1" /> Reply by email
+                </a>
+                <button className="btn btn-g btn-sm" onClick={() => handleMarkAsRead(selectedMsg)}>
+                  <Check className="size-3.5 mr-1" />
+                  {selectedMsg.status === 'read' ? 'Mark unread' : 'Mark resolved'}
+                </button>
+                <button className="btn btn-danger btn-sm ml-auto" onClick={() => handleDeleteMsg(selectedMsg.id)}>
+                  <Trash2 className="size-3.5 mr-1" /> Delete
+                </button>
+              </div>
+            </div>
+          ) : activeFolder === 'ai-chats' && selectedConv ? (
+            <div className="empty-focal">
+              <Bot style={{ width: '32px', height: '32px', stroke: 'oklch(var(--muted-foreground))', fill: 'none', strokeWidth: 1.4 }} />
+              <div className="t">Session_{selectedConv.id.substring(0, 5)} Transcript</div>
+              <div className="s">
+                Created: {new Date(selectedConv.created_at).toLocaleString()}<br />
+                Last active: {new Date(selectedConv.updated_at).toLocaleString()}
+              </div>
+            </div>
+          ) : (
+            <div className="detail-hint">
+              <Inbox style={{ width: '32px', height: '32px', stroke: 'oklch(var(--muted-foreground))', fill: 'none', opacity: 0.7, strokeWidth: 1.4 }} />
+              <div>Select an inquiry to view details</div>
+            </div>
+          )}
+        </div>
+      </div>
       )}
     </div>
   );
