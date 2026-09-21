@@ -689,7 +689,19 @@ When a teacher lectures uninterrupted for 45 minutes, attention degrades within 
     certificationTitle: 'Advanced DMIT Analyst',
     prerequisites: ['FuturePath Navigator completion'],
     learningOutcomes: ['Interpret multiple intelligences data', 'Advise organizations on talent placement'],
-    modules: []
+    modules: [
+      {
+        id: "mod_coming_soon",
+        title: "Coming Soon",
+        trackId: "coming-soon",
+        order: 1,
+        description: "Content in development",
+        estimatedHours: 0,
+        lessons: [
+          { id: "les_coming_soon_1", moduleId: "mod_coming_soon", title: "Course Content in Development", type: "reading", durationMinutes: 5, content: "This curriculum is currently under active development. Please check back later for updates.", summary: "Content in development", contentMarkdown: "This curriculum is currently under active development. Please check back later for updates.", keyTakeaways: [] }
+        ]
+      }
+    ]
   },
   {
     id: 'fp-mock-02',
@@ -711,7 +723,12 @@ When a teacher lectures uninterrupted for 45 minutes, attention degrades within 
     certificationTitle: 'Behavioral Career Strategist',
     prerequisites: [],
     learningOutcomes: ['Identify 5 common cognitive biases in students', 'Implement nudges for better choices'],
-    modules: []
+    modules: [
+      { id: "mod_coming_soon", title: "Coming Soon", trackId: "coming-soon", order: 1, description: "Content in development", estimatedHours: 0, lessons: [
+          { id: "les_coming_soon_1", moduleId: "mod_coming_soon", title: "Course Content in Development", type: "reading", durationMinutes: 5, content: "This curriculum is currently under active development. Please check back later for updates.", summary: "Content in development", contentMarkdown: "This curriculum is currently under active development. Please check back later for updates.", keyTakeaways: [] }
+        ]
+      }
+    ]
   },
   {
     id: 'ls-mock-01',
@@ -733,7 +750,12 @@ When a teacher lectures uninterrupted for 45 minutes, attention degrades within 
     certificationTitle: 'Certified Conflict Resolution Practitioner',
     prerequisites: ['LifeSkills Lab completion'],
     learningOutcomes: ['Master the 4-step de-escalation technique', 'Lead difficult conversations'],
-    modules: []
+    modules: [
+      { id: "mod_coming_soon", title: "Coming Soon", trackId: "coming-soon", order: 1, description: "Content in development", estimatedHours: 0, lessons: [
+          { id: "les_coming_soon_1", moduleId: "mod_coming_soon", title: "Course Content in Development", type: "reading", durationMinutes: 5, content: "This curriculum is currently under active development. Please check back later for updates.", summary: "Content in development", contentMarkdown: "This curriculum is currently under active development. Please check back later for updates.", keyTakeaways: [] }
+        ]
+      }
+    ]
   },
   {
     id: 'ls-mock-02',
@@ -755,7 +777,12 @@ When a teacher lectures uninterrupted for 45 minutes, attention degrades within 
     certificationTitle: 'Advanced Personal Finance Strategist',
     prerequisites: ['Basic Financial Literacy'],
     learningOutcomes: ['Build a personal DCF model', 'Optimize regional tax brackets'],
-    modules: []
+    modules: [
+      { id: "mod_coming_soon", title: "Coming Soon", trackId: "coming-soon", order: 1, description: "Content in development", estimatedHours: 0, lessons: [
+          { id: "les_coming_soon_1", moduleId: "mod_coming_soon", title: "Course Content in Development", type: "reading", durationMinutes: 5, content: "This curriculum is currently under active development. Please check back later for updates.", summary: "Content in development", contentMarkdown: "This curriculum is currently under active development. Please check back later for updates.", keyTakeaways: [] }
+        ]
+      }
+    ]
   },
   {
     id: 'ec-mock-01',
@@ -777,7 +804,12 @@ When a teacher lectures uninterrupted for 45 minutes, attention degrades within 
     certificationTitle: 'Semiconductor Basics Certificate',
     prerequisites: ['High School Physics'],
     learningOutcomes: ['Understand the 5 steps of wafer fab', 'Identify key industry players'],
-    modules: []
+    modules: [
+      { id: "mod_coming_soon", title: "Coming Soon", trackId: "coming-soon", order: 1, description: "Content in development", estimatedHours: 0, lessons: [
+          { id: "les_coming_soon_1", moduleId: "mod_coming_soon", title: "Course Content in Development", type: "reading", durationMinutes: 5, content: "This curriculum is currently under active development. Please check back later for updates.", summary: "Content in development", contentMarkdown: "This curriculum is currently under active development. Please check back later for updates.", keyTakeaways: [] }
+        ]
+      }
+    ]
   },
   {
     id: 'ec-mock-02',
@@ -799,7 +831,12 @@ When a teacher lectures uninterrupted for 45 minutes, attention degrades within 
     certificationTitle: 'Advanced Battery Tech Analyst',
     prerequisites: ['Basic Chemistry'],
     learningOutcomes: ['Compare energy densities of 4 battery types', 'Analyze EV market constraints'],
-    modules: []
+    modules: [
+      { id: "mod_coming_soon", title: "Coming Soon", trackId: "coming-soon", order: 1, description: "Content in development", estimatedHours: 0, lessons: [
+          { id: "les_coming_soon_1", moduleId: "mod_coming_soon", title: "Course Content in Development", type: "reading", durationMinutes: 5, content: "This curriculum is currently under active development. Please check back later for updates.", summary: "Content in development", contentMarkdown: "This curriculum is currently under active development. Please check back later for updates.", keyTakeaways: [] }
+        ]
+      }
+    ]
   },
   {
     id: 'ga-mock-01',
@@ -821,7 +858,12 @@ When a teacher lectures uninterrupted for 45 minutes, attention degrades within 
     certificationTitle: 'Interview Strategy Master',
     prerequisites: ['Global Admissions Studio'],
     learningOutcomes: ['Conduct 3 mock interviews', 'Formulate compelling closing questions'],
-    modules: []
+    modules: [
+      { id: "mod_coming_soon", title: "Coming Soon", trackId: "coming-soon", order: 1, description: "Content in development", estimatedHours: 0, lessons: [
+          { id: "les_coming_soon_1", moduleId: "mod_coming_soon", title: "Course Content in Development", type: "reading", durationMinutes: 5, content: "This curriculum is currently under active development. Please check back later for updates.", summary: "Content in development", contentMarkdown: "This curriculum is currently under active development. Please check back later for updates.", keyTakeaways: [] }
+        ]
+      }
+    ]
   },
   {
     id: 'ga-mock-02',
@@ -843,7 +885,12 @@ When a teacher lectures uninterrupted for 45 minutes, attention degrades within 
     certificationTitle: 'EU Admissions Strategist',
     prerequisites: [],
     learningOutcomes: ['Identify 10 tuition-free English programs', 'Navigate the Blocked Account visa process'],
-    modules: []
+    modules: [
+      { id: "mod_coming_soon", title: "Coming Soon", trackId: "coming-soon", order: 1, description: "Content in development", estimatedHours: 0, lessons: [
+          { id: "les_coming_soon_1", moduleId: "mod_coming_soon", title: "Course Content in Development", type: "reading", durationMinutes: 5, content: "This curriculum is currently under active development. Please check back later for updates.", summary: "Content in development", contentMarkdown: "This curriculum is currently under active development. Please check back later for updates.", keyTakeaways: [] }
+        ]
+      }
+    ]
   },
   {
     id: 'cl-mock-01',
@@ -865,7 +912,12 @@ When a teacher lectures uninterrupted for 45 minutes, attention degrades within 
     certificationTitle: 'DSA Interview Specialist',
     prerequisites: ['Basic Programming'],
     learningOutcomes: ['Solve 50+ medium LeetCode problems', 'Master Big-O time complexity analysis'],
-    modules: []
+    modules: [
+      { id: "mod_coming_soon", title: "Coming Soon", trackId: "coming-soon", order: 1, description: "Content in development", estimatedHours: 0, lessons: [
+          { id: "les_coming_soon_1", moduleId: "mod_coming_soon", title: "Course Content in Development", type: "reading", durationMinutes: 5, content: "This curriculum is currently under active development. Please check back later for updates.", summary: "Content in development", contentMarkdown: "This curriculum is currently under active development. Please check back later for updates.", keyTakeaways: [] }
+        ]
+      }
+    ]
   },
   {
     id: 'cl-mock-02',
@@ -887,7 +939,12 @@ When a teacher lectures uninterrupted for 45 minutes, attention degrades within 
     certificationTitle: 'Case Interview Master',
     prerequisites: ['Basic Business Acumen'],
     learningOutcomes: ['Master 4 core case frameworks', 'Perform rapid mental math estimations'],
-    modules: []
+    modules: [
+      { id: "mod_coming_soon", title: "Coming Soon", trackId: "coming-soon", order: 1, description: "Content in development", estimatedHours: 0, lessons: [
+          { id: "les_coming_soon_1", moduleId: "mod_coming_soon", title: "Course Content in Development", type: "reading", durationMinutes: 5, content: "This curriculum is currently under active development. Please check back later for updates.", summary: "Content in development", contentMarkdown: "This curriculum is currently under active development. Please check back later for updates.", keyTakeaways: [] }
+        ]
+      }
+    ]
   },
   {
     id: 'is-mock-01',
@@ -909,7 +966,12 @@ When a teacher lectures uninterrupted for 45 minutes, attention degrades within 
     certificationTitle: 'AI-Empowered Educator',
     prerequisites: [],
     learningOutcomes: ['Prompt engineer a 5-day lesson plan', 'Automate multiple-choice grading'],
-    modules: []
+    modules: [
+      { id: "mod_coming_soon", title: "Coming Soon", trackId: "coming-soon", order: 1, description: "Content in development", estimatedHours: 0, lessons: [
+          { id: "les_coming_soon_1", moduleId: "mod_coming_soon", title: "Course Content in Development", type: "reading", durationMinutes: 5, content: "This curriculum is currently under active development. Please check back later for updates.", summary: "Content in development", contentMarkdown: "This curriculum is currently under active development. Please check back later for updates.", keyTakeaways: [] }
+        ]
+      }
+    ]
   },
   {
     id: 'is-mock-02',
@@ -931,7 +993,12 @@ When a teacher lectures uninterrupted for 45 minutes, attention degrades within 
     certificationTitle: 'Makerspace Director',
     prerequisites: ['Innovation Studio & Educator Academy'],
     learningOutcomes: ['Draft a $5000 lab procurement budget', 'Design safety protocols for 3D printing'],
-    modules: []
+    modules: [
+      { id: "mod_coming_soon", title: "Coming Soon", trackId: "coming-soon", order: 1, description: "Content in development", estimatedHours: 0, lessons: [
+          { id: "les_coming_soon_1", moduleId: "mod_coming_soon", title: "Course Content in Development", type: "reading", durationMinutes: 5, content: "This curriculum is currently under active development. Please check back later for updates.", summary: "Content in development", contentMarkdown: "This curriculum is currently under active development. Please check back later for updates.", keyTakeaways: [] }
+        ]
+      }
+    ]
   },
 ]);
 

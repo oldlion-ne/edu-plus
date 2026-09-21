@@ -32,9 +32,9 @@ export const TrackCard: React.FC<TrackCardProps> = ({ track }) => {
   return (
     <HoverCard openDelay={200} closeDelay={150}>
       <HoverCardTrigger asChild>
-        <Link 
-          to={defaultHref}
-          className="border border-border bg-card flex flex-col justify-between transition-all duration-200 hover:border-primary/50 group w-[320px] shrink-0"
+        <button 
+          onClick={() => setIsDialogOpen(true)}
+          className="border border-border bg-card flex flex-col justify-between transition-all duration-200 hover:border-primary/50 group w-[320px] shrink-0 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
         >
           {/* Cover Block */}
           <div className="w-full h-32 bg-muted/30 border-b border-border/50 relative overflow-hidden shrink-0">
@@ -107,7 +107,7 @@ export const TrackCard: React.FC<TrackCardProps> = ({ track }) => {
               </div>
             </div>
           )}
-        </Link>
+        </button>
       </HoverCardTrigger>
 
       <HoverCardContent side="right" align="start" className="w-[340px] p-0 rounded-none border border-border shadow-lg bg-card z-50">

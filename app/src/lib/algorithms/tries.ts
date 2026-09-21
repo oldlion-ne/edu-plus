@@ -13,7 +13,7 @@ class TrieNode {
   isWord = false
 
   // Store metadata for autocomplete
-  metadata: any = null;
+  metadata: any[] = [];
 }
 
 /**
@@ -41,7 +41,7 @@ export class Trie {
     }
     node.isWord = true
     if (metadata) {
-       node.metadata = metadata;
+       node.metadata.push(metadata);
     }
     return this
   }
@@ -77,7 +77,9 @@ export class Trie {
 
   private dfs(node: TrieNode, currentWord: string, results: { word: string, metadata: any }[]) {
     if (node.isWord) {
-      results.push({ word: currentWord, metadata: node.metadata });
+      for (const meta of node.metadata) {
+        results.push({ word: currentWord, metadata: meta });
+      }
     }
     for (const char in node.children) {
       this.dfs(node.children[char], currentWord + char, results);

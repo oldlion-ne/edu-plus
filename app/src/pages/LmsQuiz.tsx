@@ -160,8 +160,8 @@ export default function LmsQuiz() {
  const { isCompleted: isTrackCompleted } = getTrackProgress(track.id);
 
  return (
- <div className="flex-1 w-full flex flex-col h-[100dvh] overflow-hidden">
- <div className="max-w-2xl mx-auto space-y-6">
+ <div className="flex-1 w-full flex flex-col min-h-[100dvh] py-8 sm:py-12 px-4 sm:px-6">
+ <div className="max-w-2xl mx-auto w-full space-y-6">
  {/* Top Breadcrumb */}
  <div className="flex items-center gap-2 text-xs font-mono text-muted-foreground">
  <Link to={`/lms/tracks/${track.id}`} className="hover:text-foreground flex items-center gap-1">

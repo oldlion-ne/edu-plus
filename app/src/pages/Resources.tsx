@@ -1,6 +1,5 @@
-import { useEffect, useState, useMemo } from 'react';
+import { useEffect, useState } from 'react';
 import { supabase } from '../lib/supabaseClient';
-import { Trie } from '../lib/algorithms/tries';
 import ImmersiveHero from '../components/effects/ImmersiveHero';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
@@ -163,34 +162,16 @@ export default function Resources() {
  fetchItems();
  }, []);
 
-  // Build Search Trie
-  const searchTrie = useMemo(() => {
-    const trie = new Trie();
-    items.forEach(item => {
-      // Index by title, description, and author
-      const tokens = `${item.title} ${item.description} ${item.author_name}`.split(/\s+/);
-      tokens.forEach(token => {
-        if (token.trim()) {
-          trie.add(token, item);
-        }
-      });
-    });
-    return trie;
-  }, [items]);
-
   // Filter Knowledge items when query or category tab changes
   useEffect(() => {
     let filtered = items;
     if (searchQuery.trim() !== '') {
-      const matchedNodes = searchTrie.getWordsWithPrefix(searchQuery.trim());
-      const uniqueIds = new Set();
-      filtered = [];
-      matchedNodes.forEach(node => {
-        if (!uniqueIds.has(node.metadata.id)) {
-          uniqueIds.add(node.metadata.id);
-          filtered.push(node.metadata);
-        }
-      });
+      const q = searchQuery.toLowerCase().trim();
+      filtered = filtered.filter(item => 
+        item.title.toLowerCase().includes(q) || 
+        item.description?.toLowerCase().includes(q) ||
+        item.author_name.toLowerCase().includes(q)
+      );
     }
 
     if (activeHubTab !== 'all') {
@@ -198,7 +179,7 @@ export default function Resources() {
     }
     
     setFilteredItems(filtered);
-  }, [searchQuery, activeHubTab, items, searchTrie]);
+  }, [searchQuery, activeHubTab, items]);
 
  const getYoutubeId = (url: string) => {
  const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;

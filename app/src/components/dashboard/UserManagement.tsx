@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { supabase } from '@/lib/supabaseClient';
-import { Trie } from '@/lib/algorithms/tries';
+
 import { 
   Search, 
   RefreshCw,
@@ -135,28 +135,14 @@ export default function UserManagement() {
     }
   };
 
-  const searchTrie = useMemo(() => {
-    const trie = new Trie();
-    users.forEach(u => {
-      if (u.email) {
-        trie.add(u.email, u);
-      }
-    });
-    return trie;
-  }, [users]);
-
   const filteredUsers = useMemo(() => {
     let results = users;
     if (searchTerm.trim() !== '') {
-      const matchedNodes = searchTrie.getWordsWithPrefix(searchTerm.trim());
-      const uniqueIds = new Set();
-      results = [];
-      matchedNodes.forEach(node => {
-        if (!uniqueIds.has(node.metadata.id)) {
-          uniqueIds.add(node.metadata.id);
-          results.push(node.metadata);
-        }
-      });
+      const lowerQuery = searchTerm.trim().toLowerCase();
+      results = results.filter(u => 
+        u.email?.toLowerCase().includes(lowerQuery) || 
+        u.id.toLowerCase().includes(lowerQuery)
+      );
     }
     
     if (selectedRoleFilter !== 'all') {
@@ -164,7 +150,7 @@ export default function UserManagement() {
     }
     
     return results;
-  }, [searchTerm, selectedRoleFilter, searchTrie, users]);
+  }, [searchTerm, selectedRoleFilter, users]);
 
   return (
     <div className="flex flex-col gap-7 animate-in fade-in duration-300 w-full">

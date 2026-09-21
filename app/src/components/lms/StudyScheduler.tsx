@@ -30,7 +30,14 @@ export function StudyScheduler() {
   }, [progress.completedLessonIds]);
 
   const handleGenerateSchedule = () => {
-    if (timeAvailable <= 0 || uncompletedLessons.length === 0) return;
+    let parsedTime = Math.floor(timeAvailable);
+    if (isNaN(parsedTime) || parsedTime <= 0 || uncompletedLessons.length === 0) return;
+    
+    // Bound capacity to prevent browser crash/exhaustion (max 24 hours / 1440 mins)
+    if (parsedTime > 1440) {
+      parsedTime = 1440;
+      setTimeAvailable(1440);
+    }
     
     // Weights: Duration of the lesson
     const weights = uncompletedLessons.map(l => l.durationMinutes);
@@ -40,7 +47,7 @@ export function StudyScheduler() {
     // so the knapsack algorithm maximizes the number of lessons fitted.
     const values = uncompletedLessons.map(() => 100);
     
-    const result = knapsack(timeAvailable, weights, values);
+    const result = knapsack(parsedTime, weights, values);
     
     const selectedLessons = result.selectedItems.map(index => uncompletedLessons[index]);
     setSchedule(selectedLessons);

@@ -145,7 +145,7 @@ export const CertificateModal: React.FC<CertificateModalProps> = ({
                   Certificate of Curriculum Mastery
                 </p>
 
-                <h2 className="font-heading font-medium text-foreground tracking-tight mb-[2cqw] text-[4.5cqw] leading-none whitespace-nowrap">
+                <h2 className="font-heading font-medium text-foreground tracking-tight mb-[2cqw] text-[4.5cqw] leading-none">
                   {certificate.recipientName || 'Verified EduPlus Learner'}
                 </h2>
 

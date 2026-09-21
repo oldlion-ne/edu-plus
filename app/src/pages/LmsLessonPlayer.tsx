@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { useParams, Link, useNavigate } from 'react-router';
+import { useParams, Link, useNavigate, useSearchParams } from 'react-router';
 import { CURRICULUM_TRACKS } from '../data/lmsCurriculumData';
 import { useLmsProgress } from '../lib/lmsProgressContext';
 import { LessonSidebar } from '../components/lms/LessonSidebar';
@@ -21,6 +21,8 @@ import { cn } from '../lib/utils';
 export default function LmsLessonPlayer() {
  const { trackId, lessonId } = useParams<{ trackId: string; lessonId: string }>();
  const navigate = useNavigate();
+ const [searchParams] = useSearchParams();
+ const isPreview = searchParams.get('preview') === 'true';
  const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
 
  const {
@@ -60,13 +62,13 @@ export default function LmsLessonPlayer() {
 
  // Track progress and ensure enrolled
  useEffect(() => {
- if (track && currentLesson) {
+ if (track && currentLesson && !isPreview) {
  if (!isEnrolled(track.id)) {
  enrollTrack(track.id);
  }
  setLastActive(track.id, currentLesson.id);
  }
- }, [track, currentLesson, isEnrolled, enrollTrack, setLastActive]);
+ }, [track, currentLesson, isEnrolled, enrollTrack, setLastActive, isPreview]);
 
  const handleToggleComplete = () => {
  toggleLessonCompletion(currentLesson.id);

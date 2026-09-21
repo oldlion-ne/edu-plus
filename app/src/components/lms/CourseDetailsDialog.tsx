@@ -31,7 +31,7 @@ export const CourseDetailsDialog: React.FC<CourseDetailsDialogProps> = ({
   onOpenChange,
 }) => {
   const navigate = useNavigate();
-  const { isEnrolled, enrollTrack, getTrackProgress, isLessonCompleted, getQuizAttempt } =
+  const { isEnrolled, enrollTrack, getTrackProgress, isLessonCompleted, getQuizAttempt, progress: globalProgress } =
     useLmsProgress();
 
   if (!track) return null;
@@ -44,6 +44,14 @@ export const CourseDetailsDialog: React.FC<CourseDetailsDialogProps> = ({
     if (!enrolled) {
       enrollTrack(track.id);
     }
+    
+    // Resume at last active lesson if it exists for this track
+    if (globalProgress?.lastActiveLesson?.trackId === track.id && globalProgress.lastActiveLesson.lessonId) {
+      onOpenChange(false);
+      navigate(`/lms/learn/${track.id}/${globalProgress.lastActiveLesson.lessonId}`);
+      return;
+    }
+    
     if (firstLesson) {
       onOpenChange(false);
       navigate(`/lms/learn/${track.id}/${firstLesson.id}`);
@@ -265,7 +273,7 @@ export const CourseDetailsDialog: React.FC<CourseDetailsDialogProps> = ({
                                   className="text-xs h-auto p-0 text-primary underline-offset-4 hover:underline"
                                   onClick={() => {
                                     onOpenChange(false);
-                                    navigate(`/lms/learn/${track.id}/${lesson.id}`);
+                                    navigate(`/lms/learn/${track.id}/${lesson.id}?preview=true`);
                                   }}
                                 >
                                   Preview

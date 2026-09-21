@@ -262,7 +262,7 @@ export default function LmsHub() {
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {completedTracks.slice(0, 1).map((track) => (
+              {completedTracks.map((track) => (
                 <div
                   key={track.id}
                   className="border border-primary/40 bg-card p-5 flex flex-col justify-between"
