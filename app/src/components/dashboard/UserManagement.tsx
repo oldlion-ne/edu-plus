@@ -1,5 +1,6 @@
-import React, { useState, useEffect} from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { supabase } from '@/lib/supabaseClient';
+
 import { 
   Search, 
   RefreshCw,
@@ -134,11 +135,22 @@ export default function UserManagement() {
     }
   };
 
-  const filteredUsers = users.filter(u => {
-    const matchesSearch = u.email.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesRole = selectedRoleFilter === 'all' || u.role === selectedRoleFilter;
-    return matchesSearch && matchesRole;
-  });
+  const filteredUsers = useMemo(() => {
+    let results = users;
+    if (searchTerm.trim() !== '') {
+      const lowerQuery = searchTerm.trim().toLowerCase();
+      results = results.filter(u => 
+        u.email?.toLowerCase().includes(lowerQuery) || 
+        u.id.toLowerCase().includes(lowerQuery)
+      );
+    }
+    
+    if (selectedRoleFilter !== 'all') {
+      results = results.filter(u => u.role === selectedRoleFilter);
+    }
+    
+    return results;
+  }, [searchTerm, selectedRoleFilter, users]);
 
   return (
     <div className="flex flex-col gap-7 animate-in fade-in duration-300 w-full">

@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import { shuffleArray } from '../lib/algorithms/shuffle_array';
 import { useParams, Link } from 'react-router';
 import { CURRICULUM_TRACKS } from '../data/lmsCurriculumData';
 import { useLmsProgress } from '../lib/lmsProgressContext';
@@ -41,23 +42,52 @@ export default function LmsQuiz() {
  const [isFinished, setIsFinished] = useState(false);
  const [showCertificate, setShowCertificate] = useState(false);
 
- const questions: readonly LmsQuestion[] = quiz?.questions || [];
- const currentQuestion = questions[currentIndex];
+  // Randomize questions and options on mount or retry
+  const [randomizedQuestions, setRandomizedQuestions] = useState<LmsQuestion[]>([]);
+  
+  useMemo(() => {
+    if (quiz?.questions) {
+      // 1. Shuffle the questions array
+      let shuffledQ = shuffleArray([...quiz.questions]);
+      
+      // 2. For each question, shuffle its options and track the new correctIndex
+      shuffledQ = shuffledQ.map(q => {
+        // Map options to objects tracking their original index
+        const optionsWithOriginalIndex = q.options.map((opt, idx) => ({ text: opt, originalIndex: idx }));
+        
+        // Shuffle the options
+        const shuffledOptions = shuffleArray(optionsWithOriginalIndex);
+        
+        // Find where the original correct index ended up
+        const newCorrectIndex = shuffledOptions.findIndex(opt => opt.originalIndex === q.correctIndex);
+        
+        return {
+          ...q,
+          options: shuffledOptions.map(opt => opt.text),
+          correctIndex: newCorrectIndex
+        };
+      });
+      setRandomizedQuestions(shuffledQ);
+    }
+  }, [quiz]);
 
- const handleSelectOption = (index: number) => {
- if (!isAnswerSubmitted) {
- setSelectedOption(index);
- }
- };
+  const questions = randomizedQuestions;
+  const currentQuestion = randomizedQuestions[currentIndex];
 
- const handleSubmitAnswer = () => {
- if (selectedOption === null || isAnswerSubmitted) return;
- setIsAnswerSubmitted(true);
+  const handleSelectOption = (index: number) => {
+    if (!isAnswerSubmitted) {
+      setSelectedOption(index);
+    }
+  };
 
- if (selectedOption === currentQuestion.correctIndex) {
- setCorrectAnswersCount((prev) => prev + 1);
- }
- };
+  const handleSubmitAnswer = () => {
+    if (selectedOption === null || isAnswerSubmitted || !currentQuestion) return;
+    setIsAnswerSubmitted(true);
+
+    if (selectedOption === currentQuestion.correctIndex) {
+      setCorrectAnswersCount((prev) => prev + 1);
+    }
+  };
 
  const handleNextQuestion = () => {
  if (currentIndex < questions.length - 1) {
@@ -130,8 +160,8 @@ export default function LmsQuiz() {
  const { isCompleted: isTrackCompleted } = getTrackProgress(track.id);
 
  return (
- <div className="flex-1 w-full py-8 sm:py-12 px-4 sm:px-6">
- <div className="max-w-2xl mx-auto space-y-6">
+ <div className="flex-1 w-full flex flex-col min-h-[100dvh] py-8 sm:py-12 px-4 sm:px-6">
+ <div className="max-w-2xl mx-auto w-full space-y-6">
  {/* Top Breadcrumb */}
  <div className="flex items-center gap-2 text-xs font-mono text-muted-foreground">
  <Link to={`/lms/tracks/${track.id}`} className="hover:text-foreground flex items-center gap-1">

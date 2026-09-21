@@ -6,7 +6,6 @@ import { PageHero } from '@/components/ui/page-hero';
 import { editorialIllustrations } from '@/lib/editorialIllustrations';
 import { supabase } from '../lib/supabaseClient';
 import { FOCUS_RING_CLASSES } from '../lib/utils';
-
 import { Input } from '../components/ui/input';
 import { X } from 'lucide-react';
 
@@ -96,22 +95,21 @@ export default function KnowledgeHub() {
  fetchItems();
  }, []);
 
- useEffect(() => {
- let filtered = items;
- if (activeTab !== 'all') {
- filtered = filtered.filter((item) => item.category === activeTab);
- }
- if (searchQuery.trim() !== '') {
- const q = searchQuery.toLowerCase();
- filtered = filtered.filter(
- (item) =>
- item.title.toLowerCase().includes(q) ||
- item.description.toLowerCase().includes(q) ||
- item.author_name.toLowerCase().includes(q),
- );
- }
- setFilteredItems(filtered);
- }, [searchQuery, activeTab, items]);
+  useEffect(() => {
+    let filtered = items;
+    if (activeTab !== 'all') {
+      filtered = filtered.filter((item) => item.category === activeTab);
+    }
+    if (searchQuery.trim() !== '') {
+      const q = searchQuery.toLowerCase().trim();
+      filtered = filtered.filter(item => 
+        item.title.toLowerCase().includes(q) || 
+        item.description?.toLowerCase().includes(q) ||
+        item.author_name.toLowerCase().includes(q)
+      );
+    }
+    setFilteredItems(filtered);
+  }, [searchQuery, activeTab, items]);
 
  const getYoutubeId = (url: string) => {
  const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;

@@ -162,23 +162,24 @@ export default function Resources() {
  fetchItems();
  }, []);
 
- // Filter Knowledge items when query or category tab changes
- useEffect(() => {
- let filtered = items;
- if (activeHubTab !== 'all') {
- filtered = filtered.filter(item => item.category === activeHubTab);
- }
- if (searchQuery.trim() !== '') {
- const query = searchQuery.toLowerCase();
- filtered = filtered.filter(
- item =>
- item.title.toLowerCase().includes(query) ||
- item.description.toLowerCase().includes(query) ||
- item.author_name.toLowerCase().includes(query)
- );
- }
- setFilteredItems(filtered);
- }, [searchQuery, activeHubTab, items]);
+  // Filter Knowledge items when query or category tab changes
+  useEffect(() => {
+    let filtered = items;
+    if (searchQuery.trim() !== '') {
+      const q = searchQuery.toLowerCase().trim();
+      filtered = filtered.filter(item => 
+        item.title.toLowerCase().includes(q) || 
+        item.description?.toLowerCase().includes(q) ||
+        item.author_name.toLowerCase().includes(q)
+      );
+    }
+
+    if (activeHubTab !== 'all') {
+      filtered = filtered.filter(item => item.category === activeHubTab);
+    }
+    
+    setFilteredItems(filtered);
+  }, [searchQuery, activeHubTab, items]);
 
  const getYoutubeId = (url: string) => {
  const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;

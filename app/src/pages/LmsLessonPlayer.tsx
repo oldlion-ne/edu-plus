@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { useParams, Link, useNavigate } from 'react-router';
+import { useParams, Link, useNavigate, useSearchParams } from 'react-router';
 import { CURRICULUM_TRACKS } from '../data/lmsCurriculumData';
 import { useLmsProgress } from '../lib/lmsProgressContext';
 import { LessonSidebar } from '../components/lms/LessonSidebar';
@@ -21,6 +21,8 @@ import { cn } from '../lib/utils';
 export default function LmsLessonPlayer() {
  const { trackId, lessonId } = useParams<{ trackId: string; lessonId: string }>();
  const navigate = useNavigate();
+ const [searchParams] = useSearchParams();
+ const isPreview = searchParams.get('preview') === 'true';
  const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
 
  const {
@@ -60,13 +62,13 @@ export default function LmsLessonPlayer() {
 
  // Track progress and ensure enrolled
  useEffect(() => {
- if (track && currentLesson) {
+ if (track && currentLesson && !isPreview) {
  if (!isEnrolled(track.id)) {
  enrollTrack(track.id);
  }
  setLastActive(track.id, currentLesson.id);
  }
- }, [track, currentLesson, isEnrolled, enrollTrack, setLastActive]);
+ }, [track, currentLesson, isEnrolled, enrollTrack, setLastActive, isPreview]);
 
  const handleToggleComplete = () => {
  toggleLessonCompletion(currentLesson.id);
@@ -82,7 +84,7 @@ export default function LmsLessonPlayer() {
  };
 
  return (
- <div className="flex-1 w-full flex flex-col h-[calc(100dvh-4rem)] overflow-hidden">
+ <div className="flex-1 w-full flex flex-col h-[100dvh] overflow-hidden">
  {/* ── Top Bar with Breadcrumb and Progress Controls ── */}
  <header className="border-b border-border bg-card px-4 sm:px-6 py-2.5 shrink-0 flex items-center justify-between gap-3">
  <div className="flex items-center gap-2 text-xs text-muted-foreground min-w-0">

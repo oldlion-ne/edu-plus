@@ -1,6 +1,5 @@
 @import url("tw-animate-css");
 @import url("shadcn/tailwind.css");
-@import url("https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&family=Instrument+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap");
 
 @tailwind base;
 @tailwind components;
@@ -67,6 +66,44 @@
 
   h1, h2, h3, h4, h5, h6, .font-heading {
     font-family: var(--font-heading);
+  }
+
+  .light {
+    /* Nordic Day (Light Mode) */
+    --background: 96.5% 0.012 85; /* Paper */
+    --foreground: 24% 0.018 60; /* Ink */
+    --card: 99% 0.006 85; /* Surface */
+    --card-foreground: 24% 0.018 60; /* Ink */
+    --popover: 99% 0.006 85; /* Surface */
+    --popover-foreground: 24% 0.018 60; /* Ink */
+    --primary: 57% 0.115 68; /* Ochre */
+    --primary-foreground: 96.5% 0.012 85; /* Paper */
+    --secondary: 91% 0.02 220; /* Fjord Soft */
+    --secondary-foreground: 50% 0.055 225; /* Fjord */
+    --muted: 99% 0.006 85; /* Surface */
+    --muted-foreground: 38% 0.02 60; /* Ink 2 */
+    --accent: 91% 0.02 220; /* Fjord Soft */
+    --accent-foreground: 50% 0.055 225; /* Fjord */
+    --destructive: 52% 0.11 38; /* Clay */
+    --destructive-foreground: 96.5% 0.012 85; /* Paper */
+    --border: 88% 0.015 80; /* Hairline */
+    --input: 88% 0.015 80; /* Hairline */
+    --ring: 50% 0.055 225; /* Fjord */
+    --chart-1: 57% 0.115 68; /* Ochre */
+    --chart-2: 50% 0.055 225; /* Fjord */
+    --chart-3: 53% 0.065 145; /* Moss */
+    --chart-4: 52% 0.11 38; /* Clay */
+    --chart-5: 38% 0.02 60; /* Ink 2 */
+    --radius: 0px; /* Uniform 0px radius */
+    --moss: 53% 0.065 145; /* Moss Green */
+    --sidebar: 99% 0.006 85; /* Surface */
+    --sidebar-foreground: 24% 0.018 60; /* Ink */
+    --sidebar-primary: 57% 0.115 68; /* Ochre */
+    --sidebar-primary-foreground: 96.5% 0.012 85; /* Paper */
+    --sidebar-accent: 91% 0.02 220; /* Fjord Soft */
+    --sidebar-accent-foreground: 50% 0.055 225; /* Fjord */
+    --sidebar-border: 88% 0.015 80; /* Hairline */
+    --sidebar-ring: 50% 0.055 225; /* Fjord */
   }
 
   .dark {
@@ -553,5 +590,13 @@ html[data-magicui-theme-vt="active"]::view-transition-group(root) {
     @apply text-[12px] text-muted-foreground;
 
     margin-top: 1px;
+  }
+}
+
+/* ================= PRINT OVERRIDES ================= */
+@media print {
+  @page {
+    size: landscape;
+    margin: 0;
   }
 }
