@@ -213,6 +213,9 @@ importers:
       '@supabase/functions-js':
         specifier: ^2.112.0
         version: 2.112.0
+      '@tailwindcss/container-queries':
+        specifier: ^0.1.1
+        version: 0.1.1(tailwindcss@3.4.19)
       '@testing-library/jest-dom':
         specifier: ^6.9.1
         version: 6.9.1
@@ -2550,6 +2553,11 @@ packages:
   '@supabase/supabase-js@2.106.0':
     resolution: {integrity: sha512-OOoo3sLj9iVXNp6b+fkyOfFeQrvvNy7nQbaONNf72dOaictUeS39hFDS9argIRTag6M3ZxIypNWcrDAwLgUihQ==}
     engines: {node: '>=20.0.0'}
+
+  '@tailwindcss/container-queries@0.1.1':
+    resolution: {integrity: sha512-p18dswChx6WnTSaJCSGx6lTmrGzNNvm2FtXmiO6AuA1V4U5REyoqwmT6kgAsIMdjo07QdAfYXHJ4hnMtfHzWgA==}
+    peerDependencies:
+      tailwindcss: '>=3.2.0'
 
   '@testing-library/dom@10.4.1':
     resolution: {integrity: sha512-o4PXJQidqJl82ckFaXUeoAW+XysPLauYI43Abki5hABd853iMhitooc6znOnczgbTYmEP6U6/y1ZyKAIsvMKGg==}
@@ -7624,6 +7632,10 @@ snapshots:
       '@supabase/postgrest-js': 2.106.0
       '@supabase/realtime-js': 2.106.0
       '@supabase/storage-js': 2.106.0
+
+  '@tailwindcss/container-queries@0.1.1(tailwindcss@3.4.19)':
+    dependencies:
+      tailwindcss: 3.4.19
 
   '@testing-library/dom@10.4.1':
     dependencies:

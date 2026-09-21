@@ -145,7 +145,7 @@ function App() {
               <div 
                 ref={handleScrollRef}
                 id="main-scroll-container"
-                className="flex-1 overflow-y-scroll min-h-0 [touch-action:pan-y_manipulation] relative [scrollbar-gutter:stable]"
+                className="flex-1 overflow-y-scroll overflow-x-hidden min-h-0 [touch-action:pan-y_manipulation] relative [scrollbar-gutter:stable]"
               >
                 <div className="flex flex-col min-h-full">
                   {showPublicNav && <Navigation />}
