@@ -25,7 +25,7 @@ Eduplus is built on a modern, high-performance web stack tailored for rapid deve
 *   **Edge Functions:** Supabase Functions (indicated by `@supabase/functions-js`)
 
 ### State Management, Forms & Utilities
-*   **Forms & Validation:** React Hook Form coupled with Zod for schema validation.
+*   **Forms & Validation:** React Hook Form for stateful form management.
 *   **Data Visualization:** Recharts (v3.8)
 *   **Utilities:** Lodash, Date-fns (date formatting), Tailwind-merge, CLSX.
 
