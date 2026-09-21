@@ -133,7 +133,7 @@ export function LearningPathOptimizer() {
                     
                     return (
                       <div key={id} className="relative pl-6">
-                        <div className={`absolute -left-[9px] top-1.5 h-4 w-4 rounded-full border-2 bg-paper dark:bg-charcoal ${isStart || isEnd ? 'border-ochre-500' : 'border-ink/30 dark:border-paper/30'}`} />
+                        <div className={`absolute -left-[9px] top-1.5 h-4 w-4 rounded-none border-2 bg-paper dark:bg-charcoal ${isStart || isEnd ? 'border-ochre-500' : 'border-ink/30 dark:border-paper/30'}`} />
                         <div className="space-y-1">
                           <div className="flex items-baseline justify-between gap-4">
                             <h4 className={`font-medium ${isStart || isEnd ? 'text-ochre-600 dark:text-ochre-400 font-semibold' : 'text-ink dark:text-paper'}`}>
