@@ -42,6 +42,7 @@ export interface LmsLesson {
   readonly keyTakeaways: readonly string[];
   readonly practicalExercise?: string;
   readonly resources?: readonly LmsResource[];
+  readonly prerequisiteLessonIds?: readonly string[];
 }
 
 export interface LmsModule {

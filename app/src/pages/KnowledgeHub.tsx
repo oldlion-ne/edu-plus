@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import { MagicCard } from '../components/magicui/MagicCard';
 
 import { EditorialMedia } from '@/components/ui/editorial-media';
@@ -9,6 +9,7 @@ import { FOCUS_RING_CLASSES } from '../lib/utils';
 
 import { Input } from '../components/ui/input';
 import { X } from 'lucide-react';
+import { Trie } from '../lib/algorithms/tries';
 
 interface KnowledgeItem {
  id: string;
@@ -42,6 +43,23 @@ export default function KnowledgeHub() {
 
  const [selectedVideo, setSelectedVideo] = useState<string | null>(null);
  const closeButtonRef = useRef<HTMLButtonElement>(null);
+
+ // Initialize Trie
+ const searchTrie = useMemo(() => {
+ const trie = new Trie();
+ items.forEach((item) => {
+ // Index by full title and individual words to support rich autocomplete
+ const words = `${item.title} ${item.description} ${item.author_name}`.toLowerCase().split(/\s+/);
+ words.forEach(word => {
+ if (word.length > 2) {
+ trie.add(word, item);
+ }
+ });
+ // Also add the full title as a prefix
+ trie.add(item.title.toLowerCase(), item);
+ });
+ return trie;
+ }, [items]);
 
  useEffect(() => {
  if (!selectedVideo) return;
@@ -102,16 +120,14 @@ export default function KnowledgeHub() {
  filtered = filtered.filter((item) => item.category === activeTab);
  }
  if (searchQuery.trim() !== '') {
- const q = searchQuery.toLowerCase();
- filtered = filtered.filter(
- (item) =>
- item.title.toLowerCase().includes(q) ||
- item.description.toLowerCase().includes(q) ||
- item.author_name.toLowerCase().includes(q),
- );
+ const q = searchQuery.toLowerCase().trim();
+ // Use Trie for prefix matching
+ const trieResults = searchTrie.getWordsWithPrefix(q);
+ const matchedIds = new Set(trieResults.map(res => res.metadata.id));
+ filtered = filtered.filter(item => matchedIds.has(item.id));
  }
  setFilteredItems(filtered);
- }, [searchQuery, activeTab, items]);
+ }, [searchQuery, activeTab, items, searchTrie]);
 
  const getYoutubeId = (url: string) => {
  const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;

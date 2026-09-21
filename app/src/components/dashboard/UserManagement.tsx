@@ -1,5 +1,6 @@
-import React, { useState, useEffect} from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { supabase } from '@/lib/supabaseClient';
+import { Trie } from '@/lib/algorithms/tries';
 import { 
   Search, 
   RefreshCw,
@@ -134,11 +135,36 @@ export default function UserManagement() {
     }
   };
 
-  const filteredUsers = users.filter(u => {
-    const matchesSearch = u.email.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesRole = selectedRoleFilter === 'all' || u.role === selectedRoleFilter;
-    return matchesSearch && matchesRole;
-  });
+  const searchTrie = useMemo(() => {
+    const trie = new Trie();
+    users.forEach(u => {
+      if (u.email) {
+        trie.add(u.email, u);
+      }
+    });
+    return trie;
+  }, [users]);
+
+  const filteredUsers = useMemo(() => {
+    let results = users;
+    if (searchTerm.trim() !== '') {
+      const matchedNodes = searchTrie.getWordsWithPrefix(searchTerm.trim());
+      const uniqueIds = new Set();
+      results = [];
+      matchedNodes.forEach(node => {
+        if (!uniqueIds.has(node.metadata.id)) {
+          uniqueIds.add(node.metadata.id);
+          results.push(node.metadata);
+        }
+      });
+    }
+    
+    if (selectedRoleFilter !== 'all') {
+      results = results.filter(u => u.role === selectedRoleFilter);
+    }
+    
+    return results;
+  }, [searchTerm, selectedRoleFilter, searchTrie, users]);
 
   return (
     <div className="flex flex-col gap-7 animate-in fade-in duration-300 w-full">

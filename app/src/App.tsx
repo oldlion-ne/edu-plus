@@ -80,9 +80,9 @@ function App() {
   };
 
 
-  const showChatAgent = !isDashboard && !isLogin;
-  const showPublicNav = !isDashboard;
-  const showPublicFooter = !isDashboard;
+  const showChatAgent = !isDashboard && !isLogin && !location.pathname.startsWith('/lms/learn/') && !location.pathname.startsWith('/lms/quiz/');
+  const showPublicNav = !isDashboard && !location.pathname.startsWith('/lms/learn/') && !location.pathname.startsWith('/lms/quiz/');
+  const showPublicFooter = !isDashboard && !location.pathname.startsWith('/lms/learn/') && !location.pathname.startsWith('/lms/quiz/');
 
   const sharedGlobals = (
     <>

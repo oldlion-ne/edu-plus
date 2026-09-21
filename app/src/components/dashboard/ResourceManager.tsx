@@ -147,7 +147,7 @@ export default function ResourceManager() {
 
       if (coverFile) {
         const coverExt = coverFile.name.split('.').pop();
-        const coverName = `covers/${Date.now()}-${Math.random().toString(36).slice(2)}.${coverExt}`;
+        const coverName = `covers/${Date.now()}-${crypto.randomUUID()}.${coverExt}`;
         const { error: coverUploadError } = await supabase.storage.from('resources').upload(coverName, coverFile);
         if (coverUploadError) throw coverUploadError;
         const { data: coverData } = supabase.storage.from('resources').getPublicUrl(coverName);
@@ -157,7 +157,7 @@ export default function ResourceManager() {
 
       if (newHubItem.media_type === 'document_url' && selectedFile) {
         const fileExt = selectedFile.name.split('.').pop();
-        const fileName = `${Date.now()}-${Math.random().toString(36).slice(2)}.${fileExt}`;
+        const fileName = `${Date.now()}-${crypto.randomUUID()}.${fileExt}`;
         const fp = `uploads/${fileName}`;
         const { error: uploadError } = await supabase.storage.from('resources').upload(fp, selectedFile);
         if (uploadError) throw uploadError;
