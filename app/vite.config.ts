@@ -42,16 +42,6 @@ export default defineConfig(({ mode }) => {
                 id.includes('node_modules/victory-')) {
               return 'chunk-charts';
             }
-            // Radix UI + Framer Motion + Sonner — UI primitives
-            if (id.includes('node_modules/@radix-ui/') ||
-                id.includes('node_modules/framer-motion') ||
-                id.includes('node_modules/sonner')) {
-              return 'chunk-ui';
-            }
-            // All other node_modules go into a vendor catch-all
-            if (id.includes('node_modules/')) {
-              return 'chunk-vendor';
-            }
           },
         },
       },
