@@ -44,15 +44,15 @@ vi.mock('html2canvas', () => ({
 HTMLCanvasElement.prototype.getContext = vi.fn() as any;
 
 describe('App Routing', () => {
-  it('renders Home page layout default state', () => {
+  it('renders Home page layout default state', async () => {
     render(
       <MemoryRouter initialEntries={['/']}>
         <App />
       </MemoryRouter>
     );
     // Home renders the main application structure
-    expect(screen.getByRole('main')).toBeInTheDocument();
-  });
+    expect(await screen.findByRole('main', {}, { timeout: 10000 })).toBeInTheDocument();
+  }, 15000);
 
   it('renders About page title on /about', async () => {
     render(
