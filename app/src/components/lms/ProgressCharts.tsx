@@ -35,25 +35,26 @@ const radarConfig = {
 export function ProgressCharts() {
   const { progress } = useLmsProgress();
 
-  // Generate some realistic progression data based on completed lessons
+  // Generate some progression data based on completed lessons
   const lineChartData = useMemo(() => {
     const data = [];
     const completedCount = progress.completedLessonIds.length;
-    // We'll create a 6-month historical view that ends at the current completion count
-    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
-    let currentTotal = Math.max(0, completedCount - 15);
+    
+    // Generate the last 6 months ending in the current month
+    const now = new Date();
+    const months = Array.from({ length: 6 }, (_, i) =>
+      new Date(now.getFullYear(), now.getMonth() - 5 + i, 1).toLocaleString('en-US', { month: 'short' })
+    );
 
-    const deltas = [2, 1, 3, 0, 4, 0];
-    for (let i = 0; i < 6; i++) {
-      if (i === 5) {
-        currentTotal = completedCount;
-      } else {
-        currentTotal += deltas[i] || 1;
-      }
-      data.push({
+    let currentTotal = completedCount;
+    // Walk backward to generate historical data, never dropping below 0
+    for (let i = 5; i >= 0; i--) {
+      data.unshift({
         month: months[i],
         score: currentTotal,
       });
+      currentTotal = Math.max(0, currentTotal - Math.max(1, Math.floor(completedCount / 4)));
+      if (completedCount === 0) currentTotal = 0;
     }
     return data;
   }, [progress.completedLessonIds]);
@@ -77,11 +78,11 @@ export function ProgressCharts() {
     const avg = scores.reduce((a, b) => a + b, 0) / scores.length;
 
     return [
-      { subject: 'Analytical', score: Math.min(100, avg + 10) },
-      { subject: 'Creative', score: Math.min(100, avg - 5) },
-      { subject: 'Technical', score: Math.min(100, avg + 15) },
-      { subject: 'Leadership', score: Math.min(100, avg) },
-      { subject: 'Communication', score: Math.min(100, avg + 5) },
+      { subject: 'Analytical', score: Math.max(0, Math.min(100, avg + 10)) },
+      { subject: 'Creative', score: Math.max(0, Math.min(100, avg - 5)) },
+      { subject: 'Technical', score: Math.max(0, Math.min(100, avg + 15)) },
+      { subject: 'Leadership', score: Math.max(0, Math.min(100, avg)) },
+      { subject: 'Communication', score: Math.max(0, Math.min(100, avg + 5)) },
     ];
   }, [progress.quizAttempts]);
 

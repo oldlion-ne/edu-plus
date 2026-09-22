@@ -18,7 +18,8 @@ interface GlobalSearchProps {
 
 const Highlight = ({ text, query }: { text: string; query: string }) => {
   if (!query) return <>{text}</>;
-  const parts = text.split(new RegExp(`(${query})`, 'gi'));
+  const escapedQuery = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const parts = text.split(new RegExp(`(${escapedQuery})`, 'gi'));
   return (
     <>
       {parts.map((part, i) =>
@@ -51,8 +52,12 @@ export function GlobalSearch({ open, setOpen }: GlobalSearchProps) {
 
   // Reset query when closed
   useEffect(() => {
+    let timer: ReturnType<typeof setTimeout>;
     if (!open) {
-      setTimeout(() => setQuery(""), 150)
+      timer = setTimeout(() => setQuery(""), 150)
+    }
+    return () => {
+      if (timer) clearTimeout(timer);
     }
   }, [open])
 

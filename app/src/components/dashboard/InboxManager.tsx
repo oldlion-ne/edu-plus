@@ -47,13 +47,28 @@ export default function InboxManager({ activeFolder = 'inquiries' }: { activeFol
   const [selectedConv, setSelectedConv] = useState<Conversation | null>(null);
   const [transcriptMessages, setTranscriptMessages] = useState<any[]>([]);
 
+  const [transcriptError, setTranscriptError] = useState<string | null>(null);
+
   useEffect(() => {
+    let cancelled = false;
     if (selectedConv) {
+      setTranscriptError(null);
       supabase.rpc('get_conversation_messages', { p_conversation_id: selectedConv.id })
-        .then(({ data }) => setTranscriptMessages(data || []));
+        .then(({ data, error }) => {
+          if (cancelled) return;
+          if (error) {
+            console.error('Failed to load transcript:', error);
+            setTranscriptError(error.message);
+            setTranscriptMessages([]);
+          } else {
+            setTranscriptMessages(data || []);
+          }
+        });
     } else {
+      setTranscriptError(null);
       setTranscriptMessages([]);
     }
+    return () => { cancelled = true; };
   }, [selectedConv]);
 
   useEffect(() => {
@@ -347,7 +362,15 @@ export default function InboxManager({ activeFolder = 'inquiries' }: { activeFol
                 </div>
               </div>
               <div className="flex-1 overflow-y-auto py-4 flex flex-col gap-4">
-                {transcriptMessages.length === 0 ? (
+                {transcriptError ? (
+                  <div className="text-center text-sm text-destructive py-10 flex flex-col items-center justify-center gap-2">
+                    <p>Error loading transcript.</p>
+                    <p className="text-xs text-muted-foreground max-w-sm">{transcriptError}</p>
+                    <button className="btn btn-g btn-sm mt-2" onClick={() => setSelectedConv({ ...selectedConv })}>
+                       Retry
+                    </button>
+                  </div>
+                ) : transcriptMessages.length === 0 ? (
                   <div className="text-center text-sm text-muted-foreground py-10">No messages in this transcript yet.</div>
                 ) : (
                   transcriptMessages.map((msg, index) => (

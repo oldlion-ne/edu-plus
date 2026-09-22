@@ -1,0 +1,25 @@
+{
+  "name": "eduplus-registry",
+  "homepage": "https://eduplus.dev",
+  "items": [
+    {
+      "name": "classroom-widget",
+      "type": "registry:block",
+      "title": "Classroom Widget",
+      "description": "A Google Classroom integration widget with Nordic Lagom design.",
+      "dependencies": [
+        "framer-motion",
+        "lucide-react",
+        "@supabase/supabase-js",
+        "@icons-pack/react-simple-icons"
+      ],
+      "files": [
+        {
+          "path": "registry/new-york/classroom-widget.tsx",
+          "type": "registry:block",
+          "target": "components/lms/ClassroomWidget.tsx"
+        }
+      ]
+    }
+  ]
+}

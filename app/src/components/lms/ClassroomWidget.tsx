@@ -20,39 +20,7 @@ export function ClassroomWidget() {
   const [isLoading, setIsLoading] = useState(false);
   const [assignments, setAssignments] = useState<CourseWork[]>([]);
 
-  const fetchMockClassroomData = () => {
-    setIsLoading(true);
-    // Simulate API delay
-    setTimeout(() => {
-      setAssignments([
-        {
-          id: '1',
-          title: 'Essay 2: Global Health Systems',
-          courseName: 'Public Health 101',
-          dueDate: new Date(Date.now() + 86400000 * 2).toLocaleDateString(), // In 2 days
-          status: 'pending',
-          url: 'https://classroom.google.com'
-        },
-        {
-          id: '2',
-          title: 'Weekly Quiz 4',
-          courseName: 'Anatomy Basics',
-          dueDate: new Date(Date.now() - 86400000 * 1).toLocaleDateString(), // Yesterday
-          status: 'late',
-          url: 'https://classroom.google.com'
-        },
-        {
-          id: '3',
-          title: 'Case Study Submission',
-          courseName: 'Clinical Prep',
-          dueDate: new Date(Date.now() + 86400000 * 5).toLocaleDateString(), // In 5 days
-          status: 'pending',
-          url: 'https://classroom.google.com'
-        }
-      ]);
-      setIsLoading(false);
-    }, 1500);
-  };
+
 
   const fetchRealClassroomData = useCallback(async (providerToken: string) => {
     setIsLoading(true);
@@ -84,12 +52,13 @@ export function ClassroomWidget() {
           const workData = await workRes.json();
           const works = workData.courseWork || [];
           for (const w of works) {
+            const isLate = w.dueDate && new Date(w.dueDate.year, w.dueDate.month - 1, w.dueDate.day).getTime() < Date.now();
             allWork.push({
               id: w.id,
               title: w.title,
               courseName: course.name,
               dueDate: w.dueDate ? new Date(w.dueDate.year, w.dueDate.month - 1, w.dueDate.day).toLocaleDateString() : 'No due date',
-              status: 'pending',
+              status: isLate ? 'late' : 'pending',
               url: w.alternateLink
             });
           }
@@ -99,11 +68,11 @@ export function ClassroomWidget() {
       if (allWork.length > 0) {
         setAssignments(allWork.slice(0, 5)); // show top 5
       } else {
-        fetchMockClassroomData(); // Fallback if no coursework found to demonstrate UI
+        setAssignments([]);
       }
     } catch (err) {
-      console.error('Real Google Classroom API error, falling back to mock:', err);
-      fetchMockClassroomData();
+      console.error('Real Google Classroom API error:', err);
+      setAssignments([]);
     } finally {
       setIsLoading(false);
     }
@@ -134,11 +103,8 @@ export function ClassroomWidget() {
       });
       
       if (error) {
-        console.warn('OAuth redirect failed. Showing mock data.');
-        setTimeout(() => {
-          setIsConnected(true);
-          fetchMockClassroomData();
-        }, 1500);
+        console.warn('OAuth redirect failed:', error);
+        setIsLoading(false);
       }
     } catch (error) {
       console.error('Failed to connect Google Classroom', error);
@@ -146,7 +112,8 @@ export function ClassroomWidget() {
     }
   };
 
-  const handleDisconnect = () => {
+  const handleDisconnect = async () => {
+    await supabase.auth.signOut();
     setIsConnected(false);
     setAssignments([]);
   };
@@ -229,7 +196,7 @@ export function ClassroomWidget() {
                 <div className="space-y-3 flex-1 overflow-y-auto pr-1">
                   {assignments.map(assignment => (
                     <a 
-                      key={assignment.id} 
+                      key={`${assignment.courseName}-${assignment.id}`} 
                       href={assignment.url}
                       target="_blank"
                       rel="noreferrer"

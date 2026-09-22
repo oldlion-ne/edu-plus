@@ -17,12 +17,14 @@ import ProfileSettingsDialog from '../components/dashboard/ProfileSettingsDialog
 import { useDashboardTelemetry } from '../hooks/useDashboardTelemetry';
 
 export type DashboardTab = 'overview' | 'users' | 'courses' | 'library' | 'media' | 'inquiries' | 'subscribers' | 'ai-chats' | 'profile' | 'security' | 'ai-advisor' | 'access-control';
+const VALID_TABS: DashboardTab[] = ['overview', 'users', 'courses', 'library', 'media', 'inquiries', 'subscribers', 'ai-chats', 'profile', 'security', 'ai-advisor', 'access-control'];
 
 export default function Dashboard() {
   const { user, role: selectedRole, isSimulated, signOut, signInSimulated } = useAuth();
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
-  const activeTab = (searchParams.get('tab') as DashboardTab) || 'overview';
+  const tabParam = searchParams.get('tab') as DashboardTab;
+  const activeTab = VALID_TABS.includes(tabParam) ? tabParam : 'overview';
   const [showTour, setShowTour] = useState(false);
   const [showBellDropdown, setShowBellDropdown] = useState(false);
   const mainScrollRef = useRef<HTMLElement>(null);

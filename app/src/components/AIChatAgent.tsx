@@ -68,6 +68,7 @@ export default function AIChatAgent() {
   useEffect(() => {
     if (!isOpen || conversationId) return;
 
+    let cancelled = false;
     const initSession = async () => {
       try {
         let session = localStorage.getItem('edu_plus_chat_session_id');
@@ -80,6 +81,7 @@ export default function AIChatAgent() {
           localStorage.setItem('edu_plus_chat_session_id', session);
         }
 
+        if (cancelled) return;
         setConversationId(session);
 
         try {
@@ -98,6 +100,7 @@ export default function AIChatAgent() {
           }
 
           if (history && history.length > 0) {
+            if (cancelled) return;
             setMessages(history.map((h: any) => ({ role: h.role as any, content: h.content })));
             return;
           }
@@ -109,6 +112,7 @@ export default function AIChatAgent() {
           role: 'assistant',
           content: 'Hi! I am the Eduplus AI Advisor. How can I help you today?'
         };
+        if (cancelled) return;
         setMessages([welcomeMsg]);
 
         try {
@@ -122,6 +126,7 @@ export default function AIChatAgent() {
         }
       } catch (err) {
         console.error('Fatal error in initSession:', err);
+        if (cancelled) return;
         setMessages([{
           role: 'assistant',
           content: 'Hi! I am the Eduplus AI Advisor. How can I help you today?'
@@ -130,6 +135,7 @@ export default function AIChatAgent() {
     };
 
     initSession();
+    return () => { cancelled = true; };
   }, [isOpen, conversationId]);
 
   // Auto-scroll to latest message
@@ -206,6 +212,7 @@ export default function AIChatAgent() {
   };
 
   const handleClearChat = () => {
+    if (isLoading) return;
     localStorage.removeItem('edu_plus_chat_session_id');
     setMessages([]);
     setConversationId(null);

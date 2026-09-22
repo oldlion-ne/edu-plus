@@ -17,26 +17,44 @@ CREATE TABLE IF NOT EXISTS public.chat_messages (
 ALTER TABLE public.conversations ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.chat_messages ENABLE ROW LEVEL SECURITY;
 
--- Allow anonymous users to create and read their own conversations (in a real app, this might be tied to an anonymous session ID, but for this demo we'll just allow insert, and read all for admin)
+-- Allow public to insert conversations (user_id must match auth.uid() if authenticated)
 CREATE POLICY "Allow public insert on conversations" ON public.conversations
     FOR INSERT TO public
-    WITH CHECK (true);
+    WITH CHECK (user_id IS NULL OR user_id = auth.uid());
 
--- Usually, we want people to read their own conversations. Since we don't have session tracking for anons right now, 
--- we will allow public select just for the sake of the widget to work statelessly if needed. 
--- In a real app we'd scope this by a cookie session id.
-CREATE POLICY "Allow public select on conversations" ON public.conversations
-    FOR SELECT TO public
-    USING (true);
+-- Allow authenticated users and owners to read conversations
+CREATE POLICY "Allow select on conversations" ON public.conversations
+    FOR SELECT
+    USING (auth.uid() IS NOT NULL OR user_id = auth.uid());
 
-CREATE POLICY "Allow public update on conversations" ON public.conversations
-    FOR UPDATE TO public
-    USING (true);
+-- Allow updating only by authenticated users or owners
+CREATE POLICY "Allow update on conversations" ON public.conversations
+    FOR UPDATE
+    USING (auth.uid() IS NOT NULL OR user_id = auth.uid())
+    WITH CHECK (auth.uid() IS NOT NULL OR user_id = auth.uid());
 
+-- Allow deletion by authenticated users (for the dashboard)
+CREATE POLICY "Allow delete on conversations" ON public.conversations
+    FOR DELETE
+    USING (auth.uid() IS NOT NULL);
+
+-- Allow inserting messages into owned or anonymous conversations
 CREATE POLICY "Allow public insert on chat_messages" ON public.chat_messages
     FOR INSERT TO public
-    WITH CHECK (true);
+    WITH CHECK (
+        EXISTS (
+            SELECT 1 FROM public.conversations c 
+            WHERE c.id = conversation_id 
+            AND (c.user_id IS NULL OR c.user_id = auth.uid())
+        )
+    );
 
-CREATE POLICY "Allow public select on chat_messages" ON public.chat_messages
-    FOR SELECT TO public
-    USING (true);
+-- Allow reading messages for authenticated users or owners
+CREATE POLICY "Allow select on chat_messages" ON public.chat_messages
+    FOR SELECT
+    USING (
+        auth.uid() IS NOT NULL OR EXISTS (
+            SELECT 1 FROM public.conversations c 
+            WHERE c.id = chat_messages.conversation_id AND c.user_id = auth.uid()
+        )
+    );
