@@ -1,5 +1,6 @@
 import "@supabase/functions-js/edge-runtime.d.ts";
-import { Resend } from "resend";
+// deno-lint-ignore no-import-prefix
+import { Resend } from "npm:resend@6.28.1";
 
 const ALLOWED_ORIGINS = [
   'http://localhost:3000',
