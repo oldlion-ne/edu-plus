@@ -75,12 +75,12 @@ Deno.serve(async (req: Request) => {
       .select('id, role');
     if (rolesError) throw rolesError;
 
-    const roleMap = new Map((roles || []).map((r: any) => [r.id, r.role]));
+    const roleMap = new Map((roles || []).map((r: { id: string; role: string }) => [r.id, r.role]));
 
-    const result = users.map((u: any) => ({
+    const result = users.map((u) => ({
       id: u.id,
       email: u.email,
-      role: roleMap.get(u.id) || 'none',
+      role: roleMap.get(u.id as string) || 'none',
       created_at: u.created_at,
       last_sign_in_at: u.last_sign_in_at,
       banned_until: u.banned_until,
@@ -90,11 +90,12 @@ Deno.serve(async (req: Request) => {
       headers: { ...headers, 'Content-Type': 'application/json' },
       status: 200,
     });
-  } catch (err: any) {
-    const status = err.message.startsWith('Forbidden') ? 403
-      : err.message.startsWith('Unauthorized') ? 401
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : String(err);
+    const status = message.startsWith('Forbidden') ? 403
+      : message.startsWith('Unauthorized') ? 401
       : 400;
-    return new Response(JSON.stringify({ success: false, error: err.message }), {
+    return new Response(JSON.stringify({ success: false, error: message }), {
       headers: { ...headers, 'Content-Type': 'application/json' },
       status,
     });
