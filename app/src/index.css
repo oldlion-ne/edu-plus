@@ -7,8 +7,8 @@
 
 @layer base {
   :root {
-    --font-sans: 'Instrument Sans', sans-serif;
-    --font-heading: 'Fraunces', serif;
+    --font-sans: 'DM Sans', sans-serif;
+    --font-heading: 'DM Serif Display', serif;
     --font-mono: 'IBM Plex Mono', monospace;
 
     /* Nordic Day (Light Mode) */

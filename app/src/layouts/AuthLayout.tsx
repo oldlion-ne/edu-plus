@@ -1,17 +1,17 @@
 import { Outlet } from 'react-router';
-import { GlyphMatrix } from '../components/effects/GlyphMatrix';
+import { cn } from '../lib/utils';
+import { NoiseTexture } from '../components/ui/noise-texture';
 import ScrollToTop from '../components/ScrollToTop';
 
 export function AuthLayout() {
   return (
     <div className="relative h-[100dvh] w-full bg-background flex flex-col overflow-hidden [touch-action:none]">
       {/* GLOBAL BACKGROUND MATRIX */}
-      <div className="fixed inset-0 z-0 pointer-events-none opacity-100">
-        <GlyphMatrix 
-          cellSize={18} 
-          mutationRate={0.04} 
-          interval={90} 
-          fadeBottom={0.6} 
+      <div className="fixed inset-0 z-0 pointer-events-none">
+        <NoiseTexture
+          className={cn(
+            "absolute inset-0 opacity-[0.04] mix-blend-plus-darker dark:opacity-10 dark:mix-blend-overlay"
+          )}
         />
       </div>
       

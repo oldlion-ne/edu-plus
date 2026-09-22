@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { motion, type Variants, useReducedMotion } from 'framer-motion';
 import { NavLink, Link, useNavigate, useLocation } from 'react-router';
 import { useScrollContainer } from '../lib/ScrollContext';
 import { useAuth } from '../lib/useAuth';
@@ -98,6 +99,23 @@ const translations = {
 const translationMap = new Map<string, string>(Object.entries(translations));
 const t = (key: keyof typeof translations) => translationMap.get(key) || '';
 
+const logoContainerVariants: Variants = {
+  initial: { opacity: 0 },
+  animate: { opacity: 1, transition: { staggerChildren: 0.15 } },
+  hover: {}
+};
+
+const logoTextVariants: Variants = {
+  initial: { opacity: 0, y: -8 },
+  animate: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } }
+};
+
+const logoPlusVariants: Variants = {
+  initial: { opacity: 0, scale: 0.8, rotate: -45 },
+  animate: { opacity: 1, scale: 1, rotate: 0, transition: { duration: 0.5, ease: "easeOut" } },
+  hover: { rotate: 90, scale: 1.1, transition: { duration: 0.3, ease: 'easeInOut' } }
+};
+
 // ─── Sub-components ─────────────────────────────────────────────────────────
 
 /** A single item inside the desktop mega-panel */
@@ -130,6 +148,7 @@ export default function Navigation() {
   const [scrolled, setScrolled] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
+  const shouldReduceMotion = useReducedMotion();
   const navRef = useRef<HTMLElement>(null);
   const scrollContext = useScrollContainer();
 
@@ -174,14 +193,31 @@ export default function Navigation() {
       <div className="max-w-[1440px] mx-auto flex items-center justify-between px-8 md:px-14 py-4">
 
         {/* ── Logo ── */}
-        <Link
-          to="/"
-          className="flex items-center gap-0 shrink-0 hover:opacity-80 transition-opacity duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-          aria-label="EduPlus home"
+        <motion.div
+          variants={logoContainerVariants}
+          initial={shouldReduceMotion ? false : "initial"}
+          animate="animate"
+          whileHover={shouldReduceMotion ? undefined : "hover"}
         >
-          <span className="font-heading font-bold text-xl text-foreground tracking-tight">{t('brandName')}</span>
-          <span className="text-primary font-light text-xl">{t('brandPlus')}</span>
-        </Link>
+          <Link
+            to="/"
+            className="flex items-center gap-0 shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+            aria-label="EduPlus home"
+          >
+            <motion.span 
+              variants={logoTextVariants}
+              className="font-heading font-bold text-xl text-foreground tracking-tight"
+            >
+              {t('brandName')}
+            </motion.span>
+            <motion.span 
+              variants={logoPlusVariants}
+              className="text-primary font-light text-xl origin-center"
+            >
+              {t('brandPlus')}
+            </motion.span>
+          </Link>
+        </motion.div>
 
         {/* ── Desktop Navigation ── */}
         <div className="hidden xl:flex items-center gap-1">

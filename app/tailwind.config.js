@@ -5,9 +5,9 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['var(--font-sans)', 'Instrument Sans', 'sans-serif'],
-        serif: ['Fraunces', 'serif'],
-        heading: ['var(--font-heading)', 'Fraunces', 'serif'],
+        sans: ['var(--font-sans)', 'DM Sans', 'sans-serif'],
+        serif: ['DM Serif Display', 'serif'],
+        heading: ['var(--font-heading)', 'DM Serif Display', 'serif'],
         mono: ['var(--font-mono)', 'IBM Plex Mono', 'monospace'],
       },
       colors: {

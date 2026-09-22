@@ -23,7 +23,7 @@ const ROW_2 = PARTNERS.slice(Math_half - 1); // slight overlap intentional
 
 function PartnerChip({ name }: { name: string }) {
  return (
- <div className="mx-3 md:mx-4 flex items-center justify-center h-16 md:h-20 px-8 md:px-12 bg-card border border-border/40 group hover:border-primary/50 transition-colors duration-500 cursor-default relative overflow-hidden">
+ <div className="mx-3 md:mx-4 flex items-center justify-center h-16 md:h-20 px-8 md:px-12 bg-card border border-border/40 rounded-none group hover:border-primary/50 transition-colors duration-500 cursor-default relative overflow-hidden">
  {/* Subtle geometric hover line */}
  <div className="absolute top-0 left-0 w-0 h-[2px] bg-primary group-hover:w-full transition-all duration-700 ease-out" />
  

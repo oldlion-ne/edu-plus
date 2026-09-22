@@ -263,21 +263,21 @@ export default function Contact() {
  </div>
 
  {/* Right Column: Form */}
- <div className="lg:col-span-7">
- <div className="relative border border-border/60 bg-card p-8 md:p-10">
+ <div className="lg:col-span-6 lg:col-start-7">
+ <div className="relative border border-border/60 bg-card p-6 md:p-8">
  {/* Amber top accent — static, not hover-triggered, signals premium craftsmanship */}
  <div className="absolute top-0 left-0 w-16 h-[2px] bg-primary" />
 
- <h3 className="text-xl md:text-2xl font-medium text-foreground mb-8">Send an Inquiry</h3>
+ <h3 className="text-lg md:text-xl font-medium font-heading text-foreground mb-6">Send an Inquiry</h3>
 
  {submitted ? (
  <div className="text-[14px] text-primary bg-primary/5 p-6 border border-primary/20">
  Thank you! Your message has been received. Our team will contact you within 24 hours.
  </div>
  ) : (
- <form onSubmit={inquiryForm.handleSubmit(onSubmitInquiry)} className="space-y-6">
- <div className="grid md:grid-cols-2 gap-6">
- <div className="space-y-2">
+ <form onSubmit={inquiryForm.handleSubmit(onSubmitInquiry)} className="space-y-4">
+ <div className="grid md:grid-cols-2 gap-4">
+ <div className="space-y-1.5">
  <Label htmlFor="contact-name" className="text-[11px] font-mono uppercase tracking-widest text-muted-foreground">
  Your Name
  </Label>
@@ -285,11 +285,11 @@ export default function Contact() {
  id="contact-name"
  {...inquiryForm.register('name')}
  placeholder="John Doe"
- className="rounded-none border-border/60 bg-background text-base h-11 focus:border-primary focus:ring-0 transition-colors duration-200"
+ className="rounded-none border-border/60 bg-background text-sm h-10 focus:border-primary focus:ring-0 transition-colors duration-200"
  />
  {inquiryForm.formState.errors.name && <p className="text-[11px] text-destructive">{inquiryForm.formState.errors.name.message}</p>}
  </div>
- <div className="space-y-2">
+ <div className="space-y-1.5">
  <Label htmlFor="contact-email" className="text-[11px] font-mono uppercase tracking-widest text-muted-foreground">
  Email Address
  </Label>
@@ -297,13 +297,13 @@ export default function Contact() {
  id="contact-email"
  {...inquiryForm.register('email')}
  placeholder="john@example.com"
- className="rounded-none border-border/60 bg-background text-base h-11 focus:border-primary focus:ring-0 transition-colors duration-200"
+ className="rounded-none border-border/60 bg-background text-sm h-10 focus:border-primary focus:ring-0 transition-colors duration-200"
  />
  {inquiryForm.formState.errors.email && <p className="text-[11px] text-destructive">{inquiryForm.formState.errors.email.message}</p>}
  </div>
  </div>
 
- <div className="space-y-2">
+ <div className="space-y-1.5">
  <Label htmlFor="contact-mobile" className="text-[11px] font-mono uppercase tracking-widest text-muted-foreground">
  Mobile Number
  </Label>
@@ -311,12 +311,12 @@ export default function Contact() {
  id="contact-mobile"
  {...inquiryForm.register('mobile')}
  placeholder="+91 98765 43210"
- className="rounded-none border-border/60 bg-background text-base h-11 focus:border-primary focus:ring-0 transition-colors duration-200"
+ className="rounded-none border-border/60 bg-background text-sm h-10 focus:border-primary focus:ring-0 transition-colors duration-200"
  />
  {inquiryForm.formState.errors.mobile && <p className="text-[11px] text-destructive">{inquiryForm.formState.errors.mobile.message}</p>}
  </div>
 
- <div className="space-y-2">
+ <div className="space-y-1.5">
  <Label htmlFor="contact-profile" className="text-[11px] font-mono uppercase tracking-widest text-muted-foreground block">
  Stakeholder Profile
  </Label>
@@ -324,10 +324,10 @@ export default function Contact() {
  value={inquiryForm.watch('profile')}
  onValueChange={(val) => inquiryForm.setValue('profile', val)}
  >
- <SelectTrigger id="contact-profile" className="w-full rounded-none bg-background border-border/60 h-11 text-base text-foreground focus:border-primary focus:ring-0 transition-colors duration-200">
+ <SelectTrigger id="contact-profile" className="w-full rounded-none bg-background border-border/60 h-10 text-sm text-foreground focus:border-primary focus:ring-0 transition-colors duration-200">
  <SelectValue placeholder="Select Profile" />
  </SelectTrigger>
- <SelectContent className="rounded-none text-base bg-background border border-border text-foreground">
+ <SelectContent className="rounded-none text-sm bg-background border border-border text-foreground">
  <SelectItem value="student">Student</SelectItem>
  <SelectItem value="parent">Parent / Guardian</SelectItem>
  <SelectItem value="educator">Educator / School Leader</SelectItem>
@@ -338,7 +338,7 @@ export default function Contact() {
  {inquiryForm.formState.errors.profile && <p className="text-[11px] text-destructive">{inquiryForm.formState.errors.profile.message}</p>}
  </div>
 
- <div className="space-y-2">
+ <div className="space-y-1.5">
  <Label htmlFor="contact-message" className="text-[11px] font-mono uppercase tracking-widest text-muted-foreground">
  Message
  </Label>
@@ -346,7 +346,7 @@ export default function Contact() {
  id="contact-message"
  {...inquiryForm.register('message')}
  placeholder="Tell us how we can help configure your roadmap..."
- className="rounded-none border-border/60 bg-background text-base min-h-[120px] focus:border-primary focus:ring-0 transition-colors duration-200 resize-none"
+ className="rounded-none border-border/60 bg-background text-sm min-h-[100px] focus:border-primary focus:ring-0 transition-colors duration-200 resize-none"
  />
  {inquiryForm.formState.errors.message && <p className="text-[11px] text-destructive">{inquiryForm.formState.errors.message.message}</p>}
  </div>
