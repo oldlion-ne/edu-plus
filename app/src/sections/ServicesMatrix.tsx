@@ -55,7 +55,7 @@ export default function ServicesMatrix() {
           {PROGRAMS.map((program, idx) => (
             <BlurFade key={program.name} delay={0.25 + idx * 0.05} inView>
               <div
-                className="group relative flex flex-col items-start p-10 bg-transparent transition-colors duration-200 hover:bg-secondary h-full overflow-hidden"
+                className="group relative flex flex-col items-start p-10 bg-transparent transition-colors duration-200 hover:bg-secondary h-full overflow-hidden rounded-none"
               >
                 {/* Amber accent hover line */}
                 <div className="absolute top-0 left-0 w-0 h-[2px] bg-primary group-hover:w-full transition-all duration-700 ease-out" />
