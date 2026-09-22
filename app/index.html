@@ -4,12 +4,10 @@
     <script>
       (function() {
         const theme = localStorage.getItem('theme');
-        const path = window.location.pathname;
-        if (theme === 'dark') {
+        if (theme === 'light') {
+          document.documentElement.classList.remove('dark');
+        } else {
           document.documentElement.classList.add('dark');
-        } else if (theme !== 'light' && (path.startsWith('/lms') || path.startsWith('/admin'))) {
-          document.documentElement.classList.add('dark');
-          // Optionally, don't write to localStorage here so that navigating back to public doesn't stay dark permanently
         }
       })();
     </script>
