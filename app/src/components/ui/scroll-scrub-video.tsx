@@ -178,7 +178,7 @@ export function ScrollScrubVideo({ src, className = '', scrollFactor = 1.5, chil
       style={{ height: `${scrollFactor * 100}vh` }}
       className={`relative w-full overflow-visible ${className}`}
     >
-      <div className="sticky top-0 left-0 w-full h-screen overflow-hidden flex items-center justify-center">
+      <div className="sticky top-0 left-0 w-full h-dvh overflow-hidden flex items-center justify-center">
         {loading ? (
           <div className="absolute inset-0 flex items-center justify-center bg-background text-muted-foreground text-sm font-medium tracking-wide uppercase">
             Loading Pathway...

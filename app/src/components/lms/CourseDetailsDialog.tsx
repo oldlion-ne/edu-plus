@@ -4,7 +4,7 @@ import type { CurriculumTrack } from '../../types/lms';
 import { useLmsProgress } from '../../lib/lmsProgressContext';
 import { Button } from '../ui/button';
 import { Badge } from '../ui/badge';
-import { ScrollArea } from '../ui/scroll-area';
+
 import {
   Dialog,
   DialogContent,
@@ -64,10 +64,10 @@ export const CourseDetailsDialog: React.FC<CourseDetailsDialogProps> = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-4xl p-0 gap-0 overflow-hidden bg-background border-border rounded-none shadow-2xl flex flex-col max-h-[90vh]">
+      <DialogContent className="max-w-4xl p-0 gap-0 bg-background border-border rounded-none shadow-2xl max-h-[90vh] overflow-y-auto">
         
         {/* Dark Hero Banner similar to Udemy */}
-        <div className="relative bg-card border-b border-border pt-12 pb-6 px-6 sm:pt-14 sm:pb-8 sm:px-8 shrink-0 overflow-hidden">
+        <div className="relative bg-card border-b border-border pt-12 pb-6 px-6 sm:pt-14 sm:pb-8 sm:px-8 overflow-hidden">
           {/* Background Image Blend */}
           <div className="absolute inset-0 z-0">
             <img 
@@ -123,9 +123,8 @@ export const CourseDetailsDialog: React.FC<CourseDetailsDialogProps> = ({
           </div>
         </div>
 
-        {/* Scrollable Content Area - Waterfall Layout */}
-        <ScrollArea className="flex-1 h-full">
-          <div className="p-6 sm:p-8 flex flex-col gap-8 max-w-3xl mx-auto w-full">
+        {/* Content Area - Waterfall Layout */}
+        <div className="p-6 sm:p-8 flex flex-col gap-8 max-w-3xl mx-auto w-full">
             
             {/* Learning Outcomes Checklist */}
             <div className="border border-border bg-card p-6 sm:p-8">
@@ -290,7 +289,6 @@ export const CourseDetailsDialog: React.FC<CourseDetailsDialogProps> = ({
             </div>
 
           </div>
-        </ScrollArea>
       </DialogContent>
     </Dialog>
   );

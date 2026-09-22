@@ -17,6 +17,15 @@ import {
  Sparkles,
 } from 'lucide-react';
 import { cn } from '../lib/utils';
+import VideoRoot, {
+  VideoViewport,
+  VideoControls,
+  VideoPlayTrigger,
+  VideoSoundControl,
+  VideoProgressBar,
+  VideoPipTrigger,
+  VideoFullscreenTrigger
+} from '../components/8starlabs-ui/video-player';
 
 export default function LmsLessonPlayer() {
  const { trackId, lessonId } = useParams<{ trackId: string; lessonId: string }>();
@@ -80,6 +89,8 @@ export default function LmsLessonPlayer() {
  navigate(`/lms/learn/${track.id}/${nextLesson.id}`);
  } else if (currentModule?.quiz) {
  navigate(`/lms/quiz/${track.id}/${currentModule.id}`);
+ } else {
+ navigate(`/lms/tracks/${track.id}`);
  }
  };
 
@@ -175,18 +186,20 @@ export default function LmsLessonPlayer() {
  </p>
  </div>
 
- {/* Video Lecture Player (if type is video or videoEmbedId present) */}
- {currentLesson.videoEmbedId && (
- <div className="border border-border bg-black aspect-video w-full overflow-hidden relative">
- <iframe
- className="w-full h-full"
- src={`https://www.youtube-nocookie.com/embed/${currentLesson.videoEmbedId}?rel=0&modestbranding=1`}
- title={currentLesson.title}
- allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
- allowFullScreen
- />
- </div>
- )}
+        {/* Video Lecture Player (if type is video or videoUrl present) */}
+        {currentLesson.videoUrl && (
+          <VideoRoot className="border border-border bg-black aspect-video w-full overflow-hidden relative rounded-none">
+            <VideoViewport src={currentLesson.videoUrl} fit="cover" />
+
+            <VideoControls className="flex items-center justify-between gap-4">
+              <VideoPlayTrigger />
+              <VideoSoundControl />
+              <VideoProgressBar />
+              <VideoPipTrigger />
+              <VideoFullscreenTrigger />
+            </VideoControls>
+          </VideoRoot>
+        )}
 
  {/* Main Lecture / Reading Markdown Content */}
  <div className="prose dark:prose-invert max-w-none text-foreground/90 text-sm sm:text-base leading-relaxed space-y-4 border-t border-border pt-6">

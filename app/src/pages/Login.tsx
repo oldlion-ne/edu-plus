@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
-import { useNavigate, useLocation } from 'react-router';
+import { useNavigate, useLocation, Link } from 'react-router';
 import { useAuth } from '../lib/useAuth';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
-import { Eye, EyeOff, ShieldCheck } from 'lucide-react';
+import { Eye, EyeOff, ShieldCheck, ArrowLeft } from 'lucide-react';
 import DreamyClouds from '@/components/effects/DreamyClouds';
 import { supabase } from '@/lib/supabaseClient';
+import { PageMeta } from '@/components/PageMeta';
 
 const translations = {
  brandName: 'Edu',
@@ -126,7 +127,8 @@ export default function Login() {
  };
 
  return (
- <div className="flex-grow w-full flex flex-col md:flex-row min-h-[calc(100dvh-64px)] ">
+ <div className="flex-1 w-full flex flex-col md:flex-row min-h-full">
+ <PageMeta title="Sign In" description="Sign in to your EduPlus staff dashboard." />
 
  {/* ── Left Brand Panel (shader + editorial text) ─────────────────── */}
  <div className="relative hidden md:flex md:w-1/2 lg:w-[55%] flex-col overflow-hidden border-r border-border">
@@ -139,26 +141,26 @@ export default function Login() {
  <div className="relative z-10 flex flex-col h-full px-12 py-12 justify-between">
  
  {/* Logo */}
- <div className="shrink-0 animate-in fade-in slide-in-from-bottom-4 duration-700 ease-out fill-mode-both delay-[100ms]">
+ <div className="shrink-0 animate-in fade-in slide-in-from-bottom-4 duration-700 ease-out fill-mode-both [animation-delay:100ms]">
  <span className="font-heading font-bold text-3xl text-[#0E131A] leading-none tracking-tight">
  {t('brandName')}
- <span className="text-[#FBBF24] font-light">{t('brandPlus')}</span>
+ <span className="text-primary font-light">{t('brandPlus')}</span>
  </span>
  </div>
 
  {/* Central editorial statement */}
  <div className="flex-1 flex flex-col justify-center max-w-lg">
- <h2 className="font-heading font-semibold text-5xl lg:text-7xl text-[#0E131A] leading-[1.05] whitespace-pre-line tracking-tight animate-in fade-in slide-in-from-bottom-6 duration-1000 ease-out fill-mode-both delay-[300ms]">
+ <h2 className="font-heading font-semibold text-5xl lg:text-7xl text-[#0E131A] leading-[1.05] whitespace-pre-line tracking-tight animate-in fade-in slide-in-from-bottom-6 duration-1000 ease-out fill-mode-both [animation-delay:300ms]">
  {t('taglineHeading')}
  </h2>
- <div className="w-12 h-[2px] bg-[#0E131A]/30 my-8 animate-in fade-in slide-in-from-bottom-2 duration-700 ease-out fill-mode-both delay-[500ms]" />
- <p className="text-[#0E131A]/70 text-lg font-sans leading-relaxed max-w-sm animate-in fade-in slide-in-from-bottom-4 duration-700 ease-out fill-mode-both delay-[600ms]">
+ <div className="w-12 h-[2px] bg-[#0E131A]/30 my-8 animate-in fade-in slide-in-from-bottom-2 duration-700 ease-out fill-mode-both [animation-delay:500ms]" />
+ <p className="text-[#0E131A]/70 text-lg font-sans leading-relaxed max-w-sm animate-in fade-in slide-in-from-bottom-4 duration-700 ease-out fill-mode-both [animation-delay:600ms]">
  {t('taglineSub')}
  </p>
  </div>
 
  {/* Bottom system note */}
- <div className="shrink-0 animate-in fade-in slide-in-from-bottom-2 duration-700 ease-out fill-mode-both delay-[800ms]">
+ <div className="shrink-0 animate-in fade-in slide-in-from-bottom-2 duration-700 ease-out fill-mode-both [animation-delay:800ms]">
  <p className="text-xs font-sans tracking-[0.25em] uppercase text-[#0E131A]/60 font-semibold">
  {t('systemNote')}
  </p>
@@ -169,30 +171,30 @@ export default function Login() {
  {/* ── Right Form Panel ─────────────────────────────────────────────── */}
  <div className="flex-1 flex flex-col items-center justify-center px-8 py-16 md:py-0 relative">
  
- {/* Subtle geometric background element (Nordic Lagom: Straight lines, strict) */}
- <div className="absolute inset-0 pointer-events-none overflow-hidden flex justify-center items-center opacity-[0.03]">
- <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
- <defs>
- <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
- <path d="M 40 0 L 0 0 0 40" fill="none" stroke="currentColor" strokeWidth="0.5"/>
- </pattern>
- </defs>
- <rect width="100%" height="100%" fill="url(#grid)" />
- </svg>
- </div>
 
  {/* Mobile-only logo */}
  <div className="mb-12 md:hidden animate-in fade-in slide-in-from-bottom-4 duration-700 ease-out fill-mode-both">
  <span className="font-heading font-bold text-3xl text-foreground leading-none tracking-tight">
  {t('brandName')}
- <span className="text-[#FBBF24] font-light">{t('brandPlus')}</span>
+ <span className="text-primary font-light">{t('brandPlus')}</span>
  </span>
  </div>
 
  <div className="w-full max-w-[380px] relative z-10">
 
+  {/* Back button */}
+  <div className="mb-10 animate-in fade-in slide-in-from-bottom-4 duration-700 ease-out fill-mode-both">
+    <Link 
+      to="/" 
+      className="inline-flex items-center text-[10px] font-sans font-bold tracking-[0.15em] uppercase text-muted-foreground hover:text-foreground transition-colors group"
+    >
+      <ArrowLeft size={14} strokeWidth={2} className="mr-3 opacity-60 group-hover:-translate-x-1 transition-all duration-300" />
+      Return to Website
+    </Link>
+  </div>
+
  {/* Heading */}
- <div className="mb-10 animate-in fade-in slide-in-from-bottom-4 duration-700 ease-out fill-mode-both delay-[200ms]">
+ <div className="mb-10 animate-in fade-in slide-in-from-bottom-4 duration-700 ease-out fill-mode-both [animation-delay:200ms]">
  <h1 className="font-heading text-3xl font-medium text-foreground tracking-tight">
  {t('signIn')}
  </h1>
@@ -203,7 +205,7 @@ export default function Login() {
 
  {/* Form / MFA View */}
  {mfaRequired ? (
- <div className="flex flex-col gap-6 animate-in fade-in slide-in-from-bottom-4 duration-500 ease-out fill-mode-both delay-[100ms]">
+ <div className="flex flex-col gap-6 animate-in fade-in slide-in-from-bottom-4 duration-500 ease-out fill-mode-both [animation-delay:100ms]">
  <div className="bg-primary/5 border border-primary/20 p-5 flex items-start gap-4 rounded-none">
  <ShieldCheck className="text-primary shrink-0 mt-0.5" size={20} />
  <div>
@@ -226,16 +228,16 @@ export default function Login() {
  placeholder="000000"
  value={mfaCode}
  onChange={(e) => setMfaCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
- className="peer w-full h-14 text-center tracking-[0.5em] text-xl font-sans bg-transparent text-foreground border-0 border-b border-border outline-none focus:ring-0 rounded-none transition-colors duration-300"
+ className="peer w-full h-14 text-center tracking-[0.5em] text-xl font-sans bg-card text-foreground border border-border outline-none focus:border-primary/50 transition-colors duration-300 rounded-none shadow-sm"
  />
- <div className="absolute bottom-0 left-0 h-[2px] bg-[#FBBF24] w-0 transition-all duration-300 peer-focus:w-full" />
+ <div className="absolute bottom-0 left-0 h-[2px] bg-primary w-0 transition-all duration-300 peer-focus:w-full" />
  </div>
  </div>
  <div className="flex flex-col gap-3 mt-2">
  <Button
  type="submit"
  disabled={mfaCode.length !== 6 || submitting}
- className="w-full h-12 font-sans text-sm font-medium tracking-wider uppercase bg-[#FBBF24] text-[#0E131A] hover:bg-[#FBBF24]/90 rounded-none border-none transition-all duration-300 hover:shadow-[4px_4px_0px_0px_rgba(28,27,26,0.1)] dark:hover:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.05)] disabled:hover:shadow-none disabled:opacity-50"
+ className="w-full h-12 font-sans text-sm font-medium tracking-wider uppercase bg-primary text-primary-foreground hover:bg-primary/90 rounded-none border-none transition-all duration-300 hover:shadow-[4px_4px_0px_0px_rgba(28,27,26,0.1)] dark:hover:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.05)] disabled:hover:shadow-none disabled:opacity-50"
  >
  {submitting ? 'Verifying...' : 'Verify & Continue'}
  </Button>
@@ -253,7 +255,7 @@ export default function Login() {
  ) : (
  <form onSubmit={handleSubmit} className="flex flex-col gap-6">
  
- <div className="flex flex-col gap-6 animate-in fade-in slide-in-from-bottom-4 duration-700 ease-out fill-mode-both delay-[400ms]">
+ <div className="flex flex-col gap-6 animate-in fade-in slide-in-from-bottom-4 duration-700 ease-out fill-mode-both [animation-delay:400ms]">
  {/* Email */}
  <div className="flex flex-col gap-2 relative group">
  <Label
@@ -272,16 +274,16 @@ export default function Login() {
  value={email}
  onChange={(e) => setEmail(e.target.value)}
  className={cn(
- 'peer w-full h-12 px-0 text-base font-sans',
- 'bg-transparent text-foreground',
- 'border-0 border-b border-border',
+ 'peer w-full h-12 px-4 text-base font-sans',
+ 'bg-card text-foreground',
+ 'border border-border shadow-sm',
  'placeholder:text-muted-foreground/30',
- 'outline-none focus:ring-0',
+ 'outline-none focus:border-primary/50',
  'transition-all duration-300',
  'rounded-none'
  )}
  />
- <div className="absolute bottom-0 left-0 h-[2px] bg-[#FBBF24] w-0 transition-all duration-300 peer-focus:w-full" />
+ <div className="absolute bottom-0 left-0 h-[2px] bg-primary w-0 transition-all duration-300 peer-focus:w-full" />
  </div>
  </div>
 
@@ -303,21 +305,21 @@ export default function Login() {
  value={password}
  onChange={(e) => setPassword(e.target.value)}
  className={cn(
- 'peer w-full h-12 px-0 pr-10 text-base font-sans',
- 'bg-transparent text-foreground',
- 'border-0 border-b border-border',
+ 'peer w-full h-12 px-4 pr-12 text-base font-sans',
+ 'bg-card text-foreground',
+ 'border border-border shadow-sm',
  'placeholder:text-muted-foreground/30',
- 'outline-none focus:ring-0',
+ 'outline-none focus:border-primary/50',
  'transition-all duration-300',
  'rounded-none'
  )}
  />
- <div className="absolute bottom-0 left-0 h-[2px] bg-[#FBBF24] w-0 transition-all duration-300 peer-focus:w-full" />
+ <div className="absolute bottom-0 left-0 h-[2px] bg-primary w-0 transition-all duration-300 peer-focus:w-full" />
  <button
  type="button"
  onClick={() => setShowPass((v) => !v)}
  aria-label={showPass ? 'Hide password' : 'Show password'}
- className="absolute inset-y-0 right-0 flex items-center text-muted-foreground hover:text-foreground transition-colors"
+ className="absolute inset-y-0 right-0 px-4 flex items-center text-muted-foreground hover:text-foreground transition-colors"
  >
  {showPass
  ? <EyeOff size={16} strokeWidth={1.5} />
@@ -329,10 +331,10 @@ export default function Login() {
  </div>
 
  {/* CTA */}
- <div className="mt-4 animate-in fade-in slide-in-from-bottom-4 duration-700 ease-out fill-mode-both delay-[600ms]">
+ <div className="mt-4 animate-in fade-in slide-in-from-bottom-4 duration-700 ease-out fill-mode-both [animation-delay:600ms]">
  <Button
  type="submit"
- className="w-full h-12 font-sans text-sm font-medium tracking-wider uppercase bg-[#FBBF24] text-[#0E131A] hover:bg-[#FBBF24]/90 rounded-none border-none transition-all duration-300 hover:shadow-[4px_4px_0px_0px_rgba(28,27,26,0.1)] dark:hover:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.05)] disabled:hover:shadow-none disabled:opacity-50"
+ className="w-full h-12 font-sans text-sm font-medium tracking-wider uppercase bg-primary text-primary-foreground hover:bg-primary/90 rounded-none border-none transition-all duration-300 hover:shadow-[4px_4px_0px_0px_rgba(28,27,26,0.1)] dark:hover:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.05)] disabled:hover:shadow-none disabled:opacity-50"
  disabled={submitting}
  >
  {submitting ? t('signingIn') : t('signIn')}
@@ -343,7 +345,7 @@ export default function Login() {
  )}
 
  {/* Footer note */}
- <div className="mt-12 animate-in fade-in duration-1000 ease-out fill-mode-both delay-[800ms]">
+ <div className="mt-12 animate-in fade-in duration-1000 ease-out fill-mode-both [animation-delay:800ms]">
  <p className="text-center text-[10px] text-muted-foreground/60 font-sans tracking-widest uppercase font-medium">
  {t('footerNote')}
  </p>

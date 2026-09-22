@@ -8,7 +8,7 @@ export interface AuthContextType {
   loading: boolean;
   isSimulated: boolean;
   signIn: (email: string, password: string) => Promise<{ error: any }>;
-  signUp: (email: string, password: string, role: string) => Promise<{ error: any }>;
+  signUp: (email: string, password: string) => Promise<{ error: any }>;
   signOut: () => Promise<void>;
   signInSimulated: (role: UserRole) => void;
 }

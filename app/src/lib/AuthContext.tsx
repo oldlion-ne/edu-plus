@@ -126,9 +126,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, [user?.id, role, isSimulated]);
 
   useEffect(() => {
-    // 1. Check simulated session in localStorage — resolves instantly, no network
+    // 1. Check simulated session in localStorage (only if enabled)
+    const isSimEnabled = import.meta.env.VITE_ENABLE_SIMULATION === 'true';
     const cachedSim = localStorage.getItem('edu_plus_sim_session');
-    if (cachedSim) {
+    if (cachedSim && isSimEnabled) {
       try {
         const parsed = JSON.parse(cachedSim);
         setUser(parsed.user);
@@ -139,6 +140,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       } catch {
         localStorage.removeItem('edu_plus_sim_session');
       }
+    } else if (cachedSim && !isSimEnabled) {
+       localStorage.removeItem('edu_plus_sim_session');
     }
 
     // 2. Fetch Supabase session — resolves from localStorage with persistSession: true
@@ -206,17 +209,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return { error };
   };
 
-  const signUp = async (email: string, password: string, selectedRole: string) => {
+  const signUp = async (email: string, password: string) => {
     localStorage.removeItem('edu_plus_sim_session');
     roleFetchedForRef.current = null;
-    const { data, error } = await supabase.auth.signUp({ email, password });
-
-    if (data?.user && !error) {
-      await supabase.from('user_roles').insert({
-        id: data.user.id,
-        role: selectedRole
-      });
-    }
+    const { error } = await supabase.auth.signUp({ email, password });
+    // Note: User role assignment should be handled securely server-side via triggers
+    // or by an admin using the create-user edge function.
     return { error };
   };
 
@@ -230,6 +228,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const signInSimulated = (selectedRole: UserRole) => {
+    if (import.meta.env.VITE_ENABLE_SIMULATION !== 'true') {
+      console.warn('Simulation is disabled in this environment.');
+      return;
+    }
     const mockUser = {
       id: '00000000-0000-0000-0000-000000000000',
       email: `simulated_${selectedRole}@eduplus.dev`,

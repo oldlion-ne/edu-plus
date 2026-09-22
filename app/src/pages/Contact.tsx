@@ -1,10 +1,14 @@
 import { useState } from 'react';
+import { PageMeta } from '@/components/PageMeta';
 import { toast } from 'sonner';
 import { PageHero } from '../components/ui/page-hero';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
 import { Textarea } from '../components/ui/textarea';
 import { Label } from '../components/ui/label';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import * as z from 'zod';
 import { editorialIllustrations } from '@/lib/editorialIllustrations';
 import { FadeIn } from '@/components/effects/FadeIn';
 import { InvisibleCard } from '../components/ui/invisible-card';
@@ -23,163 +27,183 @@ const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL as string;
 const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_PUBLIC_KEY as string;
 const REST_TIMEOUT_MS = 10000;
 
+const inquirySchema = z.object({
+  name: z.string().min(2, 'Name must be at least 2 characters').max(100).trim(),
+  email: z.string().email('Invalid email address').max(100).trim().toLowerCase(),
+  mobile: z.string().regex(/^[0-9+\-\s()]{7,20}$/, 'Invalid mobile number').optional().or(z.literal('')),
+  profile: z.string().min(1, 'Please select a profile'),
+  message: z.string().min(10, 'Message must be at least 10 characters').max(2000).trim(),
+  marketingConsent: z.boolean(),
+});
+
+const newsletterSchema = z.object({
+  email: z.string().email('Invalid email address').max(100).trim().toLowerCase(),
+  marketingConsent: z.boolean().refine(val => val === true, {
+    message: 'You must agree to receive communications',
+  }),
+});
+
 export default function Contact() {
  const [submitted, setSubmitted] = useState(false);
  const [subscribed, setSubscribed] = useState(false);
- const [isSubmitting, setIsSubmitting] = useState(false);
- const [formData, setFormData] = useState({
- name: '',
- email: '',
- mobile: '',
- profile: 'student',
- message: '',
- marketingConsent: false,
- });
- const [newsletterEmail, setNewsletterEmail] = useState('');
- const [newsletterConsent, setNewsletterConsent] = useState(false);
 
- const handleSubmit = async (e: React.FormEvent) => {
- e.preventDefault();
- setIsSubmitting(true);
- const normalizedMobile = (() => {
- const trimmed = formData.mobile.trim();
- return trimmed && /\d/.test(trimmed) ? trimmed : null;
- })();
- if (!normalizedMobile) {
- toast.error('Please enter a valid mobile number.');
- setIsSubmitting(false);
- return;
- }
- const toastId = toast.loading('Sending your inquiry...');
- const controller = new AbortController();
- const timeoutId = setTimeout(() => controller.abort(), REST_TIMEOUT_MS);
- try {
- // Use direct fetch to avoid Supabase auth-init delay on unauthenticated pages
- const res = await fetch(`${SUPABASE_URL}/rest/v1/contact_messages`, {
- method: 'POST',
- headers: {
- 'Content-Type': 'application/json',
- 'apikey': SUPABASE_ANON_KEY,
- 'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
- 'Prefer': 'return=minimal',
- },
- body: JSON.stringify({
- name: formData.name,
- email: formData.email,
- mobile: normalizedMobile,
- profile: formData.profile,
- message: formData.message,
- status: 'unread',
- }),
- signal: controller.signal,
- });
- if (!res.ok) {
- const errBody = await res.text();
- console.error('[Contact] Supabase error:', errBody);
- throw new Error(`Submission failed (HTTP ${res.status})`);
- }
+ const inquiryForm = useForm<z.infer<typeof inquirySchema>>({
+    resolver: zodResolver(inquirySchema),
+    defaultValues: {
+      name: '',
+      email: '',
+      mobile: '',
+      profile: 'student',
+      message: '',
+      marketingConsent: false,
+    },
+  });
 
- // Invoke the Edge Function to send email notification
- const emailRes = await fetch(`${SUPABASE_URL}/functions/v1/send-email`, {
- method: 'POST',
- headers: {
- 'Content-Type': 'application/json',
- 'apikey': SUPABASE_ANON_KEY,
- 'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
- },
- body: JSON.stringify({
- type: 'contact',
- name: formData.name,
- email: formData.email,
- mobile: normalizedMobile ?? undefined,
- message: formData.message,
- }),
- signal: controller.signal,
- });
+  const newsletterForm = useForm<z.infer<typeof newsletterSchema>>({
+    resolver: zodResolver(newsletterSchema),
+    defaultValues: {
+      email: '',
+      marketingConsent: false,
+    },
+  });
 
- if (!emailRes.ok) {
- console.error('[Contact] Failed to send email via Edge Function');
- }
+  const onSubmitInquiry = async (data: z.infer<typeof inquirySchema>) => {
+    // UI Lockout
+    const lastSub = localStorage.getItem('last_inquiry_submission');
+    if (lastSub && Date.now() - parseInt(lastSub) < 60000) {
+      toast.error('Please wait a minute before submitting another inquiry.');
+      return;
+    }
 
- console.log('[Contact] Inquiry submitted successfully');
- await new Promise((resolve) => setTimeout(resolve, 800));
- setIsSubmitting(false);
- setSubmitted(true);
- setFormData({ name: '', email: '', mobile: '', profile: 'student', message: '', marketingConsent: false });
- toast.success('Inquiry sent! We\'ll be in touch within 24 hours.', { id: toastId });
- setTimeout(() => setSubmitted(false), 6000);
- } catch (err: any) {
- console.error('[Contact] Submit error:', err);
- const isTimeout = err.name === 'AbortError';
- const msg = isTimeout ? 'Request timed out. Please try again.' : 'Failed to send. Please email us directly.';
- toast.error(msg, { id: toastId });
- } finally {
- clearTimeout(timeoutId);
- setIsSubmitting(false);
- }
- };
+    const toastId = toast.loading('Sending your inquiry...');
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), REST_TIMEOUT_MS);
+    
+    try {
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/contact_messages`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'apikey': SUPABASE_ANON_KEY,
+          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+          'Prefer': 'return=minimal',
+        },
+        body: JSON.stringify({
+          name: data.name,
+          email: data.email,
+          mobile: data.mobile || null,
+          profile: data.profile,
+          message: data.message,
+          status: 'unread',
+        }),
+        signal: controller.signal,
+      });
 
- const handleSubscribe = async (e: React.FormEvent) => {
- e.preventDefault();
- const toastId = toast.loading('Subscribing...');
- const controller = new AbortController();
- const timeoutId = setTimeout(() => controller.abort(), REST_TIMEOUT_MS);
- try {
- const res = await fetch(`${SUPABASE_URL}/rest/v1/newsletter_subscribers`, {
- method: 'POST',
- headers: {
- 'Content-Type': 'application/json',
- 'apikey': SUPABASE_ANON_KEY,
- 'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
- 'Prefer': 'return=minimal',
- },
- body: JSON.stringify({ email: newsletterEmail }),
- signal: controller.signal,
- });
- if (!res.ok && res.status !== 409) { // 409 = already subscribed
- const errBody = await res.text();
- console.error('[Contact] Subscribe error from Supabase:', errBody);
- throw new Error(`Subscription failed (HTTP ${res.status})`);
- }
+      if (!res.ok) throw new Error(`Submission failed (HTTP ${res.status})`);
 
- // Invoke the Edge Function to send newsletter confirmation email
- const emailRes = await fetch(`${SUPABASE_URL}/functions/v1/send-email`, {
- method: 'POST',
- headers: {
- 'Content-Type': 'application/json',
- 'apikey': SUPABASE_ANON_KEY,
- 'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
- },
- body: JSON.stringify({
- type: 'newsletter',
- email: newsletterEmail,
- }),
- signal: controller.signal,
- });
+      // Primary write succeeded — confirm success immediately
+      localStorage.setItem('last_inquiry_submission', Date.now().toString());
+      setSubmitted(true);
+      inquiryForm.reset();
+      toast.success('Inquiry sent! We\'ll be in touch within 24 hours.', { id: toastId });
+      setTimeout(() => setSubmitted(false), 6000);
 
- if (!emailRes.ok) {
- console.error('[Contact] Failed to send newsletter email via Edge Function');
- }
+      // Best-effort email notification
+      fetch(`${SUPABASE_URL}/functions/v1/send-email`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'apikey': SUPABASE_ANON_KEY,
+          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+        },
+        body: JSON.stringify({
+          type: 'contact',
+          name: data.name,
+          email: data.email,
+          mobile: data.mobile || undefined,
+          message: data.message,
+        }),
+        signal: AbortSignal.timeout(10_000),
+      }).catch((emailErr) => {
+        console.error('[Contact] Best-effort email delivery failed:', emailErr);
+      });
+    } catch (err: any) {
+      console.error('[Contact] Submit error:', err);
+      const isTimeout = err.name === 'AbortError';
+      const msg = isTimeout ? 'Request timed out. Please try again.' : 'Failed to send. Please email us directly.';
+      toast.error(msg, { id: toastId });
+    } finally {
+      clearTimeout(timeoutId);
+    }
+  };
 
- console.log('Newsletter sub:', { newsletterEmail, newsletterConsent });
- await new Promise((resolve) => setTimeout(resolve, 600));
- setSubscribed(true);
- setNewsletterEmail('');
- setNewsletterConsent(false);
- toast.success('Subscribed! Welcome to our learning ecosystem.', { id: toastId });
- setTimeout(() => setSubscribed(false), 5000);
- } catch (err: any) {
- console.error('[Contact] Subscribe error:', err);
- const isTimeout = err.name === 'AbortError';
- const msg = isTimeout ? 'Request timed out. Please try again.' : 'Subscription failed. Please try again.';
- toast.error(msg, { id: toastId });
- } finally {
- clearTimeout(timeoutId);
- }
- };
+  const onSubmitNewsletter = async (data: z.infer<typeof newsletterSchema>) => {
+    // UI Lockout
+    const lastSub = localStorage.getItem('last_newsletter_submission');
+    if (lastSub && Date.now() - parseInt(lastSub) < 60000) {
+      toast.error('Please wait a minute before subscribing again.');
+      return;
+    }
+
+    const toastId = toast.loading('Subscribing...');
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), REST_TIMEOUT_MS);
+    
+    try {
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/newsletter_subscribers`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'apikey': SUPABASE_ANON_KEY,
+          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+          'Prefer': 'return=minimal',
+        },
+        body: JSON.stringify({ email: data.email }),
+        signal: controller.signal,
+      });
+
+      if (!res.ok && res.status !== 409) {
+        throw new Error(`Subscription failed (HTTP ${res.status})`);
+      }
+
+      // Primary write succeeded — confirm success immediately
+      localStorage.setItem('last_newsletter_submission', Date.now().toString());
+      setSubscribed(true);
+      newsletterForm.reset();
+      toast.success('Subscribed! Welcome to our learning ecosystem.', { id: toastId });
+      setTimeout(() => setSubscribed(false), 5000);
+
+      // Best-effort email confirmation
+      fetch(`${SUPABASE_URL}/functions/v1/send-email`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'apikey': SUPABASE_ANON_KEY,
+          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+        },
+        body: JSON.stringify({
+          type: 'newsletter',
+          email: data.email,
+        }),
+        signal: AbortSignal.timeout(10_000),
+      }).catch((emailErr) => {
+        console.error('[Contact] Best-effort newsletter email failed:', emailErr);
+      });
+    } catch (err: any) {
+      console.error('[Contact] Subscribe error:', err);
+      const isTimeout = err.name === 'AbortError';
+      const msg = isTimeout ? 'Request timed out. Please try again.' : 'Subscription failed. Please try again.';
+      toast.error(msg, { id: toastId });
+    } finally {
+      clearTimeout(timeoutId);
+    }
+  };
 
  return (
  <div className=" w-full flex-1">
+      <PageMeta title="Contact Us"
+        description="Get in touch with EduPlus Skills for program inquiries, partnerships, or general information."
+      />
 
  {/* ── Typographic Hero ── */}
  <PageHero
@@ -251,7 +275,7 @@ export default function Contact() {
  Thank you! Your message has been received. Our team will contact you within 24 hours.
  </div>
  ) : (
- <form onSubmit={handleSubmit} className="space-y-6">
+ <form onSubmit={inquiryForm.handleSubmit(onSubmitInquiry)} className="space-y-6">
  <div className="grid md:grid-cols-2 gap-6">
  <div className="space-y-2">
  <Label htmlFor="contact-name" className="text-[11px] font-mono uppercase tracking-widest text-muted-foreground">
@@ -259,13 +283,11 @@ export default function Contact() {
  </Label>
  <Input
  id="contact-name"
- type="text"
- required
- value={formData.name}
- onChange={(e) => setFormData((prev) => ({ ...prev, name: e.target.value }))}
+ {...inquiryForm.register('name')}
  placeholder="John Doe"
  className="rounded-none border-border/60 bg-background text-base h-11 focus:border-primary focus:ring-0 transition-colors duration-200"
  />
+ {inquiryForm.formState.errors.name && <p className="text-[11px] text-destructive">{inquiryForm.formState.errors.name.message}</p>}
  </div>
  <div className="space-y-2">
  <Label htmlFor="contact-email" className="text-[11px] font-mono uppercase tracking-widest text-muted-foreground">
@@ -273,13 +295,11 @@ export default function Contact() {
  </Label>
  <Input
  id="contact-email"
- type="email"
- required
- value={formData.email}
- onChange={(e) => setFormData((prev) => ({ ...prev, email: e.target.value }))}
+ {...inquiryForm.register('email')}
  placeholder="john@example.com"
  className="rounded-none border-border/60 bg-background text-base h-11 focus:border-primary focus:ring-0 transition-colors duration-200"
  />
+ {inquiryForm.formState.errors.email && <p className="text-[11px] text-destructive">{inquiryForm.formState.errors.email.message}</p>}
  </div>
  </div>
 
@@ -289,14 +309,11 @@ export default function Contact() {
  </Label>
  <Input
  id="contact-mobile"
- type="tel"
- required
- value={formData.mobile}
- onChange={(e) => setFormData((prev) => ({ ...prev, mobile: e.target.value }))}
+ {...inquiryForm.register('mobile')}
  placeholder="+91 98765 43210"
- pattern="[0-9+\-\s()]{7,20}"
  className="rounded-none border-border/60 bg-background text-base h-11 focus:border-primary focus:ring-0 transition-colors duration-200"
  />
+ {inquiryForm.formState.errors.mobile && <p className="text-[11px] text-destructive">{inquiryForm.formState.errors.mobile.message}</p>}
  </div>
 
  <div className="space-y-2">
@@ -304,8 +321,8 @@ export default function Contact() {
  Stakeholder Profile
  </Label>
  <Select
- value={formData.profile}
- onValueChange={(val) => setFormData((prev) => ({ ...prev, profile: val }))}
+ value={inquiryForm.watch('profile')}
+ onValueChange={(val) => inquiryForm.setValue('profile', val)}
  >
  <SelectTrigger id="contact-profile" className="w-full rounded-none bg-background border-border/60 h-11 text-base text-foreground focus:border-primary focus:ring-0 transition-colors duration-200">
  <SelectValue placeholder="Select Profile" />
@@ -318,6 +335,7 @@ export default function Contact() {
  <SelectItem value="institution">Educational Institution</SelectItem>
  </SelectContent>
  </Select>
+ {inquiryForm.formState.errors.profile && <p className="text-[11px] text-destructive">{inquiryForm.formState.errors.profile.message}</p>}
  </div>
 
  <div className="space-y-2">
@@ -326,19 +344,18 @@ export default function Contact() {
  </Label>
  <Textarea
  id="contact-message"
- required
- value={formData.message}
- onChange={(e) => setFormData((prev) => ({ ...prev, message: e.target.value }))}
+ {...inquiryForm.register('message')}
  placeholder="Tell us how we can help configure your roadmap..."
  className="rounded-none border-border/60 bg-background text-base min-h-[120px] focus:border-primary focus:ring-0 transition-colors duration-200 resize-none"
  />
+ {inquiryForm.formState.errors.message && <p className="text-[11px] text-destructive">{inquiryForm.formState.errors.message.message}</p>}
  </div>
 
  <div className="flex items-start space-x-3">
  <Checkbox
  id="contact-marketing"
- checked={formData.marketingConsent}
- onCheckedChange={(checked) => setFormData(prev => ({ ...prev, marketingConsent: checked as boolean }))}
+ checked={inquiryForm.watch('marketingConsent')}
+ onCheckedChange={(checked) => inquiryForm.setValue('marketingConsent', checked as boolean)}
  className="mt-0.5 rounded-none"
  />
  <label
@@ -352,10 +369,10 @@ export default function Contact() {
  <Button
  type="submit"
  size="md"
- disabled={isSubmitting}
+ disabled={inquiryForm.formState.isSubmitting}
  className="w-full rounded-none bg-foreground text-background hover:bg-primary hover:text-primary-foreground transition-colors duration-200 disabled:opacity-60 disabled:cursor-not-allowed"
  >
- {isSubmitting ? 'Sending...' : 'Submit'}
+ {inquiryForm.formState.isSubmitting ? 'Sending...' : 'Submit'}
  </Button>
  </form>
  )}
@@ -376,26 +393,25 @@ export default function Contact() {
  Successfully subscribed! Welcome to our learning ecosystem.
  </div>
  ) : (
- <form onSubmit={handleSubscribe} className="flex flex-col gap-4">
+ <form onSubmit={newsletterForm.handleSubmit(onSubmitNewsletter)} className="flex flex-col gap-4">
  <div className="flex gap-4">
+ <div className="flex-grow flex flex-col">
  <Input
- type="email"
- required
- value={newsletterEmail}
- onChange={(e) => setNewsletterEmail(e.target.value)}
- className="flex-grow rounded-none border-border/50 text-base h-10"
+ {...newsletterForm.register('email')}
+ className="rounded-none border-border/50 text-base h-10"
  placeholder="Enter your email"
  />
- <Button type="submit" variant="outline" size="lg" className="rounded-none border-foreground/30 hover:border-foreground transition-colors duration-200">
- Subscribe
+ {newsletterForm.formState.errors.email && <p className="text-[11px] text-destructive mt-1">{newsletterForm.formState.errors.email.message}</p>}
+ </div>
+ <Button type="submit" variant="outline" size="lg" disabled={newsletterForm.formState.isSubmitting} className="rounded-none border-foreground/30 hover:border-foreground transition-colors duration-200">
+ {newsletterForm.formState.isSubmitting ? 'Subscribing...' : 'Subscribe'}
  </Button>
  </div>
  <div className="flex items-start space-x-3 mt-2">
  <Checkbox
  id="newsletter-marketing"
- required
- checked={newsletterConsent}
- onCheckedChange={(checked) => setNewsletterConsent(checked as boolean)}
+ checked={newsletterForm.watch('marketingConsent')}
+ onCheckedChange={(checked) => newsletterForm.setValue('marketingConsent', checked as boolean)}
  className="mt-[2px]"
  />
  <label
@@ -405,6 +421,7 @@ export default function Contact() {
  I hereby agree to receive promotional messages through WhatsApp / RCS /SMS
  </label>
  </div>
+ {newsletterForm.formState.errors.marketingConsent && <p className="text-[11px] text-destructive">{newsletterForm.formState.errors.marketingConsent.message}</p>}
  </form>
  )}
  </div>

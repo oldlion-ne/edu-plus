@@ -165,6 +165,37 @@
   .animate-fade-in {
     animation: fadeIn 0.4s ease-out forwards;
   }
+
+  /* Minimal Scrollbar */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: oklch(var(--foreground) / 20%);
+    border-radius: 0;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: oklch(var(--foreground) / 40%);
+  }
+
+  /* Fix for WebKit autofill breaking dark mode */
+  /* stylelint-disable property-no-vendor-prefix */
+  input:-webkit-autofill,
+  input:-webkit-autofill:hover, 
+  input:-webkit-autofill:focus, 
+  input:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 30px oklch(var(--background)) inset !important;
+    -webkit-text-fill-color: oklch(var(--foreground)) !important;
+    transition: background-color 5000s ease-in-out 0s;
+  }
+  /* stylelint-enable property-no-vendor-prefix */
 }
 
 ::view-transition-old(root),
@@ -501,7 +532,7 @@ html[data-magicui-theme-vt="active"]::view-transition-group(root) {
   .drop-tile:hover { @apply border-primary text-primary bg-primary/5; }
   .drop-tile svg { @apply size-[22px] stroke-current fill-none stroke-[1.6]; }
   .asset { @apply overflow-hidden; }
-  .asset .th { @apply aspect-[4/3] bg-gradient-to-br from-[#0E3A46] to-[#1C7C8C] grid place-items-center font-heading text-[26px] text-[#7DF9FF]; }
+  .asset .th { @apply aspect-[4/3] bg-muted/30 grid place-items-center font-heading text-[26px] text-primary; }
   .asset .bd { @apply py-[13px] px-[15px]; }
   .asset .fn { @apply text-[13px] font-semibold text-foreground; }
   .asset .fm { @apply font-mono text-[10.5px] text-muted-foreground mt-[2px]; }

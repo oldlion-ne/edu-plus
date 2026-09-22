@@ -3,6 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import { Badge } from '../ui/badge';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '../ui/dialog';
 import { Clock, Calendar, CheckCircle } from 'lucide-react';
 import { CURRICULUM_TRACKS } from '../../data/lmsCurriculumData';
 import { knapsack } from '../../lib/algorithms/knapsack';
@@ -13,6 +14,7 @@ export function StudyScheduler() {
   const { progress } = useLmsProgress();
   const [timeAvailable, setTimeAvailable] = useState<number>(120);
   const [schedule, setSchedule] = useState<LmsLesson[] | null>(null);
+  const [dialogOpen, setDialogOpen] = useState(false);
   
   // Get all uncompleted lessons across all tracks
   const uncompletedLessons = useMemo(() => {
@@ -42,19 +44,34 @@ export function StudyScheduler() {
     // Weights: Duration of the lesson
     const weights = uncompletedLessons.map(l => l.durationMinutes);
     
-    // Values: We give higher priority to earlier lessons (index-based) or just uniform value.
-    // To encourage finishing many short lessons or high-value lessons, we'll assign value = 100
-    // so the knapsack algorithm maximizes the number of lessons fitted.
-    const values = uncompletedLessons.map(() => 100);
+    // Values: Prioritize lessons that unlock others (highest value for prerequisites).
+    const prereqCounts: Record<string, number> = {};
+    for (const track of CURRICULUM_TRACKS) {
+      for (const module of track.modules) {
+        for (const l of module.lessons) {
+          if (l.prerequisiteLessonIds) {
+             for (const p of l.prerequisiteLessonIds) {
+                prereqCounts[p] = (prereqCounts[p] || 0) + 1;
+             }
+          }
+        }
+      }
+    }
+    
+    const values = uncompletedLessons.map(lesson => {
+      const unlocksCount = prereqCounts[lesson.id] || 0;
+      return 100 + (unlocksCount * 50);
+    });
     
     const result = knapsack(parsedTime, weights, values);
     
     const selectedLessons = result.selectedItems.map(index => uncompletedLessons[index]);
     setSchedule(selectedLessons);
+    setDialogOpen(true);
   };
 
   return (
-    <Card className="w-full shadow-sm border-l-4 border-l-ochre-500 rounded-none bg-paper dark:bg-charcoal text-ink dark:text-paper">
+    <Card className="w-full h-full shadow-none border border-border border-l-4 border-l-ochre-500 rounded-none bg-muted text-foreground">
       <CardHeader>
         <div className="flex items-center gap-2 mb-2">
           <Calendar className="h-5 w-5 text-ochre-500" />
@@ -63,7 +80,7 @@ export function StudyScheduler() {
           </Badge>
         </div>
         <CardTitle className="text-xl font-display font-medium tracking-tight">Time-Boxed Learning</CardTitle>
-        <CardDescription className="text-ink/60 dark:text-paper/60">
+        <CardDescription className="text-muted-foreground">
           Only have a few hours this weekend? Enter your available time, and we'll calculate the optimal set of lessons to maximize your learning using the Knapsack Algorithm.
         </CardDescription>
       </CardHeader>
@@ -71,7 +88,7 @@ export function StudyScheduler() {
       <CardContent className="space-y-6">
         <div className="flex items-end gap-4">
           <div className="space-y-2 flex-1">
-            <label className="text-sm font-semibold uppercase tracking-wider text-ink/70 dark:text-paper/70">
+            <label className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
               Available Time (Minutes)
             </label>
             <Input 
@@ -91,40 +108,50 @@ export function StudyScheduler() {
           </Button>
         </div>
 
-        {schedule && (
-          <div className="mt-6 border-t border-ink/10 dark:border-paper/10 pt-6 space-y-4">
-            <div className="flex items-center justify-between">
-              <h3 className="font-medium text-lg">Your Optimal Schedule</h3>
-              <div className="flex gap-2">
-                <Badge className="rounded-none bg-fjord-100 text-fjord-800 hover:bg-fjord-200">
-                  {schedule.length} Lessons
-                </Badge>
-                <Badge className="rounded-none bg-moss-100 text-moss-800 hover:bg-moss-200">
-                  {schedule.reduce((acc, l) => acc + l.durationMinutes, 0)} min total
-                </Badge>
-              </div>
-            </div>
-            
-            {schedule.length === 0 ? (
-              <p className="text-sm text-ink/60">Not enough time for any uncompleted lessons.</p>
-            ) : (
-              <div className="grid gap-3">
-                {schedule.map(lesson => (
-                  <div key={lesson.id} className="flex items-center justify-between p-3 border border-ink/10 bg-black/5 dark:bg-white/5">
-                    <div className="flex items-center gap-3">
-                      <CheckCircle className="h-4 w-4 text-ink/40" />
-                      <span className="font-medium">{lesson.title}</span>
-                    </div>
-                    <div className="flex items-center gap-1 text-sm font-mono text-ink/60">
-                      <Clock className="h-3 w-3" />
-                      {lesson.durationMinutes}m
-                    </div>
+        <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+          <DialogContent className="w-full sm:max-w-xl max-h-[85vh] overflow-y-auto rounded-none bg-background text-foreground border-ochre-500 border-l-4 border-t-0 border-r-0 border-b-0 p-8 sm:p-10">
+            <DialogHeader className="mb-4">
+              <DialogTitle className="text-2xl font-display font-medium tracking-tight">Your Optimal Schedule</DialogTitle>
+              <DialogDescription className="text-base text-muted-foreground">
+                A time-boxed selection to maximize your learning.
+              </DialogDescription>
+            </DialogHeader>
+            {schedule && (
+              <div className="space-y-6">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-5 bg-muted border border-border rounded-none min-w-0 w-full">
+                  <h3 className="font-display font-medium text-lg text-foreground truncate">Schedule Overview</h3>
+                  <div className="flex gap-2 shrink-0">
+                    <Badge className="rounded-none bg-fjord-100 text-fjord-800 hover:bg-fjord-200">
+                      {schedule.length} Lessons
+                    </Badge>
+                    <Badge className="rounded-none bg-moss-100 text-moss-800 hover:bg-moss-200">
+                      {schedule.reduce((acc, l) => acc + l.durationMinutes, 0)} min total
+                    </Badge>
                   </div>
-                ))}
+                </div>
+                
+                {schedule.length === 0 ? (
+                  <p className="text-sm text-muted-foreground">Not enough time for any uncompleted lessons.</p>
+                ) : (
+                  <div className="grid gap-3 min-w-0 w-full">
+                    {schedule.map(lesson => (
+                      <div key={lesson.id} className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-5 border border-border bg-muted/30 rounded-none shadow-sm min-w-0 w-full">
+                        <div className="flex items-center gap-3 min-w-0 w-full">
+                          <CheckCircle className="h-5 w-5 text-muted-foreground opacity-50 shrink-0" />
+                          <span className="font-medium text-base truncate flex-1">{lesson.title}</span>
+                        </div>
+                        <div className="flex items-center gap-2 text-xs font-mono bg-background px-3 py-1 border border-border shrink-0 rounded-none text-muted-foreground shadow-sm w-fit sm:w-auto">
+                          <Clock className="h-3.5 w-3.5" />
+                          {lesson.durationMinutes} min
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
             )}
-          </div>
-        )}
+          </DialogContent>
+        </Dialog>
       </CardContent>
     </Card>
   );

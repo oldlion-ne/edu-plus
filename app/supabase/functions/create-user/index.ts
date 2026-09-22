@@ -98,12 +98,13 @@ Deno.serve(async (req: Request) => {
       headers: { ...headers, 'Content-Type': 'application/json' },
       status: 200,
     });
-  } catch (err: any) {
+  } catch (err: unknown) {
     console.error('Error creating user:', err);
-    const status = err.message.startsWith('Forbidden') ? 403
-      : err.message.startsWith('Unauthorized') ? 401
+    const message = err instanceof Error ? err.message : String(err);
+    const status = message.startsWith('Forbidden') ? 403
+      : message.startsWith('Unauthorized') ? 401
       : 400;
-    return new Response(JSON.stringify({ success: false, error: err.message }), {
+    return new Response(JSON.stringify({ success: false, error: message }), {
       headers: { ...headers, 'Content-Type': 'application/json' },
       status,
     });

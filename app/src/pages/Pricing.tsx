@@ -9,6 +9,7 @@ import { cn } from '../lib/utils';
 import { Badge } from '../components/ui/badge';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '../components/ui/accordion';
 import { editorialIllustrations } from '../lib/editorialIllustrations';
+import { PageMeta } from '@/components/PageMeta';
 
 const translations = {
  heroCategory: "Platform Access",
@@ -245,6 +246,10 @@ export default function Pricing() {
 
  return (
  <div className="flex-1 text-foreground relative">
+ <PageMeta
+ title="Pricing & Access Plans"
+ description="Choose the EduPlus access tier that fits your learning journey — from free community access to invite-only champion programs and institutional cohort plans."
+ />
 
  {/* Typographic Hero */}
  <PageHero
@@ -261,6 +266,7 @@ export default function Pricing() {
  <div className="border border-border bg-secondary p-1 flex items-center justify-center rounded-none mb-4">
  <button /* ui-ignore */
  onClick={() => setPlanType('student')}
+ aria-pressed={planType === 'student'}
  className={cn(
  "px-6 py-2.5 text-[14px] font-medium transition-all duration-300 rounded-none cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground focus-visible:ring-offset-2 focus-visible:ring-offset-background",
  planType === 'student'
@@ -275,6 +281,7 @@ export default function Pricing() {
  </button>
  <button /* ui-ignore */
  onClick={() => setPlanType('institute')}
+ aria-pressed={planType === 'institute'}
  className={cn(
  "px-6 py-2.5 text-[14px] font-medium transition-all duration-300 rounded-none cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground focus-visible:ring-offset-2 focus-visible:ring-offset-background",
  planType === 'institute'
@@ -403,6 +410,7 @@ export default function Pricing() {
 
  <div className="border border-border bg-card/30 overflow-x-auto rounded-none">
  <table className="w-full border-collapse text-[14px] text-left min-w-[700px]">
+ <caption className="sr-only">Detailed program coverage comparison by tier</caption>
  <thead>
  <tr className="border-b border-border bg-secondary text-[12px] font-medium uppercase tracking-wide text-muted-foreground">
  <th className="p-4 w-[250px]">Core Program</th>

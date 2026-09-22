@@ -64,7 +64,7 @@ Deno.serve(async (req: Request) => {
     );
 
     const body = await req.json();
-    const { action, userId } = body as { action: Action; userId: string; [k: string]: any };
+    const { action, userId } = body as { action: Action; userId: string; [k: string]: unknown };
 
     if (!action || !userId) throw new Error('Missing required fields: action, userId');
 
@@ -90,7 +90,6 @@ Deno.serve(async (req: Request) => {
 
       case 'toggle_ban': {
         const { ban } = body;
-        const bannedUntil = ban ? new Date(Date.now() + 1000 * 60 * 60 * 24 * 3650).toISOString() : null;
         const { error } = await adminClient.auth.admin.updateUserById(userId, {
           ban_duration: ban ? '876000h' : 'none',
         });
@@ -118,11 +117,12 @@ Deno.serve(async (req: Request) => {
       headers: { ...headers, 'Content-Type': 'application/json' },
       status: 200,
     });
-  } catch (err: any) {
-    const status = err.message.startsWith('Forbidden') ? 403
-      : err.message.startsWith('Unauthorized') ? 401
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : String(err);
+    const status = message.startsWith('Forbidden') ? 403
+      : message.startsWith('Unauthorized') ? 401
       : 400;
-    return new Response(JSON.stringify({ success: false, error: err.message }), {
+    return new Response(JSON.stringify({ success: false, error: message }), {
       headers: { ...headers, 'Content-Type': 'application/json' },
       status,
     });

@@ -1,4 +1,5 @@
 import { useState, type KeyboardEvent } from 'react';
+import { PageMeta } from '@/components/PageMeta';
 import { Link } from 'react-router';
 import { Button } from '@/components/ui/button';
 import { PageHero } from '@/components/ui/page-hero';
@@ -93,6 +94,9 @@ export default function Guidance() {
 
  return (
  <div className=" w-full flex-1">
+      <PageMeta title="Guidance & Counseling"
+        description="Explore psychometric and career guidance programs tailored for students, professionals, and institutions."
+      />
 
  {/* ── Typographic Hero ── */}
  <PageHero
@@ -102,7 +106,7 @@ export default function Guidance() {
  description="Dedicated, one-on-one support tailored to every stakeholder in the education ecosystem — students, parents, job seekers, and educators."
  >
  <Button asChild size="md" className="rounded-none bg-foreground text-background hover:bg-primary transition-colors duration-200">
- <Link to="/contact" /* ui-ignore */>Book</Link>
+ <Link to="/connect" /* ui-ignore */>Book</Link>
  </Button>
  </PageHero>
 
@@ -152,7 +156,7 @@ export default function Guidance() {
  <h2 className="text-[28px] font-medium text-foreground mb-6 leading-snug">{audience.title}</h2>
  <p className="text-[16px] text-muted-foreground leading-relaxed mb-10 max-w-[55ch]">{audience.desc}</p>
  <Button asChild size="md" className="rounded-none bg-foreground text-background hover:bg-primary transition-colors duration-200">
- <Link to="/contact" /* ui-ignore */>{audience.cta}</Link>
+ <Link to="/connect" /* ui-ignore */>{audience.cta}</Link>
  </Button>
  </div>
  <div>
@@ -207,7 +211,7 @@ export default function Guidance() {
  </li>
  </ul>
  <Button asChild size="md" className="w-full rounded-none bg-foreground text-background hover:bg-primary transition-colors duration-200">
- <Link to="/contact" /* ui-ignore */>Book Free Session</Link>
+ <Link to="/connect" /* ui-ignore */>Book Free Session</Link>
  </Button>
  </div>
  </div>

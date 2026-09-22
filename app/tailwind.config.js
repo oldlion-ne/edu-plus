@@ -28,6 +28,10 @@ module.exports = {
           DEFAULT: "oklch(var(--destructive) / <alpha-value>)",
           foreground: "oklch(var(--destructive-foreground) / <alpha-value>)",
         },
+        success: {
+          DEFAULT: "oklch(var(--moss) / <alpha-value>)",
+          foreground: "oklch(var(--background) / <alpha-value>)",
+        },
         muted: {
           DEFAULT: "oklch(var(--muted) / <alpha-value>)",
           foreground: "oklch(var(--muted-foreground) / <alpha-value>)",
@@ -56,11 +60,11 @@ module.exports = {
         },
       },
       borderRadius: {
-        xl: "calc(var(--radius) + 4px)",
+        xl: "var(--radius)",
         lg: "var(--radius)",
-        md: "calc(var(--radius) - 2px)",
-        sm: "calc(var(--radius) - 4px)",
-        xs: "calc(var(--radius) - 6px)",
+        md: "var(--radius)",
+        sm: "var(--radius)",
+        xs: "var(--radius)",
       },
       boxShadow: {
         xs: "0 1px 2px 0 rgb(0 0 0 / 0.05)",
