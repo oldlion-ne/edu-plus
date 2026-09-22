@@ -37,6 +37,7 @@ const LmsTrackDetail = lazy(() => import('./pages/LmsTrackDetail'));
 const LmsLessonPlayer = lazy(() => import('./pages/LmsLessonPlayer'));
 const LmsQuiz = lazy(() => import('./pages/LmsQuiz'));
 const NotFound = lazy(() => import('./pages/NotFound'));
+const SentryExample = lazy(() => import('./pages/SentryExample'));
 
 // Minimal inline fallback — renders instantly, no layout shift
 const PageLoader = () => (
@@ -126,6 +127,7 @@ function App() {
                 <Route path="/lms/tracks/:trackId" element={<LmsTrackDetail />} />
                 <Route path="/pricing" element={<Pricing />} />
                 <Route path="/legal" element={<Legal />} />
+                <Route path="/sentry-example-page" element={<SentryExample />} />
                 <Route path="*" element={<NotFound />} />
               </Route>
 
