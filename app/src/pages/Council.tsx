@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { PageMeta } from '@/components/PageMeta';
 import { ScrollReveal } from '@/components/effects/ScrollReveal';
 import { BlurFade } from '@/components/ui/blur-fade';
 import {
@@ -127,6 +128,9 @@ export default function Council() {
 
  return (
  <div className=" w-full flex-1">
+      <PageMeta title="Advisory Council"
+        description="Meet the global expert council powering EduPlus Skills � researchers, corporate leaders, and community builders."
+      />
  
  {/* ── Typographic Hero ── */}
  <PageHero

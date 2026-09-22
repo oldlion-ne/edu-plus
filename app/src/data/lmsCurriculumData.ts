@@ -44,6 +44,7 @@ export const CURRICULUM_TRACKS: readonly CurriculumTrack[] = Object.freeze([
             type: 'video',
             summary: 'Why academic grades alone do not indicate career happiness or long-term competence, and how psychometrics bridges the gap.',
             videoEmbedId: 'aqz-KE-bpKQ',
+            videoUrl: 'https://vjs.zencdn.net/v/oceans.mp4',
             contentMarkdown: `### The Limits of Marks as a Predictor
 
 For decades, students have been funneled into career decisions solely based on 10th or 12th board examination scores. Yet real-world job satisfaction and exceptional performance depend on:
@@ -152,6 +153,7 @@ By identifying your dominant modality, you can reduce study fatigue by 40% while
             summary: 'A deep comparative analysis of board stream trajectories and how modern universities value cross-disciplinary competence.',
             prerequisiteLessonIds: ['fp-les-102'],
             videoEmbedId: 'dQw4w9WgXcQ',
+            videoUrl: 'https://vjs.zencdn.net/v/oceans.mp4',
             contentMarkdown: `### The Modern Matrix of Disciplines
 
 Traditional boundaries between Science and Arts have dissolved in top global research institutions:
@@ -248,6 +250,7 @@ When picking your board stream, prioritize core quantitative and communicative f
             type: 'video',
             summary: 'Structuring thoughts using the Hook, Problem, Solution, and Call to Action formula.',
             videoEmbedId: 'dQw4w9WgXcQ',
+            videoUrl: 'https://vjs.zencdn.net/v/oceans.mp4',
             contentMarkdown: `### The Four Pillars of Clear Speech
 
 Whether speaking to a classroom, an admissions committee, or a future investor, high-impact speech follows four clean phases:
@@ -377,6 +380,7 @@ Financial independence is not determined by how much you earn, but how much you 
             type: 'video',
             summary: 'How water-splitting technologies and clean energy storage are creating thousands of new engineering disciplines globally.',
             videoEmbedId: 'tgbNymZ7vqY',
+            videoUrl: 'https://vjs.zencdn.net/v/oceans.mp4',
             contentMarkdown: `### The Global Energy Transition
 
 Hydrogen is the most abundant element in the universe, but separating it cleanly requires breakthroughs in:
@@ -461,6 +465,7 @@ Students aiming for high-impact research careers in South Korea, Germany, or Jap
             type: 'video',
             summary: 'Avoid the cliché childhood story; learn how top universities evaluate authentic intellectual curiosity.',
             videoEmbedId: 'jNQXAC9IVRw',
+            videoUrl: 'https://vjs.zencdn.net/v/oceans.mp4',
             contentMarkdown: `### Moving Beyond Clichés in Admissions Essays
 
 Admissions committees read thousands of essays starting with *"Ever since I was a child, I dreamed of..."* Stand out by anchoring your narrative in specific, recent intellectual turning points:
@@ -629,6 +634,7 @@ Most resumes fail because they list passive tasks: *"Responsible for website upd
             type: 'video',
             summary: 'How to shift lecture delivery to self-paced digital modules so classroom time is reserved for collaborative problem-solving.',
             videoEmbedId: 'V-_O7nl0Ii0',
+            videoUrl: 'https://vjs.zencdn.net/v/oceans.mp4',
             contentMarkdown: `### Transforming Classroom Energy
 
 When a teacher lectures uninterrupted for 45 minutes, attention degrades within the first 12 minutes. In an inquiry-driven flipped model:
@@ -691,14 +697,23 @@ When a teacher lectures uninterrupted for 45 minutes, attention degrades within 
     learningOutcomes: ['Interpret multiple intelligences data', 'Advise organizations on talent placement'],
     modules: [
       {
-        id: "mod_coming_soon",
-        title: "Coming Soon",
-        trackId: "coming-soon",
+        id: "fp-mock-01-mod-1",
+        title: "Interpreting Brain Dominance Patterns",
+        trackId: "fp-mock-01",
         order: 1,
-        description: "Content in development",
-        estimatedHours: 0,
+        description: "Analyze prefrontal vs occipital cognitive preferences.",
+        estimatedHours: 5,
         lessons: [
-          { id: "les_coming_soon_1", moduleId: "mod_coming_soon", title: "Course Content in Development", type: "reading", durationMinutes: 5, content: "This curriculum is currently under active development. Please check back later for updates.", summary: "Content in development", contentMarkdown: "This curriculum is currently under active development. Please check back later for updates.", keyTakeaways: [] }
+          {
+            id: "fp-mock-01-les-1",
+            moduleId: "fp-mock-01-mod-1",
+            title: "Left vs Right Brain Paradigm Shifts",
+            type: "video",
+            durationMinutes: 45,
+            summary: "Deconstructing the neuroscience behind logical and creative dominance.",
+            contentMarkdown: "### Understanding Hemispheric Dominance\n\nThe traditional left/right brain model is oversimplified, but understanding hemispheric specialization helps decode why some students struggle with abstract algebra while excelling in spatial geometry.",
+            keyTakeaways: ["Hemispheric specialization", "Spatial vs Verbal intelligence"]
+          }
         ]
       }
     ]
@@ -724,8 +739,24 @@ When a teacher lectures uninterrupted for 45 minutes, attention degrades within 
     prerequisites: [],
     learningOutcomes: ['Identify 5 common cognitive biases in students', 'Implement nudges for better choices'],
     modules: [
-      { id: "mod_coming_soon", title: "Coming Soon", trackId: "coming-soon", order: 1, description: "Content in development", estimatedHours: 0, lessons: [
-          { id: "les_coming_soon_1", moduleId: "mod_coming_soon", title: "Course Content in Development", type: "reading", durationMinutes: 5, content: "This curriculum is currently under active development. Please check back later for updates.", summary: "Content in development", contentMarkdown: "This curriculum is currently under active development. Please check back later for updates.", keyTakeaways: [] }
+      {
+        id: "fp-mock-02-mod-1",
+        title: "Cognitive Biases in Teenagers",
+        trackId: "fp-mock-02",
+        order: 1,
+        description: "How peer pressure and authority bias ruin career trajectories.",
+        estimatedHours: 4,
+        lessons: [
+          {
+            id: "fp-mock-02-les-1",
+            moduleId: "fp-mock-02-mod-1",
+            title: "The Halo Effect of 'Safe' Careers",
+            type: "reading",
+            durationMinutes: 30,
+            summary: "Why parents push students toward conventional streams.",
+            contentMarkdown: "### The Illusion of Safety\n\nEngineering and Medicine are often chosen not for aptitude, but for the perceived social safety net they provide.",
+            keyTakeaways: ["Halo effect", "Sunk cost fallacy in education"]
+          }
         ]
       }
     ]
@@ -751,8 +782,24 @@ When a teacher lectures uninterrupted for 45 minutes, attention degrades within 
     prerequisites: ['LifeSkills Lab completion'],
     learningOutcomes: ['Master the 4-step de-escalation technique', 'Lead difficult conversations'],
     modules: [
-      { id: "mod_coming_soon", title: "Coming Soon", trackId: "coming-soon", order: 1, description: "Content in development", estimatedHours: 0, lessons: [
-          { id: "les_coming_soon_1", moduleId: "mod_coming_soon", title: "Course Content in Development", type: "reading", durationMinutes: 5, content: "This curriculum is currently under active development. Please check back later for updates.", summary: "Content in development", contentMarkdown: "This curriculum is currently under active development. Please check back later for updates.", keyTakeaways: [] }
+      {
+        id: "ls-mock-01-mod-1",
+        title: "De-Escalation Tactics",
+        trackId: "ls-mock-01",
+        order: 1,
+        description: "How to bring emotional temperature down.",
+        estimatedHours: 5,
+        lessons: [
+          {
+            id: "ls-mock-01-les-1",
+            moduleId: "ls-mock-01-mod-1",
+            title: "Active Listening in High-Stress Situations",
+            type: "video",
+            durationMinutes: 35,
+            summary: "Mirroring, labeling, and tactical empathy.",
+            contentMarkdown: "### Tactical Empathy\n\nNever tell an angry person to calm down. Instead, label their emotion: 'It seems like you are incredibly frustrated by this timeline.'",
+            keyTakeaways: ["Mirroring", "Labeling emotions"]
+          }
         ]
       }
     ]
@@ -778,8 +825,24 @@ When a teacher lectures uninterrupted for 45 minutes, attention degrades within 
     prerequisites: ['Basic Financial Literacy'],
     learningOutcomes: ['Build a personal DCF model', 'Optimize regional tax brackets'],
     modules: [
-      { id: "mod_coming_soon", title: "Coming Soon", trackId: "coming-soon", order: 1, description: "Content in development", estimatedHours: 0, lessons: [
-          { id: "les_coming_soon_1", moduleId: "mod_coming_soon", title: "Course Content in Development", type: "reading", durationMinutes: 5, content: "This curriculum is currently under active development. Please check back later for updates.", summary: "Content in development", contentMarkdown: "This curriculum is currently under active development. Please check back later for updates.", keyTakeaways: [] }
+      {
+        id: "ls-mock-02-mod-1",
+        title: "Discounted Cash Flows",
+        trackId: "ls-mock-02",
+        order: 1,
+        description: "Valuing future income in present terms.",
+        estimatedHours: 8,
+        lessons: [
+          {
+            id: "ls-mock-02-les-1",
+            moduleId: "ls-mock-02-mod-1",
+            title: "Time Value of Money Deep Dive",
+            type: "reading",
+            durationMinutes: 40,
+            summary: "Calculating NPV for personal investments.",
+            contentMarkdown: "### Net Present Value (NPV)\n\nA dollar today is worth more than a dollar tomorrow. We use the discount rate to figure out exactly how much more.",
+            keyTakeaways: ["Discount rate", "Inflation adjustment"]
+          }
         ]
       }
     ]
@@ -805,8 +868,24 @@ When a teacher lectures uninterrupted for 45 minutes, attention degrades within 
     prerequisites: ['High School Physics'],
     learningOutcomes: ['Understand the 5 steps of wafer fab', 'Identify key industry players'],
     modules: [
-      { id: "mod_coming_soon", title: "Coming Soon", trackId: "coming-soon", order: 1, description: "Content in development", estimatedHours: 0, lessons: [
-          { id: "les_coming_soon_1", moduleId: "mod_coming_soon", title: "Course Content in Development", type: "reading", durationMinutes: 5, content: "This curriculum is currently under active development. Please check back later for updates.", summary: "Content in development", contentMarkdown: "This curriculum is currently under active development. Please check back later for updates.", keyTakeaways: [] }
+      {
+        id: "ec-mock-01-mod-1",
+        title: "Cleanroom Operations",
+        trackId: "ec-mock-01",
+        order: 1,
+        description: "The pristine environment required for nano-scale manufacturing.",
+        estimatedHours: 6,
+        lessons: [
+          {
+            id: "ec-mock-01-les-1",
+            moduleId: "ec-mock-01-mod-1",
+            title: "Introduction to Photolithography",
+            type: "video",
+            durationMinutes: 50,
+            summary: "Using extreme ultraviolet light to print circuits on silicon.",
+            contentMarkdown: "### Printing the Impossible\n\nPhotolithography is analogous to traditional film photography, but operating at the atomic scale using EUV lasers.",
+            keyTakeaways: ["EUV lithography", "Photoresist layers"]
+          }
         ]
       }
     ]
@@ -832,8 +911,24 @@ When a teacher lectures uninterrupted for 45 minutes, attention degrades within 
     prerequisites: ['Basic Chemistry'],
     learningOutcomes: ['Compare energy densities of 4 battery types', 'Analyze EV market constraints'],
     modules: [
-      { id: "mod_coming_soon", title: "Coming Soon", trackId: "coming-soon", order: 1, description: "Content in development", estimatedHours: 0, lessons: [
-          { id: "les_coming_soon_1", moduleId: "mod_coming_soon", title: "Course Content in Development", type: "reading", durationMinutes: 5, content: "This curriculum is currently under active development. Please check back later for updates.", summary: "Content in development", contentMarkdown: "This curriculum is currently under active development. Please check back later for updates.", keyTakeaways: [] }
+      {
+        id: "ec-mock-02-mod-1",
+        title: "Solid-State Advancements",
+        trackId: "ec-mock-02",
+        order: 1,
+        description: "Replacing liquid electrolytes with solid polymers.",
+        estimatedHours: 5,
+        lessons: [
+          {
+            id: "ec-mock-02-les-1",
+            moduleId: "ec-mock-02-mod-1",
+            title: "Dendrite Prevention in Solid State",
+            type: "reading",
+            durationMinutes: 30,
+            summary: "How solid electrolytes prevent dangerous dendrite formation.",
+            contentMarkdown: "### The Dendrite Problem\n\nIn liquid Li-ion batteries, microscopic lithium spikes called dendrites can pierce the separator, causing catastrophic short circuits.",
+            keyTakeaways: ["Dendrite short circuits", "Ceramic separators"]
+          }
         ]
       }
     ]
@@ -859,8 +954,24 @@ When a teacher lectures uninterrupted for 45 minutes, attention degrades within 
     prerequisites: ['Global Admissions Studio'],
     learningOutcomes: ['Conduct 3 mock interviews', 'Formulate compelling closing questions'],
     modules: [
-      { id: "mod_coming_soon", title: "Coming Soon", trackId: "coming-soon", order: 1, description: "Content in development", estimatedHours: 0, lessons: [
-          { id: "les_coming_soon_1", moduleId: "mod_coming_soon", title: "Course Content in Development", type: "reading", durationMinutes: 5, content: "This curriculum is currently under active development. Please check back later for updates.", summary: "Content in development", contentMarkdown: "This curriculum is currently under active development. Please check back later for updates.", keyTakeaways: [] }
+      {
+        id: "ga-mock-01-mod-1",
+        title: "The Alumni Interview",
+        trackId: "ga-mock-01",
+        order: 1,
+        description: "How to hold a conversation, not an interrogation.",
+        estimatedHours: 4,
+        lessons: [
+          {
+            id: "ga-mock-01-les-1",
+            moduleId: "ga-mock-01-mod-1",
+            title: "Mastering the Alumni Interview Framework",
+            type: "video",
+            durationMinutes: 45,
+            summary: "Structuring your responses to sound natural but highly impressive.",
+            contentMarkdown: "### Conversational Agility\n\nAlumni interviewers are looking for one thing: 'Would I want this 18-year-old as my roommate or lab partner?'",
+            keyTakeaways: ["Intellectual vitality", "Authenticity over rehearsed lines"]
+          }
         ]
       }
     ]
@@ -886,8 +997,24 @@ When a teacher lectures uninterrupted for 45 minutes, attention degrades within 
     prerequisites: [],
     learningOutcomes: ['Identify 10 tuition-free English programs', 'Navigate the Blocked Account visa process'],
     modules: [
-      { id: "mod_coming_soon", title: "Coming Soon", trackId: "coming-soon", order: 1, description: "Content in development", estimatedHours: 0, lessons: [
-          { id: "les_coming_soon_1", moduleId: "mod_coming_soon", title: "Course Content in Development", type: "reading", durationMinutes: 5, content: "This curriculum is currently under active development. Please check back later for updates.", summary: "Content in development", contentMarkdown: "This curriculum is currently under active development. Please check back later for updates.", keyTakeaways: [] }
+      {
+        id: "ga-mock-02-mod-1",
+        title: "Navigating German Admissions",
+        trackId: "ga-mock-02",
+        order: 1,
+        description: "Understanding Uni-Assist and public university requirements.",
+        estimatedHours: 5,
+        lessons: [
+          {
+            id: "ga-mock-02-les-1",
+            moduleId: "ga-mock-02-mod-1",
+            title: "The Blocked Account & Visa Process",
+            type: "reading",
+            durationMinutes: 25,
+            summary: "Financial prerequisites for a German student visa.",
+            contentMarkdown: "### Sperrkonto (Blocked Account)\n\nTo study in Germany, you must prove you can support yourself by locking approximately 11,208 Euros in a blocked account.",
+            keyTakeaways: ["Sperrkonto requirements", "Uni-Assist timelines"]
+          }
         ]
       }
     ]
@@ -913,8 +1040,24 @@ When a teacher lectures uninterrupted for 45 minutes, attention degrades within 
     prerequisites: ['Basic Programming'],
     learningOutcomes: ['Solve 50+ medium LeetCode problems', 'Master Big-O time complexity analysis'],
     modules: [
-      { id: "mod_coming_soon", title: "Coming Soon", trackId: "coming-soon", order: 1, description: "Content in development", estimatedHours: 0, lessons: [
-          { id: "les_coming_soon_1", moduleId: "mod_coming_soon", title: "Course Content in Development", type: "reading", durationMinutes: 5, content: "This curriculum is currently under active development. Please check back later for updates.", summary: "Content in development", contentMarkdown: "This curriculum is currently under active development. Please check back later for updates.", keyTakeaways: [] }
+      {
+        id: "cl-mock-01-mod-1",
+        title: "Graph Algorithms",
+        trackId: "cl-mock-01",
+        order: 1,
+        description: "Mastering BFS, DFS, and topological sort.",
+        estimatedHours: 10,
+        lessons: [
+          {
+            id: "cl-mock-01-les-1",
+            moduleId: "cl-mock-01-mod-1",
+            title: "Breadth-First Search for Shortest Path",
+            type: "video",
+            durationMinutes: 60,
+            summary: "Implementing BFS using queues.",
+            contentMarkdown: "### The Queue Data Structure\n\nBFS relies on a First-In-First-Out (FIFO) queue to explore the graph level by level.",
+            keyTakeaways: ["O(V+E) time complexity", "Queue implementation"]
+          }
         ]
       }
     ]
@@ -940,8 +1083,24 @@ When a teacher lectures uninterrupted for 45 minutes, attention degrades within 
     prerequisites: ['Basic Business Acumen'],
     learningOutcomes: ['Master 4 core case frameworks', 'Perform rapid mental math estimations'],
     modules: [
-      { id: "mod_coming_soon", title: "Coming Soon", trackId: "coming-soon", order: 1, description: "Content in development", estimatedHours: 0, lessons: [
-          { id: "les_coming_soon_1", moduleId: "mod_coming_soon", title: "Course Content in Development", type: "reading", durationMinutes: 5, content: "This curriculum is currently under active development. Please check back later for updates.", summary: "Content in development", contentMarkdown: "This curriculum is currently under active development. Please check back later for updates.", keyTakeaways: [] }
+      {
+        id: "cl-mock-02-mod-1",
+        title: "Market Sizing Frameworks",
+        trackId: "cl-mock-02",
+        order: 1,
+        description: "Fermi problems and guesstimates.",
+        estimatedHours: 4,
+        lessons: [
+          {
+            id: "cl-mock-02-les-1",
+            moduleId: "cl-mock-02-mod-1",
+            title: "Top-Down vs Bottom-Up Estimation",
+            type: "reading",
+            durationMinutes: 30,
+            summary: "How to estimate the number of pianos in Chicago.",
+            contentMarkdown: "### Structured Logic over Exact Math\n\nInterviewers don't care about the exact number. They care about your assumptions and structural breakdown.",
+            keyTakeaways: ["MECE principle", "Sanity checking math"]
+          }
         ]
       }
     ]
@@ -967,8 +1126,24 @@ When a teacher lectures uninterrupted for 45 minutes, attention degrades within 
     prerequisites: [],
     learningOutcomes: ['Prompt engineer a 5-day lesson plan', 'Automate multiple-choice grading'],
     modules: [
-      { id: "mod_coming_soon", title: "Coming Soon", trackId: "coming-soon", order: 1, description: "Content in development", estimatedHours: 0, lessons: [
-          { id: "les_coming_soon_1", moduleId: "mod_coming_soon", title: "Course Content in Development", type: "reading", durationMinutes: 5, content: "This curriculum is currently under active development. Please check back later for updates.", summary: "Content in development", contentMarkdown: "This curriculum is currently under active development. Please check back later for updates.", keyTakeaways: [] }
+      {
+        id: "is-mock-01-mod-1",
+        title: "Prompt Engineering for Teachers",
+        trackId: "is-mock-01",
+        order: 1,
+        description: "Getting exactly what you want from ChatGPT.",
+        estimatedHours: 4,
+        lessons: [
+          {
+            id: "is-mock-01-les-1",
+            moduleId: "is-mock-01-mod-1",
+            title: "Generating Differentiated Worksheets",
+            type: "video",
+            durationMinutes: 35,
+            summary: "Using AI to create 3 varying difficulty levels of the same assignment.",
+            contentMarkdown: "### Differentiated Instruction\n\nYou can prompt an LLM to take a core text and rewrite it at a 5th-grade, 8th-grade, and 12th-grade reading level simultaneously.",
+            keyTakeaways: ["Persona prompting", "Output formatting"]
+          }
         ]
       }
     ]
@@ -994,12 +1169,28 @@ When a teacher lectures uninterrupted for 45 minutes, attention degrades within 
     prerequisites: ['Innovation Studio & Educator Academy'],
     learningOutcomes: ['Draft a $5000 lab procurement budget', 'Design safety protocols for 3D printing'],
     modules: [
-      { id: "mod_coming_soon", title: "Coming Soon", trackId: "coming-soon", order: 1, description: "Content in development", estimatedHours: 0, lessons: [
-          { id: "les_coming_soon_1", moduleId: "mod_coming_soon", title: "Course Content in Development", type: "reading", durationMinutes: 5, content: "This curriculum is currently under active development. Please check back later for updates.", summary: "Content in development", contentMarkdown: "This curriculum is currently under active development. Please check back later for updates.", keyTakeaways: [] }
+      {
+        id: "is-mock-02-mod-1",
+        title: "Hardware Procurement",
+        trackId: "is-mock-02",
+        order: 1,
+        description: "Maximizing ROI on school budgets.",
+        estimatedHours: 5,
+        lessons: [
+          {
+            id: "is-mock-02-les-1",
+            moduleId: "is-mock-02-mod-1",
+            title: "Choosing the Right 3D Printers for Schools",
+            type: "reading",
+            durationMinutes: 25,
+            summary: "Balancing reliability, safety, and filament cost.",
+            contentMarkdown: "### FDM vs Resin for Classrooms\n\nResin printers offer high detail but involve toxic chemicals and messy post-processing. Stick to enclosed FDM printers using PLA plastic for high schools.",
+            keyTakeaways: ["Enclosed FDM printers", "PLA filament safety"]
+          }
         ]
       }
     ]
-  },
+  }
 ]);
 
 export const CATEGORY_METADATA: Record<

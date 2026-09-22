@@ -1,8 +1,10 @@
-import { useState } from 'react';
+
+import { PageMeta } from '@/components/PageMeta';
 import { Link } from 'react-router';
 
 import { PageHero } from '@/components/ui/page-hero';
 import { BulletList, BulletItem } from '@/components/ui/bullet-list';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { editorialIllustrations } from '@/lib/editorialIllustrations';
 import { FOCUS_RING_CLASSES } from '@/lib/utils';
 
@@ -97,10 +99,11 @@ const FAQS = [
 ];
 
 export default function SignatureExperiences() {
- const [openFaq, setOpenFaq] = useState<string | null>(null);
-
  return (
  <div className="flex-1 w-full">
+      <PageMeta title="Events & Experiences"
+        description="Discover EduPlus Skills signature events, summer camps, and immersive learning experiences."
+      />
 
  {/* ── Typographic Hero ── */}
  <PageHero
@@ -159,33 +162,23 @@ export default function SignatureExperiences() {
  <h3 className="text-[17px] font-medium text-foreground mb-6 pb-4 border-b border-border/50">
  {cat.category}
  </h3>
- <div className="flex flex-col">
+ <Accordion type="multiple" className="flex flex-col border-none">
  {cat.items.map((item, idx) => {
  const key = `${cat.category}-${idx}`;
- const isOpen = openFaq === key;
  return (
- <div key={key} className="border-b border-border/50">
- <button
- onClick={() => setOpenFaq(isOpen ? null : key)}
- aria-expanded={isOpen}
- className={`w-full flex items-center justify-between py-5 text-left gap-8 group ${FOCUS_RING_CLASSES}`}
- >
+ <AccordionItem key={key} value={key} className="border-b border-border/50 data-[state=open]:bg-transparent">
+ <AccordionTrigger className={`py-5 px-0 gap-8 hover:no-underline group ${FOCUS_RING_CLASSES}`}>
  <span className="text-[15px] font-medium text-foreground group-hover:text-primary transition-colors duration-150">
  {item.q}
  </span>
- <span className="text-muted-foreground text-xl leading-none shrink-0">
- {isOpen ? '−' : '+'}
- </span>
- </button>
- {isOpen && (
- <div className="pb-6">
+ </AccordionTrigger>
+ <AccordionContent className="px-0 pb-6">
  <p className="text-[15px] text-muted-foreground leading-relaxed max-w-[60ch]">{item.a}</p>
- </div>
- )}
- </div>
+ </AccordionContent>
+ </AccordionItem>
  );
  })}
- </div>
+ </Accordion>
  </div>
  ))}
  </section>

@@ -5,7 +5,7 @@ import { CURRICULUM_TRACKS } from '../data/lmsCurriculumData';
 import { useLmsProgress } from '../lib/lmsProgressContext';
 import { CertificateModal } from '../components/lms/CertificateModal';
 import { Button } from '../components/ui/button';
-import type { CertificateData, LmsQuiz, LmsQuestion } from '../types/lms';
+import type { CertificateData, LmsQuiz } from '../types/lms';
 import {
  ChevronLeft,
  CheckCircle2,
@@ -34,42 +34,42 @@ export default function LmsQuiz() {
 
  const quiz: LmsQuiz | undefined = module?.quiz;
 
- // Quiz state
- const [currentIndex, setCurrentIndex] = useState(0);
- const [selectedOption, setSelectedOption] = useState<number | null>(null);
- const [isAnswerSubmitted, setIsAnswerSubmitted] = useState(false);
- const [correctAnswersCount, setCorrectAnswersCount] = useState(0);
- const [isFinished, setIsFinished] = useState(false);
- const [showCertificate, setShowCertificate] = useState(false);
+  // Quiz state
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [selectedOption, setSelectedOption] = useState<number | null>(null);
+  const [isAnswerSubmitted, setIsAnswerSubmitted] = useState(false);
+  const [correctAnswersCount, setCorrectAnswersCount] = useState(0);
+  const [isFinished, setIsFinished] = useState(false);
+  const [showCertificate, setShowCertificate] = useState(false);
+  const [retryCount, setRetryCount] = useState(0);
 
   // Randomize questions and options on mount or retry
-  const [randomizedQuestions, setRandomizedQuestions] = useState<LmsQuestion[]>([]);
-  
-  useMemo(() => {
-    if (quiz?.questions) {
-      // 1. Shuffle the questions array
-      let shuffledQ = shuffleArray([...quiz.questions]);
+  const randomizedQuestions = useMemo(() => {
+    if (!quiz?.questions) return [];
+    
+    // 1. Shuffle the questions array
+    let shuffledQ = shuffleArray([...quiz.questions]);
+    
+    // 2. For each question, shuffle its options and track the new correctIndex
+    shuffledQ = shuffledQ.map(q => {
+      // Map options to objects tracking their original index
+      const optionsWithOriginalIndex = q.options.map((opt, idx) => ({ text: opt, originalIndex: idx }));
       
-      // 2. For each question, shuffle its options and track the new correctIndex
-      shuffledQ = shuffledQ.map(q => {
-        // Map options to objects tracking their original index
-        const optionsWithOriginalIndex = q.options.map((opt, idx) => ({ text: opt, originalIndex: idx }));
-        
-        // Shuffle the options
-        const shuffledOptions = shuffleArray(optionsWithOriginalIndex);
-        
-        // Find where the original correct index ended up
-        const newCorrectIndex = shuffledOptions.findIndex(opt => opt.originalIndex === q.correctIndex);
-        
-        return {
-          ...q,
-          options: shuffledOptions.map(opt => opt.text),
-          correctIndex: newCorrectIndex
-        };
-      });
-      setRandomizedQuestions(shuffledQ);
-    }
-  }, [quiz]);
+      // Shuffle the options
+      const shuffledOptions = shuffleArray(optionsWithOriginalIndex);
+      
+      // Find where the original correct index ended up
+      const newCorrectIndex = shuffledOptions.findIndex(opt => opt.originalIndex === q.correctIndex);
+      
+      return {
+        ...q,
+        options: shuffledOptions.map(opt => opt.text),
+        correctIndex: newCorrectIndex
+      };
+    });
+    return shuffledQ;
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [quiz, retryCount]);
 
   const questions = randomizedQuestions;
   const currentQuestion = randomizedQuestions[currentIndex];
@@ -119,10 +119,10 @@ export default function LmsQuiz() {
  setIsAnswerSubmitted(false);
  setCorrectAnswersCount(0);
  setIsFinished(false);
+ setRetryCount(prev => prev + 1);
  };
 
  const certificateData: CertificateData = {
- // eslint-disable-next-line react-hooks/purity
  certificateId: `EDU-CERT-${track.code}-${Math.floor(100000 + Math.random() * 900000)}`,
  recipientName: 'Verified EduPlus Candidate',
  trackTitle: track.title,
@@ -160,7 +160,7 @@ export default function LmsQuiz() {
  const { isCompleted: isTrackCompleted } = getTrackProgress(track.id);
 
  return (
- <div className="flex-1 w-full flex flex-col min-h-[100dvh] py-8 sm:py-12 px-4 sm:px-6">
+  <div className="flex-1 w-full flex flex-col h-[100dvh] overflow-y-auto py-8 sm:py-12 px-4 sm:px-6">
  <div className="max-w-2xl mx-auto w-full space-y-6">
  {/* Top Breadcrumb */}
  <div className="flex items-center gap-2 text-xs font-mono text-muted-foreground">
@@ -179,7 +179,7 @@ export default function LmsQuiz() {
  className={cn(
  'size-16 mx-auto border flex items-center justify-center',
  passed
- ? 'border-[#22C55E]/40 bg-[#22C55E]/10 text-[#22C55E]'
+ ? 'border-success/40 bg-success/10 text-success'
  : 'border-destructive/40 bg-destructive/10 text-destructive',
  )}
  >
@@ -221,7 +221,8 @@ export default function LmsQuiz() {
  </div>
 
  <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-4 border-t border-border">
- {passed && isTrackCompleted ? (
+ {passed ? (
+ isTrackCompleted ? (
  <>
  <Button
  onClick={() => setShowCertificate(true)}
@@ -235,9 +236,28 @@ export default function LmsQuiz() {
  variant="outline"
  className="rounded-none text-xs h-9 px-5 w-full sm:w-auto"
  >
- <Link to={`/lms/tracks/${track.id}`}>Continue Track</Link>
+ <Link to="/dashboard">Return to Dashboard</Link>
  </Button>
  </>
+ ) : (
+ <>
+ <Button
+ asChild
+ className="rounded-none text-xs h-9 px-5 gap-1.5 w-full sm:w-auto"
+ >
+ <Link to={`/lms/tracks/${track.id}`}>
+ Continue Learning
+ </Link>
+ </Button>
+ <Button
+ asChild
+ variant="outline"
+ className="rounded-none text-xs h-9 px-5 w-full sm:w-auto"
+ >
+ <Link to="/dashboard">Return to Dashboard</Link>
+ </Button>
+ </>
+ )
  ) : (
  <>
  <Button
@@ -280,13 +300,15 @@ export default function LmsQuiz() {
  </div>
 
  {/* Question Prompt */}
- <h2 className="text-lg sm:text-xl font-heading font-medium text-foreground leading-snug">
- {currentQuestion.prompt}
- </h2>
+ {currentQuestion && (
+   <h2 className="text-lg sm:text-xl font-heading font-medium text-foreground leading-snug">
+     {currentQuestion.prompt}
+   </h2>
+ )}
 
  {/* Options List */}
  <div className="space-y-2.5">
- {currentQuestion.options.map((option, index) => {
+ {currentQuestion && currentQuestion.options.map((option, index) => {
  const isSelected = selectedOption === index;
  const isCorrect = currentQuestion.correctIndex === index;
 
@@ -299,12 +321,12 @@ export default function LmsQuiz() {
  } else if (isAnswerSubmitted) {
  if (isCorrect) {
  optionStyles =
- 'border-[#22C55E] bg-[#22C55E]/10 text-[#22C55E] font-medium';
+ 'border-success bg-success/10 text-success font-medium';
  } else if (isSelected && !isCorrect) {
  optionStyles =
  'border-destructive bg-destructive/10 text-destructive font-medium';
  } else {
- optionStyles = 'border-border/50 opacity-40 text-muted-foreground';
+ optionStyles = 'border-border/50 bg-background/50 text-muted-foreground opacity-70';
  }
  }
 
@@ -333,15 +355,15 @@ export default function LmsQuiz() {
  className={cn(
  'border p-4 text-xs leading-relaxed space-y-1',
  selectedOption === currentQuestion.correctIndex
- ? 'border-[#22C55E]/40 bg-[#22C55E]/5 text-foreground'
+ ? 'border-success/40 bg-success/5 text-foreground'
  : 'border-destructive/40 bg-destructive/5 text-foreground',
  )}
  >
  <div className="font-semibold font-mono text-[0.65rem] uppercase tracking-wider flex items-center gap-1.5">
  {selectedOption === currentQuestion.correctIndex ? (
  <>
- <CheckCircle2 className="size-3.5 text-[#22C55E]" />
- <span className="text-[#22C55E]">CORRECT ANALYSIS</span>
+ <CheckCircle2 className="size-3.5 text-success" />
+ <span className="text-success">CORRECT ANALYSIS</span>
  </>
  ) : (
  <>
@@ -350,7 +372,7 @@ export default function LmsQuiz() {
  </>
  )}
  </div>
- <p className="text-muted-foreground mt-1">{currentQuestion.explanation}</p>
+ <p className="text-foreground/90 mt-1">{currentQuestion.explanation}</p>
  </div>
  )}
 

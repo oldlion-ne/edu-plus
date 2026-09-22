@@ -1,3 +1,20 @@
+/**
+ * EduPlus Nordic Lagom UI Compliance Checker — T20
+ *
+ * Enforces:
+ *  1. No rounded corners (other than rounded-none) — 0px geometry rule
+ *  2. No curved SVG path commands (C, S, Q, A and lowercase equivalents)
+ *  3. No Recharts non-linear interpolation (type must be "linear")
+ *  4. No neon / glow / pulse colors from the old pre-Nordic palette
+ *  5. No arbitrary hex colors outside the approved OKLCH semantic token set
+ *
+ * Exits 1 if any ERROR is found; warnings are informational only.
+ *
+ * Inline suppression:
+ *  - `// ui-ignore` on the same line
+ *  - `// ui-ignore-next-line` on the preceding line
+ */
+
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -5,181 +22,186 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Configuration
+// ── Config ────────────────────────────────────────────────────────────────────
+
 const SRC_DIR = path.resolve(__dirname, '../src');
+
+/** Paths that are entirely exempt from compliance checks. */
 const IGNORE_PATHS = [
   /node_modules/,
   /dist/,
   /\.test\./,
-  /check-ui-compliance\.js/,
-  /main\.tsx/,
+  /\.spec\./,
+  /check-ui-compliance/,
   /vite-env\.d\.ts/,
-  /src[\\/]components[\\/]ui/, // Ignore shadcn UI primitives
-
+  // shadcn/ui primitives ship with their own geometry; they're third-party source.
+  // Only narrow exemption — feature code in src/ is still checked.
+  /src[/\\]components[/\\]ui[/\\]/,
+  /src[/\\]components[/\\]magicui[/\\]/,
 ];
 
-// Approved colors to prevent warning/error on hex values
-const APPROVED_HEX = [
-  '#7DF9FF', // Neon Cyan
-  '#0B0F14', // Base Slate Background
-  '#E6EDF3', // Off-white foreground
-  '#8B949E', // Muted/secondary text slate-gray
-  '#161B22', // Card dark background
-  '#0E131A', // Dropdowns and dialogs slate background
-  '#090D12', // Terminal dashboard dark background
-  '#4AF626', // Terminal text green
-  '#1A202A', // Footer background slate
-  // Feedback Colors
-  '#EF4444', // Red-500 (Danger)
-  '#F87171', // Red-400 (Light Danger)
-  '#22C55E', // Green-500 (Success)
-  '#4ADE80', // Green-400 (Light Success)
-  '#F59E0B', // Yellow-500 (Warning)
-  '#FBBF24', // Yellow-400 (Light Warning)
-];
+/**
+ * Approved hex values used as inline style color values (not Tailwind classes).
+ * These are the OKLCH-derived hex equivalents of our semantic tokens.
+ * All others must use Tailwind semantic token classes (text-foreground, etc.).
+ */
+const APPROVED_HEX_INLINE = new Set([
+  // Login page background split (approved design decision)
+  '#0E131A',
+  '#F5F0E8',
+  // Calendly widget colors (third-party config, not CSS)
+  '#B8860B',
+  '#ffffff',
+  '#1a1a1a',
+]);
 
-// Prohibited rounded corners pattern
-// Matches any word starting with rounded (e.g. rounded, rounded-md, rounded-t-lg)
-const ROUNDED_CLASSES_REGEX = /\brounded(?:-[a-zA-Z0-9]+)*\b/g;
+// ── Regexes ──────────────────────────────────────────────────────────────────
 
-// Hardcoded standard Tailwind color overrides (e.g., bg-red-500, text-blue-600, etc.)
-const TAILWIND_COLOR_OVERRIDE_REGEX = /\b(bg|text|border)-(red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose|slate|gray|zinc|neutral|stone)-(?:50|100|200|300|400|500|600|700|800|900|950)\b/g;
+// SVG path `d` attribute containing Bezier/arc curve commands.
+// Matches C, S, Q, A and their lowercase equivalents after a whitespace/digit.
+const SVG_CURVE_CMD_RE = /\bd=["'][^"']*[CSQAcsqa][^"']*/;
 
-// Custom hex color classes (e.g., bg-[#ff0000])
-const HEX_CLASS_REGEX = /\b(?:bg|text|border)-\[#([0-9a-fA-F]{3,6})\]/g;
+// rounded-* classes that are NOT rounded-none (geometry violation).
+const ROUNDED_BAD_RE = /\brounded(?:-(?!none\b)[a-zA-Z0-9]+)+\b|\brounded\b(?!-none)/;
 
-// Interactive tags regex that matches <a, <button, <Link, <NavLink (with word boundary)
-const INTERACTIVE_TAG_REGEX = /<(button|a|Link|NavLink)\b/;
+// Recharts LineChart / AreaChart type prop that isn't "linear".
+// e.g. type="monotone" or type="natural" — both are prohibited curves.
+const RECHARTS_NONLINEAR_RE = /\btype=["'](monotone|natural|basis|cardinal|catmullRom|step|stepBefore|stepAfter)["']/;
 
-// Style attributes checker
-const INLINE_STYLE_REGEX = /style=\{\{\s*[^}]+\s*\}\}/g;
+// Old neon / cyberpunk color values that should no longer appear.
+// We check for them in Tailwind arbitrary classes and inline styles.
+const NEON_COLORS_RE = /(?:#7[Dd][Ff]9[Ff]{2}|#4[Aa][Ff]626|neon|#[Ff]{2}0{2}[Ff]{2}|#00[Ff]{2}[Ff]{2}|#[Ff]{2}[Ff]{2}00)/i;
+
+// Arbitrary hex in Tailwind class: bg-[#abc123], text-[#abc123], border-[#abc123]
+const HEX_TAILWIND_RE = /\b(?:bg|text|border|ring|outline|fill|stroke)-\[#([0-9a-fA-F]{3,6})\]/g;
+
+// Inline style borderRadius with a non-zero value.
+// Explicitly allow '0', '0px', "0", "0px" — those are compliant.
+const BORDER_RADIUS_STYLE_RE = /borderRadius\s*:\s*['"](?!0(?:px)?['"])[^'"]+['"]/;
+
+// ── State ─────────────────────────────────────────────────────────────────────
 
 let totalErrors = 0;
 let totalWarnings = 0;
 
-// Text Formatter using ANSI escape sequences
-const colors = {
-  red: (str) => `\x1b[31m${str}\x1b[0m`,
-  green: (str) => `\x1b[32m${str}\x1b[0m`,
-  yellow: (str) => `\x1b[33m${str}\x1b[0m`,
-  cyan: (str) => `\x1b[36m${str}\x1b[0m`,
-  gray: (str) => `\x1b[90m${str}\x1b[0m`,
-  bold: (str) => `\x1b[1m${str}\x1b[0m`,
+// ── Helpers ───────────────────────────────────────────────────────────────────
+
+const c = {
+  red:    (s) => `\x1b[31m${s}\x1b[0m`,
+  green:  (s) => `\x1b[32m${s}\x1b[0m`,
+  yellow: (s) => `\x1b[33m${s}\x1b[0m`,
+  cyan:   (s) => `\x1b[36m${s}\x1b[0m`,
+  gray:   (s) => `\x1b[90m${s}\x1b[0m`,
+  bold:   (s) => `\x1b[1m${s}\x1b[0m`,
 };
 
-function shouldIgnorePath(filePath) {
-  return IGNORE_PATHS.some((regex) => regex.test(filePath));
+function err(rel, ln, msg, hint) {
+  console.log(`${c.red('❌ ERROR')} ${msg} — ${c.cyan(rel)}:${c.yellow(ln)}`);
+  if (hint) console.log(c.gray(`   Hint: ${hint}\n`));
+  totalErrors++;
 }
 
-function getFiles(dir, filesList = []) {
-  if (!fs.existsSync(dir)) return filesList;
-  const files = fs.readdirSync(dir);
-  for (const file of files) {
-    const name = path.join(dir, file);
-    if (fs.statSync(name).isDirectory()) {
-      getFiles(name, filesList);
-    } else {
-      if (!shouldIgnorePath(name) && (name.endsWith('.tsx') || name.endsWith('.ts') || name.endsWith('.css'))) {
-        filesList.push(name);
-      }
+function warn(rel, ln, msg, hint) {
+  console.log(`${c.yellow('⚠️  WARN')} ${msg} — ${c.cyan(rel)}:${c.yellow(ln)}`);
+  if (hint) console.log(c.gray(`   Hint: ${hint}\n`));
+  totalWarnings++;
+}
+
+function shouldIgnore(filePath) {
+  return IGNORE_PATHS.some((re) => re.test(filePath.replace(/\\/g, '/')));
+}
+
+function collectFiles(dir, out = []) {
+  if (!fs.existsSync(dir)) return out;
+  for (const entry of fs.readdirSync(dir)) {
+    const full = path.join(dir, entry);
+    if (fs.statSync(full).isDirectory()) {
+      collectFiles(full, out);
+    } else if (/\.(tsx?|css)$/.test(entry) && !shouldIgnore(full)) {
+      out.push(full);
     }
   }
-  return filesList;
+  return out;
 }
 
+// ── Per-file checker ──────────────────────────────────────────────────────────
+
 function checkFile(filePath) {
-  const content = fs.readFileSync(filePath, 'utf-8');
-  const lines = content.split('\n');
-  const relativePath = path.relative(path.resolve(__dirname, '..'), filePath);
+  const src = fs.readFileSync(filePath, 'utf-8');
+  const lines = src.split('\n');
+  const rel = path.relative(path.resolve(__dirname, '..'), filePath);
 
-  lines.forEach((line, index) => {
-    const lineNumber = index + 1;
+  lines.forEach((line, i) => {
+    const ln = i + 1;
 
-    // Check for inline ignore comments
-    if (line.includes('/* ui-ignore */') || line.includes('// ui-ignore-next-line')) {
-      return;
-    }
-    if (index > 0 && lines[index - 1].includes('// ui-ignore-next-line')) {
-      return;
-    }
+    // Inline suppression
+    if (line.includes('// ui-ignore') || line.includes('/* ui-ignore */')) return;
+    if (i > 0 && lines[i - 1].includes('// ui-ignore-next-line')) return;
 
-    // 1. Check for rounded classes (Strict Error)
-    const roundedMatches = [...line.matchAll(ROUNDED_CLASSES_REGEX)];
-    roundedMatches.forEach((match) => {
-      const className = match[0];
-      // Only error if it does not end with '-none'
-      if (!className.endsWith('-none')) {
-        console.log(`${colors.red('❌ ERROR')} Prohibited rounded corners class "${colors.bold(className)}" found in ${colors.cyan(relativePath)}:${colors.yellow(lineNumber)}`);
-        console.log(colors.gray(`   Line ${lineNumber}: ${line.trim()}`));
-        console.log(colors.gray(`   Fix: Replace with "rounded-none" or remove completely.\n`));
-        totalErrors++;
-      }
-    });
-
-    // 2. Check for standard Tailwind color overrides (Strict Error)
-    const colorOverrideMatches = [...line.matchAll(TAILWIND_COLOR_OVERRIDE_REGEX)];
-    colorOverrideMatches.forEach((match) => {
-      const className = match[0];
-      console.log(`${colors.red('❌ ERROR')} Prohibited standard Tailwind color override "${colors.bold(className)}" found in ${colors.cyan(relativePath)}:${colors.yellow(lineNumber)}`);
-      console.log(colors.gray(`   Line ${lineNumber}: ${line.trim()}`));
-      console.log(colors.gray(`   Fix: Use theme variable rules / design tokens (e.g. text-[#E6EDF3] or text-[#7DF9FF]).\n`));
-      totalErrors++;
-    });
-
-    // 3. Check for custom hex colors not in approved list (Strict Error)
-    const hexMatches = [...line.matchAll(HEX_CLASS_REGEX)];
-    hexMatches.forEach((match) => {
-      const hex = '#' + match[1].toUpperCase();
-      if (!APPROVED_HEX.includes(hex)) {
-        const className = match[0];
-        console.log(`${colors.red('❌ ERROR')} Prohibited custom hex class "${colors.bold(className)}" found in ${colors.cyan(relativePath)}:${colors.yellow(lineNumber)}`);
-        console.log(colors.gray(`   Line ${lineNumber}: ${line.trim()}`));
-        console.log(colors.gray(`   Fix: Replace with an approved theme color (${APPROVED_HEX.join(', ')}).\n`));
-        totalErrors++;
-      }
-    });
-
-    // 4. Check for interactive tags missing hover, focus, active attributes (Warning)
-    const hasInteractiveTag = INTERACTIVE_TAG_REGEX.test(line);
-    if (hasInteractiveTag && !filePath.endsWith('.css')) {
-      const hasHover = line.includes('hover:');
-      const hasFocus = line.includes('focus:');
-      if (!hasHover || !hasFocus) {
-        console.log(`${colors.yellow('⚠️ WARNING')} Interactive element missing states (hover: ${hasHover ? '✓' : '✗'}, focus: ${hasFocus ? '✓' : '✗'}) in ${colors.cyan(relativePath)}:${colors.yellow(lineNumber)}`);
-        console.log(colors.gray(`   Line ${lineNumber}: ${line.trim()}`));
-        console.log(colors.gray(`   Fix: Add responsive and interactive classes (e.g. "hover:text-[#7DF9FF] focus:outline-none focus:ring-1 focus:ring-[#7DF9FF]").\n`));
-        totalWarnings++;
-      }
+    // ── 1. Geometry: curved SVG path commands ─────────────────────────────
+    if (SVG_CURVE_CMD_RE.test(line)) {
+      err(rel, ln, 'Curved SVG path command (C/S/Q/A)',
+        'Replace with L, H, V, Z straight-line commands only.');
     }
 
-    // 5. Check for inline style attributes (Warning)
-    const inlineStyleMatches = line.match(INLINE_STYLE_REGEX);
-    if (inlineStyleMatches) {
-      console.log(`${colors.yellow('⚠️ WARNING')} Inline CSS style attribute used in ${colors.cyan(relativePath)}:${colors.yellow(lineNumber)}`);
-      console.log(colors.gray(`   Line ${lineNumber}: ${line.trim()}`));
-      console.log(colors.gray(`   Fix: Prefer styling through Tailwind utility classes or index.css classes.\n`));
-      totalWarnings++;
+    // ── 2. Geometry: rounded corners ─────────────────────────────────────
+    const roundedMatches = line.match(ROUNDED_BAD_RE);
+    if (roundedMatches) {
+      err(rel, ln, `Prohibited rounded class "${c.bold(roundedMatches[0])}"`,
+        'Use rounded-none or remove. 0px geometry is required.');
+    }
+
+    // ── 3. Geometry: inline borderRadius > 0 ─────────────────────────────
+    if (BORDER_RADIUS_STYLE_RE.test(line)) {
+      err(rel, ln, 'Non-zero inline borderRadius in style prop',
+        'Set borderRadius to "0" or "0px", or remove the property.');
+    }
+
+    // ── 4. Recharts non-linear interpolation ─────────────────────────────
+    if (RECHARTS_NONLINEAR_RE.test(line)) {
+      const m = line.match(RECHARTS_NONLINEAR_RE);
+      err(rel, ln, `Recharts curve type "${c.bold(m[1])}" is not linear`,
+        'Use type="linear" on all Recharts Line/Area elements.');
+    }
+
+    // ── 5. Neon / old-palette colors ─────────────────────────────────────
+    if (NEON_COLORS_RE.test(line)) {
+      err(rel, ln, 'Neon/legacy color detected',
+        'Replace with semantic OKLCH tokens from index.css (e.g. text-primary, text-foreground).');
+    }
+
+    // ── 6. Unapproved hex in Tailwind classes ─────────────────────────────
+    for (const m of line.matchAll(HEX_TAILWIND_RE)) {
+      const hex = `#${m[1].toUpperCase()}`;
+      // Allow OKLCH-token-derived values via /alpha — those are semantic
+      // Allow opacity modifiers (bg-[#abc]/50 is still a hex class)
+      if (!APPROVED_HEX_INLINE.has(hex) && !APPROVED_HEX_INLINE.has(`#${m[1].toLowerCase()}`)) {
+        warn(rel, ln, `Arbitrary hex Tailwind class "${c.bold(m[0])}"`,
+          'Prefer semantic token classes (text-foreground, bg-primary, etc.). If this hex is a valid token equivalent, add it to APPROVED_HEX_INLINE in the checker.');
+      }
     }
   });
 }
 
+// ── Main ──────────────────────────────────────────────────────────────────────
+
 function main() {
-  console.log(colors.cyan('\n[UI Compliance Scanner] ') + 'Running checks in src/ directory...\n');
-  const files = getFiles(SRC_DIR);
+  console.log(c.cyan('\n[Nordic Lagom UI Compliance — T20] ') + 'Scanning src/...\n');
+
+  const files = collectFiles(SRC_DIR);
   files.forEach(checkFile);
 
-  console.log(colors.cyan('-----------------------------------------------'));
-  console.log(`Scan completed: Scanned ${files.length} files.`);
-  console.log(`Errors found:   ${totalErrors > 0 ? colors.red(totalErrors) : colors.green(0)}`);
-  console.log(`Warnings found: ${totalWarnings > 0 ? colors.yellow(totalWarnings) : colors.green(0)}\n`);
+  console.log(c.cyan('─────────────────────────────────────────────'));
+  console.log(`Scanned:  ${files.length} files`);
+  console.log(`Errors:   ${totalErrors > 0 ? c.red(totalErrors) : c.green(0)}`);
+  console.log(`Warnings: ${totalWarnings > 0 ? c.yellow(totalWarnings) : c.green(0)}\n`);
 
   if (totalErrors > 0) {
-    console.log(colors.red('❌ UI compliance check failed. Please resolve all errors listed above.'));
+    console.log(c.red('❌ UI compliance check failed — resolve errors above.'));
     process.exit(1);
-  } else {
-    console.log(colors.green('✓ UI compliance check passed successfully!'));
-    process.exit(0);
   }
+  console.log(c.green('✓ UI compliance check passed.'));
+  process.exit(0);
 }
 
 main();

@@ -10,7 +10,8 @@ import {
 } from '../ui/dialog';
 import { Button } from '../ui/button';
 import type { CertificateData } from '../../types/lms';
-import { Award, Download, CheckCircle2, X, Sun, Moon, Loader2 } from 'lucide-react';
+import { Award, Download, CheckCircle2, X, Sun, Moon } from 'lucide-react';
+import { Spinner } from '@/components/ui/spinner';
 
 interface CertificateModalProps {
   readonly isOpen: boolean;
@@ -103,7 +104,7 @@ export const CertificateModal: React.FC<CertificateModalProps> = ({
               disabled={isDownloading}
               className="h-9 gap-1.5 rounded-none border-border"
             >
-              {isDownloading ? <Loader2 className="size-4 animate-spin" /> : <Download className="size-4" />}
+              {isDownloading ? <Spinner size="sm" /> : <Download className="size-4" />}
               {isDownloading ? 'Generating...' : 'Download PDF'}
             </Button>
             <Button
@@ -119,7 +120,7 @@ export const CertificateModal: React.FC<CertificateModalProps> = ({
         </DialogHeader>
 
         {/* ── Certificate Body (Nordic Lagom Straight Lines) ── */}
-        <div className="overflow-y-auto p-4 sm:p-8 bg-muted/20 flex items-center justify-center w-full">
+        <div className="overflow-y-auto p-4 sm:p-8 bg-muted/20 flex items-center justify-center w-full min-h-0">
           {/* Certificate Container with aspect-ratio and @container for fluid typography */}
           <div ref={printRef} className={`w-full max-w-[1200px] @container/cert ${certTheme}`}>
             <div

@@ -1,4 +1,5 @@
 import { Link } from 'react-router';
+import { PageMeta } from '@/components/PageMeta';
 import { BlurFade } from '@/components/ui/blur-fade';
 import { Button } from '@/components/ui/button';
 import { PageHero } from '@/components/ui/page-hero';
@@ -64,6 +65,9 @@ const TIMELINE = [
 export default function About() {
  return (
  <div className=" w-full flex-1">
+      <PageMeta title="About Us"
+        description="Learn about EduPlus Skills � our mission, journey, and the team bridging Manipur to global opportunities."
+      />
 
  {/* ── Typographic Hero ── */}
  <PageHero

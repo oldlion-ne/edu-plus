@@ -38,6 +38,7 @@ export interface LmsLesson {
   readonly type: 'video' | 'reading' | 'interactive' | 'workshop';
   readonly summary: string;
   readonly videoEmbedId?: string; // YouTube 11-char ID
+  readonly videoUrl?: string; // Direct HTML5 video URL
   readonly contentMarkdown: string;
   readonly keyTakeaways: readonly string[];
   readonly practicalExercise?: string;

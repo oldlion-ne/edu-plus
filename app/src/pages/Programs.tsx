@@ -8,6 +8,7 @@ import { editorialIllustrations } from '@/lib/editorialIllustrations';
 import { MagicCard } from '@/components/magicui/MagicCard';
 
 import { ScrollReveal } from '@/components/effects/ScrollReveal';
+import { PageMeta } from '@/components/PageMeta';
 
 const PROGRAMS = [
  {
@@ -117,6 +118,10 @@ export default function Programs() {
 
  return (
  <div className=" w-full flex-1">
+ <PageMeta
+ title="Future-Ready Programs"
+ description="Six interconnected programs supporting learners at every milestone — from career discovery to global admissions and STEM innovation."
+ />
 
  {/* ── Typographic Hero ── */}
  <PageHero
@@ -136,7 +141,7 @@ export default function Programs() {
  role="tablist"
  aria-label="Program pathways"
  aria-orientation="vertical"
- className="border-r border-border/50 pr-8 flex flex-col gap-1"
+ className="md:border-r md:border-border/50 md:pr-8 flex flex-col gap-1 border-b border-border/50 pb-4 md:border-b-0 md:pb-0"
  >
  {PROGRAMS.map((p, i) => (
  <button

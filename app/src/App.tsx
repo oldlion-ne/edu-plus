@@ -1,12 +1,7 @@
-import { lazy, Suspense, useState, useRef, useEffect, useCallback } from 'react';
-import { Routes, Route, useLocation } from 'react-router';
-import Navigation from './sections/Navigation';
-import Footer from './sections/Footer';
-import ScrollToTop from './components/ScrollToTop';
-import AIChatAgent from './components/AIChatAgent';
+import { lazy, Suspense, useState, useCallback, useEffect } from 'react';
+import { Routes, Route } from 'react-router';
 import { AuthProvider } from './lib/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
-import { ScrollContext } from './lib/ScrollContext';
 import { Toaster } from './components/ui/sonner';
 import SplashLoader from './components/SplashLoader';
 import { AnimatePresence, MotionConfig } from 'framer-motion';
@@ -15,7 +10,11 @@ import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/react';
 
 import { LmsProgressProvider } from './lib/lmsProgressContext';
-import { GlyphMatrix } from './components/effects/GlyphMatrix';
+import { PublicLayout } from './layouts/PublicLayout';
+import { LearnerLayout } from './layouts/LearnerLayout';
+import { AdminLayout } from './layouts/AdminLayout';
+import { AuthLayout } from './layouts/AuthLayout';
+import { ErrorBoundary } from './components/ErrorBoundary';
 
 // Lazy-load all page components — each is only downloaded when its route is visited.
 // Dashboard (with Recharts) is never loaded until the user navigates to /dashboard.
@@ -37,10 +36,11 @@ const LmsHub = lazy(() => import('./pages/LmsHub'));
 const LmsTrackDetail = lazy(() => import('./pages/LmsTrackDetail'));
 const LmsLessonPlayer = lazy(() => import('./pages/LmsLessonPlayer'));
 const LmsQuiz = lazy(() => import('./pages/LmsQuiz'));
+const NotFound = lazy(() => import('./pages/NotFound'));
 
 // Minimal inline fallback — renders instantly, no layout shift
 const PageLoader = () => (
-  <div className="min-h-screen bg-background flex items-center justify-center">
+  <div className="min-h-dvh bg-background flex items-center justify-center">
     <div className="w-8 h-1 bg-primary" />
   </div>
 );
@@ -67,23 +67,6 @@ function App() {
     };
   }, []);
 
-  const location = useLocation();
-  const isDashboard = location.pathname === '/dashboard';
-  const isLogin = location.pathname === '/login';
-  
-  const scrollContainerRef = useRef<HTMLDivElement | null>(null);
-  const [scrollEl, setScrollEl] = useState<HTMLDivElement | null>(null);
-
-  const handleScrollRef = (node: HTMLDivElement | null) => {
-    scrollContainerRef.current = node;
-    setScrollEl(node);
-  };
-
-
-  const showChatAgent = !isDashboard && !isLogin && !location.pathname.startsWith('/lms/learn/') && !location.pathname.startsWith('/lms/quiz/');
-  const showPublicNav = !isDashboard && !location.pathname.startsWith('/lms/learn/') && !location.pathname.startsWith('/lms/quiz/');
-  const showPublicFooter = !isDashboard && !location.pathname.startsWith('/lms/learn/') && !location.pathname.startsWith('/lms/quiz/');
-
   const sharedGlobals = (
     <>
       <CookieConsentBanner onConsentChange={handleConsentChange} />
@@ -100,14 +83,16 @@ function App() {
     </>
   );
 
-  if (isDashboard) {
-    return (
-      <AuthProvider>
+  return (
+    <AuthProvider>
+      <LmsProgressProvider>
         <MotionConfig reducedMotion="user">
           {sharedGlobals}
-          <div className="relative h-[100dvh] w-full bg-background overflow-hidden [touch-action:none]">
-            <Suspense fallback={<PageLoader />}>
-              <Routes>
+          <ErrorBoundary>
+          <Suspense fallback={<PageLoader />}>
+            <Routes>
+              {/* ADMIN LAYOUT */}
+              <Route element={<AdminLayout />}>
                 <Route
                   path="/dashboard"
                   element={
@@ -116,71 +101,41 @@ function App() {
                     </ProtectedRoute>
                   }
                 />
-              </Routes>
-            </Suspense>
-          </div>
-        </MotionConfig>
-      </AuthProvider>
-    );
-  }
+              </Route>
 
-  return (
-    <AuthProvider>
-      <LmsProgressProvider>
-        <MotionConfig reducedMotion="user">
-          {sharedGlobals}
-          <ScrollContext.Provider value={{ scrollContainerRef }}>
-            <div className="relative h-[100dvh] w-full bg-background flex flex-col overflow-hidden [touch-action:none]">
-              {/* GLOBAL BACKGROUND MATRIX */}
-              <div className="fixed inset-0 z-0 pointer-events-none opacity-100">
-                <GlyphMatrix 
-                  cellSize={18} 
-                  mutationRate={0.04} 
-                  interval={90} 
-                  fadeBottom={0.6} 
-                />
-              </div>
-              
-              {showChatAgent && <AIChatAgent />}
-              <div 
-                ref={handleScrollRef}
-                id="main-scroll-container"
-                className="flex-1 overflow-y-scroll overflow-x-hidden min-h-0 [touch-action:pan-y_manipulation] relative [scrollbar-gutter:stable]"
-              >
-                <div className="flex flex-col min-h-full">
-                  {showPublicNav && <Navigation />}
-                  <main className="flex-1 flex flex-col">
-                    <Suspense fallback={<PageLoader />}>
-                      <ScrollToTop />
-                      {scrollEl && (
-                        <Routes>
-                          <Route path="/" element={<Home />} />
-                          <Route path="/about" element={<About />} />
-                          <Route path="/programs" element={<Programs />} />
-                          <Route path="/events" element={<SignatureExperiences />} />
-                          <Route path="/council" element={<Council />} />
-                          <Route path="/guidance" element={<Guidance />} />
-                          <Route path="/news" element={<News />} />
-                          <Route path="/news/:slug" element={<News />} />
-                          <Route path="/contact" element={<Contact />} />
-                          <Route path="/connect" element={<Connect />} />
-                          <Route path="/knowledge-hub" element={<KnowledgeHub />} />
-                          <Route path="/lms" element={<LmsHub />} />
-                          <Route path="/lms/tracks/:trackId" element={<LmsTrackDetail />} />
-                          <Route path="/lms/learn/:trackId/:lessonId" element={<LmsLessonPlayer />} />
-                          <Route path="/lms/quiz/:trackId/:moduleId" element={<LmsQuiz />} />
-                          <Route path="/pricing" element={<Pricing />} />
-                          <Route path="/login" element={<Login />} />
-                          <Route path="/legal" element={<Legal />} />
-                        </Routes>
-                      )}
-                    </Suspense>
-                  </main>
-                  {showPublicFooter && <Footer />}
-                </div>
-              </div>
-            </div>
-          </ScrollContext.Provider>
+              {/* LEARNER LAYOUT (No nav/footer for immersive learning) */}
+              <Route element={<LearnerLayout />}>
+                <Route path="/lms/learn/:trackId/:lessonId" element={<LmsLessonPlayer />} />
+                <Route path="/lms/quiz/:trackId/:moduleId" element={<LmsQuiz />} />
+              </Route>
+
+              {/* PUBLIC LAYOUT (Nav, footer, agent) */}
+              <Route element={<PublicLayout />}>
+                <Route path="/" element={<Home />} />
+                <Route path="/about" element={<About />} />
+                <Route path="/programs" element={<Programs />} />
+                <Route path="/events" element={<SignatureExperiences />} />
+                <Route path="/council" element={<Council />} />
+                <Route path="/guidance" element={<Guidance />} />
+                <Route path="/news" element={<News />} />
+                <Route path="/news/:slug" element={<News />} />
+                <Route path="/contact" element={<Contact />} />
+                <Route path="/connect" element={<Connect />} />
+                <Route path="/knowledge-hub" element={<KnowledgeHub />} />
+                <Route path="/lms" element={<LmsHub />} />
+                <Route path="/lms/tracks/:trackId" element={<LmsTrackDetail />} />
+                <Route path="/pricing" element={<Pricing />} />
+                <Route path="/legal" element={<Legal />} />
+                <Route path="*" element={<NotFound />} />
+              </Route>
+
+              {/* AUTH LAYOUT (No nav/footer) */}
+              <Route element={<AuthLayout />}>
+                <Route path="/login" element={<Login />} />
+              </Route>
+            </Routes>
+          </Suspense>
+          </ErrorBoundary>
         </MotionConfig>
       </LmsProgressProvider>
     </AuthProvider>

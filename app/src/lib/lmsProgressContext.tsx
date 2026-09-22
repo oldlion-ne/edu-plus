@@ -1,7 +1,8 @@
-import React, { createContext, useContext, useEffect, useState, useMemo, useCallback } from 'react';
+import React, { createContext, useContext, useEffect, useRef, useState, useMemo, useCallback } from 'react';
 import type { LearnerProgress, QuizAttempt, CurriculumTrack } from '../types/lms';
 import { CURRICULUM_TRACKS } from '../data/lmsCurriculumData';
-
+import { supabase } from './supabaseClient';
+import { useAuth } from './useAuth';
 const STORAGE_KEY = 'eduplus_lms_progress';
 
 const DEFAULT_PROGRESS: LearnerProgress = {
@@ -38,6 +39,7 @@ interface LmsContextType {
 const LmsProgressContext = createContext<LmsContextType | null>(null);
 
 export const LmsProgressProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const { user, isSimulated } = useAuth();
   const [progress, setProgress] = useState<LearnerProgress>(() => {
     try {
       const saved = localStorage.getItem(STORAGE_KEY);
@@ -56,13 +58,84 @@ export const LmsProgressProvider: React.FC<{ children: React.ReactNode }> = ({ c
     return DEFAULT_PROGRESS;
   });
 
+  const [isInitialized, setIsInitialized] = useState(false);
+
+  const progressRef = useRef(progress);
+  useEffect(() => { progressRef.current = progress; }, [progress]);
+
   useEffect(() => {
+    let mounted = true;
+
+    async function loadProgress() {
+      if (!user || isSimulated) {
+        if (mounted) setIsInitialized(true);
+        return;
+      }
+      
+      try {
+        const { data, error } = await supabase
+          .from('lms_progress')
+          .select('state')
+          .eq('user_id', user.id)
+          .maybeSingle();
+
+        if (error) {
+          if (error.code !== 'PGRST205') {
+            console.error("Error fetching lms_progress", error);
+          }
+        }
+        
+        if (data && data.state) {
+          const parsed = data.state;
+          const remoteProgress = {
+            enrolledTrackIds: Array.isArray(parsed.enrolledTrackIds) ? parsed.enrolledTrackIds : DEFAULT_PROGRESS.enrolledTrackIds,
+            completedLessonIds: Array.isArray(parsed.completedLessonIds) ? parsed.completedLessonIds : [],
+            quizAttempts: parsed.quizAttempts || {},
+            lastActiveLesson: parsed.lastActiveLesson || DEFAULT_PROGRESS.lastActiveLesson,
+          };
+          if (mounted) {
+            setProgress(remoteProgress);
+            setIsInitialized(true);
+          }
+        } else {
+          // If no row exists, upsert the current progress (from localStorage)
+          await supabase.from('lms_progress').upsert({
+            user_id: user.id,
+            state: progressRef.current,
+          }, { onConflict: 'user_id' });
+          if (mounted) setIsInitialized(true);
+        }
+      } catch (err) {
+         if (mounted) setIsInitialized(true);
+      }
+    }
+    
+    loadProgress();
+    
+    return () => { mounted = false; };
+  }, [user, isSimulated]);
+
+  useEffect(() => {
+    if (!isInitialized) return;
+
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
     } catch {
       // storage might be restricted
     }
-  }, [progress]);
+    
+    if (user && !isSimulated) {
+      supabase.from('lms_progress').upsert({
+        user_id: user.id,
+        state: progress,
+        updated_at: new Date().toISOString()
+      }, { onConflict: 'user_id' }).then(({error}) => {
+        if (error && error.code !== 'PGRST205') {
+          console.error("Error saving lms_progress to Supabase", error);
+        }
+      });
+    }
+  }, [progress, isInitialized, user, isSimulated]);
 
   const enrollTrack = useCallback((trackId: string) => {
     setProgress((prev) => {

@@ -128,6 +128,8 @@ export function GlyphMatrix({
     let lastTick = 0;
 
     const render = (timestamp: number) => {
+      const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
       if (timestamp - lastTick > interval) {
         lastTick = timestamp;
 
@@ -144,8 +146,8 @@ export function GlyphMatrix({
           for (let r = 0; r < rows.current; r++) {
             const cell = grid.current[c][r];
             
-            // Mutate randomly based on rate
-            if (Math.random() < mutationRate) {
+            // Mutate randomly based on rate ONLY if not reduced motion
+            if (!prefersReducedMotion && Math.random() < mutationRate) {
               cell.char = glyphs.charAt(Math.floor(Math.random() * glyphs.length));
             }
 
@@ -161,10 +163,18 @@ export function GlyphMatrix({
         }
         ctx.globalAlpha = 1.0;
       }
-      animationFrameId = requestAnimationFrame(render);
+      if (!prefersReducedMotion) {
+        animationFrameId = requestAnimationFrame(render);
+      }
     };
 
-    animationFrameId = requestAnimationFrame(render);
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReducedMotion) {
+      // Just render once immediately
+      render(performance.now() + interval + 1);
+    } else {
+      animationFrameId = requestAnimationFrame(render);
+    }
 
     return () => {
       cancelAnimationFrame(animationFrameId);

@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { PageMeta } from '@/components/PageMeta';
 import { MagicCard } from '../components/magicui/MagicCard';
 
 import { EditorialMedia } from '@/components/ui/editorial-media';
@@ -119,6 +120,9 @@ export default function KnowledgeHub() {
 
  return (
  <div className="flex-1 w-full">
+      <PageMeta title="Knowledge Hub"
+        description="Browse expert articles, research insights, and learning resources curated by EduPlus Skills advisors."
+      />
 
  {/* ── Typographic Hero ── */}
  <PageHero
@@ -199,18 +203,19 @@ export default function KnowledgeHub() {
  </div>
  ) : (
  <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-16">
- {filteredItems.map((item) => {
+ {filteredItems.map((item, i) => {
  const isYoutube = item.media_type === 'video_embed' && getYoutubeId(item.url);
  const youtubeId = isYoutube ? getYoutubeId(item.url) : null;
+ const isFeatured = i === 0 && activeTab === 'all' && searchQuery.trim() === '';
  return (
  <MagicCard
  key={item.id}
- className="group flex flex-col gap-4 p-8 bg-transparent hover:bg-secondary transition-colors duration-200 rounded-none border border-border/30"
+ className={`group flex flex-col ${isFeatured ? 'md:flex-row' : ''} gap-6 p-8 bg-transparent hover:bg-secondary transition-colors duration-200 rounded-none border border-border/30 ${isFeatured ? 'md:col-span-2 lg:col-span-3' : ''}`}
  gradientColor="oklch(var(--primary) / 0.08)"
  >
  {/* 3:2 thumbnail */}
  {youtubeId ? (
- <div className="aspect-[3/2] w-full overflow-hidden bg-border/30">
+ <div className={`aspect-[3/2] overflow-hidden bg-border/30 ${isFeatured ? 'md:w-1/2' : 'w-full'}`}>
  <img
  src={`https://img.youtube.com/vi/${youtubeId}/mqdefault.jpg`}
  alt={item.title}
@@ -218,30 +223,31 @@ export default function KnowledgeHub() {
  />
  </div>
  ) : item.cover_image_url ? (
- <div className="aspect-[3/2] w-full overflow-hidden bg-border/30">
+ <div className={`aspect-[3/2] overflow-hidden bg-border/30 ${isFeatured ? 'md:w-1/2' : 'w-full'}`}>
  <img
- src={item.cover_image_url}
- alt={item.title}
- className="w-full h-full object-cover"
- />
+  src={item.cover_image_url}
+  alt={item.title}
+  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+  />
  </div>
  ) : (
- <div className="aspect-[3/2] w-full bg-secondary flex items-center justify-center text-muted-foreground">
- <span className="text-[11px] uppercase tracking-wide">{CATEGORY_LABELS[item.category] || item.category}</span>
- </div>
+ <div className={`aspect-[3/2] bg-secondary flex items-center justify-center text-muted-foreground ${isFeatured ? 'md:w-1/2' : 'w-full'}`}>
+  <span className="text-[11px] uppercase tracking-wide">{CATEGORY_LABELS[item.category] || item.category}</span>
+  </div>
  )}
 
+ <div className={`flex flex-col flex-1 ${isFeatured ? 'md:w-1/2 md:justify-center' : ''}`}>
  {/* Metadata */}
- <div className="flex-1 flex flex-col gap-2">
- <span className="text-[12px] text-muted-foreground">{item.author_name}</span>
- <h3 className="text-[17px] font-medium text-foreground leading-snug">{item.title}</h3>
- {item.description && (
- <p className="text-[14px] text-muted-foreground leading-relaxed line-clamp-2">{item.description}</p>
- )}
- </div>
+ <div className="flex flex-col gap-2 mb-6">
+  <span className="text-[12px] font-medium text-primary uppercase tracking-wide">{item.author_name}</span>
+  <h3 className={`${isFeatured ? 'text-[28px] md:text-[36px]' : 'text-[17px]'} font-medium text-foreground leading-snug group-hover:text-primary transition-colors`}>{item.title}</h3>
+  {item.description && (
+  <p className="text-[14px] text-muted-foreground leading-relaxed line-clamp-2 mt-2">{item.description}</p>
+  )}
+  </div>
 
  {/* CTA */}
- <div className="pt-2">
+ <div className="mt-auto">
  {isYoutube ? (
  <button
  onClick={() => setSelectedVideo(item.url)}
@@ -260,6 +266,7 @@ export default function KnowledgeHub() {
  Open resource &rarr;
  </a>
  )}
+ </div>
  </div>
  </MagicCard>
  );

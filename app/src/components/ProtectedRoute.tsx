@@ -13,8 +13,9 @@ export default function ProtectedRoute({ children }: { children: React.ReactNode
   useEffect(() => {
     if (loading) return;
     
-    // If not logged in, or if it's a simulated session (tests/demo), skip AAL check
-    if (!user || isSimulated) {
+    // If not logged in, or if it's a simulated session (tests/demo) and simulation is enabled, skip AAL check
+    const isSimEnabled = import.meta.env.VITE_ENABLE_SIMULATION === 'true';
+    if (!user || (isSimulated && isSimEnabled)) {
       setAalLoading(false);
       return;
     }
@@ -48,7 +49,7 @@ export default function ProtectedRoute({ children }: { children: React.ReactNode
 
   if (loading || aalLoading) {
     return (
-      <div className="min-h-screen bg-background flex flex-col justify-center items-center text-primary font-mono p-8">
+      <div className="min-h-dvh bg-background flex flex-col justify-center items-center text-primary font-mono p-8">
         <div className="border border-border p-6 bg-card rounded-none shadow-[0_0_15px_oklch(var(--primary)/0.05)] text-center max-w-md animate-pulse">
           <p className="text-xs tracking-widest mb-3 text-muted-foreground uppercase">Authenticating</p>
           <p className="text-sm font-light text-foreground mb-4">Verifying session credentials...</p>

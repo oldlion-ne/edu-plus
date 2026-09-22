@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { PageMeta } from '@/components/PageMeta';
 import { useLocation, useNavigate } from 'react-router';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Shield, FileText, Cookie } from 'lucide-react';
@@ -36,6 +37,9 @@ export default function Legal() {
 
  return (
  <div className="min-h-[100dvh] pt-32 pb-24 px-6 md:px-12 font-sans selection:bg-primary/30">
+      <PageMeta title="Legal & Privacy"
+        description="Review EduPlus Skills legal terms, privacy policy, and cookie usage information."
+      />
  <div className="max-w-6xl mx-auto">
  
  {/* Header */}

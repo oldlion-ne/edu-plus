@@ -19,6 +19,7 @@ import {
   Target,
   FileCheck,
 } from 'lucide-react';
+import { PageMeta } from '@/components/PageMeta';
 
 export default function LmsHub() {
   const [selectedCertificate, setSelectedCertificate] = useState<CertificateData | null>(null);
@@ -47,8 +48,7 @@ export default function LmsHub() {
 
   const handleOpenCertificate = (track: CurriculumTrack) => {
     setSelectedCertificate({
-      // eslint-disable-next-line react-hooks/purity
-      certificateId: `EDU-CERT-${track.code}-${Math.floor(100000 + Math.random() * 900000)}`,
+      certificateId: `EDU-CERT-${track.code}-${crypto.randomUUID().split('-')[0].toUpperCase()}`,
       recipientName: 'Verified EduPlus Candidate',
       trackTitle: track.title,
       trackCode: track.code,
@@ -67,6 +67,10 @@ export default function LmsHub() {
 
   return (
     <div className="flex flex-col flex-1 w-full relative z-0 pb-16">
+      <PageMeta
+        title="Learning Hub"
+        description="Track your EduPlus learning milestones, resume your curriculum tracks, and earn verified certificates."
+      />
       {/* ── Dynamic Dashboard Hero ── */}
       <div className="bg-muted/20 border-b border-border">
         <div className="max-w-[1440px] mx-auto w-full px-4 sm:px-6 md:px-12 py-12 md:py-16">
@@ -177,9 +181,17 @@ export default function LmsHub() {
       <div className="max-w-[1440px] mx-auto w-full px-4 sm:px-6 md:px-12 mt-12 sm:mt-16">
         
         {/* ── Tools & Schedulers ── */}
-        <div className="mb-16 grid grid-cols-1 xl:grid-cols-2 gap-8">
-          <LearningPathOptimizer />
-          <StudyScheduler />
+        <div className="mb-16 bg-card border border-border p-8 md:p-10 rounded-none shadow-sm relative z-10">
+          <div className="mb-8">
+            <h2 className="text-2xl font-heading font-medium text-foreground">AI Power Tools</h2>
+            <p className="text-sm text-muted-foreground mt-1">
+              Leverage artificial intelligence to optimize your curriculum path and schedule.
+            </p>
+          </div>
+          <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
+            <LearningPathOptimizer />
+            <StudyScheduler />
+          </div>
         </div>
 
         {/* ── Enrolled Tracks Carousel ── */}
