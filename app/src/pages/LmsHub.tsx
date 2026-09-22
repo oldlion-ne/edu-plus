@@ -7,6 +7,8 @@ import { TrackCard } from '../components/lms/TrackCard';
 import { CertificateModal } from '../components/lms/CertificateModal';
 import { LearningPathOptimizer } from '../components/LearningPathOptimizer';
 import { StudyScheduler } from '../components/lms/StudyScheduler';
+import { ClassroomWidget } from '../components/lms/ClassroomWidget';
+import { ProgressCharts } from '../components/lms/ProgressCharts';
 import { Button } from '../components/ui/button';
 import { Badge } from '../components/ui/badge';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '../components/ui/carousel';
@@ -175,6 +177,9 @@ export default function LmsHub() {
               </div>
             </div>
           </div>
+          
+          {/* ── Progress Charts ── */}
+          <ProgressCharts />
         </div>
       </div>
 
@@ -183,14 +188,15 @@ export default function LmsHub() {
         {/* ── Tools & Schedulers ── */}
         <div className="mb-16 bg-card border border-border p-8 md:p-10 rounded-none shadow-sm relative z-10">
           <div className="mb-8">
-            <h2 className="text-2xl font-heading font-medium text-foreground">AI Power Tools</h2>
+            <h2 className="text-2xl font-heading font-medium text-foreground">AI Power Tools & Integrations</h2>
             <p className="text-sm text-muted-foreground mt-1">
-              Leverage artificial intelligence to optimize your curriculum path and schedule.
+              Leverage artificial intelligence and external connections to optimize your curriculum path and schedule.
             </p>
           </div>
-          <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             <LearningPathOptimizer />
             <StudyScheduler />
+            <ClassroomWidget />
           </div>
         </div>
 

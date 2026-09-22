@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { useNavigate } from 'react-router';
+import { useNavigate, useSearchParams } from 'react-router';
 import { toast } from 'sonner';
 import { useAuth } from '../lib/useAuth';
 import DashboardOnboardingTour from '../components/DashboardOnboardingTour';
@@ -17,11 +17,14 @@ import ProfileSettingsDialog from '../components/dashboard/ProfileSettingsDialog
 import { useDashboardTelemetry } from '../hooks/useDashboardTelemetry';
 
 export type DashboardTab = 'overview' | 'users' | 'courses' | 'library' | 'media' | 'inquiries' | 'subscribers' | 'ai-chats' | 'profile' | 'security' | 'ai-advisor' | 'access-control';
+const VALID_TABS: DashboardTab[] = ['overview', 'users', 'courses', 'library', 'media', 'inquiries', 'subscribers', 'ai-chats', 'profile', 'security', 'ai-advisor', 'access-control'];
 
 export default function Dashboard() {
   const { user, role: selectedRole, isSimulated, signOut, signInSimulated } = useAuth();
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState<DashboardTab>('overview');
+  const [searchParams, setSearchParams] = useSearchParams();
+  const tabParam = searchParams.get('tab') as DashboardTab;
+  const activeTab = VALID_TABS.includes(tabParam) ? tabParam : 'overview';
   const [showTour, setShowTour] = useState(false);
   const [showBellDropdown, setShowBellDropdown] = useState(false);
   const mainScrollRef = useRef<HTMLElement>(null);
@@ -35,7 +38,7 @@ export default function Dashboard() {
   } = useDashboardTelemetry();
 
   const handleTabChange = (tab: DashboardTab) => {
-    setActiveTab(tab);
+    setSearchParams({ tab });
     if (mainScrollRef.current) mainScrollRef.current.scrollTop = 0;
   };
 

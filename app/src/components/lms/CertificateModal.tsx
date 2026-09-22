@@ -191,7 +191,7 @@ export const CertificateModal: React.FC<CertificateModalProps> = ({
               </div>
 
               {/* Verification Badge */}
-              <div className="absolute bottom-[0cqw] translate-y-1/2 flex items-center justify-center gap-[0.5cqw] text-[#22C55E] font-mono tracking-widest bg-background px-[2cqw] py-[0.5cqw] border border-[#22C55E]/20">
+              <div className="absolute bottom-[0cqw] translate-y-1/2 flex items-center justify-center gap-[0.5cqw] text-green-600 font-mono tracking-widest bg-background px-[2cqw] py-[0.5cqw] border border-green-600/20">
                 <CheckCircle2 className="w-[1.2cqw] h-[1.2cqw]" />
                 <span className="text-[0.9cqw]">AUTHENTICATED RECORD // EDUPLUS SKILLS COUNCIL</span>
               </div>

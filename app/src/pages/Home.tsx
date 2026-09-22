@@ -6,6 +6,7 @@ import Vision from '../sections/Vision';
 import PathwaySimulator from '../sections/PathwaySimulator';
 import ServicesMatrix from '../sections/ServicesMatrix';
 import PedigreeShowcase from '../sections/PedigreeShowcase';
+import { Testimonials } from '../components/Testimonials';
 
 export default function Home() {
   return (
@@ -20,6 +21,7 @@ export default function Home() {
       <Vision />
       <PathwaySimulator />
       <ServicesMatrix />
+      <Testimonials />
       <PedigreeShowcase />
     </>
   );

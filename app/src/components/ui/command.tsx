@@ -9,10 +9,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
-import {
-  InputGroup,
-  InputGroupAddon,
-} from "@/components/ui/input-group"
 import { HugeiconsIcon } from "@hugeicons/react"
 import { SearchIcon, Tick02Icon } from "@hugeicons/core-free-icons"
 
@@ -71,22 +67,18 @@ function CommandInput({
   ...props
 }: React.ComponentProps<typeof CommandPrimitive.Input>) {
   return (
-    <div data-slot="command-input-wrapper" className="p-1 pb-0">
-      <InputGroup className="h-8! bg-input/20 dark:bg-input/30">
+    <div className="flex items-center border-b border-border/50 px-3" data-slot="command-input-wrapper">
+      <HugeiconsIcon icon={SearchIcon} strokeWidth={2} className="mr-2 size-4 shrink-0 opacity-50" />
       {React.createElement(
         CommandPrimitive.Input,
         Object.assign({}, props, {
           "data-slot": "command-input",
           className: cn(
-            "w-full text-xs/relaxed outline-none disabled:cursor-not-allowed disabled:opacity-50",
+            "flex h-10 w-full bg-transparent py-3 text-sm outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50",
             className
           ),
         }) as React.ComponentProps<typeof CommandPrimitive.Input> & { "data-slot": string }
       )}
-        <InputGroupAddon>
-          <HugeiconsIcon icon={SearchIcon} strokeWidth={2} className="size-3.5 shrink-0 opacity-50" />
-        </InputGroupAddon>
-      </InputGroup>
     </div>
   )
 }

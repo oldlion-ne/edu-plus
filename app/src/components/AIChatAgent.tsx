@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from 'react';
 import { supabase } from '../lib/supabaseClient';
 import { sendChatMessage, type ChatMessage } from '../lib/openRouter';
-import { X, MessageSquare } from 'lucide-react';
+import { X, MessageSquare, Trash2 } from 'lucide-react';
 
 const SYSTEM_PROMPT = `You are the Eduplus Skills AI Advisor, a highly smart, professional, and helpful site guide & academic counselor for Holistic Eduplus Skills based in Imphal, Manipur.
 Your goal is to guide visitors through Eduplus services and help students explore career/academic options.
@@ -15,10 +15,13 @@ Eduplus Services/Programs:
 6. Innovation Studio & Educator Academy: STEM lab setups in schools & modern pedagogical growth training for teachers.
 
 Style Guidelines:
+- CRITICAL: Keep your responses EXTREMELY short, concise, and to the point.
+- Answer ONLY what the user explicitly asks. Do not provide unprompted background information.
+- Limit responses to 1-3 sentences maximum whenever possible.
+- Avoid outputting long lists unless the user explicitly requests them.
 - Sound professional, encouraging, and supportive.
-- Keep answers structured with bullet points where appropriate.
 - Be explicitly aware that Eduplus Skills is an agency operating from Mommy Complex, Nambol Bazar & Wangkhei in Manipur, India.
-- Encourage the user to explore the website pages (Programs, About, Council, Contact). If they express a strong interest in registering, guide them to use the Connect page (/connect).`;
+- If they express a strong interest in registering, guide them to use the Connect page (/connect).`;
 
 const translations = {
   advisorTitle: "EDU+ AI ADVISOR",
@@ -65,6 +68,7 @@ export default function AIChatAgent() {
   useEffect(() => {
     if (!isOpen || conversationId) return;
 
+    let cancelled = false;
     const initSession = async () => {
       try {
         let session = localStorage.getItem('edu_plus_chat_session_id');
@@ -77,6 +81,7 @@ export default function AIChatAgent() {
           localStorage.setItem('edu_plus_chat_session_id', session);
         }
 
+        if (cancelled) return;
         setConversationId(session);
 
         try {
@@ -95,6 +100,7 @@ export default function AIChatAgent() {
           }
 
           if (history && history.length > 0) {
+            if (cancelled) return;
             setMessages(history.map((h: any) => ({ role: h.role as any, content: h.content })));
             return;
           }
@@ -104,8 +110,9 @@ export default function AIChatAgent() {
 
         const welcomeMsg: ChatMessage = {
           role: 'assistant',
-          content: 'Welcome to Edu+ AI Advisor. I am your academic guidance assistant. Are you looking for career counseling, program exploration, or academic advisory?'
+          content: 'Hi! I am the Eduplus AI Advisor. How can I help you today?'
         };
+        if (cancelled) return;
         setMessages([welcomeMsg]);
 
         try {
@@ -119,14 +126,16 @@ export default function AIChatAgent() {
         }
       } catch (err) {
         console.error('Fatal error in initSession:', err);
+        if (cancelled) return;
         setMessages([{
           role: 'assistant',
-          content: 'Welcome to Edu+ AI Advisor. I am your academic guidance assistant. Are you looking for career counseling, program exploration, or academic advisory?'
+          content: 'Hi! I am the Eduplus AI Advisor. How can I help you today?'
         }]);
       }
     };
 
     initSession();
+    return () => { cancelled = true; };
   }, [isOpen, conversationId]);
 
   // Auto-scroll to latest message
@@ -200,6 +209,13 @@ export default function AIChatAgent() {
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const handleClearChat = () => {
+    if (isLoading) return;
+    localStorage.removeItem('edu_plus_chat_session_id');
+    setMessages([]);
+    setConversationId(null);
   };
 
   const formatMessageContent = (content: string) => {
@@ -298,15 +314,26 @@ export default function AIChatAgent() {
                 </span>
                 <span className="font-mono text-xs font-bold tracking-widest text-primary uppercase">{t('advisorTitle')}</span>
               </div>
-              {/* Close button */}
-              <button /* ui-ignore */
-                type="button"
-                onClick={() => setIsOpen(false)}
-                aria-label="Close AI chat"
-                className="flex items-center justify-center h-8 w-8 border border-border hover:border-primary/60 text-muted-foreground hover:text-primary bg-transparent hover:bg-primary/10 transition-all duration-200 cursor-pointer rounded-none"
-              >
-                <X className="size-4" />
-              </button>
+              {/* Actions */}
+              <div className="flex items-center gap-1">
+                <button /* ui-ignore */
+                  type="button"
+                  onClick={handleClearChat}
+                  title="Clear Chat"
+                  aria-label="Clear AI chat"
+                  className="flex items-center justify-center h-8 w-8 border border-transparent hover:border-border text-muted-foreground hover:text-destructive bg-transparent hover:bg-destructive/10 transition-all duration-200 cursor-pointer rounded-none"
+                >
+                  <Trash2 className="size-4" />
+                </button>
+                <button /* ui-ignore */
+                  type="button"
+                  onClick={() => setIsOpen(false)}
+                  aria-label="Close AI chat"
+                  className="flex items-center justify-center h-8 w-8 border border-border hover:border-primary/60 text-muted-foreground hover:text-primary bg-transparent hover:bg-primary/10 transition-all duration-200 cursor-pointer rounded-none"
+                >
+                  <X className="size-4" />
+                </button>
+              </div>
             </div>
 
             {/* Messages */}

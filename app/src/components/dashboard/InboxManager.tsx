@@ -7,7 +7,8 @@ import {
   Trash2, 
   Check,
   Search,
-  MessageSquare
+  MessageSquare,
+  Download
 } from 'lucide-react';
 import { toast } from 'sonner';
 
@@ -44,6 +45,31 @@ export default function InboxManager({ activeFolder = 'inquiries' }: { activeFol
   // Selected Detail Modal/View
   const [selectedMsg, setSelectedMsg] = useState<ContactMsg | null>(null);
   const [selectedConv, setSelectedConv] = useState<Conversation | null>(null);
+  const [transcriptMessages, setTranscriptMessages] = useState<any[]>([]);
+
+  const [transcriptError, setTranscriptError] = useState<string | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    if (selectedConv) {
+      setTranscriptError(null);
+      supabase.rpc('get_conversation_messages', { p_conversation_id: selectedConv.id })
+        .then(({ data, error }) => {
+          if (cancelled) return;
+          if (error) {
+            console.error('Failed to load transcript:', error);
+            setTranscriptError(error.message);
+            setTranscriptMessages([]);
+          } else {
+            setTranscriptMessages(data || []);
+          }
+        });
+    } else {
+      setTranscriptError(null);
+      setTranscriptMessages([]);
+    }
+    return () => { cancelled = true; };
+  }, [selectedConv]);
 
   useEffect(() => {
     fetchInboxData();
@@ -102,6 +128,31 @@ export default function InboxManager({ activeFolder = 'inquiries' }: { activeFol
     } catch (err: any) {
       toast.error('Failed to delete message');
     }
+  };
+
+  const handleDeleteChat = async (id: string) => {
+    if (!confirm('Delete chat session?')) return;
+    try {
+      const { error } = await supabase.from('conversations').delete().eq('id', id);
+      if (error) throw error;
+      toast.success('Chat session deleted');
+      setConversations(prev => prev.filter(c => c.id !== id));
+      if (selectedConv?.id === id) setSelectedConv(null);
+    } catch (err: any) {
+      toast.error('Failed to delete chat session');
+    }
+  };
+
+  const handleExportChat = () => {
+    if (!selectedConv || transcriptMessages.length === 0) return;
+    const text = transcriptMessages.map(msg => `[${msg.role === 'user' ? 'YOU' : 'ADVISOR'}]\n${msg.content}`).join('\n\n');
+    const blob = new Blob([text], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `chat_session_${selectedConv.id.substring(0, 5)}.txt`;
+    a.click();
+    URL.revokeObjectURL(url);
   };
 
   if (activeFolder === 'subscribers') {
@@ -292,12 +343,47 @@ export default function InboxManager({ activeFolder = 'inquiries' }: { activeFol
               </div>
             </div>
           ) : activeFolder === 'ai-chats' && selectedConv ? (
-            <div className="empty-focal">
-              <Bot style={{ width: '32px', height: '32px', stroke: 'oklch(var(--muted-foreground))', fill: 'none', strokeWidth: 1.4 }} />
-              <div className="t">Session_{selectedConv.id.substring(0, 5)} Transcript</div>
-              <div className="s">
-                Created: {new Date(selectedConv.created_at).toLocaleString()}<br />
-                Last active: {new Date(selectedConv.updated_at).toLocaleString()}
+            <div className="h-full flex flex-col">
+              <div className="flex items-center gap-3 pb-4 border-b border-border/50 shrink-0">
+                <Bot style={{ width: '24px', height: '24px', stroke: 'oklch(var(--primary))', fill: 'none', strokeWidth: 1.5 }} />
+                <div className="flex-1">
+                  <div className="font-heading font-medium text-foreground">Session_{selectedConv.id.substring(0, 5)} Transcript</div>
+                  <div className="text-[11px] font-mono text-muted-foreground mt-0.5">
+                    {new Date(selectedConv.created_at).toLocaleString()}
+                  </div>
+                </div>
+                <div className="flex gap-2">
+                  <button className="btn btn-g btn-sm" onClick={handleExportChat}>
+                    <Download className="size-3.5 mr-1" /> Export
+                  </button>
+                  <button className="btn btn-danger btn-sm" onClick={() => handleDeleteChat(selectedConv.id)}>
+                    <Trash2 className="size-3.5 mr-1" /> Delete
+                  </button>
+                </div>
+              </div>
+              <div className="flex-1 overflow-y-auto py-4 flex flex-col gap-4">
+                {transcriptError ? (
+                  <div className="text-center text-sm text-destructive py-10 flex flex-col items-center justify-center gap-2">
+                    <p>Error loading transcript.</p>
+                    <p className="text-xs text-muted-foreground max-w-sm">{transcriptError}</p>
+                    <button className="btn btn-g btn-sm mt-2" onClick={() => setSelectedConv({ ...selectedConv })}>
+                       Retry
+                    </button>
+                  </div>
+                ) : transcriptMessages.length === 0 ? (
+                  <div className="text-center text-sm text-muted-foreground py-10">No messages in this transcript yet.</div>
+                ) : (
+                  transcriptMessages.map((msg, index) => (
+                    <div key={msg.id || `msg-${index}`} className={`flex flex-col gap-1 ${msg.role === 'user' ? 'items-end' : 'items-start'}`}>
+                      <div className={`text-[10px] uppercase font-bold tracking-wider ${msg.role === 'user' ? 'text-primary' : 'text-muted-foreground'}`}>
+                        {msg.role === 'user' ? 'YOU' : 'ADVISOR'}
+                      </div>
+                      <div className={`p-3 text-[13.5px] leading-relaxed rounded-none max-w-[90%] whitespace-pre-wrap ${msg.role === 'user' ? 'bg-primary/10 text-foreground' : 'bg-muted/50 border border-border/50 text-foreground'}`}>
+                        {msg.content}
+                      </div>
+                    </div>
+                  ))
+                )}
               </div>
             </div>
           ) : (

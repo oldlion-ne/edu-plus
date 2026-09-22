@@ -105,7 +105,7 @@ function App() {
               </Route>
 
               {/* LEARNER LAYOUT (No nav/footer for immersive learning) */}
-              <Route element={<LearnerLayout />}>
+              <Route element={<ProtectedRoute><LearnerLayout /></ProtectedRoute>}>
                 <Route path="/lms/learn/:trackId/:lessonId" element={<LmsLessonPlayer />} />
                 <Route path="/lms/quiz/:trackId/:moduleId" element={<LmsQuiz />} />
               </Route>
@@ -123,8 +123,8 @@ function App() {
                 <Route path="/contact" element={<Contact />} />
                 <Route path="/connect" element={<Connect />} />
                 <Route path="/knowledge-hub" element={<KnowledgeHub />} />
-                <Route path="/lms" element={<LmsHub />} />
-                <Route path="/lms/tracks/:trackId" element={<LmsTrackDetail />} />
+                <Route path="/lms" element={<ProtectedRoute><LmsHub /></ProtectedRoute>} />
+                <Route path="/lms/tracks/:trackId" element={<ProtectedRoute><LmsTrackDetail /></ProtectedRoute>} />
                 <Route path="/pricing" element={<Pricing />} />
                 <Route path="/legal" element={<Legal />} />
                 <Route path="/sentry-example-page" element={<SentryExample />} />
