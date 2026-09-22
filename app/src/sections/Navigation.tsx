@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { motion, type Variants } from 'framer-motion';
+import { motion, type Variants, useReducedMotion } from 'framer-motion';
 import { NavLink, Link, useNavigate, useLocation } from 'react-router';
 import { useScrollContainer } from '../lib/ScrollContext';
 import { useAuth } from '../lib/useAuth';
@@ -148,6 +148,7 @@ export default function Navigation() {
   const [scrolled, setScrolled] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
+  const shouldReduceMotion = useReducedMotion();
   const navRef = useRef<HTMLElement>(null);
   const scrollContext = useScrollContainer();
 
@@ -194,9 +195,9 @@ export default function Navigation() {
         {/* ── Logo ── */}
         <motion.div
           variants={logoContainerVariants}
-          initial="initial"
+          initial={shouldReduceMotion ? false : "initial"}
           animate="animate"
-          whileHover="hover"
+          whileHover={shouldReduceMotion ? undefined : "hover"}
         >
           <Link
             to="/"

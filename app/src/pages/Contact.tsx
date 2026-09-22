@@ -268,7 +268,7 @@ export default function Contact() {
  {/* Amber top accent — static, not hover-triggered, signals premium craftsmanship */}
  <div className="absolute top-0 left-0 w-16 h-[2px] bg-primary" />
 
- <h3 className="text-lg md:text-xl font-medium text-foreground mb-6">Send an Inquiry</h3>
+ <h3 className="text-lg md:text-xl font-medium font-heading text-foreground mb-6">Send an Inquiry</h3>
 
  {submitted ? (
  <div className="text-[14px] text-primary bg-primary/5 p-6 border border-primary/20">
