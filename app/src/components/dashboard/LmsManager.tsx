@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { CURRICULUM_TRACKS } from '../../data/lmsCurriculumData';
 import { Link } from 'react-router';
 import { ExternalLink } from 'lucide-react';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 
 export default function LmsManager() {
   const [selectedTrackId, setSelectedTrackId] = useState(CURRICULUM_TRACKS[0].id);
@@ -84,36 +85,40 @@ export default function LmsManager() {
             
             <div className="hr" />
 
-            <h3 className="font-sans text-[16px] font-semibold text-foreground mb-2">
+            <h3 className="font-sans text-[16px] font-semibold text-foreground mb-4">
               Syllabus · {selectedTrack.modules.length} modules
             </h3>
             
-            <div className="divide-y divide-border/60">
+            <Accordion type="single" collapsible className="w-full">
               {selectedTrack.modules.map((m) => (
-                <div key={m.id} className="mod py-4">
-                  <div className="mh flex justify-between items-baseline gap-3 mb-1">
-                    <span className="mt font-semibold text-foreground text-[14.5px]">
-                      Module {m.order} · {m.title}
-                    </span>
-                    <span className="mm font-mono text-[11px] text-muted-foreground shrink-0">
-                      {m.estimatedHours}h · {m.lessons.length} lessons
-                    </span>
-                  </div>
-                  <div className="space-y-1 mt-2">
-                    {m.lessons.map((l) => (
-                      <div key={l.id} className="les flex justify-between items-baseline gap-3 text-[13.5px] text-muted-foreground">
-                        <span>{l.title}</span>
-                        <span className="dur font-mono text-[11px] text-muted-foreground shrink-0">
-                          {l.durationMinutes}m · {l.type}
-                        </span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
+                <AccordionItem key={m.id} value={m.id} className="border-border/40">
+                  <AccordionTrigger className="hover:no-underline py-4 group">
+                    <div className="flex flex-1 justify-between items-baseline gap-3 pr-4">
+                      <span className="font-semibold text-foreground text-[14.5px] group-hover:text-primary transition-colors">
+                        Module {m.order} · {m.title}
+                      </span>
+                      <span className="font-mono text-[11px] text-muted-foreground shrink-0">
+                        {m.estimatedHours}h · {m.lessons.length} lessons
+                      </span>
+                    </div>
+                  </AccordionTrigger>
+                  <AccordionContent>
+                    <div className="space-y-3 pt-2 pb-1">
+                      {m.lessons.map((l, idx) => (
+                        <div key={l.id} className="flex justify-between items-baseline gap-3 text-[13.5px] text-muted-foreground pl-1 border-l-2 border-primary/20 hover:border-primary transition-colors">
+                          <span className="pl-3">{idx + 1}. {l.title}</span>
+                          <span className="font-mono text-[11px] shrink-0">
+                            {l.durationMinutes}m · {l.type}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  </AccordionContent>
+                </AccordionItem>
               ))}
-            </div>
+            </Accordion>
 
-            <div className="mt-6 pt-4 border-t border-border flex items-center justify-between">
+            <div className="mt-8 pt-4 border-t border-border flex items-center justify-between">
               <span className="font-mono text-[11px] text-muted-foreground">
                 Council Certified Track
               </span>

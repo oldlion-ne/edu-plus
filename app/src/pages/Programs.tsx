@@ -1,5 +1,5 @@
-import { useState, type KeyboardEvent } from 'react';
-import { Link } from 'react-router';
+import { useState, useEffect, useRef, type KeyboardEvent } from 'react';
+import { Link, useSearchParams } from 'react-router';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { PageHero } from '@/components/ui/page-hero';
@@ -86,9 +86,27 @@ const PROGRAMS = [
 ];
 
 export default function Programs() {
- const [selected, setSelected] = useState<number>(0);
+  const [searchParams] = useSearchParams();
+  const [selected, setSelected] = useState<number>(0);
+  const sectionRef = useRef<HTMLElement>(null);
 
- const handleTabKeyDown = (
+  useEffect(() => {
+    const tabNum = searchParams.get('tab');
+    if (tabNum) {
+      const index = PROGRAMS.findIndex(p => p.num === tabNum);
+      if (index !== -1) {
+        setSelected(index);
+        // Add a slight delay to allow rendering and ScrollToTop to finish
+        setTimeout(() => {
+          if (sectionRef.current) {
+            sectionRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+        }, 100);
+      }
+    }
+  }, [searchParams]);
+
+  const handleTabKeyDown = (
  event: KeyboardEvent<HTMLButtonElement>,
  index: number,
  ) => {
@@ -132,7 +150,7 @@ export default function Programs() {
  />
 
  {/* ── Program Explorer ── */}
- <section className="py-20 border-t border-border/50 px-6 md:px-12 max-w-[1440px] mx-auto">
+ <section ref={sectionRef} className="py-20 border-t border-border/50 px-6 md:px-12 max-w-[1440px] mx-auto scroll-mt-24">
  <ScrollReveal>
  <div className="grid md:grid-cols-[280px_1fr] gap-16">
 

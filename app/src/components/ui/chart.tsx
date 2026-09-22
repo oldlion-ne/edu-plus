@@ -1,18 +1,13 @@
-"use client"
-
 import * as React from "react"
+import { cn } from "cn"
 import * as RechartsPrimitive from "recharts"
 import type { TooltipValueType } from "recharts"
-
-import { cn } from "@/lib/utils"
 
 // Format: { THEME_NAME: CSS_SELECTOR }
 const THEMES = { light: "", dark: ".dark" } as const
 
 const INITIAL_DIMENSION = { width: 320, height: 200 } as const
 type TooltipNameType = number | string
-
-const isSafeKey = (k: string) => k !== "__proto__" && k !== "constructor" && k !== "prototype"
 
 export type ChartConfig = Record<
   string,
@@ -63,26 +58,22 @@ function ChartContainer({
 
   return (
     <ChartContext.Provider value={{ config }}>
-      {React.createElement(
-        "div",
-        {
-          "data-slot": "chart",
-          "data-chart": chartId,
-          className: cn(
-            "flex aspect-video justify-center text-xs [&_.recharts-cartesian-axis-tick_text]:fill-muted-foreground [&_.recharts-cartesian-grid_line[stroke='#ccc']]:stroke-border/50 [&_.recharts-curve.recharts-tooltip-cursor]:stroke-border [&_.recharts-dot[stroke='#fff']]:stroke-transparent [&_.recharts-layer]:outline-none [&_.recharts-polar-grid_[stroke='#ccc']]:stroke-border [&_.recharts-radial-bar-background-sector]:fill-muted [&_.recharts-rectangle.recharts-tooltip-cursor]:fill-muted [&_.recharts-reference-line_[stroke='#ccc']]:stroke-border [&_.recharts-sector]:outline-none [&_.recharts-sector[stroke='#fff']]:stroke-transparent [&_.recharts-surface]:outline-none",
-            className
-          ),
-          ...props,
-        },
-        <>
-          <ChartStyle id={chartId} config={config} />
-          <RechartsPrimitive.ResponsiveContainer
-            initialDimension={initialDimension}
-          >
-            {children}
-          </RechartsPrimitive.ResponsiveContainer>
-        </>
-      )}
+      <div
+        data-slot="chart"
+        data-chart={chartId}
+        className={cn(
+          "flex aspect-video justify-center text-xs [&_.recharts-cartesian-axis-tick_text]:fill-muted-foreground [&_.recharts-cartesian-grid_line[stroke='#ccc']]:stroke-border/50 [&_.recharts-curve.recharts-tooltip-cursor]:stroke-border [&_.recharts-dot[stroke='#fff']]:stroke-transparent [&_.recharts-layer]:outline-hidden [&_.recharts-polar-grid_[stroke='#ccc']]:stroke-border [&_.recharts-radial-bar-background-sector]:fill-muted [&_.recharts-rectangle.recharts-tooltip-cursor]:fill-muted [&_.recharts-reference-line_[stroke='#ccc']]:stroke-border [&_.recharts-sector]:outline-hidden [&_.recharts-sector[stroke='#fff']]:stroke-transparent [&_.recharts-surface]:outline-hidden",
+          className
+        )}
+        {...props}
+      >
+        <ChartStyle id={chartId} config={config} />
+        <RechartsPrimitive.ResponsiveContainer
+          initialDimension={initialDimension}
+        >
+          {children}
+        </RechartsPrimitive.ResponsiveContainer>
+      </div>
     </ChartContext.Provider>
   )
 }
@@ -97,24 +88,26 @@ const ChartStyle = ({ id, config }: { id: string; config: ChartConfig }) => {
   }
 
   return (
-    <style>
-      {Object.entries(THEMES)
-        .map(
-          ([theme, prefix]) => `
+    <style
+      dangerouslySetInnerHTML={{
+        __html: Object.entries(THEMES)
+          .map(
+            ([theme, prefix]) => `
 ${prefix} [data-chart=${id}] {
 ${colorConfig
   .map(([key, itemConfig]) => {
     const color =
-      (itemConfig.theme && isSafeKey(theme) ? Reflect.get(itemConfig.theme, theme) : undefined) ??
+      itemConfig.theme?.[theme as keyof typeof itemConfig.theme] ??
       itemConfig.color
     return color ? `  --color-${key}: ${color};` : null
   })
   .join("\n")}
 }
 `
-        )
-        .join("\n")}
-    </style>
+          )
+          .join("\n"),
+      }}
+    />
   )
 }
 
@@ -159,8 +152,8 @@ function ChartTooltipContent({
     const key = `${labelKey ?? item?.dataKey ?? item?.name ?? "value"}`
     const itemConfig = getPayloadConfigFromPayload(config, item, key)
     const value =
-      !labelKey && typeof label === "string" && isSafeKey(label) && Object.prototype.hasOwnProperty.call(config, label)
-        ? ((Reflect.get(config, label) as any)?.label ?? label)
+      !labelKey && typeof label === "string"
+        ? (config[label]?.label ?? label)
         : itemConfig?.label
 
     if (labelFormatter) {
@@ -195,7 +188,7 @@ function ChartTooltipContent({
   return (
     <div
       className={cn(
-        "grid min-w-32 items-start gap-1.5 rounded-none border border-border/50 bg-background px-2.5 py-1.5 text-xs/relaxed shadow-xl",
+        "grid min-w-32 items-start gap-1.5 rounded-lg border border-border/50 bg-background px-2.5 py-1.5 text-xs/relaxed shadow-xl",
         className
       )}
     >
@@ -226,7 +219,7 @@ function ChartTooltipContent({
                       !hideIndicator && (
                         <div
                           className={cn(
-                            "shrink-0 rounded-none border-(--color-border) bg-(--color-bg)",
+                            "shrink-0 rounded-[2px] border-(--color-border) bg-(--color-bg)",
                             {
                               "h-2.5 w-2.5": indicator === "dot",
                               "w-1": indicator === "line",
@@ -317,7 +310,7 @@ function ChartLegendContent({
                 <itemConfig.icon />
               ) : (
                 <div
-                  className="h-2 w-2 shrink-0 rounded-none"
+                  className="h-2 w-2 shrink-0 rounded-[2px]"
                   style={{
                     backgroundColor: item.color,
                   }}
@@ -350,29 +343,21 @@ function getPayloadConfigFromPayload(
   let configLabelKey: string = key
 
   if (
-    isSafeKey(key) &&
     key in payload &&
-    typeof Reflect.get(payload, key) === "string"
+    typeof payload[key as keyof typeof payload] === "string"
   ) {
-    configLabelKey = Reflect.get(payload, key) as string
+    configLabelKey = payload[key as keyof typeof payload] as string
   } else if (
     payloadPayload &&
-    isSafeKey(key) &&
     key in payloadPayload &&
-    typeof Reflect.get(payloadPayload, key) === "string"
+    typeof payloadPayload[key as keyof typeof payloadPayload] === "string"
   ) {
-    configLabelKey = Reflect.get(payloadPayload, key) as string
+    configLabelKey = payloadPayload[
+      key as keyof typeof payloadPayload
+    ] as string
   }
 
-  if (!isSafeKey(configLabelKey)) {
-    return undefined
-  }
-
-  return Object.prototype.hasOwnProperty.call(config, configLabelKey)
-    ? (Reflect.get(config, configLabelKey) as any)
-    : Object.prototype.hasOwnProperty.call(config, key)
-    ? (Reflect.get(config, key) as any)
-    : undefined
+  return configLabelKey in config ? config[configLabelKey] : config[key]
 }
 
 export {

@@ -19,8 +19,9 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
 } from '@/components/ui/navigation-menu';
-import { Menu, X, ChevronDown, User } from 'lucide-react';
+import { Menu, X, ChevronDown, User, Search } from 'lucide-react';
 import { AnimatedThemeToggler } from '@/components/ui/animated-theme-toggler';
+import { GlobalSearch } from '@/components/GlobalSearch';
 
 // ─── Data ──────────────────────────────────────────────────────────────────
 
@@ -128,6 +129,7 @@ export default function Navigation() {
   const navigate = useNavigate();
   const [scrolled, setScrolled] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
   const navRef = useRef<HTMLElement>(null);
   const scrollContext = useScrollContainer();
 
@@ -253,6 +255,19 @@ export default function Navigation() {
         {/* ── Right-side Actions ── */}
         <div className="hidden xl:flex items-center gap-3">
 
+          <button
+            onClick={() => setSearchOpen(true)}
+            className="flex items-center justify-between gap-4 h-9 px-3 border border-border bg-muted/20 hover:bg-muted/50 text-muted-foreground hover:text-foreground transition-all duration-200 rounded-none w-56 text-sm"
+          >
+            <div className="flex items-center gap-2">
+              <Search className="size-4 shrink-0" />
+              <span className="font-sans text-xs">Search...</span>
+            </div>
+            <kbd className="pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded-none border border-border bg-muted px-1.5 font-mono text-[10px] font-medium opacity-100 uppercase tracking-widest">
+              <span className="text-xs">⌘</span>K
+            </kbd>
+          </button>
+
           {/* Theme Toggle */}
           <AnimatedThemeToggler />
 
@@ -309,6 +324,13 @@ export default function Navigation() {
 
         {/* ── Mobile Hamburger ── */}
         <div className="xl:hidden flex items-center gap-2">
+          <button
+            onClick={() => setSearchOpen(true)}
+            className="flex items-center justify-center h-9 w-9 border border-transparent hover:border-border text-muted-foreground hover:text-foreground bg-transparent hover:bg-muted/50 transition-all duration-200 cursor-pointer rounded-none"
+            aria-label="Search"
+          >
+            <Search className="size-4" />
+          </button>
           <AnimatedThemeToggler />
           <Sheet open={isOpen} onOpenChange={setIsOpen}>
             <SheetTrigger asChild>
@@ -396,6 +418,8 @@ export default function Navigation() {
         </div>
 
       </div>
+      
+      <GlobalSearch open={searchOpen} setOpen={setSearchOpen} />
     </nav>
   );
 }
