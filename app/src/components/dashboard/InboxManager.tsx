@@ -378,7 +378,7 @@ export default function InboxManager({ activeFolder = 'inquiries' }: { activeFol
                       <div className={`text-[10px] uppercase font-bold tracking-wider ${msg.role === 'user' ? 'text-primary' : 'text-muted-foreground'}`}>
                         {msg.role === 'user' ? 'YOU' : 'ADVISOR'}
                       </div>
-                      <div className={`p-3 text-[13.5px] leading-relaxed rounded-md max-w-[90%] whitespace-pre-wrap ${msg.role === 'user' ? 'bg-primary/10 text-foreground' : 'bg-muted/50 border border-border/50 text-foreground'}`}>
+                      <div className={`p-3 text-[13.5px] leading-relaxed rounded-none max-w-[90%] whitespace-pre-wrap ${msg.role === 'user' ? 'bg-primary/10 text-foreground' : 'bg-muted/50 border border-border/50 text-foreground'}`}>
                         {msg.content}
                       </div>
                     </div>

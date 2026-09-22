@@ -130,7 +130,7 @@ export function ClassroomWidget() {
             <h3 className="font-heading font-medium text-lg text-foreground flex items-center gap-2">
               Google Classroom
               {isConnected && (
-                <Badge variant="outline" className="text-[0.65rem] border-green-600/30 text-green-600 bg-green-600/5 px-1.5 py-0 rounded-sm uppercase tracking-wider">Connected</Badge>
+                <Badge variant="outline" className="text-[0.65rem] border-green-600/30 text-green-600 bg-green-600/5 px-1.5 py-0 rounded-none uppercase tracking-wider">Connected</Badge>
               )}
             </h3>
             <p className="text-sm text-muted-foreground">Sync your external coursework and grades</p>
@@ -155,7 +155,7 @@ export function ClassroomWidget() {
               exit={{ opacity: 0, y: -10 }}
               className="flex flex-col items-center justify-center py-10 text-center flex-1"
             >
-              <div className="size-16 border border-dashed border-border flex items-center justify-center text-muted-foreground/50 mb-4 rounded-full">
+              <div className="size-16 border border-dashed border-border flex items-center justify-center text-muted-foreground/50 mb-4 rounded-none">
                 <SiGoogleclassroom className="size-8" />
               </div>
               <h4 className="font-medium text-foreground mb-2">Connect Your Account</h4>
