@@ -4,6 +4,7 @@
     "jsr:@supabase/functions-js@2": "2.107.0",
     "npm:@supabase/supabase-js@2": "2.116.0",
     "npm:openai@^4.52.5": "4.104.0",
+    "npm:resend@6.28.1": "6.28.1",
     "npm:resend@^6.28.1": "6.28.1"
   },
   "jsr": {
