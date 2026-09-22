@@ -23,7 +23,19 @@ serve(async (req: Request) => {
     const body = await req.json();
     const { messages } = body;
 
-    if (!messages || !Array.isArray(messages)) {
+    const isValidMessage = (m: unknown): boolean =>
+      !!m &&
+      typeof m === "object" &&
+      ["user", "assistant", "system"].includes((m as { role?: string }).role ?? "") &&
+      typeof (m as { content?: unknown }).content === "string" &&
+      (m as { content: string }).content.length <= 8000;
+
+    if (
+      !Array.isArray(messages) ||
+      messages.length === 0 ||
+      messages.length > 50 ||
+      !messages.every(isValidMessage)
+    ) {
       return new Response(JSON.stringify({ error: "Invalid messages format" }), {
         status: 400,
         headers: { "Content-Type": "application/json", ...corsHeaders },
@@ -34,6 +46,7 @@ serve(async (req: Request) => {
 
     const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
       method: "POST",
+      signal: AbortSignal.timeout(30_000),
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${OPENROUTER_API}`,

@@ -101,7 +101,15 @@ export default function Contact() {
 
       if (!res.ok) throw new Error(`Submission failed (HTTP ${res.status})`);
 
-      const emailRes = await fetch(`${SUPABASE_URL}/functions/v1/send-email`, {
+      // Primary write succeeded — confirm success immediately
+      localStorage.setItem('last_inquiry_submission', Date.now().toString());
+      setSubmitted(true);
+      inquiryForm.reset();
+      toast.success('Inquiry sent! We\'ll be in touch within 24 hours.', { id: toastId });
+      setTimeout(() => setSubmitted(false), 6000);
+
+      // Best-effort email notification
+      fetch(`${SUPABASE_URL}/functions/v1/send-email`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -115,16 +123,10 @@ export default function Contact() {
           mobile: data.mobile || undefined,
           message: data.message,
         }),
-        signal: controller.signal,
+        signal: AbortSignal.timeout(10_000),
+      }).catch((emailErr) => {
+        console.error('[Contact] Best-effort email delivery failed:', emailErr);
       });
-
-      if (!emailRes.ok) console.error('[Contact] Failed to send email via Edge Function');
-
-      localStorage.setItem('last_inquiry_submission', Date.now().toString());
-      setSubmitted(true);
-      inquiryForm.reset();
-      toast.success('Inquiry sent! We\'ll be in touch within 24 hours.', { id: toastId });
-      setTimeout(() => setSubmitted(false), 6000);
     } catch (err: any) {
       console.error('[Contact] Submit error:', err);
       const isTimeout = err.name === 'AbortError';
@@ -164,7 +166,15 @@ export default function Contact() {
         throw new Error(`Subscription failed (HTTP ${res.status})`);
       }
 
-      const emailRes = await fetch(`${SUPABASE_URL}/functions/v1/send-email`, {
+      // Primary write succeeded — confirm success immediately
+      localStorage.setItem('last_newsletter_submission', Date.now().toString());
+      setSubscribed(true);
+      newsletterForm.reset();
+      toast.success('Subscribed! Welcome to our learning ecosystem.', { id: toastId });
+      setTimeout(() => setSubscribed(false), 5000);
+
+      // Best-effort email confirmation
+      fetch(`${SUPABASE_URL}/functions/v1/send-email`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -175,16 +185,10 @@ export default function Contact() {
           type: 'newsletter',
           email: data.email,
         }),
-        signal: controller.signal,
+        signal: AbortSignal.timeout(10_000),
+      }).catch((emailErr) => {
+        console.error('[Contact] Best-effort newsletter email failed:', emailErr);
       });
-
-      if (!emailRes.ok) console.error('[Contact] Failed to send newsletter email via Edge Function');
-
-      localStorage.setItem('last_newsletter_submission', Date.now().toString());
-      setSubscribed(true);
-      newsletterForm.reset();
-      toast.success('Subscribed! Welcome to our learning ecosystem.', { id: toastId });
-      setTimeout(() => setSubscribed(false), 5000);
     } catch (err: any) {
       console.error('[Contact] Subscribe error:', err);
       const isTimeout = err.name === 'AbortError';

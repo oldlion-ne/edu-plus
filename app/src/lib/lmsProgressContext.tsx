@@ -65,6 +65,7 @@ export const LmsProgressProvider: React.FC<{ children: React.ReactNode }> = ({ c
 
   useEffect(() => {
     let mounted = true;
+    setIsInitialized(false);
 
     async function loadProgress() {
       if (!user || isSimulated) {

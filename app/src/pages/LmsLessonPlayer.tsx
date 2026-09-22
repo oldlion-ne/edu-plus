@@ -90,7 +90,7 @@ export default function LmsLessonPlayer() {
  } else if (currentModule?.quiz) {
  navigate(`/lms/quiz/${track.id}/${currentModule.id}`);
  } else {
- navigate('/dashboard');
+ navigate(`/lms/tracks/${track.id}`);
  }
  };
 

@@ -350,7 +350,7 @@ export default function LmsQuiz() {
  </div>
 
  {/* Educational Explanation Box after submission */}
- {isAnswerSubmitted && (
+ {isAnswerSubmitted && currentQuestion && (
  <div
  className={cn(
  'border p-4 text-xs leading-relaxed space-y-1',

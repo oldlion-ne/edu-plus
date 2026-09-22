@@ -50,6 +50,7 @@ export default function ProfileSettingsDialog({
   const [profileAvatar, setProfileAvatar] = useState('');
   const [profileBio, setProfileBio] = useState('');
   const [isUploadingAvatar, setIsUploadingAvatar] = useState(false);
+  const [isSavingProfile, setIsSavingProfile] = useState(false);
 
   useEffect(() => {
     if (isOpen) {
@@ -61,6 +62,8 @@ export default function ProfileSettingsDialog({
 
   const handleUpdateProfile = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (isSavingProfile) return;
+    setIsSavingProfile(true);
     try {
       if (isSimulated) {
         const cachedSim = localStorage.getItem('edu_plus_sim_session');
@@ -100,6 +103,8 @@ export default function ProfileSettingsDialog({
         description: err.message || 'Failed to update user profile.',
         style: { background: 'oklch(var(--card))', border: '1px solid oklch(var(--destructive)/0.3)', color: 'oklch(var(--foreground))', borderRadius: '0px' }
       });
+    } finally {
+      setIsSavingProfile(false);
     }
   };
 
@@ -219,7 +224,7 @@ export default function ProfileSettingsDialog({
           <div className="pt-4 flex flex-col gap-5">
             <div className="flex justify-end gap-5 items-center">
               <button type="button" onClick={() => onOpenChange(false)} className="text-xs font-sans text-muted-foreground hover:text-foreground transition-colors focus:outline-none focus-visible:ring-1 focus-visible:ring-primary">Cancel</button>
-              <Button type="submit" className="px-6 bg-primary text-primary-foreground hover:bg-primary/90 transition-colors font-sans text-[11px] font-medium cursor-pointer rounded-none h-9 shadow-none border-none tracking-wide focus-visible:ring-1 focus-visible:ring-primary">Save changes</Button>
+              <Button type="submit" disabled={isSavingProfile} className="px-6 bg-primary text-primary-foreground hover:bg-primary/90 transition-colors font-sans text-[11px] font-medium cursor-pointer rounded-none h-9 shadow-none border-none tracking-wide focus-visible:ring-1 focus-visible:ring-primary disabled:opacity-60 disabled:cursor-not-allowed">{isSavingProfile ? 'Saving…' : 'Save changes'}</Button>
             </div>
             <div className="w-full h-px bg-gradient-to-r from-transparent via-border/60 to-transparent" />
             <button type="button" onClick={() => { onOpenChange(false); handleLogout(); }} className="text-[10px] font-sans text-muted-foreground hover:text-foreground transition-colors focus:outline-none focus-visible:ring-1 focus-visible:ring-primary uppercase tracking-widest text-center pb-2">Sign out of account</button>

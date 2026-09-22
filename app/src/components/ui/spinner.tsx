@@ -43,18 +43,21 @@ const Spinner = React.forwardRef<SVGSVGElement, SpinnerProps>(
     return (
       <svg
         ref={ref}
+        role="status"
+        aria-label="Loading"
         className={cn(spinnerVariants({ size, speed }), "text-foreground", className)}
         viewBox="0 0 42 42"
         {...props}
       >
         <g fill="none" transform="translate(3 3)" strokeWidth={strokeWidth}>
           <circle className={bgClassName} cx="18" cy="18" r="18" />
-          <path
+          {/* Straight-line indicator: a short arc approximated with 4 line segments */}
+          <polyline
             className="stroke-current"
             stroke="currentColor"
-            d="M36 18c0-9.94-8.06-18-18-18"
-            strokeLinecap="round"
-            strokeLinejoin="round"
+            strokeLinecap="square"
+            strokeLinejoin="miter"
+            points="18,0 36,0 36,18"
           />
         </g>
       </svg>

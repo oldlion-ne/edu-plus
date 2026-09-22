@@ -1,4 +1,4 @@
-import type { CurriculumTrack } from '../types/lms';
+﻿import type { CurriculumTrack } from '../types/lms';
 
 export const CURRICULUM_TRACKS: readonly CurriculumTrack[] = Object.freeze([
   {
@@ -44,7 +44,7 @@ export const CURRICULUM_TRACKS: readonly CurriculumTrack[] = Object.freeze([
             type: 'video',
             summary: 'Why academic grades alone do not indicate career happiness or long-term competence, and how psychometrics bridges the gap.',
             videoEmbedId: 'aqz-KE-bpKQ',
-            videoUrl: 'https://vjs.zencdn.net/v/oceans.mp4',
+            // videoUrl: undefined, // TODO: replace with hosted lesson video
             contentMarkdown: `### The Limits of Marks as a Predictor
 
 For decades, students have been funneled into career decisions solely based on 10th or 12th board examination scores. Yet real-world job satisfaction and exceptional performance depend on:
@@ -153,7 +153,7 @@ By identifying your dominant modality, you can reduce study fatigue by 40% while
             summary: 'A deep comparative analysis of board stream trajectories and how modern universities value cross-disciplinary competence.',
             prerequisiteLessonIds: ['fp-les-102'],
             videoEmbedId: 'dQw4w9WgXcQ',
-            videoUrl: 'https://vjs.zencdn.net/v/oceans.mp4',
+            // videoUrl: undefined, // TODO: replace with hosted lesson video
             contentMarkdown: `### The Modern Matrix of Disciplines
 
 Traditional boundaries between Science and Arts have dissolved in top global research institutions:
@@ -250,7 +250,7 @@ When picking your board stream, prioritize core quantitative and communicative f
             type: 'video',
             summary: 'Structuring thoughts using the Hook, Problem, Solution, and Call to Action formula.',
             videoEmbedId: 'dQw4w9WgXcQ',
-            videoUrl: 'https://vjs.zencdn.net/v/oceans.mp4',
+            // videoUrl: undefined, // TODO: replace with hosted lesson video
             contentMarkdown: `### The Four Pillars of Clear Speech
 
 Whether speaking to a classroom, an admissions committee, or a future investor, high-impact speech follows four clean phases:
@@ -380,7 +380,7 @@ Financial independence is not determined by how much you earn, but how much you 
             type: 'video',
             summary: 'How water-splitting technologies and clean energy storage are creating thousands of new engineering disciplines globally.',
             videoEmbedId: 'tgbNymZ7vqY',
-            videoUrl: 'https://vjs.zencdn.net/v/oceans.mp4',
+            // videoUrl: undefined, // TODO: replace with hosted lesson video
             contentMarkdown: `### The Global Energy Transition
 
 Hydrogen is the most abundant element in the universe, but separating it cleanly requires breakthroughs in:
@@ -465,7 +465,7 @@ Students aiming for high-impact research careers in South Korea, Germany, or Jap
             type: 'video',
             summary: 'Avoid the cliché childhood story; learn how top universities evaluate authentic intellectual curiosity.',
             videoEmbedId: 'jNQXAC9IVRw',
-            videoUrl: 'https://vjs.zencdn.net/v/oceans.mp4',
+            // videoUrl: undefined, // TODO: replace with hosted lesson video
             contentMarkdown: `### Moving Beyond Clichés in Admissions Essays
 
 Admissions committees read thousands of essays starting with *"Ever since I was a child, I dreamed of..."* Stand out by anchoring your narrative in specific, recent intellectual turning points:
@@ -634,7 +634,7 @@ Most resumes fail because they list passive tasks: *"Responsible for website upd
             type: 'video',
             summary: 'How to shift lecture delivery to self-paced digital modules so classroom time is reserved for collaborative problem-solving.',
             videoEmbedId: 'V-_O7nl0Ii0',
-            videoUrl: 'https://vjs.zencdn.net/v/oceans.mp4',
+            // videoUrl: undefined, // TODO: replace with hosted lesson video
             contentMarkdown: `### Transforming Classroom Energy
 
 When a teacher lectures uninterrupted for 45 minutes, attention degrades within the first 12 minutes. In an inquiry-driven flipped model:

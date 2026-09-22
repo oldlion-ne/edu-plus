@@ -20,6 +20,9 @@ export function useDashboardTelemetry() {
       const kb = kbRes.data;
       const contact = contactRes.data;
 
+      const queryError = hubRes.error ?? kbRes.error ?? contactRes.error;
+      if (queryError) throw queryError;
+
       setKnowledgeHubItems(hub || []);
       setKbDocuments(kb || []);
       setContactMessages(contact || []);

@@ -42,7 +42,6 @@ export default function NotFound() {
             asChild
             variant="outline"
             className="w-full sm:w-auto h-11 px-8 rounded-none"
-            onClick={() => window.history.back()}
           >
             <button type="button" onClick={() => window.history.back()}>
               <ArrowLeft className="w-4 h-4 mr-2" />

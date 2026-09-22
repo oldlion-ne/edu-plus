@@ -309,8 +309,15 @@ export default function Connect() {
       throw new Error(`Submission failed (HTTP ${res.status}). Please try again later.`);
     }
 
-    // Invoke the Edge Function to send email notification
-    const emailRes = await fetch(`${SUPABASE_URL}/functions/v1/send-email`, {
+    // Primary write succeeded — confirm success immediately
+    localStorage.setItem('last_connect_inquiry', Date.now().toString());
+    toast.success('Inquiry sent! We\'ll respond within 24 hours.', { id: toastId });
+    setSubmitted(true);
+    inquiryForm.reset();
+    setTimeout(() => setSubmitted(false), 5000);
+
+    // Best-effort email notification — failures do not affect user-facing success
+    fetch(`${SUPABASE_URL}/functions/v1/send-email`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -324,18 +331,10 @@ export default function Connect() {
         mobile: data.mobile || undefined,
         message: data.message,
       }),
-      signal: controller.signal,
+      signal: AbortSignal.timeout(10_000),
+    }).catch((emailErr) => {
+      console.error('[Connect] Best-effort email delivery failed:', emailErr);
     });
-
-    if (!emailRes.ok) {
-      console.error('[Connect] Failed to send email via Edge Function');
-    }
-
-    localStorage.setItem('last_connect_inquiry', Date.now().toString());
-    toast.success('Inquiry sent! We\'ll respond within 24 hours.', { id: toastId });
-    setSubmitted(true);
-    inquiryForm.reset();
-    setTimeout(() => setSubmitted(false), 5000);
   } catch (err: any) {
     console.error('Error sending message:', err);
     const isTimeout = err.name === 'AbortError';
@@ -375,8 +374,15 @@ export default function Connect() {
       throw new Error(`Subscription failed (HTTP ${res.status})`);
     }
 
-    // Invoke the Edge Function to send newsletter confirmation email
-    const emailRes = await fetch(`${SUPABASE_URL}/functions/v1/send-email`, {
+    // Primary write succeeded — confirm success immediately
+    localStorage.setItem('last_connect_newsletter', Date.now().toString());
+    toast.success(t('newsletterSuccess'), { id: toastId });
+    setSubscribed(true);
+    newsletterForm.reset();
+    setTimeout(() => setSubscribed(false), 5000);
+
+    // Best-effort email confirmation — failures do not affect user-facing success
+    fetch(`${SUPABASE_URL}/functions/v1/send-email`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -387,18 +393,10 @@ export default function Connect() {
         type: 'newsletter',
         email: data.email,
       }),
-      signal: controller.signal,
+      signal: AbortSignal.timeout(10_000),
+    }).catch((emailErr) => {
+      console.error('[Connect] Best-effort newsletter email failed:', emailErr);
     });
-
-    if (!emailRes.ok) {
-      console.error('[Connect] Failed to send newsletter email via Edge Function');
-    }
-
-    localStorage.setItem('last_connect_newsletter', Date.now().toString());
-    toast.success(t('newsletterSuccess'), { id: toastId });
-    setSubscribed(true);
-    newsletterForm.reset();
-    setTimeout(() => setSubscribed(false), 5000);
   } catch (err: any) {
     const isTimeout = err.name === 'AbortError';
     const msg = isTimeout ? 'Request timed out. Please try again.' : 'Subscription failed. Please try again.';

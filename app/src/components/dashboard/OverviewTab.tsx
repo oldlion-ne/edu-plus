@@ -53,7 +53,7 @@ export default function OverviewTab({
 
       <div className="stack flex flex-col gap-7">
         <div className="stats">
-          <div className="card stat p-[18px_20px]">
+          <div className="card stat rounded-none p-[18px_20px]">
             <div className="text-[13px] text-muted-foreground whitespace-nowrap">{t('dashboard.overview.hubResources')}</div>
             <div className="font-heading text-[32px] leading-[1.2] mt-0.5 text-foreground font-normal tabular-nums">
               <NumberTicker value={knowledgeHubItems.length} />
@@ -62,7 +62,7 @@ export default function OverviewTab({
               {knowledgeHubItems.length === 0 ? 'Library is nearly empty' : `${knowledgeHubItems.length} published`}
             </div>
           </div>
-          <div className="card stat p-[18px_20px]">
+          <div className="card stat rounded-none p-[18px_20px]">
             <div className="text-[13px] text-muted-foreground whitespace-nowrap">{t('dashboard.overview.aiTrainingRules')}</div>
             <div className="font-heading text-[32px] leading-[1.2] mt-0.5 text-foreground font-normal tabular-nums">
               {kbDocuments.length === 0 ? '—' : <NumberTicker value={kbDocuments.length} />}
@@ -71,7 +71,7 @@ export default function OverviewTab({
               {kbDocuments.length === 0 ? 'None yet · add in AI Advisor' : `${kbDocuments.length} active rules`}
             </div>
           </div>
-          <div className="card stat p-[18px_20px]">
+          <div className="card stat rounded-none p-[18px_20px]">
             <div className="text-[13px] text-muted-foreground whitespace-nowrap">{t('dashboard.overview.inboundInquiries')}</div>
             <div className="font-heading text-[32px] leading-[1.2] mt-0.5 text-foreground font-normal tabular-nums">
               <NumberTicker value={contactMessages.length} />
@@ -83,7 +83,7 @@ export default function OverviewTab({
         </div>
 
         {/* Interactive Area Chart */}
-        <div className="card">
+        <div className="card rounded-none">
           {/* Chart Header */}
           <div className="chart-head flex flex-col sm:flex-row items-start sm:items-baseline justify-between gap-3 p-[22px_24px_0]">
             <div>
@@ -188,7 +188,7 @@ export default function OverviewTab({
         </div>
 
         {/* Content Category Distribution */}
-        <div className="card card-pad">
+        <div className="card card-pad rounded-none">
           <h3 className="font-sans text-[16px] font-semibold text-foreground leading-[1.15]">{t('dashboard.overview.contentCategoryDistribution')}</h3>
           <div className="text-[12.5px] text-muted-foreground mt-0.5 mb-4">Knowledge Hub resources by format</div>
           <div className="w-full h-2.5 flex rounded-none overflow-hidden bg-muted border border-border/40">

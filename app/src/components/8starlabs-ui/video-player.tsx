@@ -579,7 +579,7 @@ export function VideoViewport({
             {!isBuffering && (
               <button
                 className={cn(
-                  "flex aspect-square items-center justify-center rounded-xl bg-white/10 p-[min(0.75rem,2.5cqw)] backdrop-blur-xs transition-[opacity,transform] duration-300 hover:cursor-pointer",
+                  "flex aspect-square items-center justify-center rounded-none bg-white/10 p-[min(0.75rem,2.5cqw)] backdrop-blur-xs transition-[opacity,transform] duration-300 hover:cursor-pointer",
                   areControlsVisible
                     ? "opacity-100"
                     : "opacity-0 pointer-events-none"
@@ -596,7 +596,7 @@ export function VideoViewport({
 
             <div
               className={cn(
-                "flex aspect-square items-center justify-center rounded-2xl bg-white/10 p-[min(1rem,3cqw)] backdrop-blur-xs transition-[opacity,transform] duration-300",
+                "flex aspect-square items-center justify-center rounded-none bg-white/10 p-[min(1rem,3cqw)] backdrop-blur-xs transition-[opacity,transform] duration-300",
                 !isBuffering && "hover:cursor-pointer",
                 isBuffering || areControlsVisible
                   ? "opacity-100"
@@ -624,7 +624,7 @@ export function VideoViewport({
             {!isBuffering && (
               <button
                 className={cn(
-                  "flex aspect-square items-center justify-center rounded-xl bg-white/10 p-[min(0.75rem,2.5cqw)] backdrop-blur-xs transition-[opacity,transform] duration-300 hover:cursor-pointer",
+                  "flex aspect-square items-center justify-center rounded-none bg-white/10 p-[min(0.75rem,2.5cqw)] backdrop-blur-xs transition-[opacity,transform] duration-300 hover:cursor-pointer",
                   areControlsVisible
                     ? "opacity-100"
                     : "opacity-0 pointer-events-none"
@@ -825,11 +825,27 @@ export function VideoSoundControl({
       >
         <div
           ref={sliderRef}
-          className="relative h-full w-full rounded-full bg-neutral-600"
+          role="slider"
+          tabIndex={isVolumeControlOpen ? 0 : -1}
+          aria-label="Volume"
+          aria-valuemin={0}
+          aria-valuemax={1}
+          aria-valuenow={localVolume}
+          aria-valuetext={`${Math.round(localVolume * 100)}%`}
+          onKeyDown={(event) => {
+            if (event.key === "ArrowUp") {
+              event.preventDefault();
+              setVolume(Math.min(localVolume + 0.1, 1));
+            } else if (event.key === "ArrowDown") {
+              event.preventDefault();
+              setVolume(Math.max(localVolume - 0.1, 0));
+            }
+          }}
+          className="relative h-full w-full rounded-none bg-neutral-600"
           onPointerDown={handleSliderPointerDown}
         >
           <div
-            className="pointer-events-none absolute bottom-0 left-0 w-full rounded-full bg-white"
+            className="pointer-events-none absolute bottom-0 left-0 w-full rounded-none bg-white"
             style={{ height: `${localVolume * 100}%` }}
           />
         </div>
@@ -1074,6 +1090,23 @@ function VideoSeekSlider({
     <div
       id="video-progress-bar"
       ref={progressBarContainerRef}
+      role="slider"
+      tabIndex={0}
+      aria-label="Seek"
+      aria-valuemin={0}
+      aria-valuemax={videoDuration}
+      aria-valuenow={videoProgress}
+      aria-valuetext={`${Math.floor(videoProgress / 60)}:${String(Math.floor(videoProgress % 60)).padStart(2, '0')}`}
+      onKeyDown={(event) => {
+        if (videoDuration === 0) return;
+        if (event.key === "ArrowRight") {
+          event.preventDefault();
+          handleSeekVideo(Math.min((videoProgress + 5) / videoDuration, 1));
+        } else if (event.key === "ArrowLeft") {
+          event.preventDefault();
+          handleSeekVideo(Math.max((videoProgress - 5) / videoDuration, 0));
+        }
+      }}
       className={cn(
         "relative flex-1 h-4 translate-y-[0.4px] flex items-center",
         className
@@ -1085,11 +1118,11 @@ function VideoSeekSlider({
     >
       <div
         id="video-progress-bar-bg"
-        className="h-1 w-full rounded-full bg-neutral-600"
+        className="h-1 w-full rounded-none bg-neutral-600"
       />
       <div
         id="video-progress-bar-fill"
-        className="pointer-events-none absolute left-0 h-1 rounded-full bg-white"
+        className="pointer-events-none absolute left-0 h-1 rounded-none bg-white"
         style={{ width: `${frac * 100}%` }}
       />
 
@@ -1097,7 +1130,7 @@ function VideoSeekSlider({
         <div
           id="video-progress-bar-hover-time"
           className={cn(
-            "pointer-events-none absolute -top-13 z-10 rounded text-sm text-white transition-opacity duration-300 flex flex-col items-center gap-[3px] select-none",
+            "pointer-events-none absolute -top-13 z-10 rounded-none text-sm text-white transition-opacity duration-300 flex flex-col items-center gap-[3px] select-none",
             isHovering ? "opacity-100" : "opacity-0"
           )}
           style={{ left: hover.x, transform: "translateX(-50%)" }}

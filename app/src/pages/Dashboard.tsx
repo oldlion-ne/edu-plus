@@ -182,7 +182,7 @@ export default function Dashboard() {
               </div>
             )}
 
-            {activeTab === 'library' && (
+            {activeTab === 'library' && hasPermission(['admin', 'educator', 'resource_person']) && (
               <div id="view-library" className="page animate-in fade-in duration-300">
                 <ResourceManager />
               </div>

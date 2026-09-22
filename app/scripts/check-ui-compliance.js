@@ -61,8 +61,10 @@ const APPROVED_HEX_INLINE = new Set([
 // Matches C, S, Q, A and their lowercase equivalents after a whitespace/digit.
 const SVG_CURVE_CMD_RE = /\bd=["'][^"']*[CSQAcsqa][^"']*/;
 
-// rounded-* classes that are NOT rounded-none (geometry violation).
-const ROUNDED_BAD_RE = /\brounded(?:-(?!none\b)[a-zA-Z0-9]+)+\b|\brounded\b(?!-none)/;
+// Matches any `rounded` utility whose final segment is not `none`.
+// Correctly passes: rounded-none, rounded-t-none, rounded-tl-none, rounded-s-none
+// Correctly fails: rounded, rounded-md, rounded-full, rounded-xl
+const ROUNDED_BAD_RE = /\brounded(?:-[a-zA-Z0-9[\]%.]+)*\b(?<!-none)(?!-)/;
 
 // Recharts LineChart / AreaChart type prop that isn't "linear".
 // e.g. type="monotone" or type="natural" — both are prohibited curves.
